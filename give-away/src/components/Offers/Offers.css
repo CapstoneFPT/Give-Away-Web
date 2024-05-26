@@ -1,0 +1,9 @@
+.offers{
+    width: 65%;
+    height: 70vh;
+    display:flex;
+    margin: auto;
+    padding:0px 100px;
+    margin-bottom: 150px;
+    background: linear-gradient(90deg, white,black 30%);
+}
