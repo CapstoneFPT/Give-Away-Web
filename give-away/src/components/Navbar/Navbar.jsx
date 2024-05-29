@@ -7,21 +7,13 @@ const Navbar = () => {
   const [menu, setMenu] = useState("shop");
   return (
     <div className="navbar">
-      <div className="nav-logo">
-        <img src={logo} alt="" />
-        <p>Give Away</p>
-      </div>
+      <Link to="/" className="no-underline" onClick={() => setMenu("")}>
+        <div className="nav-logo">
+          <img src={logo} alt="" />
+          <p>Give Away</p>
+        </div>
+      </Link>
       <ul className="nav-menu">
-        <li
-          onClick={() => {
-            setMenu("shop");
-          }}
-        >
-          <Link to="/" className="no-underline">
-            Shop
-          </Link>
-          {menu === "shop" ? <hr /> : <></>}
-        </li>
         <li
           onClick={() => {
             setMenu("men");
@@ -41,16 +33,6 @@ const Navbar = () => {
             Women
           </Link>
           {menu === "women" ? <hr /> : <></>}
-        </li>
-        <li
-          onClick={() => {
-            setMenu("kids");
-          }}
-        >
-          <Link to="/kids" className="no-underline">
-            Kids
-          </Link>
-          {menu === "kids" ? <hr /> : <></>}
         </li>
       </ul>
       <div className="nav-login-cart">
