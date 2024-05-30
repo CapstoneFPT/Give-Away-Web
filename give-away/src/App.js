@@ -5,9 +5,7 @@ import Shop from './pages/Shop';
 import ShopCategory from './pages/ShopCategory';
 import Product from './pages/Product';
 import Cart from './pages/Cart';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import ForgotPassword from './pages/ForgotPassword';
+import LoginSignup from './pages/LoginSignup';
 function App() {
   return (
     <div>
@@ -22,17 +20,9 @@ function App() {
         <Route path=':productId' element={<Product/>}/>
       </Route>
       <Route path='/cart' element={<Cart/>}/>
-      <Route path='/login' element={<Login/>}/>
-      
-      <Route path='/forgotpassword' element={<ForgotPassword/>}/>
-    </Routes>
-    <Routes>
-    <Route path='/register' element={<Register/>}/>
+      <Route path='/login' element={<LoginSignup/>}/>
     </Routes>
     </BrowserRouter>
-    
-    
-
     </div>
   );
 }
