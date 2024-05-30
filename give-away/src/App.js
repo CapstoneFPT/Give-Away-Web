@@ -5,7 +5,9 @@ import Shop from './pages/Shop';
 import ShopCategory from './pages/ShopCategory';
 import Product from './pages/Product';
 import Cart from './pages/Cart';
-import LoginSignup from './pages/LoginSignup';
+import Login from './pages/Login';
+import Register from './pages/Register';
+
 function App() {
   return (
     <div>
@@ -20,7 +22,8 @@ function App() {
         <Route path=':productId' element={<Product/>}/>
       </Route>
       <Route path='/cart' element={<Cart/>}/>
-      <Route path='/login' element={<LoginSignup/>}/>
+      <Route path='/login' element={<Login/>}/>
+      <Route path='/register' element={<Register/>}/>
     </Routes>
     </BrowserRouter>
     </div>
