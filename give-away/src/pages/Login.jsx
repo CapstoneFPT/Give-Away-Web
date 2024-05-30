@@ -1,101 +1,33 @@
-// import React from 'react'
-// import { useState } from 'react';
-// import { Button, Modal} from 'antd';
-// import { UserOutlined, EyeOutlined, EyeInvisibleOutlined   } from '@ant-design/icons';
-// import { Input } from 'antd';
-
-
-// const Login = () => {
-//   const [isModalOpen, setIsModalOpen] = useState(false);
-//   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-//   const showModal = () => {
-//     setIsModalOpen(true);
-//   };
-//   const handleOk = () => {
-//     setIsModalOpen(false);
-//   };
-//   const handleCancel = () => {
-//     setIsModalOpen(false);
-//   };
-//   const togglePasswordVisibility = () => {
-//     setIsPasswordVisible(!isPasswordVisible);
-//   };
-//   const styles ={
-//     buttonLogin: {
-//       backgroundColor: '#d3d3d3',
-//       color: 'black', 
-//       border: '2px solid black',
-//       padding: '10px 20px',
-//       fontSize: '16px', 
-//       width: '120px', 
-//       height: '40px', 
-//       border: '20px',
-//       fontFamily: 'Arial, sans-serif'
-//     },
-//     modalLogin: {
-//       display: 'flex',
-//       flexDirection: 'column',
-//       alignItems: 'center',
-//       justifyContent: 'center'
-//     },
-//     inputContainer: {
-//       width: '100%',
-//       textAlign: 'center',
-//       marginBottom: '10px'
-//     }
-//   }
-//   return (
-//     <>
-//     <Button style={styles.buttonLogin} type="primary" onClick={showModal}>
-//         Login
-//       </Button>
-//       <Modal style={styles.modalLogin} title="Login" open={isModalOpen}  onOk={handleOk} onCancel={handleCancel}>
-//       <Input size="large" placeholder="Username" prefix={<UserOutlined />} />
-//         <br />
-//         <br />
-//         <Input
-//           type={isPasswordVisible ? 'text' : 'password'}
-//           size="large"
-//           placeholder="Password"
-//           prefix={isPasswordVisible ? <EyeInvisibleOutlined onClick={togglePasswordVisibility} /> : <EyeOutlined onClick={togglePasswordVisibility} />}
-//         />
-//         <br />
-//         <br />
-
-//       </Modal>
-//     </>
-//   );
-
-// }
-
-// export default Login
 
 import React from 'react';
 import { useState } from 'react';
 import { Button, Modal } from 'antd';
-import { UserOutlined, EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
-import { Input, Link } from 'antd';
+import { UserOutlined, EyeOutlined, EyeInvisibleOutlined, GoogleOutlined } from '@ant-design/icons';
+import { Link } from 'react-router-dom';
+import { Input } from 'antd';
+import Register from './Register';
+import ForgotPassword from './ForgotPassword';
 
 const Login = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalLoginOpen, setIsModalLoginOpen] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
-  const showModal = () => {
-    setIsModalOpen(true);
+  const showModalLogin = () => {
+    setIsModalLoginOpen(true);
   };
 
   const handleOk = () => {
-    setIsModalOpen(false);
+    setIsModalLoginOpen(false);
   };
 
   const handleCancel = () => {
-    setIsModalOpen(false);
+    setIsModalLoginOpen(false);
   };
 
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
   };
-
+  
   const styles = {
     buttonLogin: {
       backgroundColor: '#000000',
@@ -103,11 +35,11 @@ const Login = () => {
       border: '2px solid black',
       padding: '10px 20px',
       fontSize: '16px',
-      width: '120px',
+      width: '100px',
       height: '40px',
       fontFamily: 'Arial, sans-serif'
-     
-      
+
+
     },
     modalLogin: {
       display: 'flex',
@@ -119,7 +51,7 @@ const Login = () => {
       width: '90%',
       textAlign: 'center',
       marginBottom: '40px',
-      marginLeft:'25px'
+      marginLeft: '25px'
     },
     loginTitle: {
       fontSize: '40px',
@@ -127,56 +59,69 @@ const Login = () => {
       textAlign: 'center',
       marginBottom: '10px'
     },
-    buttonLoginModalLayout:{
+    buttonLoginModalLayout: {
       textAlign: 'center',
-      color: '#434040'
-      
+      backgroundColor: '#000000',
+      color: 'white',
+      width: '90%'
+
     },
-    buttonLoginModal:{
-      color: '#434040'
+    buttonLoginModal: {
+      backgroundColor: '#434040'
     }
-    
-   
 
   };
 
   return (
     <>
-      <Button style={styles.buttonLogin} type="primary" onClick={showModal}>
+      <Button style={styles.buttonLogin} type="primary" onClick={showModalLogin}>
         Login
       </Button>
       <Modal
-        title=""
         centered
-        visible={isModalOpen}
-        onOk={handleOk}
+        width={500}
+        footer={null}
         onCancel={handleCancel}
-        width={600} 
-        
-        
+        onOk={handleOk}
+        visible = {isModalLoginOpen}
+
       >
-        <div style={{height:"500px"}}>
-        <h2 style={styles.loginTitle}>Give Away</h2>
-        <h3 style={{textAlign:'center', marginBottom:'30px'}}>Login with your email & password</h3>
-        <div style={styles.inputContainer}>
-          <Input size="large" placeholder="Username" prefix={<UserOutlined />} />
-        </div>
-        <div style={styles.inputContainer}>
-          <Input
-            type={isPasswordVisible ? 'text' : 'password'}
-            size="large"
-            placeholder="Password"
-            prefix={isPasswordVisible ? <EyeInvisibleOutlined onClick={togglePasswordVisibility} /> : <EyeOutlined onClick={togglePasswordVisibility} />}
-          />
-        </div>
-        <div style={styles.buttonLoginModalLayout}>
-            <Button style={{color:'434040'}} > Login </Button>
-        </div>
-        <div>Do you have accont?
-           <div>
-              ------Register now------
-            </div> 
-           </div>
+        <div style={{ height: "550px" }}>
+          <h2 style={styles.loginTitle}>Give Away</h2>
+          <h3 style={{ textAlign: 'center', marginBottom: '30px', color: '#a19696' }}>Login with your email & password</h3>
+          <div style={styles.inputContainer}>
+            <Input size="large" placeholder="Username" prefix={<UserOutlined />} />
+          </div>
+          <div style={styles.inputContainer}>
+            <Input
+              type={isPasswordVisible ? 'text' : 'password'}
+              size="large"
+              placeholder="Password"
+              prefix={isPasswordVisible ? <EyeInvisibleOutlined onClick={togglePasswordVisibility} /> : <EyeOutlined onClick={togglePasswordVisibility} />}
+            />
+          </div>
+          <div style={{ textAlign: 'center' }} >
+            <Button style={styles.buttonLoginModalLayout}> Login </Button>
+          </div>
+          <div style={{ textAlign: 'center', marginTop: '30px' }}>
+            <p>-------Or-------</p>
+            <Button type='primary' style={{ width: '90%', marginTop: '30px', }}><GoogleOutlined />Login with Google</Button>
+
+          </div>
+          <div style={{ marginTop: '20px', textAlign: 'center' }}>
+            <div style={{ marginBottom: '10px' }}>Don't have any account?
+            {/* <a onClick={setIsModalLoginOpen}> <Register/> </a> */}
+           <Link to='register'> Register</Link>
+            
+
+            </div>
+            <div>
+              <ForgotPassword />
+
+            </div>
+          </div>
+
+
         </div>
       </Modal>
     </>

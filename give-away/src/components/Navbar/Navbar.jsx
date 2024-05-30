@@ -3,8 +3,6 @@ import './Navbar.css'
 import logo from '../Assets/logo.png'
 import cart_icon from '../Assets/cart_icon.png'
 import { Link } from 'react-router-dom'
-import { Button } from "antd";
-import showModal from "../../pages/Login"
 import Login from '../../pages/Login'
 const Navbar = () => {
     const[menu,setMenu] = useState('shop');
