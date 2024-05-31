@@ -1,12 +1,15 @@
-
-import React from 'react';
-import { useState } from 'react';
-import { Button, Modal } from 'antd';
-import { UserOutlined, EyeOutlined, EyeInvisibleOutlined, GoogleOutlined } from '@ant-design/icons';
-import { Link } from 'react-router-dom';
-import { Input } from 'antd';
-import Register from './Register';
-import ForgotPassword from './ForgotPassword';
+import React from "react";
+import { useState } from "react";
+import { Button, Modal } from "antd";
+import {
+  UserOutlined,
+  EyeOutlined,
+  EyeInvisibleOutlined,
+  GoogleOutlined,
+} from "@ant-design/icons";
+import { Link } from "react-router-dom";
+import { Input } from "antd";
+import ForgotPassword from "./ForgotPassword";
 
 const Login = () => {
   const [isModalLoginOpen, setIsModalLoginOpen] = useState(false);
@@ -27,54 +30,54 @@ const Login = () => {
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
   };
-  
+
   const styles = {
     buttonLogin: {
-      backgroundColor: '#000000',
-      color: 'white',
-      border: '2px solid black',
-      padding: '10px 20px',
-      fontSize: '16px',
-      width: '100px',
-      height: '40px',
-      fontFamily: 'Arial, sans-serif'
-
-
+      backgroundColor: "#000000",
+      color: "white",
+      border: "2px solid black",
+      padding: "10px 20px",
+      fontSize: "16px",
+      width: "100px",
+      height: "40px",
+      fontFamily: "Arial, sans-serif",
     },
     modalLogin: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center'
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
     },
     inputContainer: {
-      width: '90%',
-      textAlign: 'center',
-      marginBottom: '40px',
-      marginLeft: '25px'
+      width: "90%",
+      textAlign: "center",
+      marginBottom: "40px",
+      marginLeft: "25px",
     },
     loginTitle: {
-      fontSize: '40px',
-      fontWeight: 'bold',
-      textAlign: 'center',
-      marginBottom: '10px'
+      fontSize: "40px",
+      fontWeight: "bold",
+      textAlign: "center",
+      marginBottom: "10px",
     },
     buttonLoginModalLayout: {
-      textAlign: 'center',
-      backgroundColor: '#000000',
-      color: 'white',
-      width: '90%'
-
+      textAlign: "center",
+      backgroundColor: "#000000",
+      color: "white",
+      width: "90%",
     },
     buttonLoginModal: {
-      backgroundColor: '#434040'
-    }
-
+      backgroundColor: "#434040",
+    },
   };
 
   return (
     <>
-      <Button style={styles.buttonLogin} type="primary" onClick={showModalLogin}>
+      <Button
+        style={styles.buttonLogin}
+        type="primary"
+        onClick={showModalLogin}
+      >
         Login
       </Button>
       <Modal
@@ -83,49 +86,64 @@ const Login = () => {
         footer={null}
         onCancel={handleCancel}
         onOk={handleOk}
-        visible = {isModalLoginOpen}
-
+        visible={isModalLoginOpen}
       >
         <div style={{ height: "550px" }}>
           <h2 style={styles.loginTitle}>Give Away</h2>
-          <h3 style={{ textAlign: 'center', marginBottom: '30px', color: '#a19696' }}>Login with your email & password</h3>
+          <h3
+            style={{
+              textAlign: "center",
+              marginBottom: "30px",
+              color: "#a19696",
+            }}
+          >
+            Login with your email & password
+          </h3>
           <div style={styles.inputContainer}>
-            <Input size="large" placeholder="Username" prefix={<UserOutlined />} />
+            <Input
+              size="large"
+              placeholder="Username"
+              prefix={<UserOutlined />}
+            />
           </div>
           <div style={styles.inputContainer}>
             <Input
-              type={isPasswordVisible ? 'text' : 'password'}
+              type={isPasswordVisible ? "text" : "password"}
               size="large"
               placeholder="Password"
-              prefix={isPasswordVisible ? <EyeInvisibleOutlined onClick={togglePasswordVisibility} /> : <EyeOutlined onClick={togglePasswordVisibility} />}
+              prefix={
+                isPasswordVisible ? (
+                  <EyeInvisibleOutlined onClick={togglePasswordVisibility} />
+                ) : (
+                  <EyeOutlined onClick={togglePasswordVisibility} />
+                )
+              }
             />
           </div>
-          <div style={{ textAlign: 'center' }} >
+          <div style={{ textAlign: "center" }}>
             <Button style={styles.buttonLoginModalLayout}> Login </Button>
           </div>
-          <div style={{ textAlign: 'center', marginTop: '30px' }}>
+          <div style={{ textAlign: "center", marginTop: "30px" }}>
             <p>-------Or-------</p>
-            <Button type='primary' style={{ width: '90%', marginTop: '30px', }}><GoogleOutlined />Login with Google</Button>
-
+            <Button type="primary" style={{ width: "90%", marginTop: "30px" }}>
+              <GoogleOutlined />
+              Login with Google
+            </Button>
           </div>
-          <div style={{ marginTop: '20px', textAlign: 'center' }}>
-            <div style={{ marginBottom: '10px' }}>Don't have any account?
-            {/* <a onClick={setIsModalLoginOpen}> <Register/> </a> */}
-           <Link to='register'> Register</Link>
-            
-
+          <div style={{ marginTop: "20px", textAlign: "center" }}>
+            <div style={{ marginBottom: "10px" }}>
+              Don't have any account?
+              {/* <a onClick={setIsModalLoginOpen}> <Register/> </a> */}
+              <Link to="/register"> Register</Link>
             </div>
             <div>
               <ForgotPassword />
-
             </div>
           </div>
-
-
         </div>
       </Modal>
     </>
   );
-}
+};
 
 export default Login;
