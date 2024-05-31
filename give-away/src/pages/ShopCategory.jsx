@@ -7,7 +7,6 @@ const ShopCategory = (props) => {
   return (
     <div className="shop-category">
       <img className="shopcategory-banner" src={props.banner} alt="" />
-      <div></div>
       <div className="shopcategory-products">
         {all_product.map((item, i) => {
           if (props.category === item.category) {
@@ -26,6 +25,7 @@ const ShopCategory = (props) => {
           }
         })}
       </div>
+      <div className="shopcategory-loadmore">Explore more</div>
     </div>
   );
 };
