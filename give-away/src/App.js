@@ -41,16 +41,6 @@ function App() {
             }
           />
           <Route
-            path="/kids"
-            element={
-              <>
-                /9
-                <Navbar />
-                <ShopCategory category="kids" />
-              </>
-            }
-          />
-          <Route
             path="product"
             element={
               <>
