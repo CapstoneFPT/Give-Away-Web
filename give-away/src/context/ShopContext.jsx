@@ -1,6 +1,5 @@
 import React, { createContext, useState } from "react";
 import all_product from "../components/Assets/all_product";
-import Item from "antd/es/list/Item";
 export const ShopContext = createContext(null);
 const getDefaultCart = () => {
   let cart = {};
@@ -11,7 +10,6 @@ const getDefaultCart = () => {
 };
 const ShopContextProvider = (props) => {
   const [cartItems, setCartItems] = useState(getDefaultCart());
-
   const addToCart = (itemId) => {
     setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] + 1 }));
   };
