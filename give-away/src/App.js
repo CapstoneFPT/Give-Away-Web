@@ -75,6 +75,7 @@ function App() {
             path="/register"
             element={
               <>
+                <Navbar />
                 <Register />
               </>
             }
@@ -83,6 +84,7 @@ function App() {
             path="/forgotPassword"
             element={
               <>
+               <Navbar />
                 <ForgotPassword />
               </>
             }
@@ -91,6 +93,7 @@ function App() {
             path="/confirmPassword"
             element={
               <>
+                 <Navbar />
                 <ConfirmPassword />
               </>
             }

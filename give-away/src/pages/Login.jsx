@@ -141,7 +141,7 @@ const Login = () => {
           <div style={{ marginTop: '20px', textAlign: 'center' }}>
             <div style={{ marginBottom: '10px' }}>Don't have any account?
             
-           <Link to ={'/register'} onClick={onClickRegister} > Register</Link>
+           <Link onClick={onClickRegister} to ={'/register'}  > Register</Link>
             
 
             </div>
