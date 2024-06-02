@@ -9,7 +9,6 @@ import {
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { Input } from "antd";
-import ForgotPassword from "./ForgotPassword";
 
 const Login = () => {
   const [isModalLoginOpen, setIsModalLoginOpen] = useState(false);
@@ -23,14 +22,12 @@ const Login = () => {
     setIsModalLoginOpen(false);
   };
   // const history = useHistory
-  const  onClickRegister =()=>{
+  const onClickRegister = () => {
     setIsModalLoginOpen(false);
-    
-  }
-  const  onClickForgotPassword =()=>{
+  };
+  const onClickForgotPassword = () => {
     setIsModalLoginOpen(false);
-    
-  }
+  };
   const handleCancel = () => {
     setIsModalLoginOpen(false);
   };
@@ -138,16 +135,19 @@ const Login = () => {
               Login with Google
             </Button>
           </div>
-          <div style={{ marginTop: '20px', textAlign: 'center' }}>
-            <div style={{ marginBottom: '10px' }}>Don't have any account?
-            
-           <Link onClick={onClickRegister} to ={'/register'}  > Register</Link>
-            
-
+          <div style={{ marginTop: "20px", textAlign: "center" }}>
+            <div style={{ marginBottom: "10px" }}>
+              Don't have any account?
+              <Link onClick={onClickRegister} to={"/register"}>
+                {" "}
+                Register
+              </Link>
             </div>
             <div>
-            <Link onClick={onClickForgotPassword} to='/forgotPassword'> Forgot password</Link>
-
+              <Link onClick={onClickForgotPassword} to="/forgotPassword">
+                {" "}
+                Forgot password
+              </Link>
             </div>
           </div>
         </div>
