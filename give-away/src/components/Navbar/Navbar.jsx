@@ -1,5 +1,3 @@
-
-
 import React, { useState } from "react";
 import "./Navbar.css";
 import logo from "../Assets/logo.png";
@@ -14,7 +12,6 @@ const Navbar = () => {
         <div className="nav-logo">
           <img src={logo} alt="" />
           <p>Give Away</p>
-
         </div>
       </Link>
       <ul className="nav-menu">
@@ -38,9 +35,19 @@ const Navbar = () => {
           </Link>
           {menu === "women" ? <hr /> : <></>}
         </li>
+        <li
+          onClick={() => {
+            setMenu("aunctions");
+          }}
+        >
+          <Link to="/aunctions" className="no-underline">
+            Aunctions
+          </Link>
+          {menu === "aunctions" ? <hr /> : <></>}
+        </li>
       </ul>
       <div className="nav-login-cart">
-        <Login/>
+        <Login />
         <Link to="/cart">
           <img src={cart_icon} alt="" />
         </Link>
