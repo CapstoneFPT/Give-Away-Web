@@ -3,9 +3,8 @@ import { useState } from 'react';
 import { Button, Card } from 'antd';
 import { UserOutlined, EyeOutlined, EyeInvisibleOutlined, PhoneOutlined, MailOutlined } from '@ant-design/icons';
 import { Input } from 'antd';
-
-const Register = () => {
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+const ConfirmPassword = () => {
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
@@ -14,10 +13,9 @@ const Register = () => {
   const styles = {
 
     inputContainer: {
-      width: '90%',
-      // textAlign: 'center',
-      marginBottom: '40px',
-      marginLeft: '40px'
+      width: '60%',
+      marginBottom: '42px',
+      marginLeft: '130px'
     },
     registerTitle: {
       fontSize: '40px',
@@ -25,7 +23,7 @@ const Register = () => {
       textAlign: 'center',
       marginBottom: '10px'
     },
-    buttonRegisterModalLayout: {
+    buttonConfirmPassword: {
       textAlign: 'center',
       backgroundColor: '#000000',
       color: 'white',
@@ -36,10 +34,9 @@ const Register = () => {
       backgroundColor: '#434040'
     }
   };
-
   return (
     <>
-
+    
     <div style={{justifyContent:'center',  display: 'flex'}}>
     <Card bordered={false}
         // size='small'
@@ -50,25 +47,7 @@ const Register = () => {
           justifyContent:'center'
         }}>
         <h2 style={styles.registerTitle}>Give Away</h2>
-        <h3 style={{ textAlign: 'center', marginBottom: '30px', color: '#a19696' }}>Register</h3>
-        <div style={styles.inputContainer}>
-          <Input size="large" placeholder="Username" prefix={<UserOutlined />} />
-        </div>
-
-        <div style={styles.inputContainer}>
-          <Input
-            prefix={<MailOutlined />}
-            placeholder="Email"
-
-          />
-        </div>
-        <div style={styles.inputContainer}>
-          <Input
-            prefix={<PhoneOutlined />}
-            placeholder="phone"
-
-          />
-        </div>
+        <h3 style={{ textAlign: 'center', marginBottom: '30px', color: '#a19696' }}>Change New Password</h3>  
         <div style={styles.inputContainer}>
           <Input
             type={isPasswordVisible ? 'text' : 'password'}
@@ -88,7 +67,7 @@ const Register = () => {
 
 
         <div style={{ textAlign: 'center' }} >
-          <Button style={styles.buttonRegisterModalLayout}> Register </Button>
+          <Button style={styles.buttonConfirmPassword}> Confirm </Button>
         </div>
 
 
@@ -101,4 +80,4 @@ const Register = () => {
   )
 }
 
-export default Register
+export default ConfirmPassword

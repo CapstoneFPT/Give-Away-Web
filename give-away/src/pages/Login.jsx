@@ -1,12 +1,9 @@
-
 import React from 'react';
 import { useState } from 'react';
 import { Button, Modal } from 'antd';
 import { UserOutlined, EyeOutlined, EyeInvisibleOutlined, GoogleOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { Input } from 'antd';
-import Register from './Register';
-import ForgotPassword from './ForgotPassword';
 
 const Login = () => {
   const [isModalLoginOpen, setIsModalLoginOpen] = useState(false);
@@ -19,7 +16,15 @@ const Login = () => {
   const handleOk = () => {
     setIsModalLoginOpen(false);
   };
-
+  // const history = useHistory
+  const  onClickRegister =()=>{
+    setIsModalLoginOpen(false);
+    
+  }
+  const  onClickForgotPassword =()=>{
+    setIsModalLoginOpen(false);
+    
+  }
   const handleCancel = () => {
     setIsModalLoginOpen(false);
   };
@@ -110,13 +115,13 @@ const Login = () => {
           </div>
           <div style={{ marginTop: '20px', textAlign: 'center' }}>
             <div style={{ marginBottom: '10px' }}>Don't have any account?
-            {/* <a onClick={setIsModalLoginOpen}> <Register/> </a> */}
-           <Link to='register'> Register</Link>
+            
+           <Link to ={'/register'} onClick={onClickRegister} > Register</Link>
             
 
             </div>
             <div>
-              <ForgotPassword />
+            <Link onClick={onClickForgotPassword} to='/forgotPassword'> Forgot password</Link>
 
             </div>
           </div>
