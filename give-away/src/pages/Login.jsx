@@ -22,7 +22,15 @@ const Login = () => {
   const handleOk = () => {
     setIsModalLoginOpen(false);
   };
-
+  // const history = useHistory
+  const  onClickRegister =()=>{
+    setIsModalLoginOpen(false);
+    
+  }
+  const  onClickForgotPassword =()=>{
+    setIsModalLoginOpen(false);
+    
+  }
   const handleCancel = () => {
     setIsModalLoginOpen(false);
   };
@@ -130,13 +138,16 @@ const Login = () => {
               Login with Google
             </Button>
           </div>
-          <div style={{ marginTop: "20px", textAlign: "center" }}>
-            <div style={{ marginBottom: "10px" }}>
-              Don't have any account?
-              <Link to="/register"> Register</Link>
+          <div style={{ marginTop: '20px', textAlign: 'center' }}>
+            <div style={{ marginBottom: '10px' }}>Don't have any account?
+            
+           <Link onClick={onClickRegister} to ={'/register'}  > Register</Link>
+            
+
             </div>
             <div>
-              <ForgotPassword />
+            <Link onClick={onClickForgotPassword} to='/forgotPassword'> Forgot password</Link>
+
             </div>
           </div>
         </div>
