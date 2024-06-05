@@ -8,8 +8,8 @@ import Cart from "./pages/Cart";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Aunction from "./pages/Aunction";
-import ConfirmPassword from './pages/ConfirmPassword';
-import ForgotPassword from './pages/ForgotPassword';
+import ConfirmPassword from "./pages/ConfirmPassword";
+import ForgotPassword from "./pages/ForgotPassword";
 function App() {
   return (
     <div>
@@ -20,6 +20,7 @@ function App() {
             element={
               <>
                 <Navbar />
+
                 <Shop />
               </>
             }
@@ -29,6 +30,7 @@ function App() {
             element={
               <>
                 <Navbar />
+
                 <ShopCategory category="men" />
               </>
             }
@@ -38,6 +40,7 @@ function App() {
             element={
               <>
                 <Navbar />
+
                 <ShopCategory category="women" />
               </>
             }
@@ -84,16 +87,16 @@ function App() {
             path="/forgotPassword"
             element={
               <>
-               <Navbar />
+                <Navbar />
                 <ForgotPassword />
               </>
             }
           />
-           <Route
+          <Route
             path="/confirmPassword"
             element={
               <>
-                 <Navbar />
+                <Navbar />
                 <ConfirmPassword />
               </>
             }
