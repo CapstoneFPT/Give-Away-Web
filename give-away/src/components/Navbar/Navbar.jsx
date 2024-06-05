@@ -5,14 +5,16 @@ import cart_icon from "../Assets/cart_icon.png";
 import { Link } from "react-router-dom";
 import Login from "../../pages/Login";
 import { ShopContext } from "../../context/ShopContext";
-
+import SearchBar from "../SearchBar/SearchBar";
 const Navbar = () => {
   const [menu, setMenu] = useState("shop");
   const { cartItems } = useContext(ShopContext);
+  const handleSearch = (searchTerm) => {};
   const totalItems = Object.values(cartItems).reduce(
     (total, quantity) => total + quantity,
     0
   );
+
   return (
     <div className="navbar">
       <Link to="/" className="no-underline" onClick={() => setMenu("")}>
@@ -54,6 +56,7 @@ const Navbar = () => {
         </li>
       </ul>
       <div className="nav-login-cart">
+        <SearchBar onSearch={handleSearch} />
         <Login />
         <Link to="/cart">
           <img src={cart_icon} alt="" />

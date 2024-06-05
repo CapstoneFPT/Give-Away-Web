@@ -1,25 +1,42 @@
-.item{
-    width: 350px;
+.item {
+  width: 100%; /* Make the item take up the full width of its parent */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 1s ease-in-out; /* Move the transition property here */
 }
-.item p{
-    margin: 6px 0px;
+
+.item img {
+  width: 100%; /* Make the image take up the full width of its parent */
+  height: auto; /* Maintain the aspect ratio of the image */
+  object-fit: contain; /* Ensure the image scales to fit within its box */
 }
-.item-prices{
-    display: flex;
-    gap: 20px;
+
+.item p {
+  margin: 6px 0px;
+  text-align: center; /* Center the text */
 }
-.item-price-new{
-    color: #373737;
-    font-size: 18px;
-    font-weight: 600;
+
+.item-prices {
+  display: flex;
+  justify-content: space-between; /* Distribute items evenly */
+  width: 100%; /* Make the item-prices take up the full width of its parent */
+  gap: 20px;
 }
-.item-price-old{
-    color: #8c8c8c;
-    font-size: 18px;
-    font-weight: 500;
-    text-decoration: line-through;
+
+.item-price-new {
+  color: #373737;
+  font-size: 18px;
+  font-weight: 600;
 }
-.item:hover{
-    transform: scale(1.1);
-    transition: 1s;
+
+.item-price-old {
+  color: #8c8c8c;
+  font-size: 18px;
+  font-weight: 500;
+  text-decoration: line-through;
+}
+
+.item:hover {
+  transform: scale(1.1);
 }
