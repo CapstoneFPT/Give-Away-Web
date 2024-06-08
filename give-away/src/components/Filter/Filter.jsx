@@ -18,6 +18,7 @@ const Filter = ({ categories, onFilterChange }) => {
 
   return (
     <div>
+      <div className="filter-header">Find by filter</div>
       {categories.map((category, i) => (
         <div key={i}>
           <input

@@ -46,16 +46,14 @@ function App() {
             }
           />
           <Route
-            path="product"
+            path="/:category/:clothingType/:productName"
             element={
               <>
                 <Navbar />
                 <Product />
               </>
             }
-          >
-            <Route path=":productId" element={<Product />} />
-          </Route>
+          />
           <Route
             path="/cart"
             element={

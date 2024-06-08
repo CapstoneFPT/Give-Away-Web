@@ -2,45 +2,79 @@ import React, { useContext } from "react";
 import "./CSS/ShopCategory.css";
 import { ShopContext } from "../context/ShopContext";
 import Item from "../components/Item/Item";
-import CategoryList from "../components/CategoryList/CategoryList";
 import Filter from "../components/Filter/Filter";
 import { useState } from "react";
+import { Link } from "react-router-dom";
+
 const ShopCategory = (props) => {
   const { all_product } = useContext(ShopContext);
-  const categories = ["tanktop", "shirt"];
+  const clothTypes = ["t-shirt", "jeans", "jacket"];
   const [filteredProducts, setFilteredProducts] = useState(all_product);
+  const [filtersVisible, setFiltersVisible] = useState(true);
 
+  const toggleFilters = () => {
+    setFiltersVisible(!filtersVisible);
+  };
   const onFilterChange = (selectedCategories) => {
     if (selectedCategories.length === 0) {
       setFilteredProducts(all_product);
     } else {
       setFilteredProducts(
         all_product.filter((product) =>
-          selectedCategories.includes(product.category)
+          selectedCategories.includes(product.clothType)
         )
       );
     }
   };
   return (
     <div className="shop-category">
-      <img className="shopcategory-banner" src={props.banner} alt="" />
+      <div className="shop-category-header">
+        <h1>
+          {props.category.charAt(0).toUpperCase() + props.category.slice(1)}{" "}
+          Collection
+        </h1>
+      </div>
+
+      <div>
+        <button
+          aria-label="FILTERS"
+          type="button"
+          className="filter-results d-flex align-items-center ml-auto mr-2 mouseFocusUnActive"
+          onClick={toggleFilters}
+        >
+          {filtersVisible ? (
+            <span className="filter-sidebar--open">HIDE FILTERS</span>
+          ) : (
+            <span className="filter-sidebar--closed">FILTERS</span>
+          )}
+        </button>
+      </div>
       <div className="shopcategory-content">
-        <div>
-          <CategoryList categories={categories} />
-          <Filter categories={categories} onFilterChange={onFilterChange} />
+        <div
+          className="filter-bar"
+          style={{ display: filtersVisible ? "block" : "none" }}
+        >
+          <Filter categories={clothTypes} onFilterChange={onFilterChange} />
         </div>
         <div className="shopcategory-products">
           {filteredProducts.map((item, i) => {
             if (props.category === item.category) {
               return (
-                <Item
-                  className="item"
-                  id={item.id}
-                  name={item.name}
-                  image={item.image}
-                  new_price={item.new_price}
-                  old_price={item.old_price}
-                />
+                <Link
+                  to={`/${props.category}/${item.clothType}/${item.name}`}
+                  style={{ textDecoration: "none" }}
+                >
+                  <Item
+                    className="item"
+                    category={item.category}
+                    id={item.id}
+                    name={item.name}
+                    clothType={item.clothType}
+                    image={item.image}
+                    new_price={item.new_price}
+                    old_price={item.old_price}
+                  />
+                </Link>
               );
             } else {
               return null;
