@@ -4,6 +4,7 @@ import { ShopContext } from "../context/ShopContext";
 import Item from "../components/Item/Item";
 import Filter from "../components/Filter/Filter";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const ShopCategory = (props) => {
   const { all_product } = useContext(ShopContext);
@@ -59,15 +60,21 @@ const ShopCategory = (props) => {
           {filteredProducts.map((item, i) => {
             if (props.category === item.category) {
               return (
-                <Item
-                  className="item"
-                  id={item.id}
-                  name={item.name}
-                  clothTypes={item.clothType}
-                  image={item.image}
-                  new_price={item.new_price}
-                  old_price={item.old_price}
-                />
+                <Link
+                  to={`/${props.category}/${item.clothType}/${item.name}`}
+                  style={{ textDecoration: "none" }}
+                >
+                  <Item
+                    className="item"
+                    category={item.category}
+                    id={item.id}
+                    name={item.name}
+                    clothType={item.clothType}
+                    image={item.image}
+                    new_price={item.new_price}
+                    old_price={item.old_price}
+                  />
+                </Link>
               );
             } else {
               return null;
