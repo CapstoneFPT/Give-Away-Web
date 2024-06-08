@@ -17,46 +17,50 @@ const Navbar = () => {
 
   return (
     <div className="navbar">
-      <Link to="/" className="no-underline" onClick={() => setMenu("")}>
-        <div className="nav-logo">
-          <img src={logo} alt="" />
-          <p>Give Away</p>
-        </div>
-      </Link>
-      <ul className="nav-menu">
-        <li
-          onClick={() => {
-            setMenu("men");
-          }}
-        >
-          <Link to="/men" className="no-underline">
-            Men
-          </Link>
-          {menu === "men" ? <hr /> : <></>}
-        </li>
-        <li
-          onClick={() => {
-            setMenu("women");
-          }}
-        >
-          <Link to="/women" className="no-underline">
-            Women
-          </Link>
-          {menu === "women" ? <hr /> : <></>}
-        </li>
-        <li
-          onClick={() => {
-            setMenu("aunctions");
-          }}
-        >
-          <Link to="/aunctions" className="no-underline">
-            Aunctions
-          </Link>
-          {menu === "aunctions" ? <hr /> : <></>}
-        </li>
-      </ul>
-      <div className="nav-login-cart">
+      <div className="nav-left">
+        <Link to="/" className="no-underline" onClick={() => setMenu("")}>
+          <div className="nav-logo">
+            <img src={logo} alt="" />
+            <p>Give Away</p>
+          </div>
+        </Link>
+      </div>
+      <div className="nav-mid">
         <SearchBar onSearch={handleSearch} />
+        <ul className="nav-menu">
+          <li
+            onClick={() => {
+              setMenu("men");
+            }}
+          >
+            <Link to="/men" className="no-underline">
+              Men
+            </Link>
+            {menu === "men" ? <hr /> : <></>}
+          </li>
+          <li
+            onClick={() => {
+              setMenu("women");
+            }}
+          >
+            <Link to="/women" className="no-underline">
+              Women
+            </Link>
+            {menu === "women" ? <hr /> : <></>}
+          </li>
+          <li
+            onClick={() => {
+              setMenu("aunctions");
+            }}
+          >
+            <Link to="/aunctions" className="no-underline">
+              Aunctions
+            </Link>
+            {menu === "aunctions" ? <hr /> : <></>}
+          </li>
+        </ul>
+      </div>
+      <div className="nav-right">
         <Login />
         <Link to="/cart">
           <img src={cart_icon} alt="" />

@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { ShopContext } from "../context/ShopContext";
 import { useContext } from "react";
 import ProductDisplay from "../components/ProductDisplay/ProductDisplay";
-import Breadcrum from "../components/Breadcrums/Breadcrum";
+import Breadcrumb from "../components/Breadcrumb/Breadcrumb";
 import Footer from "../components/Footer/Footer";
 import DescriptionBox from "../components/DescriptionBox/DescriptionBox";
 import RelatedProducts from "../components/RelatedProducts/RelatedProducts";
@@ -15,7 +15,7 @@ const Product = () => {
   console.log(product?.category);
   return (
     <div>
-      <Breadcrum product={product} />
+      <Breadcrumb product={product} />
       <ProductDisplay product={product} />
       <DescriptionBox />
       {product && <RelatedProducts category={product.category} />}
