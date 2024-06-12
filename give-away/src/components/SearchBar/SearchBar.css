@@ -16,10 +16,11 @@
 .searchBar button {
   padding: 5px 10px;
   border: none;
-  background-color: #007bff;
+  background-color: black;
   color: white;
   cursor: pointer;
   border-radius: 4px;
+  height: 40px;
 }
 
 .searchBar button:hover {
