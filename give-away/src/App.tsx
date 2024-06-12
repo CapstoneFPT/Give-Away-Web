@@ -23,7 +23,7 @@ function App(): JSX.Element {
             element={
               <>
                 <Navbar />
-                <Breadcrumb />
+
                 <Shop />
               </>
             }
