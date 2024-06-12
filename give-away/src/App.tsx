@@ -8,10 +8,13 @@ import Product from "./pages/Product";
 import Cart from "./pages/Cart";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Aunction from "./pages/Aunction";
 import ConfirmPassword from "./pages/ConfirmPassword";
 import ForgotPassword from "./pages/ForgotPassword";
 import Breadcrumb from "./components/Breadcrums/Breadcrumb";
+import DetailProductAunction from "./pages/DetailProductAunction";
+import RuleAunction from "./pages/RuleAunction";
+import PurchasePoints from "./pages/PurchasePoints";
+import Aunction from "./pages/AunctionList";
 
 function App(): JSX.Element {
   return (
@@ -110,6 +113,42 @@ function App(): JSX.Element {
               <>
                 <Navbar />
                 <Aunction />
+              </>
+            }
+          />
+          <Route
+            path="/aunctions"
+            element={
+              <>
+                <Navbar />
+                <Aunction />
+              </>
+            }
+          />
+          <Route
+            path="/detailProductAunction"
+            element={
+              <>
+                <Navbar />
+                <DetailProductAunction />
+              </>
+            }
+          />
+          <Route
+            path="/ruleAunction"
+            element={
+              <>
+                <Navbar />
+                <RuleAunction />
+              </>
+            }
+          />
+          <Route
+            path="/purchasePoints"
+            element={
+              <>
+                <Navbar />
+                <PurchasePoints />
               </>
             }
           />
