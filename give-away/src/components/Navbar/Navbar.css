@@ -1,10 +1,6 @@
 .container {
   background-color: #f9f9f9;
 }
-.nav-breadcrumb {
-  background-color: #f9f9f9;
-  margin-left: 30px;
-}
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -60,18 +56,27 @@
   gap: 20px;
 }
 
+.nav-cart {
+  position: relative;
+  display: inline-block; /* This makes the link content width only as wide as it needs to be */
+}
+
 .nav-cart-count {
   position: absolute;
   top: -10px;
   right: -10px;
-  background-color: red;
-  color: white;
-  border-radius: 50%;
-  padding: 5px;
-  font-size: 0.8em;
+  background-color: red; /* This makes the background red */
+  color: white; /* This makes the text color white */
+  padding: 2px; /* This creates some space around the count */
+  border-radius: 50%; /* This makes the div circular */
+  min-width: 20px; /* This ensures the circle maintains its shape even with single digit numbers */
+  text-align: center; /* This centers the count in the circle */
 }
 
 .no-underline {
   text-decoration: none;
   color: inherit;
+}
+.wallet {
+  display: block;
 }
