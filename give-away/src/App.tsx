@@ -15,6 +15,7 @@ import DetailProductAunction from "./pages/DetailProductAunction";
 import RuleAunction from "./pages/RuleAunction";
 import PurchasePoints from "./pages/PurchasePoints";
 import Aunction from "./pages/AunctionList";
+import Consign from "./pages/ConsignForm";
 
 function App(): JSX.Element {
   return (
@@ -26,7 +27,7 @@ function App(): JSX.Element {
             element={
               <>
                 <Navbar />
-                
+
                 <Shop />
               </>
             }
@@ -117,15 +118,6 @@ function App(): JSX.Element {
             }
           />
           <Route
-            path="/aunctions"
-            element={
-              <>
-                <Navbar />
-                <Aunction/>
-              </>
-            }
-          />
-          <Route
             path="/detailProductAunction"
             element={
               <>
@@ -139,7 +131,7 @@ function App(): JSX.Element {
             element={
               <>
                 <Navbar />
-                <RuleAunction/>
+                <RuleAunction />
               </>
             }
           />
@@ -148,11 +140,19 @@ function App(): JSX.Element {
             element={
               <>
                 <Navbar />
-                <PurchasePoints/>
+                <PurchasePoints />
               </>
             }
           />
-
+          <Route
+            path="/consign"
+            element={
+              <>
+                <Navbar />
+                <Consign />
+              </>
+            }
+          />
         </Routes>
       </BrowserRouter>
     </div>
