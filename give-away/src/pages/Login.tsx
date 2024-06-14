@@ -31,6 +31,10 @@ const Login = () => {
     },
     {
       key: "3",
+      label: <Link to="/profile">Profile</Link>,
+    },
+    {
+      key: "4",
       label: (
         <Link to="/" onClick={handleLogout}>
           Logout

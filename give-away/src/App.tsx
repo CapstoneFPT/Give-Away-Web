@@ -13,9 +13,9 @@ import ForgotPassword from "./pages/ForgotPassword";
 import Breadcrumb from "./components/Breadcrums/Breadcrumb";
 import DetailProductAunction from "./pages/DetailProductAunction";
 import RuleAunction from "./pages/RuleAunction";
-import PurchasePoints from "./pages/PurchasePoints";
 import Aunction from "./pages/AunctionList";
 import Consign from "./pages/ConsignForm";
+import Fund from "./pages/Fund";
 
 function App(): JSX.Element {
   return (
@@ -136,11 +136,11 @@ function App(): JSX.Element {
             }
           />
           <Route
-            path="/purchasePoints"
+            path="/add-fund"
             element={
               <>
                 <Navbar />
-                <PurchasePoints />
+                <Fund />
               </>
             }
           />
@@ -150,6 +150,14 @@ function App(): JSX.Element {
               <>
                 <Navbar />
                 <Consign />
+              </>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <>
+                <Navbar />
               </>
             }
           />
