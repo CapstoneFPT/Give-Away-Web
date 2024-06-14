@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { useState } from "react";
-import { Button, Modal, Menu } from "antd";
+import { Button, Modal } from "antd";
 import {
   UserOutlined,
   EyeOutlined,
@@ -8,9 +8,9 @@ import {
   GoogleOutlined,
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
-import { Input } from "antd";
+import { Input, Dropdown } from "antd";
 import { UserContext } from "../context/UserContext";
-
+import type { MenuProps } from "antd";
 const Login = () => {
   const [isModalLoginOpen, setIsModalLoginOpen] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -20,28 +20,20 @@ const Login = () => {
     setDropdownVisible(false); // hide dropdown
   };
   const [isDropdownVisible, setDropdownVisible] = useState(false);
-  const dropDownItems: { key: number; label: JSX.Element }[] = [
+  const dropDownItems: MenuProps["items"] = [
     {
-      key: 1,
-      label: (
-        <Link to="/profile" style={{ color: "black" }}>
-          Profile
-        </Link>
-      ),
+      key: "1",
+      label: <Link to="/consign">Consign</Link>,
     },
     {
-      key: 2,
-      label: (
-        <Link to="/" onClick={handleLogout} style={{ color: "black" }}>
-          Log out
-        </Link>
-      ),
+      key: "2",
+      label: <Link to="/add-fund">Add Fund</Link>,
     },
     {
-      key: 3,
+      key: "3",
       label: (
-        <Link to="/settings" style={{ color: "black" }}>
-          Settings
+        <Link to="/" onClick={handleLogout}>
+          Logout
         </Link>
       ),
     },
@@ -134,11 +126,11 @@ const Login = () => {
       {user && isDropdownVisible ? (
         <div style={styles.container}>
           <p>Welcome, {user.name}!</p>
-          <Menu>
-            {dropDownItems.map((item) => (
-              <Menu.Item key={item.key}>{item.label}</Menu.Item>
-            ))}
-          </Menu>
+          <Dropdown menu={{ items: dropDownItems }}>
+            <Button type="primary" style={styles.buttonLogin}>
+              Menu
+            </Button>
+          </Dropdown>
         </div>
       ) : (
         <Button
