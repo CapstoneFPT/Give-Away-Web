@@ -55,10 +55,10 @@ const Navbar = () => {
                 setMenu("aunctions");
               }}
             >
-              <Link to="/aunctions" className="no-underline">
+              <Link to="/aunctionList" className="no-underline">
             Aunctions
           </Link>
-              {menu === "aunctions" ? <hr /> : <></>}
+              {menu === "aunctionList" ? <hr /> : <></>}
             </li>
           </ul>
         </div>

@@ -29,13 +29,13 @@ const data = [
     tags: ['cool', 'teacher'],
   },
 ];
-const Aunction = () => {
+const AunctionList = () => {
   return (
     <>
       
         <div style={{width:'90%',marginLeft:'80px'}}>
         <h1 style={{textAlign:'center', margin:'30px'}}>Aunction List</h1>
-          <Table dataSource={data}>
+          <Table pagination={false} dataSource={data}>
             
               <Column title="Store Name" dataIndex="firstName" key="firstName" />
               <Column title="Product name" dataIndex="lastName" key="lastName" />
@@ -71,10 +71,10 @@ const Aunction = () => {
                   <Link to='/detailProductAunction'> 
                     <Button>Detail</Button>
                   </Link>
-                  <Link to='/ruleAunction'> 
+                  <Link to='/ruleDeposit'> 
                     <Button>Deposit</Button>
                   </Link>
-                  <Link to=''> 
+                  <Link to='/ruleAunction'> 
                     <Button>Aunction</Button>
                   </Link>
                 </Space>
@@ -90,4 +90,4 @@ const Aunction = () => {
 
 };
 
-export default Aunction;
+export default AunctionList;

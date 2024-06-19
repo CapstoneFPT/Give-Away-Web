@@ -14,7 +14,11 @@ import Breadcrumb from "./components/Breadcrums/Breadcrumb";
 import DetailProductAunction from "./pages/DetailProductAunction";
 import RuleAunction from "./pages/RuleAunction";
 import PurchasePoints from "./pages/PurchasePoints";
-import Aunction from "./pages/AunctionList";
+
+import RuleDeposit from "./pages/RuleDeposit";
+import AunctionList from "./pages/AunctionList";
+import Aunction from "./pages/Aunction";
+import { Footer } from "antd/es/layout/layout";
 
 function App(): JSX.Element {
   return (
@@ -108,20 +112,11 @@ function App(): JSX.Element {
           />
 
           <Route
-            path="/aunctions"
+            path="/aunctionList"
             element={
               <>
                 <Navbar />
-                <Aunction />
-              </>
-            }
-          />
-          <Route
-            path="/aunctions"
-            element={
-              <>
-                <Navbar />
-                <Aunction/>
+                <AunctionList/>
               </>
             }
           />
@@ -144,11 +139,29 @@ function App(): JSX.Element {
             }
           />
           <Route
+            path="/ruleDeposit"
+            element={
+              <>
+                <Navbar />
+                <RuleDeposit/>
+              </>
+            }
+          />
+          <Route
             path="/purchasePoints"
             element={
               <>
                 <Navbar />
                 <PurchasePoints/>
+              </>
+            }
+          />
+          <Route
+            path="/aunction"
+            element={
+              <>
+                <Navbar />
+                <Aunction/>
               </>
             }
           />
