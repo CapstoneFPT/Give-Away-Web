@@ -19,6 +19,7 @@ import RuleDeposit from "./pages/RuleDeposit";
 import AunctionList from "./pages/AunctionList";
 import Aunction from "./pages/Aunction";
 import { Footer } from "antd/es/layout/layout";
+import Consign from "./pages/ConsignForm";
 
 function App(): JSX.Element {
   return (
@@ -30,7 +31,7 @@ function App(): JSX.Element {
             element={
               <>
                 <Navbar />
-                
+
                 <Shop />
               </>
             }
@@ -134,7 +135,7 @@ function App(): JSX.Element {
             element={
               <>
                 <Navbar />
-                <RuleAunction/>
+                <RuleAunction />
               </>
             }
           />
@@ -148,11 +149,19 @@ function App(): JSX.Element {
             }
           />
           <Route
-            path="/purchasePoints"
+            path="/consign"
             element={
               <>
                 <Navbar />
-                <PurchasePoints/>
+                <Consign />
+              </>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <>
+                <Navbar />
               </>
             }
           />
