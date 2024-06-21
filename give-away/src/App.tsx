@@ -13,9 +13,13 @@ import ForgotPassword from "./pages/ForgotPassword";
 import Breadcrumb from "./components/Breadcrums/Breadcrumb";
 import DetailProductAunction from "./pages/DetailProductAunction";
 import RuleAunction from "./pages/RuleAunction";
-import Aunction from "./pages/AunctionList";
+import PurchasePoints from "./pages/PurchasePoints";
+
+import RuleDeposit from "./pages/RuleDeposit";
+import AunctionList from "./pages/AunctionList";
+import Aunction from "./pages/Aunction";
+import { Footer } from "antd/es/layout/layout";
 import Consign from "./pages/ConsignForm";
-import Fund from "./pages/Fund";
 
 function App(): JSX.Element {
   return (
@@ -109,11 +113,11 @@ function App(): JSX.Element {
           />
 
           <Route
-            path="/aunctions"
+            path="/aunctionList"
             element={
               <>
                 <Navbar />
-                <Aunction />
+                <AunctionList/>
               </>
             }
           />
@@ -136,11 +140,11 @@ function App(): JSX.Element {
             }
           />
           <Route
-            path="/add-fund"
+            path="/ruleDeposit"
             element={
               <>
                 <Navbar />
-                <Fund />
+                <RuleDeposit/>
               </>
             }
           />
@@ -161,6 +165,16 @@ function App(): JSX.Element {
               </>
             }
           />
+          <Route
+            path="/aunction"
+            element={
+              <>
+                <Navbar />
+                <Aunction/>
+              </>
+            }
+          />
+
         </Routes>
       </BrowserRouter>
     </div>
