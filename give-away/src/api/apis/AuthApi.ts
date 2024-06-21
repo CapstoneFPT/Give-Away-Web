@@ -37,7 +37,12 @@ import {
     StringResultToJSON,
 } from '../models/index';
 
-export interface ApiAuthCreatestaffaccountPostRequest {
+export interface ApiAuthConfirmEmailGetRequest {
+    id?: string;
+    token?: string;
+}
+
+export interface ApiAuthCreateStaffAccountPostRequest {
     createStaffAccountRequest?: CreateStaffAccountRequest;
 }
 
@@ -54,6 +59,10 @@ export interface ApiAuthRegisterPostRequest {
     registerRequest?: RegisterRequest;
 }
 
+export interface ApiAuthResendVerifyEmailGetRequest {
+    email?: string;
+}
+
 export interface ApiAuthResetPasswordPutRequest {
     confirmtoken?: string;
 }
@@ -65,7 +74,47 @@ export class AuthApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiAuthCreatestaffaccountPostRaw(requestParameters: ApiAuthCreatestaffaccountPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AccountResponseResult>> {
+    async apiAuthConfirmEmailGetRaw(requestParameters: ApiAuthConfirmEmailGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<StringResult>> {
+        const queryParameters: any = {};
+
+        if (requestParameters['id'] != null) {
+            queryParameters['id'] = requestParameters['id'];
+        }
+
+        if (requestParameters['token'] != null) {
+            queryParameters['token'] = requestParameters['token'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("Bearer", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/api/auth/confirm-email`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => StringResultFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiAuthConfirmEmailGet(requestParameters: ApiAuthConfirmEmailGetRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<StringResult> {
+        const response = await this.apiAuthConfirmEmailGetRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiAuthCreateStaffAccountPostRaw(requestParameters: ApiAuthCreateStaffAccountPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AccountResponseResult>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -81,7 +130,7 @@ export class AuthApi extends runtime.BaseAPI {
             }
         }
         const response = await this.request({
-            path: `/api/auth/createstaffaccount`,
+            path: `/api/auth/create-staff-account`,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -93,8 +142,8 @@ export class AuthApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiAuthCreatestaffaccountPost(requestParameters: ApiAuthCreatestaffaccountPostRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AccountResponseResult> {
-        const response = await this.apiAuthCreatestaffaccountPostRaw(requestParameters, initOverrides);
+    async apiAuthCreateStaffAccountPost(requestParameters: ApiAuthCreateStaffAccountPostRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AccountResponseResult> {
+        const response = await this.apiAuthCreateStaffAccountPostRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -236,6 +285,42 @@ export class AuthApi extends runtime.BaseAPI {
      */
     async apiAuthRegisterPost(requestParameters: ApiAuthRegisterPostRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AccountResponseResult> {
         const response = await this.apiAuthRegisterPostRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiAuthResendVerifyEmailGetRaw(requestParameters: ApiAuthResendVerifyEmailGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<StringResult>> {
+        const queryParameters: any = {};
+
+        if (requestParameters['email'] != null) {
+            queryParameters['email'] = requestParameters['email'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("Bearer", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/api/auth/resend-verify-email`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => StringResultFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiAuthResendVerifyEmailGet(requestParameters: ApiAuthResendVerifyEmailGetRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<StringResult> {
+        const response = await this.apiAuthResendVerifyEmailGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

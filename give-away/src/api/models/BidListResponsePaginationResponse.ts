@@ -31,7 +31,7 @@ export interface BidListResponsePaginationResponse {
      * @type {number}
      * @memberof BidListResponsePaginationResponse
      */
-    page?: number;
+    pageNumber?: number;
     /**
      * 
      * @type {number}
@@ -93,7 +93,7 @@ export function BidListResponsePaginationResponseFromJSONTyped(json: any, ignore
     }
     return {
         
-        'page': json['page'] == null ? undefined : json['page'],
+        'pageNumber': json['pageNumber'] == null ? undefined : json['pageNumber'],
         'pageSize': json['pageSize'] == null ? undefined : json['pageSize'],
         'searchTerm': json['searchTerm'] == null ? undefined : json['searchTerm'],
         'filters': json['filters'] == null ? undefined : json['filters'],
@@ -110,7 +110,7 @@ export function BidListResponsePaginationResponseToJSON(value?: Omit<BidListResp
     }
     return {
         
-        'page': value['page'],
+        'pageNumber': value['pageNumber'],
         'pageSize': value['pageSize'],
         'searchTerm': value['searchTerm'],
         'filters': value['filters'],

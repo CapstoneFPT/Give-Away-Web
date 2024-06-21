@@ -21,6 +21,7 @@
   cursor: pointer;
   border-radius: 4px;
   height: 40px;
+  width: 20%;
 }
 
 .searchBar button:hover {

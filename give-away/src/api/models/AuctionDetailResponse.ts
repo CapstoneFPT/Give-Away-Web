@@ -19,6 +19,12 @@ import {
     ShopDetailResponseFromJSONTyped,
     ShopDetailResponseToJSON,
 } from './ShopDetailResponse';
+import type { AuctionFashionItemDetailResponse } from './AuctionFashionItemDetailResponse';
+import {
+    AuctionFashionItemDetailResponseFromJSON,
+    AuctionFashionItemDetailResponseFromJSONTyped,
+    AuctionFashionItemDetailResponseToJSON,
+} from './AuctionFashionItemDetailResponse';
 
 /**
  * 
@@ -82,10 +88,10 @@ export interface AuctionDetailResponse {
     shop?: ShopDetailResponse;
     /**
      * 
-     * @type {object}
+     * @type {AuctionFashionItemDetailResponse}
      * @memberof AuctionDetailResponse
      */
-    auctionItem?: object;
+    auctionFashionItem?: AuctionFashionItemDetailResponse;
 }
 
 /**
@@ -114,7 +120,7 @@ export function AuctionDetailResponseFromJSONTyped(json: any, ignoreDiscriminato
         'shopId': json['shopId'] == null ? undefined : json['shopId'],
         'auctionItemId': json['auctionItemId'] == null ? undefined : json['auctionItemId'],
         'shop': json['shop'] == null ? undefined : ShopDetailResponseFromJSON(json['shop']),
-        'auctionItem': json['auctionItem'] == null ? undefined : json['auctionItem'],
+        'auctionFashionItem': json['auctionFashionItem'] == null ? undefined : AuctionFashionItemDetailResponseFromJSON(json['auctionFashionItem']),
     };
 }
 
@@ -133,7 +139,7 @@ export function AuctionDetailResponseToJSON(value?: AuctionDetailResponse | null
         'shopId': value['shopId'],
         'auctionItemId': value['auctionItemId'],
         'shop': ShopDetailResponseToJSON(value['shop']),
-        'auctionItem': value['auctionItem'],
+        'auctionFashionItem': AuctionFashionItemDetailResponseToJSON(value['auctionFashionItem']),
     };
 }
 
