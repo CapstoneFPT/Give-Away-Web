@@ -67,6 +67,12 @@ export interface UpdateAuctionRequest {
      * @memberof UpdateAuctionRequest
      */
     depositFee?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateAuctionRequest
+     */
+    status?: string;
 }
 
 /**
@@ -94,6 +100,7 @@ export function UpdateAuctionRequestFromJSONTyped(json: any, ignoreDiscriminator
         'scheduleDate': json['scheduleDate'] == null ? undefined : (new Date(json['scheduleDate'])),
         'timeslotId': json['timeslotId'] == null ? undefined : json['timeslotId'],
         'depositFee': json['depositFee'] == null ? undefined : json['depositFee'],
+        'status': json['status'] == null ? undefined : json['status'],
     };
 }
 
@@ -111,6 +118,7 @@ export function UpdateAuctionRequestToJSON(value?: UpdateAuctionRequest | null):
         'scheduleDate': value['scheduleDate'] == null ? undefined : ((value['scheduleDate'] as any).toISOString().substring(0,10)),
         'timeslotId': value['timeslotId'],
         'depositFee': value['depositFee'],
+        'status': value['status'],
     };
 }
 

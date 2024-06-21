@@ -25,6 +25,24 @@ export interface LoginResponse {
      * @memberof LoginResponse
      */
     accessToken?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof LoginResponse
+     */
+    role?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof LoginResponse
+     */
+    id?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof LoginResponse
+     */
+    email?: string;
 }
 
 /**
@@ -45,6 +63,9 @@ export function LoginResponseFromJSONTyped(json: any, ignoreDiscriminator: boole
     return {
         
         'accessToken': json['accessToken'] == null ? undefined : json['accessToken'],
+        'role': json['role'] == null ? undefined : json['role'],
+        'id': json['id'] == null ? undefined : json['id'],
+        'email': json['email'] == null ? undefined : json['email'],
     };
 }
 
@@ -55,6 +76,9 @@ export function LoginResponseToJSON(value?: LoginResponse | null): any {
     return {
         
         'accessToken': value['accessToken'],
+        'role': value['role'],
+        'id': value['id'],
+        'email': value['email'],
     };
 }
 

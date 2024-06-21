@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import { useState } from "react";
 import { Button, Modal } from "antd";
 import {
@@ -9,16 +9,25 @@ import {
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { Input, Dropdown } from "antd";
-import { UserContext } from "../context/UserContext";
 import type { MenuProps } from "antd";
+
+import { ApiAuthLoginPostRequest, AuthApi } from "../api/apis/AuthApi";
+
 const Login = () => {
   const [isModalLoginOpen, setIsModalLoginOpen] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const { user, login, logout } = useContext(UserContext);
+  const [user, setUser] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  console.log(email);
+  console.log(user);
+  console.log(password);
   const handleLogout = () => {
-    logout();
+    setUser(false); // remove user state
     setDropdownVisible(false); // hide dropdown
+    setIsModalLoginOpen(false); // hide modal
   };
+
   const [isDropdownVisible, setDropdownVisible] = useState(false);
   const dropDownItems: MenuProps["items"] = [
     {
@@ -46,7 +55,6 @@ const Login = () => {
   const showModalLogin = () => {
     // your logic here
     setIsModalLoginOpen(true); // show modal
-    login({ id: 1, name: "John Doe" }); // call login function from UserContext with an object of type User
     setDropdownVisible(true); // show dropdown
   };
 
@@ -67,7 +75,30 @@ const Login = () => {
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
   };
+  const handleLogin = async () => {
+    try {
+      const request: ApiAuthLoginPostRequest = {
+        loginRequest: {
+          email: email,
+          password: password,
+        },
+      };
 
+      const authApi = new AuthApi();
+      const response = await authApi.apiAuthLoginPost(request);
+
+      if (response.resultStatus === "Success") {
+        console.log("Login successfully");
+
+        setUser(true); // set user state here
+        setIsModalLoginOpen(false); // hide modal after login
+      } else {
+        console.error("Failed to login");
+      }
+    } catch (error) {
+      console.error("An error occurred while trying to login:", error);
+    }
+  };
   const styles: { [key: string]: React.CSSProperties } = {
     buttonLogin: {
       backgroundColor: "#000000",
@@ -129,7 +160,6 @@ const Login = () => {
     <>
       {user && isDropdownVisible ? (
         <div style={styles.container}>
-          <p>Welcome, {user.name}!</p>
           <Dropdown menu={{ items: dropDownItems }}>
             <Button type="primary" style={styles.buttonLogin}>
               Menu
@@ -167,7 +197,9 @@ const Login = () => {
           <div style={styles.inputContainer}>
             <Input
               size="large"
-              placeholder="Username"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               prefix={<UserOutlined />}
             />
           </div>
@@ -176,6 +208,8 @@ const Login = () => {
               type={isPasswordVisible ? "text" : "password"}
               size="large"
               placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               prefix={
                 isPasswordVisible ? (
                   <EyeInvisibleOutlined onClick={togglePasswordVisibility} />
@@ -186,7 +220,10 @@ const Login = () => {
             />
           </div>
           <div style={{ textAlign: "center" }}>
-            <Button style={styles.buttonLoginModalLayout}> Login </Button>
+            <Button style={styles.buttonLoginModalLayout} onClick={handleLogin}>
+              {" "}
+              Login{" "}
+            </Button>
           </div>
           <div style={{ textAlign: "center", marginTop: "30px" }}>
             <p>-------Or-------</p>
