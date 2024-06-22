@@ -20,6 +20,7 @@ interface ShopContextValue {
   cartItems: Cart;
   addToCart: (itemId: number) => void;
   removeFromCart: (itemId: number) => void;
+  updateCartItems: (itemId: number, quantity: number) => void;
 }
 
 export const ShopContext = createContext<ShopContextValue | null>(null);
@@ -44,12 +45,16 @@ const ShopContextProvider: React.FC<{ children: React.ReactNode }> = (
   const removeFromCart = (itemId: number) => {
     setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] - 1 }));
   };
-
+  const updateCartItems = (itemId: number, quantity: number) => {
+    // Add this function
+    setCartItems((prev) => ({ ...prev, [itemId]: quantity }));
+  };
   const contextValue: ShopContextValue = {
     all_product,
     cartItems,
     addToCart,
     removeFromCart,
+    updateCartItems,
   };
 
   return (

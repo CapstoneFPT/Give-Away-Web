@@ -1,6 +1,7 @@
 import React, { PropsWithChildren } from "react";
 import "./Item.css";
 import { Link } from "react-router-dom";
+import { Button } from "antd";
 
 interface ItemProps {
   id: number;
@@ -21,7 +22,7 @@ const Item = (props: PropsWithChildren<ItemProps>) => {
       <p>{props.name}</p>
       <div className="item-prices">
         <div className="item-price-new">{props.new_price}</div>
-        <div className="item-price-old">{props.old_price}</div>
+        <Button className="item-price-old">Add</Button>
       </div>
     </div>
   );

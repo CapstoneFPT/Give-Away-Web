@@ -13,81 +13,81 @@
  */
 
 import { mapValues } from '../runtime';
-import type { AuctionListResponse } from './AuctionListResponse';
+import type { FashionItemDetailResponse } from './FashionItemDetailResponse';
 import {
-    AuctionListResponseFromJSON,
-    AuctionListResponseFromJSONTyped,
-    AuctionListResponseToJSON,
-} from './AuctionListResponse';
+    FashionItemDetailResponseFromJSON,
+    FashionItemDetailResponseFromJSONTyped,
+    FashionItemDetailResponseToJSON,
+} from './FashionItemDetailResponse';
 
 /**
  * 
  * @export
- * @interface AuctionListResponsePaginationResponse
+ * @interface FashionItemDetailResponsePaginationResponse
  */
-export interface AuctionListResponsePaginationResponse {
+export interface FashionItemDetailResponsePaginationResponse {
     /**
      * 
      * @type {number}
-     * @memberof AuctionListResponsePaginationResponse
+     * @memberof FashionItemDetailResponsePaginationResponse
      */
     pageNumber?: number;
     /**
      * 
      * @type {number}
-     * @memberof AuctionListResponsePaginationResponse
+     * @memberof FashionItemDetailResponsePaginationResponse
      */
     pageSize?: number;
     /**
      * 
      * @type {string}
-     * @memberof AuctionListResponsePaginationResponse
+     * @memberof FashionItemDetailResponsePaginationResponse
      */
     searchTerm?: string;
     /**
      * 
      * @type {Array<string>}
-     * @memberof AuctionListResponsePaginationResponse
+     * @memberof FashionItemDetailResponsePaginationResponse
      */
     filters?: Array<string>;
     /**
      * 
      * @type {string}
-     * @memberof AuctionListResponsePaginationResponse
+     * @memberof FashionItemDetailResponsePaginationResponse
      */
     orderBy?: string;
     /**
      * 
      * @type {number}
-     * @memberof AuctionListResponsePaginationResponse
+     * @memberof FashionItemDetailResponsePaginationResponse
      */
     totalCount?: number;
     /**
      * 
      * @type {number}
-     * @memberof AuctionListResponsePaginationResponse
+     * @memberof FashionItemDetailResponsePaginationResponse
      */
     readonly totalPages?: number;
     /**
      * 
-     * @type {Array<AuctionListResponse>}
-     * @memberof AuctionListResponsePaginationResponse
+     * @type {Array<FashionItemDetailResponse>}
+     * @memberof FashionItemDetailResponsePaginationResponse
      */
-    items?: Array<AuctionListResponse>;
+    items?: Array<FashionItemDetailResponse>;
 }
 
 /**
- * Check if a given object implements the AuctionListResponsePaginationResponse interface.
+ * Check if a given object implements the FashionItemDetailResponsePaginationResponse interface.
  */
-export function instanceOfAuctionListResponsePaginationResponse(value: object): value is AuctionListResponsePaginationResponse {
+export function instanceOfFashionItemDetailResponsePaginationResponse(value: object): value is FashionItemDetailResponsePaginationResponse {
     return true;
 }
 
-export function AuctionListResponsePaginationResponseFromJSON(json: any): AuctionListResponsePaginationResponse {
-    return AuctionListResponsePaginationResponseFromJSONTyped(json, false);
+export function FashionItemDetailResponsePaginationResponseFromJSON(json: any): FashionItemDetailResponsePaginationResponse {
+    return FashionItemDetailResponsePaginationResponseFromJSONTyped(json, false);
 }
 
-export function AuctionListResponsePaginationResponseFromJSONTyped(json: any, ignoreDiscriminator: boolean): AuctionListResponsePaginationResponse {
+export function FashionItemDetailResponsePaginationResponseFromJSONTyped(json: any, ignoreDiscriminator: boolean): FashionItemDetailResponsePaginationResponse {
     if (json == null) {
         return json;
     }
@@ -100,11 +100,11 @@ export function AuctionListResponsePaginationResponseFromJSONTyped(json: any, ig
         'orderBy': json['orderBy'] == null ? undefined : json['orderBy'],
         'totalCount': json['totalCount'] == null ? undefined : json['totalCount'],
         'totalPages': json['totalPages'] == null ? undefined : json['totalPages'],
-        'items': json['items'] == null ? undefined : ((json['items'] as Array<any>).map(AuctionListResponseFromJSON)),
+        'items': json['items'] == null ? undefined : ((json['items'] as Array<any>).map(FashionItemDetailResponseFromJSON)),
     };
 }
 
-export function AuctionListResponsePaginationResponseToJSON(value?: Omit<AuctionListResponsePaginationResponse, 'totalPages'> | null): any {
+export function FashionItemDetailResponsePaginationResponseToJSON(value?: Omit<FashionItemDetailResponsePaginationResponse, 'totalPages'> | null): any {
     if (value == null) {
         return value;
     }
@@ -116,7 +116,7 @@ export function AuctionListResponsePaginationResponseToJSON(value?: Omit<Auction
         'filters': value['filters'],
         'orderBy': value['orderBy'],
         'totalCount': value['totalCount'],
-        'items': value['items'] == null ? undefined : ((value['items'] as Array<any>).map(AuctionListResponseToJSON)),
+        'items': value['items'] == null ? undefined : ((value['items'] as Array<any>).map(FashionItemDetailResponseToJSON)),
     };
 }
 

@@ -1,7 +1,6 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import "./Breadcrumb.css";
-import arrow_icon from "../Assets/arrow.png";
 
 const Breadcrumb = () => {
   const location = useLocation();
@@ -9,16 +8,19 @@ const Breadcrumb = () => {
 
   return (
     <div className="breadcrumb">
-      <Link to="/">Home</Link>
+      <Link style={{ textDecoration: "none" }} to="/">
+        Home /
+      </Link>
       {pathnames.map((value, index) => {
         const to = `/${pathnames.slice(0, index + 1).join("/")}`;
         const decodedValue = decodeURIComponent(value);
 
         return (
           <span key={index}>
-            {/* prettier-ignore */} <img src={arrow_icon} alt="" />
-            &nbsp; &nbsp; &nbsp;
-            <Link to={to}>{decodedValue}</Link>
+            &nbsp;
+            <Link style={{ textDecoration: "none" }} to={to}>
+              {decodedValue.charAt(0).toUpperCase() + decodedValue.slice(1)}
+            </Link>
           </span>
         );
       })}

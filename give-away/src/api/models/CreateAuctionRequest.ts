@@ -27,18 +27,6 @@ export interface CreateAuctionRequest {
     title?: string;
     /**
      * 
-     * @type {Date}
-     * @memberof CreateAuctionRequest
-     */
-    startDate?: Date;
-    /**
-     * 
-     * @type {Date}
-     * @memberof CreateAuctionRequest
-     */
-    endDate?: Date;
-    /**
-     * 
      * @type {string}
      * @memberof CreateAuctionRequest
      */
@@ -87,8 +75,6 @@ export function CreateAuctionRequestFromJSONTyped(json: any, ignoreDiscriminator
     return {
         
         'title': json['title'] == null ? undefined : json['title'],
-        'startDate': json['startDate'] == null ? undefined : (new Date(json['startDate'])),
-        'endDate': json['endDate'] == null ? undefined : (new Date(json['endDate'])),
         'shopId': json['shopId'] == null ? undefined : json['shopId'],
         'auctionItemId': json['auctionItemId'] == null ? undefined : json['auctionItemId'],
         'scheduleDate': json['scheduleDate'] == null ? undefined : (new Date(json['scheduleDate'])),
@@ -104,8 +90,6 @@ export function CreateAuctionRequestToJSON(value?: CreateAuctionRequest | null):
     return {
         
         'title': value['title'],
-        'startDate': value['startDate'] == null ? undefined : ((value['startDate']).toISOString()),
-        'endDate': value['endDate'] == null ? undefined : ((value['endDate']).toISOString()),
         'shopId': value['shopId'],
         'auctionItemId': value['auctionItemId'],
         'scheduleDate': value['scheduleDate'] == null ? undefined : ((value['scheduleDate']).toISOString().substring(0,10)),

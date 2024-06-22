@@ -24,6 +24,7 @@ import type {
   CreateAuctionDepositRequest,
   CreateAuctionRequest,
   CreateBidRequest,
+  ProblemDetails,
   UpdateAuctionRequest,
   UpdateBidRequest,
 } from '../models/index';
@@ -46,11 +47,19 @@ import {
     CreateAuctionRequestToJSON,
     CreateBidRequestFromJSON,
     CreateBidRequestToJSON,
+    ProblemDetailsFromJSON,
+    ProblemDetailsToJSON,
     UpdateAuctionRequestFromJSON,
     UpdateAuctionRequestToJSON,
     UpdateBidRequestFromJSON,
     UpdateBidRequestToJSON,
 } from '../models/index';
+
+export interface ApiAuctionsGetRequest {
+    searchTerm?: string;
+    pageNumber?: number;
+    pageSize?: number;
+}
 
 export interface ApiAuctionsIdBidsBidIdDeleteRequest {
     id: string;
@@ -126,8 +135,20 @@ export class AuctionApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiAuctionsGetRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AuctionListResponsePaginationResponse>> {
+    async apiAuctionsGetRaw(requestParameters: ApiAuctionsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AuctionListResponsePaginationResponse>> {
         const queryParameters: any = {};
+
+        if (requestParameters['searchTerm'] != null) {
+            queryParameters['SearchTerm'] = requestParameters['searchTerm'];
+        }
+
+        if (requestParameters['pageNumber'] != null) {
+            queryParameters['PageNumber'] = requestParameters['pageNumber'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['PageSize'] = requestParameters['pageSize'];
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -151,8 +172,8 @@ export class AuctionApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiAuctionsGet(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AuctionListResponsePaginationResponse> {
-        const response = await this.apiAuctionsGetRaw(initOverrides);
+    async apiAuctionsGet(requestParameters: ApiAuctionsGetRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AuctionListResponsePaginationResponse> {
+        const response = await this.apiAuctionsGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

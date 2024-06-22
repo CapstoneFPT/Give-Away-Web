@@ -1,8 +1,36 @@
 .breadcrumb {
+  padding: 10px 0;
+  list-style: none;
+  background: #f8f8f8;
+  padding-left: 40px;
+  font-size: 16px;
+  border-radius: 4px;
   display: flex;
-  align-items: center;
+  flex-wrap: wrap;
 }
 
 .breadcrumb span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+}
+
+.breadcrumb span::after {
+  content: "/";
   margin: 0 10px;
+  color: #666;
+}
+
+.breadcrumb span:last-child::after {
+  content: "";
+}
+
+.breadcrumb a {
+  color: #666;
+  text-decoration: none;
+}
+
+.breadcrumb a:hover {
+  color: #111;
 }
