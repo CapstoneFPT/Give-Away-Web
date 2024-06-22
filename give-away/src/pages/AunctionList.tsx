@@ -34,7 +34,7 @@ const AunctionList = () => {
     <>
       
         <div style={{width:'90%',marginLeft:'80px'}}>
-        <h1 style={{textAlign:'center', margin:'30px'}}>Aunction List</h1>
+        <h1 style={{textAlign:'center', margin:'30px'}}>Auction List</h1>
           <Table pagination={false} dataSource={data}>
             
               <Column title="Store Name" dataIndex="firstName" key="firstName" />
@@ -75,7 +75,7 @@ const AunctionList = () => {
                     <Button>Deposit</Button>
                   </Link>
                   <Link to='/ruleAunction'> 
-                    <Button>Aunction</Button>
+                    <Button>Auction</Button>
                   </Link>
                 </Space>
               )}

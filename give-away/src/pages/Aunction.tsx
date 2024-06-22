@@ -63,7 +63,7 @@ const Auction: React.FC = () => {
 
   return (
     <Card>
-      <h1 style={{  textAlign: 'center', fontSize: '40px' }}>Auction</h1>
+      <Card><h1 style={{  textAlign: 'center', fontSize: '40px' }}>Auction</h1>
       <Row gutter={[16, 16]} style={{ margin: '10px' }}>
         <Col span={4}>
           <Row gutter={[10, 8]}>
@@ -149,6 +149,7 @@ const Auction: React.FC = () => {
         </Card>
       </Row>
     <Footer/>
+    </Card>
       
     </Card>
   );

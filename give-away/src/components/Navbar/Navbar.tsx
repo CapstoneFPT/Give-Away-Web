@@ -56,7 +56,7 @@ const Navbar = () => {
               }}
             >
               <Link to="/aunctionList" className="no-underline">
-            Aunctions
+            Auctions
           </Link>
               {menu === "aunctionList" ? <hr /> : <></>}
             </li>
