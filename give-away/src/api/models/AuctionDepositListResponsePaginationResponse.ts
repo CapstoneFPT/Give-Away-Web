@@ -70,6 +70,18 @@ export interface AuctionDepositListResponsePaginationResponse {
     readonly totalPages?: number;
     /**
      * 
+     * @type {boolean}
+     * @memberof AuctionDepositListResponsePaginationResponse
+     */
+    readonly hasNext?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof AuctionDepositListResponsePaginationResponse
+     */
+    readonly hasPrevious?: boolean;
+    /**
+     * 
      * @type {Array<AuctionDepositListResponse>}
      * @memberof AuctionDepositListResponsePaginationResponse
      */
@@ -100,11 +112,13 @@ export function AuctionDepositListResponsePaginationResponseFromJSONTyped(json: 
         'orderBy': json['orderBy'] == null ? undefined : json['orderBy'],
         'totalCount': json['totalCount'] == null ? undefined : json['totalCount'],
         'totalPages': json['totalPages'] == null ? undefined : json['totalPages'],
+        'hasNext': json['hasNext'] == null ? undefined : json['hasNext'],
+        'hasPrevious': json['hasPrevious'] == null ? undefined : json['hasPrevious'],
         'items': json['items'] == null ? undefined : ((json['items'] as Array<any>).map(AuctionDepositListResponseFromJSON)),
     };
 }
 
-export function AuctionDepositListResponsePaginationResponseToJSON(value?: Omit<AuctionDepositListResponsePaginationResponse, 'totalPages'> | null): any {
+export function AuctionDepositListResponsePaginationResponseToJSON(value?: Omit<AuctionDepositListResponsePaginationResponse, 'totalPages'|'hasNext'|'hasPrevious'> | null): any {
     if (value == null) {
         return value;
     }

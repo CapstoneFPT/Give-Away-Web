@@ -13,6 +13,13 @@
  */
 
 import { mapValues } from '../runtime';
+import type { AuctionStatus } from './AuctionStatus';
+import {
+    AuctionStatusFromJSON,
+    AuctionStatusFromJSONTyped,
+    AuctionStatusToJSON,
+} from './AuctionStatus';
+
 /**
  * 
  * @export
@@ -51,10 +58,10 @@ export interface AuctionListResponse {
     depositFee?: number;
     /**
      * 
-     * @type {string}
+     * @type {AuctionStatus}
      * @memberof AuctionListResponse
      */
-    status?: string;
+    status?: AuctionStatus;
     /**
      * 
      * @type {string}
@@ -91,7 +98,7 @@ export function AuctionListResponseFromJSONTyped(json: any, ignoreDiscriminator:
         'startDate': json['startDate'] == null ? undefined : (new Date(json['startDate'])),
         'endDate': json['endDate'] == null ? undefined : (new Date(json['endDate'])),
         'depositFee': json['depositFee'] == null ? undefined : json['depositFee'],
-        'status': json['status'] == null ? undefined : json['status'],
+        'status': json['status'] == null ? undefined : AuctionStatusFromJSON(json['status']),
         'shopId': json['shopId'] == null ? undefined : json['shopId'],
         'auctionItemId': json['auctionItemId'] == null ? undefined : json['auctionItemId'],
     };
@@ -108,7 +115,7 @@ export function AuctionListResponseToJSON(value?: AuctionListResponse | null): a
         'startDate': value['startDate'] == null ? undefined : ((value['startDate']).toISOString()),
         'endDate': value['endDate'] == null ? undefined : ((value['endDate']).toISOString()),
         'depositFee': value['depositFee'],
-        'status': value['status'],
+        'status': AuctionStatusToJSON(value['status']),
         'shopId': value['shopId'],
         'auctionItemId': value['auctionItemId'],
     };

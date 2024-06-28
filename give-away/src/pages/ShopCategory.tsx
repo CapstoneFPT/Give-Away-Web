@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import "./CSS/ShopCategory.css";
 import { ShopContext } from "../context/ShopContext";
 import Item from "../components/Item/Item";
-import Filter from "../components/Filter/Filter";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -15,7 +15,7 @@ const ShopCategory: React.FC<Props> = (props) => {
   const clothTypes: string[] = ["t-shirt", "jeans", "jacket"];
   const [filteredProducts, setFilteredProducts] = useState(all_product);
   const [filtersVisible, setFiltersVisible] = useState(true);
-
+  const history = useNavigate();
   const toggleFilters = () => {
     setFiltersVisible(!filtersVisible);
   };
@@ -57,16 +57,16 @@ const ShopCategory: React.FC<Props> = (props) => {
         <div
           className="filter-bar"
           style={{ display: filtersVisible ? "block" : "none" }}
-        >
-          <Filter categories={clothTypes} onFilterChange={onFilterChange} />
-        </div>
+        ></div>
         <div className="shopcategory-products">
           {filteredProducts.map((item: any) => {
             if (props.category === item.category) {
               return (
-                <Link
+                <div
                   key={item.id}
-                  to={`/${item.category}/${item.clothType}/${item.name}`}
+                  onClick={() =>
+                    history(`/${item.category}/${item.clothType}/${item.name}`)
+                  }
                   style={{ textDecoration: "none" }}
                 >
                   <Item
@@ -78,7 +78,7 @@ const ShopCategory: React.FC<Props> = (props) => {
                     new_price={item.new_price}
                     old_price={item.old_price}
                   />
-                </Link>
+                </div>
               );
             } else {
               return null;

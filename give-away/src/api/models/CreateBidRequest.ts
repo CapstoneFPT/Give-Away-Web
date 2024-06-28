@@ -31,12 +31,6 @@ export interface CreateBidRequest {
      * @memberof CreateBidRequest
      */
     amount?: number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof CreateBidRequest
-     */
-    isWinning?: boolean;
 }
 
 /**
@@ -58,7 +52,6 @@ export function CreateBidRequestFromJSONTyped(json: any, ignoreDiscriminator: bo
         
         'memberId': json['memberId'] == null ? undefined : json['memberId'],
         'amount': json['amount'] == null ? undefined : json['amount'],
-        'isWinning': json['isWinning'] == null ? undefined : json['isWinning'],
     };
 }
 
@@ -70,7 +63,6 @@ export function CreateBidRequestToJSON(value?: CreateBidRequest | null): any {
         
         'memberId': value['memberId'],
         'amount': value['amount'],
-        'isWinning': value['isWinning'],
     };
 }
 

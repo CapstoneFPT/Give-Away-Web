@@ -13,6 +13,18 @@
  */
 
 import { mapValues } from '../runtime';
+import type { FashionItemStatus } from './FashionItemStatus';
+import {
+    FashionItemStatusFromJSON,
+    FashionItemStatusFromJSONTyped,
+    FashionItemStatusToJSON,
+} from './FashionItemStatus';
+import type { FashionItemType } from './FashionItemType';
+import {
+    FashionItemTypeFromJSON,
+    FashionItemTypeFromJSONTyped,
+    FashionItemTypeToJSON,
+} from './FashionItemType';
 import type { ShopDetailResponse } from './ShopDetailResponse';
 import {
     ShopDetailResponseFromJSON,
@@ -34,10 +46,10 @@ export interface AuctionFashionItemDetailResponse {
     itemId?: string;
     /**
      * 
-     * @type {string}
+     * @type {FashionItemType}
      * @memberof AuctionFashionItemDetailResponse
      */
-    type?: string;
+    type?: FashionItemType;
     /**
      * 
      * @type {number}
@@ -88,10 +100,10 @@ export interface AuctionFashionItemDetailResponse {
     initialPrice?: number;
     /**
      * 
-     * @type {string}
+     * @type {FashionItemStatus}
      * @memberof AuctionFashionItemDetailResponse
      */
-    auctionItemStatus?: string;
+    auctionItemStatus?: FashionItemStatus;
     /**
      * 
      * @type {string}
@@ -130,7 +142,7 @@ export function AuctionFashionItemDetailResponseFromJSONTyped(json: any, ignoreD
     return {
         
         'itemId': json['itemId'] == null ? undefined : json['itemId'],
-        'type': json['type'] == null ? undefined : json['type'],
+        'type': json['type'] == null ? undefined : FashionItemTypeFromJSON(json['type']),
         'sellingPrice': json['sellingPrice'] == null ? undefined : json['sellingPrice'],
         'name': json['name'] == null ? undefined : json['name'],
         'note': json['note'] == null ? undefined : json['note'],
@@ -139,7 +151,7 @@ export function AuctionFashionItemDetailResponseFromJSONTyped(json: any, ignoreD
         'condition': json['condition'] == null ? undefined : json['condition'],
         'duration': json['duration'] == null ? undefined : json['duration'],
         'initialPrice': json['initialPrice'] == null ? undefined : json['initialPrice'],
-        'auctionItemStatus': json['auctionItemStatus'] == null ? undefined : json['auctionItemStatus'],
+        'auctionItemStatus': json['auctionItemStatus'] == null ? undefined : FashionItemStatusFromJSON(json['auctionItemStatus']),
         'shopId': json['shopId'] == null ? undefined : json['shopId'],
         'categoryId': json['categoryId'] == null ? undefined : json['categoryId'],
         'shop': json['shop'] == null ? undefined : ShopDetailResponseFromJSON(json['shop']),
@@ -153,7 +165,7 @@ export function AuctionFashionItemDetailResponseToJSON(value?: AuctionFashionIte
     return {
         
         'itemId': value['itemId'],
-        'type': value['type'],
+        'type': FashionItemTypeToJSON(value['type']),
         'sellingPrice': value['sellingPrice'],
         'name': value['name'],
         'note': value['note'],
@@ -162,7 +174,7 @@ export function AuctionFashionItemDetailResponseToJSON(value?: AuctionFashionIte
         'condition': value['condition'],
         'duration': value['duration'],
         'initialPrice': value['initialPrice'],
-        'auctionItemStatus': value['auctionItemStatus'],
+        'auctionItemStatus': FashionItemStatusToJSON(value['auctionItemStatus']),
         'shopId': value['shopId'],
         'categoryId': value['categoryId'],
         'shop': ShopDetailResponseToJSON(value['shop']),
