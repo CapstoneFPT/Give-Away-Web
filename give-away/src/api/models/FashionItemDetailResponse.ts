@@ -13,6 +13,19 @@
  */
 
 import { mapValues } from '../runtime';
+import type { FashionItemStatus } from './FashionItemStatus';
+import {
+    FashionItemStatusFromJSON,
+    FashionItemStatusFromJSONTyped,
+    FashionItemStatusToJSON,
+} from './FashionItemStatus';
+import type { FashionItemType } from './FashionItemType';
+import {
+    FashionItemTypeFromJSON,
+    FashionItemTypeFromJSONTyped,
+    FashionItemTypeToJSON,
+} from './FashionItemType';
+
 /**
  * 
  * @export
@@ -27,10 +40,10 @@ export interface FashionItemDetailResponse {
     itemId?: string;
     /**
      * 
-     * @type {string}
+     * @type {FashionItemType}
      * @memberof FashionItemDetailResponse
      */
-    type?: string;
+    type?: FashionItemType;
     /**
      * 
      * @type {number}
@@ -72,19 +85,25 @@ export interface FashionItemDetailResponse {
      * @type {number}
      * @memberof FashionItemDetailResponse
      */
-    duration?: number;
+    consignDuration?: number;
     /**
      * 
-     * @type {string}
+     * @type {FashionItemStatus}
      * @memberof FashionItemDetailResponse
      */
-    status?: string;
+    status?: FashionItemStatus;
     /**
      * 
      * @type {string}
      * @memberof FashionItemDetailResponse
      */
     shopAddress?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof FashionItemDetailResponse
+     */
+    shopId?: string;
     /**
      * 
      * @type {Date}
@@ -129,16 +148,17 @@ export function FashionItemDetailResponseFromJSONTyped(json: any, ignoreDiscrimi
     return {
         
         'itemId': json['itemId'] == null ? undefined : json['itemId'],
-        'type': json['type'] == null ? undefined : json['type'],
+        'type': json['type'] == null ? undefined : FashionItemTypeFromJSON(json['type']),
         'sellingPrice': json['sellingPrice'] == null ? undefined : json['sellingPrice'],
         'name': json['name'] == null ? undefined : json['name'],
         'note': json['note'] == null ? undefined : json['note'],
         'quantity': json['quantity'] == null ? undefined : json['quantity'],
         'value': json['value'] == null ? undefined : json['value'],
         'condition': json['condition'] == null ? undefined : json['condition'],
-        'duration': json['duration'] == null ? undefined : json['duration'],
-        'status': json['status'] == null ? undefined : json['status'],
+        'consignDuration': json['consignDuration'] == null ? undefined : json['consignDuration'],
+        'status': json['status'] == null ? undefined : FashionItemStatusFromJSON(json['status']),
         'shopAddress': json['shopAddress'] == null ? undefined : json['shopAddress'],
+        'shopId': json['shopId'] == null ? undefined : json['shopId'],
         'startDate': json['startDate'] == null ? undefined : (new Date(json['startDate'])),
         'endDate': json['endDate'] == null ? undefined : (new Date(json['endDate'])),
         'consigner': json['consigner'] == null ? undefined : json['consigner'],
@@ -153,16 +173,17 @@ export function FashionItemDetailResponseToJSON(value?: FashionItemDetailRespons
     return {
         
         'itemId': value['itemId'],
-        'type': value['type'],
+        'type': FashionItemTypeToJSON(value['type']),
         'sellingPrice': value['sellingPrice'],
         'name': value['name'],
         'note': value['note'],
         'quantity': value['quantity'],
         'value': value['value'],
         'condition': value['condition'],
-        'duration': value['duration'],
-        'status': value['status'],
+        'consignDuration': value['consignDuration'],
+        'status': FashionItemStatusToJSON(value['status']),
         'shopAddress': value['shopAddress'],
+        'shopId': value['shopId'],
         'startDate': value['startDate'] == null ? undefined : ((value['startDate'] as any).toISOString()),
         'endDate': value['endDate'] == null ? undefined : ((value['endDate'] as any).toISOString()),
         'consigner': value['consigner'],

@@ -55,6 +55,12 @@ export interface CreateStaffAccountRequest {
      * @memberof CreateStaffAccountRequest
      */
     address: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateStaffAccountRequest
+     */
+    shopPhone: string;
 }
 
 /**
@@ -67,6 +73,7 @@ export function instanceOfCreateStaffAccountRequest(value: object): value is Cre
     if (!('password' in value) || value['password'] === undefined) return false;
     if (!('confirmPassword' in value) || value['confirmPassword'] === undefined) return false;
     if (!('address' in value) || value['address'] === undefined) return false;
+    if (!('shopPhone' in value) || value['shopPhone'] === undefined) return false;
     return true;
 }
 
@@ -86,6 +93,7 @@ export function CreateStaffAccountRequestFromJSONTyped(json: any, ignoreDiscrimi
         'password': json['password'],
         'confirmPassword': json['confirmPassword'],
         'address': json['address'],
+        'shopPhone': json['shopPhone'],
     };
 }
 
@@ -101,6 +109,7 @@ export function CreateStaffAccountRequestToJSON(value?: CreateStaffAccountReques
         'password': value['password'],
         'confirmPassword': value['confirmPassword'],
         'address': value['address'],
+        'shopPhone': value['shopPhone'],
     };
 }
 

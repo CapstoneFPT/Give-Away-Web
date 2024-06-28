@@ -13,93 +13,93 @@
  */
 
 import { mapValues } from '../runtime';
-import type { BidListResponse } from './BidListResponse';
+import type { OrderResponse } from './OrderResponse';
 import {
-    BidListResponseFromJSON,
-    BidListResponseFromJSONTyped,
-    BidListResponseToJSON,
-} from './BidListResponse';
+    OrderResponseFromJSON,
+    OrderResponseFromJSONTyped,
+    OrderResponseToJSON,
+} from './OrderResponse';
 
 /**
  * 
  * @export
- * @interface BidListResponsePaginationResponse
+ * @interface OrderResponsePaginationResponse
  */
-export interface BidListResponsePaginationResponse {
+export interface OrderResponsePaginationResponse {
     /**
      * 
      * @type {number}
-     * @memberof BidListResponsePaginationResponse
+     * @memberof OrderResponsePaginationResponse
      */
     pageNumber?: number;
     /**
      * 
      * @type {number}
-     * @memberof BidListResponsePaginationResponse
+     * @memberof OrderResponsePaginationResponse
      */
     pageSize?: number;
     /**
      * 
      * @type {string}
-     * @memberof BidListResponsePaginationResponse
+     * @memberof OrderResponsePaginationResponse
      */
     searchTerm?: string;
     /**
      * 
      * @type {Array<string>}
-     * @memberof BidListResponsePaginationResponse
+     * @memberof OrderResponsePaginationResponse
      */
     filters?: Array<string>;
     /**
      * 
      * @type {string}
-     * @memberof BidListResponsePaginationResponse
+     * @memberof OrderResponsePaginationResponse
      */
     orderBy?: string;
     /**
      * 
      * @type {number}
-     * @memberof BidListResponsePaginationResponse
+     * @memberof OrderResponsePaginationResponse
      */
     totalCount?: number;
     /**
      * 
      * @type {number}
-     * @memberof BidListResponsePaginationResponse
+     * @memberof OrderResponsePaginationResponse
      */
     readonly totalPages?: number;
     /**
      * 
      * @type {boolean}
-     * @memberof BidListResponsePaginationResponse
+     * @memberof OrderResponsePaginationResponse
      */
     readonly hasNext?: boolean;
     /**
      * 
      * @type {boolean}
-     * @memberof BidListResponsePaginationResponse
+     * @memberof OrderResponsePaginationResponse
      */
     readonly hasPrevious?: boolean;
     /**
      * 
-     * @type {Array<BidListResponse>}
-     * @memberof BidListResponsePaginationResponse
+     * @type {Array<OrderResponse>}
+     * @memberof OrderResponsePaginationResponse
      */
-    items?: Array<BidListResponse>;
+    items?: Array<OrderResponse>;
 }
 
 /**
- * Check if a given object implements the BidListResponsePaginationResponse interface.
+ * Check if a given object implements the OrderResponsePaginationResponse interface.
  */
-export function instanceOfBidListResponsePaginationResponse(value: object): value is BidListResponsePaginationResponse {
+export function instanceOfOrderResponsePaginationResponse(value: object): value is OrderResponsePaginationResponse {
     return true;
 }
 
-export function BidListResponsePaginationResponseFromJSON(json: any): BidListResponsePaginationResponse {
-    return BidListResponsePaginationResponseFromJSONTyped(json, false);
+export function OrderResponsePaginationResponseFromJSON(json: any): OrderResponsePaginationResponse {
+    return OrderResponsePaginationResponseFromJSONTyped(json, false);
 }
 
-export function BidListResponsePaginationResponseFromJSONTyped(json: any, ignoreDiscriminator: boolean): BidListResponsePaginationResponse {
+export function OrderResponsePaginationResponseFromJSONTyped(json: any, ignoreDiscriminator: boolean): OrderResponsePaginationResponse {
     if (json == null) {
         return json;
     }
@@ -114,11 +114,11 @@ export function BidListResponsePaginationResponseFromJSONTyped(json: any, ignore
         'totalPages': json['totalPages'] == null ? undefined : json['totalPages'],
         'hasNext': json['hasNext'] == null ? undefined : json['hasNext'],
         'hasPrevious': json['hasPrevious'] == null ? undefined : json['hasPrevious'],
-        'items': json['items'] == null ? undefined : ((json['items'] as Array<any>).map(BidListResponseFromJSON)),
+        'items': json['items'] == null ? undefined : ((json['items'] as Array<any>).map(OrderResponseFromJSON)),
     };
 }
 
-export function BidListResponsePaginationResponseToJSON(value?: Omit<BidListResponsePaginationResponse, 'totalPages'|'hasNext'|'hasPrevious'> | null): any {
+export function OrderResponsePaginationResponseToJSON(value?: Omit<OrderResponsePaginationResponse, 'totalPages'|'hasNext'|'hasPrevious'> | null): any {
     if (value == null) {
         return value;
     }
@@ -130,7 +130,7 @@ export function BidListResponsePaginationResponseToJSON(value?: Omit<BidListResp
         'filters': value['filters'],
         'orderBy': value['orderBy'],
         'totalCount': value['totalCount'],
-        'items': value['items'] == null ? undefined : ((value['items'] as Array<any>).map(BidListResponseToJSON)),
+        'items': value['items'] == null ? undefined : ((value['items'] as Array<any>).map(OrderResponseToJSON)),
     };
 }
 
