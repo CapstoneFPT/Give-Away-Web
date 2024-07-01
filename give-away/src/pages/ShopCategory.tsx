@@ -4,7 +4,6 @@ import { ShopContext } from "../context/ShopContext";
 import Item from "../components/Item/Item";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { Link } from "react-router-dom";
 
 interface Props {
   category: string;
@@ -15,7 +14,7 @@ const ShopCategory: React.FC<Props> = (props) => {
   const clothTypes: string[] = ["t-shirt", "jeans", "jacket"];
   const [filteredProducts, setFilteredProducts] = useState(all_product);
   const [filtersVisible, setFiltersVisible] = useState(true);
-  const history = useNavigate();
+  const navigate = useNavigate();
   const toggleFilters = () => {
     setFiltersVisible(!filtersVisible);
   };
@@ -65,7 +64,7 @@ const ShopCategory: React.FC<Props> = (props) => {
                 <div
                   key={item.id}
                   onClick={() =>
-                    history(`/${item.category}/${item.clothType}/${item.name}`)
+                    navigate(`/${item.category}/${item.clothType}/${item.name}`)
                   }
                   style={{ textDecoration: "none" }}
                 >

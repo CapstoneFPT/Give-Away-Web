@@ -4,8 +4,8 @@ import type {
   FormListFieldData,
   FormListOperation,
 } from "antd/lib/form/FormList";
-import { PlusOutlined } from "@ant-design/icons";
-import { InputNumber, Select } from "antd";
+import { DeleteOutlined } from "@ant-design/icons";
+import { Select } from "antd";
 import { Upload } from "antd";
 import "./ConsignForm.css";
 
@@ -19,7 +19,6 @@ interface FormValues {
   userInfo: { fullName: string; phone: string };
   items: {
     productName: string;
-    quantity: number;
     picture: string;
     description: string;
     price: string;
@@ -35,47 +34,58 @@ const ConsignForm = () => {
   };
 
   return (
-    <Card>
+    <Card
+      className="consign-form-container"
+      style={{ justifyContent: "center", display: "flex" }}
+    >
       <Form
+        className="consign-form"
         name="dynamic_form"
         onFinish={onFinish}
         autoComplete="off"
         size="large"
       >
-        <div style={{ borderBottom: "5px solid #000", paddingBottom: "10px" }}>
-          <Form.Item
-            name={["userInfo", "fullName"]}
-            rules={[{ required: true, message: "Missing full name" }]}
-          >
-            <Input placeholder="Full Name" />
-          </Form.Item>
-          <Form.Item
-            name={["userInfo", "phone"]}
-            rules={[{ required: true, message: "Missing phone" }]}
-          >
-            <Input placeholder="Phone" />
-          </Form.Item>
-          <Form.Item
-            name={["userInfo", "clothBranches"]}
-            rules={[{ required: true, message: "Missing cloth branches" }]}
-          >
-            <Select placeholder="Cloth Branches">
-              <Select.Option value="branch1">Branch 1</Select.Option>
-              <Select.Option value="branch2">Branch 2</Select.Option>
-              <Select.Option value="branch3">Branch 3</Select.Option>
-              {/* Add more options as needed */}
-            </Select>
-          </Form.Item>
-        </div>
-        <div
+        <Card
+          className="user-info-card"
           style={{
-            margin: "40px",
-            borderBottom: "5px solid #000",
-            paddingBottom: "10px",
+            justifyContent: "center",
+            alignItems: "center",
+            display: "flex",
           }}
         >
+          <div style={{ width: "1000px" }}>
+            <h1> Consign Form</h1>
+            <Form.Item
+              name={["userInfo", "fullName"]}
+              rules={[{ required: true, message: "Missing full name" }]}
+            >
+              <Input placeholder="Full Name" />
+            </Form.Item>
+            <Form.Item
+              name={["userInfo", "phone"]}
+              rules={[{ required: true, message: "Missing phone" }]}
+            >
+              <Input placeholder="Phone" />
+            </Form.Item>
+            <Form.Item
+              name={["userInfo", "clothBranches"]}
+              rules={[{ required: true, message: "Missing cloth branches" }]}
+            >
+              <Select placeholder="Cloth Branches">
+                <Select.Option value="branch1">Branch 1</Select.Option>
+                <Select.Option value="branch2">Branch 2</Select.Option>
+                <Select.Option value="branch3">Branch 3</Select.Option>
+                {/* Add more options as needed */}
+              </Select>
+            </Form.Item>
+          </div>
+        </Card>
+        <Card>
           <Form.List name="items">
-            {(fields: FormListFieldData[], { add }: FormListOperation) => (
+            {(
+              fields: FormListFieldData[],
+              { add, remove }: FormListOperation
+            ) => (
               <div
                 className="form-container"
                 style={{
@@ -85,8 +95,15 @@ const ConsignForm = () => {
                   flexWrap: "wrap",
                 }}
               >
-                {fields.map(({ key, name, ...restField }) => (
-                  <div key={key} style={{ marginBottom: "10px" }}>
+                {fields.map(({ key, name, ...restField }, index) => (
+                  <Card
+                    key={key}
+                    style={{
+                      marginBottom: "10px",
+                      position: "relative",
+                      padding: "10px",
+                    }}
+                  >
                     <Form.Item
                       {...restField}
                       name={[name, "productName"]}
@@ -97,13 +114,7 @@ const ConsignForm = () => {
                     >
                       <Input placeholder="Product Name" />
                     </Form.Item>
-                    <Form.Item
-                      {...restField}
-                      name={[name, "quantity"]}
-                      rules={[{ required: true, message: "Missing quantity" }]}
-                    >
-                      <InputNumber placeholder="Quantity" />
-                    </Form.Item>
+
                     <Form.Item
                       {...restField}
                       name={[name, "pictures"]}
@@ -124,7 +135,6 @@ const ConsignForm = () => {
                         listType="picture-card"
                       >
                         <div>
-                          <PlusOutlined />
                           <div style={{ marginTop: 8 }}>Upload</div>
                         </div>
                       </Upload>
@@ -164,34 +174,70 @@ const ConsignForm = () => {
                     >
                       <Input placeholder="Condition Percentage" />
                     </Form.Item>
-                  </div>
+                    <Button
+                      icon={<DeleteOutlined style={{ color: "red" }} />}
+                      style={{
+                        position: "absolute",
+                        right: 20,
+                        top: 20,
+                        transform: "translate(50%, -50%)",
+                        backgroundColor: "transparent",
+                        border: "none",
+                      }}
+                      onClick={() => remove(name)}
+                    />
+                  </Card>
                 ))}
-                <Button
-                  type="dashed"
-                  onClick={() => add()}
-                  block
-                  className="form-button"
+                <div
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "flex-start",
+                  }}
                 >
-                  Add item
-                </Button>
+                  {fields.length < 5 && (
+                    <Button
+                      style={{
+                        width: "10%",
+                        marginTop: "20px",
+                        backgroundColor: "black",
+                        color: "white",
+                      }}
+                      onClick={() => add()}
+                    >
+                      Add Item
+                    </Button>
+                  )}
+                </div>
               </div>
             )}
           </Form.List>
-        </div>
-        <Form.Item
-          name="termsAndRules"
-          valuePropName="checked"
-          rules={[
-            { required: true, message: "Please agree to the terms and rules" },
-          ]}
-        >
-          <Checkbox>I agree to the terms and rules</Checkbox>
-        </Form.Item>
-        <Form.Item>
-          <Button type="primary" htmlType="submit">
-            Submit
-          </Button>
-        </Form.Item>
+
+          <Form.Item
+            name="termsAndRules"
+            valuePropName="checked"
+            rules={[
+              {
+                required: true,
+                message: "Please agree to the terms and rules",
+              },
+            ]}
+          >
+            <Checkbox>I agree to the terms and rules</Checkbox>
+          </Form.Item>
+          <Form.Item style={{}}>
+            <Button
+              type="primary"
+              htmlType="submit"
+              style={{
+                backgroundColor: "black",
+                width: "10%",
+              }}
+            >
+              Submit
+            </Button>
+          </Form.Item>
+        </Card>
       </Form>
     </Card>
   );
