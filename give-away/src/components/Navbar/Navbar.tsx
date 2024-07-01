@@ -8,6 +8,7 @@ import { ShopContext } from "../../context/ShopContext";
 import SearchBar from "../SearchBar/SearchBar";
 const Navbar = () => {
   const [menu, setMenu] = useState("shop");
+
   const shopContext = useContext(ShopContext) ?? {};
   const cartItems = shopContext;
   const handleSearch = () => {};
@@ -52,13 +53,23 @@ const Navbar = () => {
             </li>
             <li
               onClick={() => {
-                setMenu("aunctions");
+                setMenu("aunctionList");
               }}
             >
               <Link to="/aunctionList" className="no-underline">
-            Auctions
-          </Link>
+                Auctions
+              </Link>
               {menu === "aunctionList" ? <hr /> : <></>}
+            </li>
+            <li
+              onClick={() => {
+                setMenu("branches");
+              }}
+            >
+              <Link to="/branches" className="no-underline">
+                Branches
+              </Link>
+              {menu === "branches" ? <hr /> : <></>}
             </li>
           </ul>
         </div>
