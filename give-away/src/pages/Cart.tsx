@@ -9,10 +9,24 @@ const Cart = () => {
   if (!shopContext) {
     return null; // or handle the case when ShopContext is null
   }
+  const { all_product, cartItems, removeFromCart } = shopContext;
+  console.log(cartItems);
+  const pushCartToBackend = async () => {
+    const itemIds = Object.keys(cartItems).map((id) => parseInt(id));
 
-  const { all_product, cartItems, removeFromCart, updateCartItems } =
-    shopContext;
-
+    console.log("Pushing cart to backend:", itemIds);
+    try {
+      await fetch("YOUR_BACKEND_ENDPOINT", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ itemIds }),
+      });
+    } catch (error) {
+      console.error("Failed to push cart to backend:", error);
+    }
+  };
   return (
     <Card>
       <div className="cartContainer">
@@ -36,7 +50,7 @@ const Cart = () => {
             <div className="cartItemsDisplay">
               <hr />
               {all_product
-                .filter((e: any) => cartItems[e.id] > 0)
+                .filter((e) => cartItems[e.id])
                 .map((e: any) => (
                   <div className="cartItem" key={e.id}>
                     <div className="product">
@@ -54,23 +68,6 @@ const Cart = () => {
                         <h2>${e.new_price}</h2>
                         <h3> Size: M</h3>
                       </div>
-                    </div>
-                    <div className="interactive-button">
-                      <button
-                        onClick={() =>
-                          updateCartItems(e.id, cartItems[e.id] - 1)
-                        }
-                      >
-                        -
-                      </button>
-                      <span>{cartItems[e.id]}</span>
-                      <button
-                        onClick={() =>
-                          updateCartItems(e.id, cartItems[e.id] + 1)
-                        }
-                      >
-                        +
-                      </button>
                     </div>
 
                     <hr />
@@ -102,6 +99,7 @@ const Cart = () => {
                 borderRadius: "10px",
                 height: "50px",
               }}
+              onClick={pushCartToBackend}
             >
               Check Out
             </Button>

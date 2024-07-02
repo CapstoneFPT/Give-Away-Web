@@ -11,52 +11,41 @@ interface Product {
   old_price: number;
 }
 
-interface Cart {
-  [key: number]: number;
+interface CartItem {
+  id: number; // Only ID is needed to identify the product in the cart
 }
 
 interface ShopContextValue {
   all_product: Product[];
-  cartItems: Cart;
-  addToCart: (itemId: number) => void;
-  removeFromCart: (itemId: number) => void;
-  updateCartItems: (itemId: number, quantity: number) => void;
+  cartItems: CartItem[];
+  addToCart: (productId: number) => void; // Quantity removed
+  removeFromCart: (productId: number) => void;
 }
 
 export const ShopContext = createContext<ShopContextValue | null>(null);
 
-const getDefaultCart = (): Cart => {
-  let cart: Cart = {};
-  for (let index = 0; index < all_product.length; index++) {
-    cart[index] = 0;
-  }
-  return cart;
-};
-
 const ShopContextProvider: React.FC<{ children: React.ReactNode }> = (
   props
 ) => {
-  const [cartItems, setCartItems] = useState<Cart>(getDefaultCart());
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
-  const addToCart = (itemId: number) => {
-    setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] + 1 }));
+  const addToCart = (productId: number) => {
+    // Directly add the product to the cart without quantity
+    setCartItems((prev) => [...prev, { id: productId }]);
   };
 
-  const removeFromCart = (itemId: number) => {
-    setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] - 1 }));
+  const removeFromCart = (productId: number) => {
+    setCartItems((prev) => prev.filter((item) => item.id !== productId));
   };
-  const updateCartItems = (itemId: number, quantity: number) => {
-    // Add this function
-    setCartItems((prev) => ({ ...prev, [itemId]: quantity }));
-  };
+
   const contextValue: ShopContextValue = {
     all_product,
     cartItems,
     addToCart,
     removeFromCart,
-    updateCartItems,
   };
 
+  console.log(cartItems);
   return (
     <ShopContext.Provider value={contextValue}>
       {props.children}

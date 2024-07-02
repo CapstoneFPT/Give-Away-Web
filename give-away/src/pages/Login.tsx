@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button, Modal } from "antd";
 import {
   UserOutlined,
@@ -16,46 +16,23 @@ import { ApiAuthLoginPostRequest, AuthApi } from "../api/apis/AuthApi";
 const Login = () => {
   const [isModalLoginOpen, setIsModalLoginOpen] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [user, setUser] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  console.log(email);
-  console.log(user);
-  console.log(password);
-  const handleLogout = () => {
-    setUser(false); // remove user state
-    setDropdownVisible(false); // hide dropdown
-    setIsModalLoginOpen(false); // hide modal
-  };
 
-  const [isDropdownVisible, setDropdownVisible] = useState(false);
-  const dropDownItems: MenuProps["items"] = [
-    {
-      key: "1",
-      label: <Link to="/consign">Consign</Link>,
-    },
-    {
-      key: "2",
-      label: <Link to="/add-fund">Add Fund</Link>,
-    },
-    {
-      key: "3",
-      label: <Link to="/profile">Profile</Link>,
-    },
-    {
-      key: "4",
-      label: (
-        <Link to="/" onClick={handleLogout}>
-          Logout
-        </Link>
-      ),
-    },
-  ];
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const user = sessionStorage.getItem("user");
+  console.log("user", user);
+  useEffect(() => {
+    const user = localStorage.getItem("user");
+    if (user) {
+      setIsLoggedIn(true);
+      // Any additional setup based on the user being logged in
+    }
+  }, []);
 
   const showModalLogin = () => {
     // your logic here
     setIsModalLoginOpen(true); // show modal
-    setDropdownVisible(true); // show dropdown
   };
 
   const handleOk = () => {
@@ -89,9 +66,13 @@ const Login = () => {
 
       if (response.resultStatus === "Success") {
         console.log("Login successfully");
-
-        setUser(true); // set user state here
+        localStorage.setItem(
+          "user",
+          JSON.stringify(response.data?.accessToken)
+        );
+        console.log(user);
         setIsModalLoginOpen(false); // hide modal after login
+        setIsLoggedIn(true);
       } else {
         console.error("Failed to login");
       }
@@ -99,6 +80,33 @@ const Login = () => {
       console.error("An error occurred while trying to login:", error);
     }
   };
+  const handleLogout = () => {
+    setIsModalLoginOpen(false);
+    localStorage.removeItem("user");
+    setIsLoggedIn(false);
+  };
+  const dropDownItems: MenuProps["items"] = [
+    {
+      key: "1",
+      label: <Link to="/consign">Consign</Link>,
+    },
+    {
+      key: "2",
+      label: <Link to="/add-fund">Add Fund</Link>,
+    },
+    {
+      key: "3",
+      label: <Link to="/profile">Profile</Link>,
+    },
+    {
+      key: "4",
+      label: (
+        <Link to="/" onClick={handleLogout}>
+          Logout
+        </Link>
+      ),
+    },
+  ];
   const styles: { [key: string]: React.CSSProperties } = {
     buttonLogin: {
       backgroundColor: "#000000",
@@ -158,7 +166,7 @@ const Login = () => {
 
   return (
     <>
-      {user && isDropdownVisible ? (
+      {isLoggedIn ? (
         <div style={styles.container}>
           <Dropdown menu={{ items: dropDownItems }}>
             <Button type="primary" style={styles.buttonLogin}>

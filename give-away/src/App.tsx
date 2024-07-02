@@ -21,6 +21,8 @@ import Aunction from "./pages/Aunction";
 
 import Consign from "./pages/ConsignForm";
 import Profile from "./pages/Profile";
+import Branches from "./pages/Branches";
+import Footer from "./components/Footer/Footer";
 
 import ChangePassword from "./pages/ChangePassword";
 import Refunds from "./pages/Refunds";
@@ -253,6 +255,16 @@ function App(): JSX.Element {
               <>
                 <Navbar />
                 <OrderDetail />
+              </>
+            }
+          />
+          <Route
+            path="/branches"
+            element={
+              <>
+                <Navbar />
+                <Branches />
+                <Footer />
               </>
             }
           />
