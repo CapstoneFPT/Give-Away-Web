@@ -22,8 +22,6 @@ import type {
   DeliveryResponseResult,
   StringResult,
   UpdateAccountRequest,
-  UpdateWalletRequest,
-  WalletResponseResult,
 } from '../models/index';
 import {
     AccountResponseFromJSON,
@@ -40,10 +38,6 @@ import {
     StringResultToJSON,
     UpdateAccountRequestFromJSON,
     UpdateAccountRequestToJSON,
-    UpdateWalletRequestFromJSON,
-    UpdateWalletRequestToJSON,
-    WalletResponseResultFromJSON,
-    WalletResponseResultToJSON,
 } from '../models/index';
 
 export interface ApiAccountsAccountIdDeliveriesDeliveryIdDeleteRequest {
@@ -69,15 +63,6 @@ export interface ApiAccountsAccountIdDeliveriesPostRequest {
 export interface ApiAccountsAccountIdPutRequest {
     accountId: string;
     updateAccountRequest?: UpdateAccountRequest;
-}
-
-export interface ApiAccountsAccountIdWalletsGetRequest {
-    accountId: string;
-}
-
-export interface ApiAccountsAccountIdWalletsPutRequest {
-    accountId: string;
-    updateWalletRequest?: UpdateWalletRequest;
 }
 
 export interface ApiAccountsIdBanPutRequest {
@@ -308,87 +293,6 @@ export class AccountApi extends runtime.BaseAPI {
      */
     async apiAccountsAccountIdPut(requestParameters: ApiAccountsAccountIdPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AccountResponseResult> {
         const response = await this.apiAccountsAccountIdPutRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     */
-    async apiAccountsAccountIdWalletsGetRaw(requestParameters: ApiAccountsAccountIdWalletsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<WalletResponseResult>> {
-        if (requestParameters['accountId'] == null) {
-            throw new runtime.RequiredError(
-                'accountId',
-                'Required parameter "accountId" was null or undefined when calling apiAccountsAccountIdWalletsGet().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        if (this.configuration && this.configuration.accessToken) {
-            const token = this.configuration.accessToken;
-            const tokenString = await token("Bearer", []);
-
-            if (tokenString) {
-                headerParameters["Authorization"] = `Bearer ${tokenString}`;
-            }
-        }
-        const response = await this.request({
-            path: `/api/accounts/{accountId}/wallets`.replace(`{${"accountId"}}`, encodeURIComponent(String(requestParameters['accountId']))),
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => WalletResponseResultFromJSON(jsonValue));
-    }
-
-    /**
-     */
-    async apiAccountsAccountIdWalletsGet(requestParameters: ApiAccountsAccountIdWalletsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<WalletResponseResult> {
-        const response = await this.apiAccountsAccountIdWalletsGetRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     */
-    async apiAccountsAccountIdWalletsPutRaw(requestParameters: ApiAccountsAccountIdWalletsPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<WalletResponseResult>> {
-        if (requestParameters['accountId'] == null) {
-            throw new runtime.RequiredError(
-                'accountId',
-                'Required parameter "accountId" was null or undefined when calling apiAccountsAccountIdWalletsPut().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters['Content-Type'] = 'application/json';
-
-        if (this.configuration && this.configuration.accessToken) {
-            const token = this.configuration.accessToken;
-            const tokenString = await token("Bearer", []);
-
-            if (tokenString) {
-                headerParameters["Authorization"] = `Bearer ${tokenString}`;
-            }
-        }
-        const response = await this.request({
-            path: `/api/accounts/{accountId}/wallets`.replace(`{${"accountId"}}`, encodeURIComponent(String(requestParameters['accountId']))),
-            method: 'PUT',
-            headers: headerParameters,
-            query: queryParameters,
-            body: UpdateWalletRequestToJSON(requestParameters['updateWalletRequest']),
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => WalletResponseResultFromJSON(jsonValue));
-    }
-
-    /**
-     */
-    async apiAccountsAccountIdWalletsPut(requestParameters: ApiAccountsAccountIdWalletsPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<WalletResponseResult> {
-        const response = await this.apiAccountsAccountIdWalletsPutRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

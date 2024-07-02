@@ -13,6 +13,13 @@
  */
 
 import { mapValues } from '../runtime';
+import type { AuctionStatus } from './AuctionStatus';
+import {
+    AuctionStatusFromJSON,
+    AuctionStatusFromJSONTyped,
+    AuctionStatusToJSON,
+} from './AuctionStatus';
+
 /**
  * 
  * @export
@@ -69,10 +76,10 @@ export interface UpdateAuctionRequest {
     depositFee?: number;
     /**
      * 
-     * @type {string}
+     * @type {AuctionStatus}
      * @memberof UpdateAuctionRequest
      */
-    status?: string;
+    status?: AuctionStatus;
 }
 
 /**
@@ -100,7 +107,7 @@ export function UpdateAuctionRequestFromJSONTyped(json: any, ignoreDiscriminator
         'scheduleDate': json['scheduleDate'] == null ? undefined : (new Date(json['scheduleDate'])),
         'timeslotId': json['timeslotId'] == null ? undefined : json['timeslotId'],
         'depositFee': json['depositFee'] == null ? undefined : json['depositFee'],
-        'status': json['status'] == null ? undefined : json['status'],
+        'status': json['status'] == null ? undefined : AuctionStatusFromJSON(json['status']),
     };
 }
 
@@ -118,7 +125,7 @@ export function UpdateAuctionRequestToJSON(value?: UpdateAuctionRequest | null):
         'scheduleDate': value['scheduleDate'] == null ? undefined : ((value['scheduleDate'] as any).toISOString().substring(0,10)),
         'timeslotId': value['timeslotId'],
         'depositFee': value['depositFee'],
-        'status': value['status'],
+        'status': AuctionStatusToJSON(value['status']),
     };
 }
 

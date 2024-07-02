@@ -18,9 +18,19 @@ import RuleAunction from "./pages/RuleAunction";
 import RuleDeposit from "./pages/RuleDeposit";
 import AunctionList from "./pages/AunctionList";
 import Aunction from "./pages/Aunction";
-import { Footer } from "antd/es/layout/layout";
+
 import Consign from "./pages/ConsignForm";
 import Profile from "./pages/Profile";
+
+import ChangePassword from "./pages/ChangePassword";
+import Refunds from "./pages/Refunds";
+import Withdraw from "./pages/Withdraw";
+
+import MyConsign from "./pages/Transaction/MyConsign";
+import AuctionHistory from "./pages/Transaction/AuctionHistory";
+import OrderList from "./pages/OrderList";
+import WithdrawHistory from "./pages/Transaction/WithdrawHistory";
+import OrderDetail from "./pages/OrderDetail";
 
 function App(): JSX.Element {
   return (
@@ -32,7 +42,6 @@ function App(): JSX.Element {
             element={
               <>
                 <Navbar />
-
                 <Shop />
               </>
             }
@@ -112,13 +121,12 @@ function App(): JSX.Element {
               </>
             }
           />
-
           <Route
             path="/aunctionList"
             element={
               <>
                 <Navbar />
-                <AunctionList/>
+                <AunctionList />
               </>
             }
           />
@@ -145,7 +153,7 @@ function App(): JSX.Element {
             element={
               <>
                 <Navbar />
-                <RuleDeposit/>
+                <RuleDeposit />
               </>
             }
           />
@@ -163,20 +171,91 @@ function App(): JSX.Element {
             element={
               <>
                 <Navbar />
-                <Aunction/>
+                <Aunction />
               </>
             }
           />
-           <Route
+          <Route
             path="/profile"
             element={
               <>
                 <Navbar />
-                <Profile/>
+                <Profile />
               </>
             }
           />
-
+          <Route
+            path="/change-password"
+            element={
+              <>
+                <Navbar />
+                <ChangePassword />
+              </>
+            }
+          />
+          <Route
+            path="/refunds"
+            element={
+              <>
+                <Navbar />
+                <Refunds />
+              </>
+            }
+          />
+          <Route
+            path="/transaction/withdraw"
+            element={
+              <>
+                <Navbar />
+                <Withdraw />
+              </>
+            }
+          />
+          <Route
+            path="/transaction/withdraw-history"
+            element={
+              <>
+                <Navbar />
+                <WithdrawHistory />
+              </>
+            }
+          />
+          <Route
+            path="/transaction/Auction-history"
+            element={
+              <>
+                <Navbar />
+                <AuctionHistory />
+              </>
+            }
+          />
+          <Route
+            path="/transaction/My-consign"
+            element={
+              <>
+                <Navbar />
+                <MyConsign />
+              </>
+            }
+          />
+          <Route
+            path="/order-list"
+            element={
+              <>
+                <Navbar />
+                <OrderList />
+              </>
+            }
+          />
+          <Route
+            path="/order-detail/:id"
+            element={
+              <>
+                <Navbar />
+                <OrderDetail />
+              </>
+            }
+          />
         </Routes>
       </BrowserRouter>
     </div>

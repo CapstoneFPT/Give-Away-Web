@@ -54,6 +54,12 @@ export interface CreateAuctionRequest {
      * @type {number}
      * @memberof CreateAuctionRequest
      */
+    stepIncrementPercentage?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof CreateAuctionRequest
+     */
     depositFee?: number;
 }
 
@@ -79,6 +85,7 @@ export function CreateAuctionRequestFromJSONTyped(json: any, ignoreDiscriminator
         'auctionItemId': json['auctionItemId'] == null ? undefined : json['auctionItemId'],
         'scheduleDate': json['scheduleDate'] == null ? undefined : (new Date(json['scheduleDate'])),
         'timeslotId': json['timeslotId'] == null ? undefined : json['timeslotId'],
+        'stepIncrementPercentage': json['stepIncrementPercentage'] == null ? undefined : json['stepIncrementPercentage'],
         'depositFee': json['depositFee'] == null ? undefined : json['depositFee'],
     };
 }
@@ -94,6 +101,7 @@ export function CreateAuctionRequestToJSON(value?: CreateAuctionRequest | null):
         'auctionItemId': value['auctionItemId'],
         'scheduleDate': value['scheduleDate'] == null ? undefined : ((value['scheduleDate']).toISOString().substring(0,10)),
         'timeslotId': value['timeslotId'],
+        'stepIncrementPercentage': value['stepIncrementPercentage'],
         'depositFee': value['depositFee'],
     };
 }

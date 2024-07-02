@@ -70,6 +70,18 @@ export interface BidListResponsePaginationResponse {
     readonly totalPages?: number;
     /**
      * 
+     * @type {boolean}
+     * @memberof BidListResponsePaginationResponse
+     */
+    readonly hasNext?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof BidListResponsePaginationResponse
+     */
+    readonly hasPrevious?: boolean;
+    /**
+     * 
      * @type {Array<BidListResponse>}
      * @memberof BidListResponsePaginationResponse
      */
@@ -100,11 +112,13 @@ export function BidListResponsePaginationResponseFromJSONTyped(json: any, ignore
         'orderBy': json['orderBy'] == null ? undefined : json['orderBy'],
         'totalCount': json['totalCount'] == null ? undefined : json['totalCount'],
         'totalPages': json['totalPages'] == null ? undefined : json['totalPages'],
+        'hasNext': json['hasNext'] == null ? undefined : json['hasNext'],
+        'hasPrevious': json['hasPrevious'] == null ? undefined : json['hasPrevious'],
         'items': json['items'] == null ? undefined : ((json['items'] as Array<any>).map(BidListResponseFromJSON)),
     };
 }
 
-export function BidListResponsePaginationResponseToJSON(value?: Omit<BidListResponsePaginationResponse, 'totalPages'> | null): any {
+export function BidListResponsePaginationResponseToJSON(value?: Omit<BidListResponsePaginationResponse, 'totalPages'|'hasNext'|'hasPrevious'> | null): any {
     if (value == null) {
         return value;
     }

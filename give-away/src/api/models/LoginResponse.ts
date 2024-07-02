@@ -13,6 +13,13 @@
  */
 
 import { mapValues } from '../runtime';
+import type { Roles } from './Roles';
+import {
+    RolesFromJSON,
+    RolesFromJSONTyped,
+    RolesToJSON,
+} from './Roles';
+
 /**
  * 
  * @export
@@ -27,10 +34,10 @@ export interface LoginResponse {
     accessToken?: string;
     /**
      * 
-     * @type {string}
+     * @type {Roles}
      * @memberof LoginResponse
      */
-    role?: string;
+    role?: Roles;
     /**
      * 
      * @type {string}
@@ -63,7 +70,7 @@ export function LoginResponseFromJSONTyped(json: any, ignoreDiscriminator: boole
     return {
         
         'accessToken': json['accessToken'] == null ? undefined : json['accessToken'],
-        'role': json['role'] == null ? undefined : json['role'],
+        'role': json['role'] == null ? undefined : RolesFromJSON(json['role']),
         'id': json['id'] == null ? undefined : json['id'],
         'email': json['email'] == null ? undefined : json['email'],
     };
@@ -76,7 +83,7 @@ export function LoginResponseToJSON(value?: LoginResponse | null): any {
     return {
         
         'accessToken': value['accessToken'],
-        'role': value['role'],
+        'role': RolesToJSON(value['role']),
         'id': value['id'],
         'email': value['email'],
     };

@@ -48,7 +48,13 @@ export interface BidListResponse {
      * @type {Date}
      * @memberof BidListResponse
      */
-    createdAt?: Date;
+    createdDate?: Date;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof BidListResponse
+     */
+    isWinning?: boolean;
 }
 
 /**
@@ -72,7 +78,8 @@ export function BidListResponseFromJSONTyped(json: any, ignoreDiscriminator: boo
         'auctionId': json['auctionId'] == null ? undefined : json['auctionId'],
         'memberId': json['memberId'] == null ? undefined : json['memberId'],
         'amount': json['amount'] == null ? undefined : json['amount'],
-        'createdAt': json['createdAt'] == null ? undefined : (new Date(json['createdAt'])),
+        'createdDate': json['createdDate'] == null ? undefined : (new Date(json['createdDate'])),
+        'isWinning': json['isWinning'] == null ? undefined : json['isWinning'],
     };
 }
 
@@ -86,7 +93,8 @@ export function BidListResponseToJSON(value?: BidListResponse | null): any {
         'auctionId': value['auctionId'],
         'memberId': value['memberId'],
         'amount': value['amount'],
-        'createdAt': value['createdAt'] == null ? undefined : ((value['createdAt']).toISOString()),
+        'createdDate': value['createdDate'] == null ? undefined : ((value['createdDate']).toISOString()),
+        'isWinning': value['isWinning'],
     };
 }
 

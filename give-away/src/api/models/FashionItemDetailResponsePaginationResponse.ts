@@ -70,6 +70,18 @@ export interface FashionItemDetailResponsePaginationResponse {
     readonly totalPages?: number;
     /**
      * 
+     * @type {boolean}
+     * @memberof FashionItemDetailResponsePaginationResponse
+     */
+    readonly hasNext?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof FashionItemDetailResponsePaginationResponse
+     */
+    readonly hasPrevious?: boolean;
+    /**
+     * 
      * @type {Array<FashionItemDetailResponse>}
      * @memberof FashionItemDetailResponsePaginationResponse
      */
@@ -100,11 +112,13 @@ export function FashionItemDetailResponsePaginationResponseFromJSONTyped(json: a
         'orderBy': json['orderBy'] == null ? undefined : json['orderBy'],
         'totalCount': json['totalCount'] == null ? undefined : json['totalCount'],
         'totalPages': json['totalPages'] == null ? undefined : json['totalPages'],
+        'hasNext': json['hasNext'] == null ? undefined : json['hasNext'],
+        'hasPrevious': json['hasPrevious'] == null ? undefined : json['hasPrevious'],
         'items': json['items'] == null ? undefined : ((json['items'] as Array<any>).map(FashionItemDetailResponseFromJSON)),
     };
 }
 
-export function FashionItemDetailResponsePaginationResponseToJSON(value?: Omit<FashionItemDetailResponsePaginationResponse, 'totalPages'> | null): any {
+export function FashionItemDetailResponsePaginationResponseToJSON(value?: Omit<FashionItemDetailResponsePaginationResponse, 'totalPages'|'hasNext'|'hasPrevious'> | null): any {
     if (value == null) {
         return value;
     }

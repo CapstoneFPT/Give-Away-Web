@@ -16,16 +16,29 @@
 import * as runtime from '../runtime';
 import type {
   FashionItemDetailResponsePaginationResponseResult,
+  FashionItemDetailResponseResult,
+  FashionItemStatus,
 } from '../models/index';
 import {
     FashionItemDetailResponsePaginationResponseResultFromJSON,
     FashionItemDetailResponsePaginationResponseResultToJSON,
+    FashionItemDetailResponseResultFromJSON,
+    FashionItemDetailResponseResultToJSON,
+    FashionItemStatusFromJSON,
+    FashionItemStatusToJSON,
 } from '../models/index';
 
 export interface ApiFashionitemsGetRequest {
     searchTerm?: string;
     pageNumber?: number;
     pageSize?: number;
+    status?: FashionItemStatus;
+    type?: string;
+    shopId?: string;
+}
+
+export interface ApiFashionitemsIdGetRequest {
+    id: string;
 }
 
 /**
@@ -48,6 +61,18 @@ export class FashionItemApi extends runtime.BaseAPI {
 
         if (requestParameters['pageSize'] != null) {
             queryParameters['PageSize'] = requestParameters['pageSize'];
+        }
+
+        if (requestParameters['status'] != null) {
+            queryParameters['Status'] = requestParameters['status'];
+        }
+
+        if (requestParameters['type'] != null) {
+            queryParameters['Type'] = requestParameters['type'];
+        }
+
+        if (requestParameters['shopId'] != null) {
+            queryParameters['ShopId'] = requestParameters['shopId'];
         }
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -74,6 +99,45 @@ export class FashionItemApi extends runtime.BaseAPI {
      */
     async apiFashionitemsGet(requestParameters: ApiFashionitemsGetRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<FashionItemDetailResponsePaginationResponseResult> {
         const response = await this.apiFashionitemsGetRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiFashionitemsIdGetRaw(requestParameters: ApiFashionitemsIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<FashionItemDetailResponseResult>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiFashionitemsIdGet().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("Bearer", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/api/fashionitems/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => FashionItemDetailResponseResultFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiFashionitemsIdGet(requestParameters: ApiFashionitemsIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<FashionItemDetailResponseResult> {
+        const response = await this.apiFashionitemsIdGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
