@@ -2,9 +2,9 @@ import React from "react";
 import { MailOutlined, PhoneOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Card, Row, Col, Form, Input } from "antd";
 
+
 import img from "../components/Assets/nam2.png";
 import NavProfile from "../components/NavProfile/NavProfile";
-
 
 
 const handlePhoneInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -12,7 +12,7 @@ const handlePhoneInput = (e: React.ChangeEvent<HTMLInputElement>) => {
 };
 
 const Profile: React.FC = () => {
- 
+
   return (
     <Card>
       <Row gutter={[16, 16]}>

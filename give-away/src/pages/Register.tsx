@@ -20,7 +20,6 @@ const Register = () => {
   const styles = {
     inputContainer: {
       width: "90%",
-      
       marginBottom: "40px",
       marginLeft: "40px",
     },
