@@ -20,10 +20,12 @@ const Login = () => {
   const [password, setPassword] = useState("");
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const user = sessionStorage.getItem("user");
-  console.log("user", user);
+
   useEffect(() => {
     const user = localStorage.getItem("user");
+    const userId = localStorage.getItem("userId");
+    console.log("id", userId);
+    console.log("user", user);
     if (user) {
       setIsLoggedIn(true);
       // Any additional setup based on the user being logged in
@@ -63,13 +65,15 @@ const Login = () => {
 
       const authApi = new AuthApi();
       const response = await authApi.apiAuthLoginPost(request);
-
+      const user = sessionStorage.getItem("user");
+      const userId = sessionStorage.getItem("userId");
       if (response.resultStatus === "Success") {
         console.log("Login successfully");
         localStorage.setItem(
           "user",
           JSON.stringify(response.data?.accessToken)
         );
+        localStorage.setItem("userId", JSON.stringify(response.data?.id));
         console.log(user);
         setIsModalLoginOpen(false); // hide modal after login
         setIsLoggedIn(true);
