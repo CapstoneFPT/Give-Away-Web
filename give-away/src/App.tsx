@@ -133,7 +133,7 @@ function App(): JSX.Element {
             }
           />
           <Route
-            path="/detailProductAunction"
+            path="/detailProductAunction/:auctionItemID"
             element={
               <>
                 <Navbar />
@@ -169,7 +169,7 @@ function App(): JSX.Element {
             }
           />
           <Route
-            path="/aunction"
+            path="/aunction/:auctionID"
             element={
               <>
                 <Navbar />

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Card, Row, Col, Button, Typography, List, Select } from "antd";
 import  Footer  from "../components/Footer/Footer";
+import { useParams } from "react-router-dom";
 
 const { Title, Paragraph } = Typography;
 const { Option } = Select;
@@ -32,6 +33,8 @@ const product: Product = {
 };
 
 const Auction: React.FC = () => {
+  const { auctionID } = useParams();
+  console.log(auctionID);
   const [selectedImage, setSelectedImage] = useState<string>(product.images[0]);
   const [bids, setBids] = useState<Bid[]>([]);
   const [selectedBid, setSelectedBid] = useState<number | undefined>(undefined);

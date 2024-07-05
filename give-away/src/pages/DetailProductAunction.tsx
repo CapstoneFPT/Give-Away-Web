@@ -1,6 +1,7 @@
 import React from "react";
 import { Card, Button } from "antd";
 import "./CSS/DetailProductAunction.css";
+import { useParams } from "react-router-dom";
 const styles = {
   buttonDetail: {
     marginRight: "30px",
@@ -14,6 +15,8 @@ const styles = {
   },
 };
 const DetailProductAunction = () => {
+  const { auctionItemID } = useParams();
+  console.log(auctionItemID);
   return (
     <>
       <div style={{ marginTop: "25px", margin: "50px" }}>

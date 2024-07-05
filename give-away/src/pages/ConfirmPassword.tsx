@@ -51,8 +51,6 @@ const ConfirmPassword = () => {
       <div style={{ justifyContent: "center", display: "flex" }}>
         <Card
           bordered={false}
-          // size='small'
-
           style={{
             width: 700,
             marginTop: "30px",
