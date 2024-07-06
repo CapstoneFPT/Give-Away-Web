@@ -20,13 +20,16 @@ const Login = () => {
   const [password, setPassword] = useState("");
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
+  const user = localStorage.getItem("user");
+  const userId = localStorage.getItem("userId");
+  const role = localStorage.getItem("role");
+  console.log(user);
+  console.log(userId);
+  console.log(role);
   useEffect(() => {
-    const user = localStorage.getItem("user");
-    const userId = localStorage.getItem("userId");
-    console.log("id", userId);
-    console.log("user", user);
-    if (user) {
+    const role = localStorage.getItem("role");
+
+    if (role) {
       setIsLoggedIn(true);
       // Any additional setup based on the user being logged in
     }
@@ -65,8 +68,7 @@ const Login = () => {
 
       const authApi = new AuthApi();
       const response = await authApi.apiAuthLoginPost(request);
-      const user = sessionStorage.getItem("user");
-      const userId = sessionStorage.getItem("userId");
+
       if (response.resultStatus === "Success") {
         console.log("Login successfully");
         localStorage.setItem(
@@ -74,7 +76,15 @@ const Login = () => {
           JSON.stringify(response.data?.accessToken)
         );
         localStorage.setItem("userId", JSON.stringify(response.data?.id));
-        console.log(user);
+        localStorage.setItem("role", JSON.stringify(response.data?.role));
+        setTimeout(() => {
+          const user = localStorage.getItem("user");
+          const userId = localStorage.getItem("userId");
+          const role = localStorage.getItem("role");
+          console.log(user);
+          console.log(userId);
+          console.log(role);
+        }, 100);
         setIsModalLoginOpen(false); // hide modal after login
         setIsLoggedIn(true);
       } else {
@@ -87,6 +97,8 @@ const Login = () => {
   const handleLogout = () => {
     setIsModalLoginOpen(false);
     localStorage.removeItem("user");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("role");
     setIsLoggedIn(false);
   };
   const dropDownItems: MenuProps["items"] = [
