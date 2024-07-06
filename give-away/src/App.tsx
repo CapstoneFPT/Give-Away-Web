@@ -33,6 +33,7 @@ import AuctionHistory from "./pages/Transaction/AuctionHistory";
 import OrderList from "./pages/OrderList";
 import WithdrawHistory from "./pages/Transaction/WithdrawHistory";
 import OrderDetail from "./pages/OrderDetail";
+import Fund from "./pages/Fund";
 
 function App(): JSX.Element {
   return (
@@ -201,6 +202,15 @@ function App(): JSX.Element {
               <>
                 <Navbar />
                 <Refunds />
+              </>
+            }
+          />
+          <Route
+            path="/add-fund"
+            element={
+              <>
+                <Navbar />
+                <Fund />
               </>
             }
           />
