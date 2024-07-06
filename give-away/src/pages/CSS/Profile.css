@@ -1,0 +1,15 @@
+.custom-confirm-button {
+    background-color: black !important;
+    color: white !important;
+    border: none !important;
+    height: 32px !important;
+    width: 100px !important;
+    font-size: 14px !important;
+  }
+  .custom-cancel-button {
+    background-color: white !important;
+    color: black !important;
+    height: 32px !important;
+    width: 100px !important;
+    font-size: 14px !important;
+  }

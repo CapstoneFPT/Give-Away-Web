@@ -1,17 +1,83 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { MailOutlined, PhoneOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, Card, Row, Col, Form, Input } from "antd";
-
-
+import { Button, Card, Row, Col, Form, Input, notification, Modal } from "antd"; 
+import axios from "axios"; 
 import img from "../components/Assets/nam2.png";
 import NavProfile from "../components/NavProfile/NavProfile";
-
+import './CSS/Profile.css'; 
 
 const handlePhoneInput = (e: React.ChangeEvent<HTMLInputElement>) => {
   e.target.value = e.target.value.replace(/[^0-9]/g, "");
 };
 
 const Profile: React.FC = () => {
+  const [userData, setUserData] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [form] = Form.useForm(); 
+  const [isFormChanged, setIsFormChanged] = useState(false); 
+
+  useEffect(() => {
+    const userId = JSON.parse(localStorage.getItem("userId") || "null");
+    console.log(userId);
+    if (userId) {
+      axios
+        .get(
+          `http://giveawayproject.jettonetto.org:8080/api/accounts/${userId}`
+        )
+        .then((response) => {
+          setUserData(response.data);
+          form.setFieldsValue({
+            fullname: response.data.data.fullname,
+            phone: response.data.data.phone,
+            email: response.data.data.email,
+          });
+          console.log(form.getFieldsValue());
+          console.log(response.data.data.fullname);
+        })
+        .catch((error) => {
+          console.error("There was an error fetching the user data!", error);
+          setError("Failed to fetch user data. Please try again later.");
+        });
+    } else {
+      setError("User ID not found in local storage.");
+    }
+  }, [form]);
+
+  const handleSave = () => {
+    Modal.confirm({
+      title: "Confirm",
+      content: "Are you sure you want to save the changes?",
+      okText: "Confirm", 
+      okButtonProps: { className: 'custom-confirm-button' }, 
+      cancelButtonProps: { className: 'custom-cancel-button' }, 
+      onOk: () => {
+        const userId = JSON.parse(localStorage.getItem("userId") || "null");
+        if (userId) {
+          form.validateFields().then((values) => {
+            axios
+              .put(
+                `http://giveawayproject.jettonetto.org:8080/api/accounts/${userId}`,
+                values
+              )
+              .then((response) => {
+                notification.success({
+                  message: "Success",
+                  description: "User data updated successfully!",
+                });
+                setIsFormChanged(false); 
+              })
+              .catch((error) => {
+                console.error("There was an error updating the user data!", error);
+                notification.error({
+                  message: "Error",
+                  description: "Failed to update user data. Please try again later.",
+                });
+              });
+          });
+        }
+      },
+    });
+  };
 
   return (
     <Card>
@@ -34,73 +100,82 @@ const Profile: React.FC = () => {
               </Col>
               <Col span={16}>
                 <Card>
-                  <Form
-                    name="trigger"
-                    style={{ maxWidth: 600, marginTop: "50px" }}
-                    layout="vertical"
-                    autoComplete="off"
-                  >
-                    <Form.Item
-                      hasFeedback
-                      label="Name"
-                      name="field_a"
-                      validateTrigger="onBlur"
-                      initialValue={"wiwi"}
+                  {error ? (
+                    <p style={{ color: "red" }}>{error}</p>
+                  ) : (
+                    <Form
+                      form={form} // Bind form instance
+                      name="trigger"
+                      style={{ maxWidth: 600, marginTop: "50px" }}
+                      layout="vertical"
+                      autoComplete="off"
+                      onValuesChange={() => setIsFormChanged(true)} // Track form changes
                     >
-                      <Input
-                        prefix={<UserOutlined />}
-                        placeholder="Validate required onBlur"
-                      />
-                    </Form.Item>
+                      <Form.Item
+                        hasFeedback
+                        label="Name"
+                        name="fullname"
+                        validateTrigger="onBlur"
+                        initialValue={userData?.fullname}
+                      >
+                        <Input
+                          value={userData?.fullname}
+                          prefix={<UserOutlined />}
+                        />
+                      </Form.Item>
 
-                    <Form.Item
-                      hasFeedback
-                      label="Phone"
-                      name="field_b"
-                      initialValue={"0949601014"}
-                    >
-                      <Input
-                        prefix={<PhoneOutlined />}
-                        placeholder="10 numbers"
-                        maxLength={10}
-                        onInput={handlePhoneInput}
-                      />
-                    </Form.Item>
+                      <Form.Item
+                        hasFeedback
+                        label="Phone"
+                        name="phone"
+                        initialValue={userData?.phone}
+                      >
+                        <Input
+                          placeholder="{phone}"
+                          prefix={<PhoneOutlined />}
+                          maxLength={10}
+                          onInput={handlePhoneInput}
+                        />
+                      </Form.Item>
 
-                    <Form.Item
-                      hasFeedback
-                      label="Email"
-                      name="field_c"
-                      validateFirst
-                      rules={[
-                        {
-                          type: "email",
-                          message: "The input is not valid E-mail!",
-                        },
-                        {
-                          required: true,
-                          message: "Please input your E-mail!",
-                        },
-                      ]}
-                      initialValue={"wiwinov152000@gmail.com"}
-                    >
-                      <Input
-                        prefix={<MailOutlined />}
-                        placeholder="Validate one by one"
-                      />
-                    </Form.Item>
-                    <Button
-                      style={{
-                        backgroundColor: "black",
-                        width: "120px",
-                        height: "40px",
-                        color: "white",
-                        marginLeft: "480px",
-                      }}
-                    >
-                      Save
-                    </Button>
-                  </Form>
+                      <Form.Item
+                        hasFeedback
+                        label="Email"
+                        name="email"
+                        validateFirst
+                        initialValue={userData?.email}
+                        rules={[
+                          {
+                            type: "email",
+                            message: "The input is not valid E-mail!",
+                          },
+                          {
+                            required: true,
+                            message: "Please input your E-mail!",
+                          },
+                        ]}
+                      >
+                        <Input
+                          readOnly
+                          value={userData?.email}
+                          prefix={<MailOutlined />}
+                        />
+                      </Form.Item>
+                      <Button
+                        style={{
+                          backgroundColor: "black",
+                          width: "120px",
+                          height: "40px",
+                          color: "white",
+                          marginLeft: "480px",
+                        }}
+                        onClick={handleSave} 
+                        disabled={!isFormChanged} 
+                      >
+                        Save
+                      </Button>
+                    </Form>
+                  )}
                 </Card>
               </Col>
             </Row>

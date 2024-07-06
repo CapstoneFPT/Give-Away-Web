@@ -142,7 +142,7 @@ export interface ApiAuctionsPostRequest {
  * 
  */
 export class AuctionApi extends runtime.BaseAPI {
-
+    
     /**
      */
     async apiAuctionsAuctionIdDepositsDepositIdDeleteRaw(requestParameters: ApiAuctionsAuctionIdDepositsDepositIdDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {

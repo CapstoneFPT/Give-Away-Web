@@ -1,93 +1,88 @@
-
-import React from 'react';
-import { Button, Space, Table, Tag } from 'antd';
+import React, { useEffect, useState } from "react";
+import { Button, Space, Table, Tag } from "antd";
 import { Link } from "react-router-dom";
+import moment from "moment";
+import { AuctionApi, AuctionListResponse } from "../api";
+
 const { Column } = Table;
-const data = [
-  {
-    key: '1',
-    firstName: 'John',
-    lastName: 'Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-  },
-  {
-    key: '2',
-    firstName: 'Jim',
-    lastName: 'Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    tags: ['loser'],
-  },
-  {
-    key: '3',
-    firstName: 'Joe',
-    lastName: 'Black',
-    age: 32,
-    address: 'Sydney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
-  },
-];
+
 const AunctionList = () => {
+  const [data, setData] = useState<AuctionListResponse[]>([]);
+
+  useEffect(() => {
+    const auctionApi = new AuctionApi();
+    const fetchData = async () => {
+      try {
+        const response = await auctionApi.apiAuctionsGet();
+        const fetchedData: AuctionListResponse[] = response.items
+          ? response.items.map((item: any) => ({
+              ...item,
+              // auctionTime: moment(item.auctionTime).format("YYYY-MM-DD HH:mm"),
+              startDate: moment(item.startDate).format("YYYY-MM-DD HH:mm"),
+              endDate: moment(item.endDate).format("YYYY-MM-DD HH:mm"),
+            }))
+          : ([] as AuctionListResponse[]);
+        console.log(fetchedData);
+        setData(
+          fetchedData.sort((a: any, b: any) =>
+            moment(a.auctionTime).diff(moment(b.auctionTime))
+          )
+        );
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <>
-      
-        <div style={{width:'90%',marginLeft:'80px'}}>
-        <h1 style={{textAlign:'center', margin:'30px'}}>Auction List</h1>
+      <div style={{ width: "90%", marginLeft: "80px" }}>
+        <h1 style={{ textAlign: "center", margin: "30px" }}>Auction List</h1>
+        {data && (
           <Table pagination={false} dataSource={data}>
-            
-              <Column title="Store Name" dataIndex="firstName" key="firstName" />
-              <Column title="Product name" dataIndex="lastName" key="lastName" />
-            
-            <Column title="Store address" dataIndex="address" key="address" />
-            <Column title="Time" dataIndex="age" key="age" />
-
+            <Column title="Auction ID" dataIndex="auctionID" key="auctionID" />
+            <Column title="Title" dataIndex="title" key="title" />
+            <Column title="Start Date" dataIndex="startDate" key="startDate" />
+            <Column title="End Date" dataIndex="endDate" key="endDate" />
             <Column
-              title="Status"
-              dataIndex="tags"
-              key="tags"
-              render={(tags) => (
-                <>
-                  {tags.map((tag:any) => {
-                    let color = tag.length > 5 ? 'geekblue' : 'green';
-                    if (tag === 'loser') {
-                      color = 'volcano';
-                    }
-                    return (
-                      <Tag color={color} key={tag}>
-                        {tag.toUpperCase()}
-                      </Tag>
-                    );
-                  })}
-                </>
-              )}
+              title="Deposit Fee"
+              dataIndex="depositFee"
+              key="depositFee"
+            />
+            <Column title="Shop ID" dataIndex="shopId" key="shopId" />
+            <Column
+              title="Auction Item ID"
+              dataIndex="auctionItemId"
+              key="auctionItemId"
+            />
+            <Column title="Status" dataIndex="status" key="status" />
+            <Column
+              title="Step Increment"
+              dataIndex="stepIncrement"
+              key="stepIncrement"
             />
             <Column
               title="Action"
               key="action"
-              render={(_, record) => (
+              dataIndex={["auctionItemId", "auctionId"]}
+              render={(_, record: { auctionItemId: string; auctionId: string }) => (
                 <Space size="middle">
-                  <Link to='/detailProductAunction'> 
+                  <Link to={`/detailProductAunction/${record.auctionItemId}`}>
                     <Button>Detail</Button>
                   </Link>
-                  <Link to='/ruleDeposit'> 
-                    <Button>Deposit</Button>
-                  </Link>
-                  <Link to='/ruleAunction'> 
+                  <Link to={`/aunction/${record.auctionId}`}>
                     <Button>Auction</Button>
                   </Link>
                 </Space>
               )}
             />
           </Table>
-        </div>
-      
+        )}
+      </div>
     </>
-  )
-
-
-
+  );
 };
 
 export default AunctionList;
