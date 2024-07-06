@@ -49,6 +49,7 @@ const Branches: React.FC = () => {
   const [shops, setShops] = useState<ShopData[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [categories, setCategories] = useState<any[]>([]);
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
