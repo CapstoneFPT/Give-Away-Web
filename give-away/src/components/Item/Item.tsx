@@ -4,7 +4,13 @@ import { Link } from "react-router-dom";
 import { Button } from "antd";
 
 interface ItemProps {
-  id: number;
+  // itemId: string;
+  // sellingPrice: string;
+  // note: string;
+  // brand: string;
+  // color: string;
+  // gender: string;
+  // size
   category: string;
   clothType: string;
   name: string;

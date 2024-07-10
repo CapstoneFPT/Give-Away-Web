@@ -1,7 +1,8 @@
 import React, { createContext, useState } from "react";
 import all_product from "../components/Assets/all_product";
+import axios from "axios";
 
-interface Product {
+export interface Product {
   id: number;
   name: string;
   category: string;
@@ -11,13 +12,16 @@ interface Product {
   old_price: number;
 }
 
+
 interface CartItem {
   id: number; // Only ID is needed to identify the product in the cart
 }
 
 interface ShopContextValue {
-  all_product: Product[];
+ 
   cartItems: CartItem[];
+  getAllProduct: (genderType: string) => Promise<Product[]>;
+
   addToCart: (productId: number) => void; // Quantity removed
   removeFromCart: (productId: number) => void;
 }
@@ -38,12 +42,18 @@ const ShopContextProvider: React.FC<{ children: React.ReactNode }> = (
     setCartItems((prev) => prev.filter((item) => item.id !== productId));
   };
 
+const getAllProduct = async (genderType: string) => {
+  const response = await axios.get(`http://giveawayproject.jettonetto.org:8080/api/fashionitems?GenderType=${genderType}`);
+  return response.data;
+}
+
   const contextValue: ShopContextValue = {
-    all_product,
+    getAllProduct,
     cartItems,
     addToCart,
     removeFromCart,
   };
+  
 
   console.log(cartItems);
   return (

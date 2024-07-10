@@ -1,17 +1,21 @@
-import React, { useContext } from "react";
-import "./CSS/ShopCategory.css";
+import React, { useContext, useEffect } from "react";
 import { ShopContext } from "../context/ShopContext";
 import Item from "../components/Item/Item";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { Button, Typography, Row, Col, Card, Layout, Menu } from "antd";
+import { Product } from "../context/ShopContext";
+
+const { Title } = Typography;
+const { Sider, Content } = Layout;
 
 interface Props {
   category: string;
 }
 
 const ShopCategory: React.FC<Props> = (props) => {
-  const { all_product } = useContext(ShopContext)!;
-  const clothTypes: string[] = ["t-shirt", "jeans", "jacket"];
+  const { getAllProduct } = useContext(ShopContext)!;
+  let all_product: Product[] = [];
   const [filteredProducts, setFilteredProducts] = useState(all_product);
   const [filtersVisible, setFiltersVisible] = useState(true);
   const navigate = useNavigate();
@@ -29,64 +33,113 @@ const ShopCategory: React.FC<Props> = (props) => {
       );
     }
   };
-  return (
-    <div className="shop-category">
-      <div className="shop-category-header">
-        <h1>
-          {props.category.charAt(0).toUpperCase() + props.category.slice(1)}{" "}
-          Collection
-        </h1>
-      </div>
+  useEffect(() => {
+    const fetchProducts = async () => {
+      let genderType = 'Male';
+      if (props.category === 'women') {
+        genderType = 'Female'
+        ;
+      }
+      const products = await getAllProduct(genderType);
+      all_product = products;
+      setFilteredProducts(products);
+    };
+    fetchProducts();
+  }, []);
 
-      <div>
-        <button
-          aria-label="FILTERS"
-          type="button"
-          className="filter-results d-flex align-items-center ml-auto mr-2 mouseFocusUnActive"
+  const handleMenuClick = (e: any) => {
+    // Handle menu item click
+    console.log("Menu item clicked:", e.key);
+  };
+
+  const addToCart = (item: any) => {
+    // Handle add to cart logic
+    console.log("Added to cart:", item);
+  };
+
+  return (
+    <Layout>
+      <Sider width={210} style={{ background: "#fff", marginTop: "20px" }}>
+        <Button
+          style={{ width: "100px", color: "white", backgroundColor: "black", marginBottom: "20px", marginTop: "10px", marginLeft: "10px" }}
           onClick={toggleFilters}
         >
-          {filtersVisible ? (
-            <span className="filter-sidebar--open">HIDE FILTERS</span>
-          ) : (
-            <span className="filter-sidebar--closed">FILTERS</span>
-          )}
-        </button>
-      </div>
-      <div className="shopcategory-content">
-        <div
-          className="filter-bar"
-          style={{ display: filtersVisible ? "block" : "none" }}
-        ></div>
-        <div className="shopcategory-products">
-          {filteredProducts.map((item: any) => {
-            if (props.category === item.category) {
-              return (
-                <div
-                  key={item.id}
-                  onClick={() =>
-                    navigate(`/${item.category}/${item.clothType}/${item.name}`)
-                  }
-                  style={{ textDecoration: "none" }}
-                >
-                  <Item
-                    category={item.category}
-                    id={item.id}
-                    name={item.name}
-                    clothType={item.clothType}
-                    image={item.image}
-                    new_price={item.new_price}
-                    old_price={item.old_price}
-                  />
-                </div>
-              );
-            } else {
-              return null;
-            }
-          })}
-        </div>
-      </div>
-      <div className="shopcategory-loadmore">Explore more</div>
-    </div>
+          {filtersVisible ? "HIDE FILTERS" : "SHOW FILTERS"}
+        </Button>
+        
+        <Menu
+          mode="inline"
+          defaultSelectedKeys={["1"]}
+          style={{ height: "100%", borderRight: 0 }}
+          onClick={handleMenuClick}
+        >
+          <Menu.Item key="1">Category 1</Menu.Item>
+          <Menu.Item key="2">Category 2</Menu.Item>
+          <Menu.Item key="3">Category 3</Menu.Item>
+          {/* Add more categories as needed */}
+        </Menu>
+      </Sider>
+      <Layout style={{ padding: "0 24px 24px" }}>
+        <Content>
+          <div style={{ textAlign: "center", marginBottom: "15px" }}>
+            <Title level={1}>
+              {props.category.charAt(0).toUpperCase() + props.category.slice(1)}{" "}
+              Collection
+            </Title>
+          </div>
+
+          <div>
+            {filtersVisible && (
+              <div style={{ marginBottom: "20px" }}>
+                {/* Add your filter components here */}
+              </div>
+            )}
+            <Row gutter={[16, 16]}>
+              {filteredProducts.map((item: any) => {
+                if (props.category === item.category) {
+                  return (
+                    <Col key={item.id} xs={22} sm={12} md={8} lg={4} >
+                      <Card
+                        hoverable
+                        onClick={() =>
+                          navigate(
+                            `/${item.category}/${item.clothType}/${item.name}`
+                          )
+                        }
+                        cover={<img alt={item.name} src={item.image} />}
+                      >
+                        <Card.Meta
+                          title={item.name}
+                          description={`New Price: ${item.new_price} - Old Price: ${item.old_price}`}
+                        />
+                        <Button
+                          type="primary"
+                          style={{
+                            marginTop: "10px",
+                            color: "white",
+                            backgroundColor: "black",
+                            width: "100%",
+                            height: "30px",
+                          }}
+                          onClick={() => addToCart(item)}
+                        >
+                          Add to Cart
+                        </Button>
+                      </Card>
+                    </Col>
+                  );
+                } else {
+                  return null;
+                }
+              })}
+            </Row>
+          </div>
+          <div style={{ textAlign: "center", marginTop: "20px" }}>
+            <Button type="primary">Explore more</Button>
+          </div>
+        </Content>
+      </Layout>
+    </Layout>
   );
 };
 
