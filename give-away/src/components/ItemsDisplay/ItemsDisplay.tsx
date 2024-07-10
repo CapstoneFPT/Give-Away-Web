@@ -29,7 +29,7 @@ const DisplayItem: React.FC<{ item: FashionItem; onAdd: () => void }> = ({
       <Typography.Text style={{ fontSize: "16px" }}>
         ${item.sellingPrice}
       </Typography.Text>
-      <Button type="primary" onClick={onAdd}>
+      <Button style={{ backgroundColor: "black", color: "white" }} type="primary" onClick={onAdd}>
         Add
       </Button>
     </Card>
