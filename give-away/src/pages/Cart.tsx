@@ -1,15 +1,28 @@
 import { Card } from "antd";
-import { ShopContext } from "../../src/context/ShopContext";
+import { Product, ShopContext } from "../../src/context/ShopContext";
 import "./CSS/Cart.css";
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Button from "antd/lib/button/button";
 const Cart = () => {
   const shopContext = useContext(ShopContext);
-
+  const [all_product, setAllProduct] = useState<Product[]>([]);
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const products = await shopContext?.getAllProduct('Male');
+      
+      if (products) {
+        setAllProduct(products);
+      }
+    };
+    fetchProducts();
+  }, []);
   if (!shopContext) {
     return null; // or handle the case when ShopContext is null
   }
-  const { all_product, cartItems, removeFromCart } = shopContext;
+ 
+  
+
+  const {  cartItems, removeFromCart, getAllProduct } = shopContext;
   console.log(cartItems);
   const pushCartToBackend = async () => {
     const itemIds = Object.keys(cartItems).map((id) => parseInt(id));
@@ -27,6 +40,7 @@ const Cart = () => {
       console.error("Failed to push cart to backend:", error);
     }
   };
+  
   return (
     <Card>
       <div className="cartContainer">
