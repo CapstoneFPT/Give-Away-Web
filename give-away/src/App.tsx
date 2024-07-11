@@ -3,8 +3,7 @@ import "./App.css";
 import Navbar from "./components/Navbar/Navbar";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Shop from "./pages/Shop";
-import ShopCategory from "./pages/ShopCategory";
-import Product from "./pages/Product";
+
 import Cart from "./pages/Cart";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -55,7 +54,6 @@ function App(): JSX.Element {
               <>
                 <Navbar />
                 <Breadcrumb />
-                <ShopCategory category="men" />
               </>
             }
           />
@@ -65,7 +63,6 @@ function App(): JSX.Element {
               <>
                 <Navbar />
                 <Breadcrumb />
-                <ShopCategory category="women" />
               </>
             }
           />
@@ -75,7 +72,6 @@ function App(): JSX.Element {
               <>
                 <Navbar />
                 <Breadcrumb />
-                <Product />
               </>
             }
           />
