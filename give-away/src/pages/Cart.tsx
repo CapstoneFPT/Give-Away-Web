@@ -1,46 +1,9 @@
 import { Card } from "antd";
-import { Product, ShopContext } from "../../src/context/ShopContext";
+
 import "./CSS/Cart.css";
 import React, { useContext, useEffect, useState } from "react";
 import Button from "antd/lib/button/button";
 const Cart = () => {
-  const shopContext = useContext(ShopContext);
-  const [all_product, setAllProduct] = useState<Product[]>([]);
-  useEffect(() => {
-    const fetchProducts = async () => {
-      const products = await shopContext?.getAllProduct('Male');
-      
-      if (products) {
-        setAllProduct(products);
-      }
-    };
-    fetchProducts();
-  }, []);
-  if (!shopContext) {
-    return null; // or handle the case when ShopContext is null
-  }
- 
-  
-
-  const {  cartItems, removeFromCart, getAllProduct } = shopContext;
-  console.log(cartItems);
-  const pushCartToBackend = async () => {
-    const itemIds = Object.keys(cartItems).map((id) => parseInt(id));
-
-    console.log("Pushing cart to backend:", itemIds);
-    try {
-      await fetch("YOUR_BACKEND_ENDPOINT", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ itemIds }),
-      });
-    } catch (error) {
-      console.error("Failed to push cart to backend:", error);
-    }
-  };
-  
   return (
     <Card>
       <div className="cartContainer">
@@ -63,30 +26,22 @@ const Cart = () => {
             </div>
             <div className="cartItemsDisplay">
               <hr />
-              {all_product
-                .filter((e) => cartItems[e.id])
-                .map((e: any) => (
-                  <div className="cartItem" key={e.id}>
-                    <div className="product">
-                      <img className="product-img" src={e.image} alt={e.name} />
-                      <div className="product-content">
-                        <p>
-                          <h1>{e.name}</h1>
-                          <button
-                            className="remove-button"
-                            onClick={() => removeFromCart(e.id)}
-                          >
-                            x
-                          </button>
-                        </p>
-                        <h2>${e.new_price}</h2>
-                        <h3> Size: M</h3>
-                      </div>
-                    </div>
-
-                    <hr />
+              {/* add product item here */}
+              <div className="cartItem">
+                <div className="product">
+                  <img className="product-img" />
+                  <div className="product-content">
+                    <p>
+                      <h1>name</h1>
+                      <button className="remove-button">x</button>
+                    </p>
+                    <h2>$price</h2>
+                    <h3> Size: M</h3>
                   </div>
-                ))}
+                </div>
+
+                <hr />
+              </div>
             </div>
             <p>
               <a href="/">Back to shop</a>
@@ -113,7 +68,6 @@ const Cart = () => {
                 borderRadius: "10px",
                 height: "50px",
               }}
-              onClick={pushCartToBackend}
             >
               Check Out
             </Button>
