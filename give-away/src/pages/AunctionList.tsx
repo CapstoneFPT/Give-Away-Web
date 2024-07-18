@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Space, Table, Tag } from "antd";
+import { Button, Space, Table } from "antd";
 import { Link } from "react-router-dom";
 import moment from "moment";
 import { AuctionApi, AuctionListResponse } from "../api";
@@ -8,7 +8,12 @@ const { Column } = Table;
 
 const AunctionList = () => {
   const [data, setData] = useState<AuctionListResponse[]>([]);
-
+  const [userId, setUserId] = useState<string | null>(null); 
+  useEffect(() => {
+    const userId = JSON.parse(localStorage.getItem("userId") || "null");
+    setUserId(userId);
+    console.log(userId);
+  }, []);
   useEffect(() => {
     const auctionApi = new AuctionApi();
     const fetchData = async () => {
@@ -17,7 +22,6 @@ const AunctionList = () => {
         const fetchedData: AuctionListResponse[] = response.items
           ? response.items.map((item: any) => ({
               ...item,
-              // auctionTime: moment(item.auctionTime).format("YYYY-MM-DD HH:mm"),
               startDate: moment(item.startDate).format("YYYY-MM-DD HH:mm"),
               endDate: moment(item.endDate).format("YYYY-MM-DD HH:mm"),
             }))
@@ -42,7 +46,7 @@ const AunctionList = () => {
         <h1 style={{ textAlign: "center", margin: "30px" }}>Auction List</h1>
         {data && (
           <Table pagination={false} dataSource={data}>
-            <Column title="Auction ID" dataIndex="auctionID" key="auctionID" />
+            <Column title="Auction ID" dataIndex="auctionId" key="auctionId" />
             <Column title="Title" dataIndex="title" key="title" />
             <Column title="Start Date" dataIndex="startDate" key="startDate" />
             <Column title="End Date" dataIndex="endDate" key="endDate" />
@@ -72,7 +76,7 @@ const AunctionList = () => {
                   <Link to={`/detailProductAunction/${record.auctionItemId}`}>
                     <Button>Detail</Button>
                   </Link>
-                  <Link to={`/aunction/${record.auctionId}`}>
+                  <Link to={`/aunction/${record.auctionId}?item=${record.auctionItemId}`}>
                     <Button>Auction</Button>
                   </Link>
                 </Space>
