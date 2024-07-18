@@ -33,6 +33,7 @@ const Navbar = () => {
                 Men
               </Link>
               {menu === "men" ? <hr /> : <></>}
+              
             </li>
             <li
               onClick={() => {
@@ -43,6 +44,7 @@ const Navbar = () => {
                 Women
               </Link>
               {menu === "women" ? <hr /> : <></>}
+              
             </li>
             <li
               onClick={() => {
