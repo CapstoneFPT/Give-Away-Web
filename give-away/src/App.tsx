@@ -12,7 +12,6 @@ import ForgotPassword from "./pages/ForgotPassword";
 import Breadcrumb from "./components/Breadcrums/Breadcrumb";
 import DetailProductAunction from "./pages/DetailProductAunction";
 import RuleAunction from "./pages/RuleAunction";
-// import PurchasePoints from "./pages/PurchasePoints";
 
 import RuleDeposit from "./pages/RuleDeposit";
 import AunctionList from "./pages/AunctionList";
@@ -33,250 +32,284 @@ import OrderList from "./pages/OrderList";
 import WithdrawHistory from "./pages/Transaction/WithdrawHistory";
 import OrderDetail from "./pages/OrderDetail";
 import Fund from "./pages/Fund";
+import Men from "./pages/MainProduct/Men";
+import Women from "./pages/MainProduct/Women";
+import ItemDetail from "./components/ItemsDisplay/ItemDetail";
+import { CartProvider } from "./pages/CartContext";
+import Deposit from "./pages/Deposit";
 
 function App(): JSX.Element {
   return (
-    <div>
-      <BrowserRouter>
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <>
-                <Navbar />
-                <Shop />
-              </>
-            }
-          />
-          <Route
-            path="/men"
-            element={
-              <>
-                <Navbar />
-                <Breadcrumb />
-              </>
-            }
-          />
-          <Route
-            path="/women"
-            element={
-              <>
-                <Navbar />
-                <Breadcrumb />
-              </>
-            }
-          />
-          <Route
-            path="/:category/:clothingType/:productId"
-            element={
-              <>
-                <Navbar />
-                <Breadcrumb />
-              </>
-            }
-          />
-          <Route
-            path="/cart"
-            element={
-              <>
-                <Navbar />
-                <Cart />
-              </>
-            }
-          />
-          <Route
-            path="/login"
-            element={
-              <>
-                <Navbar />
-                <Login />
-              </>
-            }
-          />
-          <Route
-            path="/register"
-            element={
-              <>
-                <Navbar />
-                <Register />
-              </>
-            }
-          />
-          <Route
-            path="/forgotPassword"
-            element={
-              <>
-                <Navbar />
-                <ForgotPassword />
-              </>
-            }
-          />
-          <Route
-            path="/confirmPassword"
-            element={
-              <>
-                <Navbar />
-                <ConfirmPassword />
-              </>
-            }
-          />
-          <Route
-            path="/aunctionList"
-            element={
-              <>
-                <Navbar />
-                <AunctionList />
-              </>
-            }
-          />
-          <Route
-            path="/detailProductAunction/:auctionItemID"
-            element={
-              <>
-                <Navbar />
-                <DetailProductAunction />
-              </>
-            }
-          />
-          <Route
-            path="/ruleAunction"
-            element={
-              <>
-                <Navbar />
-                <RuleAunction />
-              </>
-            }
-          />
-          <Route
-            path="/ruleDeposit"
-            element={
-              <>
-                <Navbar />
-                <RuleDeposit />
-              </>
-            }
-          />
-          <Route
-            path="/consign"
-            element={
-              <>
-                <Navbar />
-                <Consign />
-              </>
-            }
-          />
-          <Route
-            path="/aunction/:auctionID"
-            element={
-              <>
-                <Navbar />
-                <Aunction />
-              </>
-            }
-          />
-          <Route
-            path="/profile"
-            element={
-              <>
-                <Navbar />
-                <Profile />
-              </>
-            }
-          />
-          <Route
-            path="/change-password"
-            element={
-              <>
-                <Navbar />
-                <ChangePassword />
-              </>
-            }
-          />
-          <Route
-            path="/refunds"
-            element={
-              <>
-                <Navbar />
-                <Refunds />
-              </>
-            }
-          />
-          <Route
-            path="/add-fund"
-            element={
-              <>
-                <Navbar />
-                <Fund />
-              </>
-            }
-          />
-          <Route
-            path="/transaction/withdraw"
-            element={
-              <>
-                <Navbar />
-                <Withdraw />
-              </>
-            }
-          />
-          <Route
-            path="/transaction/withdraw-history"
-            element={
-              <>
-                <Navbar />
-                <WithdrawHistory />
-              </>
-            }
-          />
-          <Route
-            path="/transaction/Auction-history"
-            element={
-              <>
-                <Navbar />
-                <AuctionHistory />
-              </>
-            }
-          />
-          <Route
-            path="/transaction/My-consign"
-            element={
-              <>
-                <Navbar />
-                <MyConsign />
-              </>
-            }
-          />
-          <Route
-            path="/order-list"
-            element={
-              <>
-                <Navbar />
-                <OrderList />
-              </>
-            }
-          />
-          <Route
-            path="/order-detail/:id"
-            element={
-              <>
-                <Navbar />
-                <OrderDetail />
-              </>
-            }
-          />
-          <Route
-            path="/branches"
-            element={
-              <>
-                <Navbar />
-                <Branches />
-                <Footer />
-              </>
-            }
-          />
-        </Routes>
-      </BrowserRouter>
-    </div>
+    <BrowserRouter>
+      <div>
+        <CartProvider>
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <>
+                  <Navbar />
+                  <Shop />
+                </>
+              }
+            />
+
+            <Route
+              path="/:category/:clothingType/:productId"
+              element={
+                <>
+                  <Navbar />
+                  <Breadcrumb />
+                </>
+              }
+            />
+            <Route
+              path="/cart"
+              element={
+                <>
+                  <Navbar />
+                  <Cart />
+                </>
+              }
+            />
+            <Route
+              path="/login"
+              element={
+                <>
+                  <Navbar />
+                  <Login />
+                </>
+              }
+            />
+            <Route
+              path="/register"
+              element={
+                <>
+                  <Navbar />
+                  <Register />
+                </>
+              }
+            />
+            <Route
+              path="/forgotPassword"
+              element={
+                <>
+                  <Navbar />
+                  <ForgotPassword />
+                </>
+              }
+            />
+            <Route
+              path="/confirmPassword"
+              element={
+                <>
+                  <Navbar />
+                  <ConfirmPassword />
+                </>
+              }
+            />
+            <Route
+              path="/aunctionList"
+              element={
+                <>
+                  <Navbar />
+                  <AunctionList />
+                </>
+              }
+            />
+            <Route
+              path="/detailProductAunction/:auctionItemID"
+              element={
+                <>
+                  <Navbar />
+                  <DetailProductAunction />
+                </>
+              }
+            />
+            <Route
+              path="/deposit"
+              element={
+                <>
+                  <Navbar />
+                  <Deposit />
+                </>
+              }
+            />
+            <Route
+              path="/ruleAunction"
+              element={
+                <>
+                  <Navbar />
+                  <RuleAunction />
+                </>
+              }
+            />
+            <Route
+              path="/ruleDeposit"
+              element={
+                <>
+                  <Navbar />
+                  <RuleDeposit />
+                </>
+              }
+            />
+            <Route
+              path="/consign"
+              element={
+                <>
+                  <Navbar />
+                  <Consign />
+                </>
+              }
+            />
+            <Route
+              path="/aunction/:auctionId"
+              element={
+                <>
+                  <Navbar />
+                  <Aunction />
+                </>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <>
+                  <Navbar />
+                  <Profile />
+                </>
+              }
+            />
+            <Route
+              path="/change-password"
+              element={
+                <>
+                  <Navbar />
+                  <ChangePassword />
+                </>
+              }
+            />
+            <Route
+              path="/refunds"
+              element={
+                <>
+                  <Navbar />
+                  <Refunds />
+                </>
+              }
+            />
+            <Route
+              path="/add-fund"
+              element={
+                <>
+                  <Navbar />
+                  <Fund />
+                </>
+              }
+            />
+            <Route
+              path="/transaction/withdraw"
+              element={
+                <>
+                  <Navbar />
+                  <Withdraw />
+                </>
+              }
+            />
+            <Route
+              path="/transaction/withdraw-history"
+              element={
+                <>
+                  <Navbar />
+                  <WithdrawHistory />
+                </>
+              }
+            />
+            <Route
+              path="/transaction/Auction-history"
+              element={
+                <>
+                  <Navbar />
+                  <AuctionHistory />
+                </>
+              }
+            />
+            <Route
+              path="/transaction/My-consign"
+              element={
+                <>
+                  <Navbar />
+                  <MyConsign />
+                </>
+              }
+            />
+            <Route
+              path="/order-list"
+              element={
+                <>
+                  <Navbar />
+                  <OrderList />
+                </>
+              }
+            />
+            <Route
+              path="/order-detail/:id"
+              element={
+                <>
+                  <Navbar />
+                  <OrderDetail />
+                </>
+              }
+            />
+            <Route
+              path="/branches"
+              element={
+                <>
+                  <Navbar />
+                  <Branches />
+                  <Footer />
+                </>
+              }
+            />
+            <Route
+              path="/men"
+              element={
+                <>
+                  <Navbar />
+                  <Breadcrumb />
+                  <Men />
+                  <Footer />
+                </>
+              }
+            />
+
+            <Route
+              path="/women"
+              element={
+                <>
+                  <Navbar />
+                  <Breadcrumb />
+                  <Women />
+                  <Footer />
+                </>
+              }
+            />
+
+            <Route
+              path="/itemDetail/:itemId"
+              element={
+                <>
+                  <Navbar />
+                  <ItemDetail />
+
+                  <Footer />
+                </>
+              }
+            />
+          </Routes>
+        </CartProvider>
+      </div>
+    </BrowserRouter>
   );
 }
 
