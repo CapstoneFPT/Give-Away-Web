@@ -5,6 +5,7 @@ import { ShoppingCartOutlined } from "@ant-design/icons";
 
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import { BASE_URL } from "../../api/config";
 
 const { Title, Paragraph } = Typography;
 
@@ -13,10 +14,10 @@ const styles = {
     fontSize: "18px",
     color: "black",
   },
-  price:{
-    color:'red',
+  price: {
+    color: "red",
     fontSize: "30px",
-  }
+  },
 };
 
 interface Product {
@@ -41,9 +42,11 @@ const ItemDetail: React.FC = () => {
   useEffect(() => {
     if (itemId) {
       axios
-        .get(
-          `http://giveawayproject.jettonetto.org:8080/api/fashionitems/${itemId}`
-        )
+        .get(`${BASE_URL}/fashionitems/${itemId}`,{
+          headers :{
+            "ngrok-skip-browser-warning": "6942"
+          }
+        })
         .then((response) => {
           const data = response.data.data;
           setProduct(data);
@@ -100,7 +103,7 @@ const ItemDetail: React.FC = () => {
           </Col>
           <Col span={9}>
             <Card>
-            <Paragraph style={styles.para}>
+              <Paragraph style={styles.para}>
                 <strong>Product Name: </strong> {product.name}
               </Paragraph>
               <Paragraph style={styles.para}>
@@ -108,20 +111,23 @@ const ItemDetail: React.FC = () => {
               </Paragraph>
               <Paragraph style={styles.para}>
                 <strong>Category:</strong> {product.categoryName}{" "}
-                <strong style={{marginLeft:'50px'}}>Gender:</strong> {product.gender}
+                <strong style={{ marginLeft: "50px" }}>Gender:</strong>{" "}
+                {product.gender}
               </Paragraph>
               <Paragraph style={styles.para}>
-                <strong>Size:</strong> {product.size} <strong style={{marginLeft:'150px'}}>Color:</strong>{" "}
+                <strong>Size:</strong> {product.size}{" "}
+                <strong style={{ marginLeft: "150px" }}>Color:</strong>{" "}
                 {product.color}
               </Paragraph>
               <Paragraph style={styles.para}>
                 <strong>Shop Address:</strong> {product.shopAddress}
               </Paragraph>
               <Paragraph style={styles.para}>
-                <strong style={styles.price}>Price: {product.sellingPrice} VND</strong>
-                
+                <strong style={styles.price}>
+                  Price: {product.sellingPrice} VND
+                </strong>
               </Paragraph>
-              
+
               <Button
                 style={{
                   textAlign: "center",
@@ -142,14 +148,13 @@ const ItemDetail: React.FC = () => {
                 />
               </Button>
             </Card>
-            
           </Col>
         </Row>
-        <Card style={{marginTop:'20px'}}>
-              <Paragraph style={styles.para}>
-                <strong>Description:</strong> {product.note}
-              </Paragraph>
-            </Card>
+        <Card style={{ marginTop: "20px" }}>
+          <Paragraph style={styles.para}>
+            <strong>Description:</strong> {product.note}
+          </Paragraph>
+        </Card>
       </Card>
     </Card>
   );

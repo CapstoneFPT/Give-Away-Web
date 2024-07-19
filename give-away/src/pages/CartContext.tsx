@@ -21,7 +21,7 @@ interface Product {
 interface CartState {
   cartItems: Product[];
   userId: string | null;
-  itemToRemove: Product | null; // New field to store item to remove
+  itemToRemove: Product | null;
 }
 
 type CartAction =
@@ -54,12 +54,16 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
   }
 };
 
-const CartContext = createContext<{
+interface CartContextType {
   state: CartState;
   dispatch: React.Dispatch<CartAction>;
-}>({
+  isItemInCart: (itemId: any) => boolean;
+}
+
+const CartContext = createContext<CartContextType>({
   state: initialState,
   dispatch: () => null,
+  isItemInCart: () => false,
 });
 
 export const useCart = () => useContext(CartContext);
@@ -73,8 +77,12 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
     localStorage.setItem("cart", JSON.stringify(state.cartItems));
   }, [state.cartItems]);
 
+  const isItemInCart = (itemId: any) => {
+    return state.cartItems.some((item) => item.itemId === itemId);
+  };
+
   return (
-    <CartContext.Provider value={{ state, dispatch }}>
+    <CartContext.Provider value={{ state, dispatch, isItemInCart }}>
       {children}
     </CartContext.Provider>
   );

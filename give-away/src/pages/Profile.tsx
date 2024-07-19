@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { MailOutlined, PhoneOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, Card, Row, Col, Form, Input, notification, Modal } from "antd"; 
-import axios from "axios"; 
+import { Button, Card, Row, Col, Form, Input, notification, Modal } from "antd";
+import axios from "axios";
 import img from "../components/Assets/nam2.png";
 import NavProfile from "../components/NavProfile/NavProfile";
-import './CSS/Profile.css'; 
+import "./CSS/Profile.css";
+import { BASE_URL } from "../api/config";
 
 const handlePhoneInput = (e: React.ChangeEvent<HTMLInputElement>) => {
   e.target.value = e.target.value.replace(/[^0-9]/g, "");
@@ -13,17 +14,19 @@ const handlePhoneInput = (e: React.ChangeEvent<HTMLInputElement>) => {
 const Profile: React.FC = () => {
   const [userData, setUserData] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
-  const [form] = Form.useForm(); 
-  const [isFormChanged, setIsFormChanged] = useState(false); 
+  const [form] = Form.useForm();
+  const [isFormChanged, setIsFormChanged] = useState(false);
 
   useEffect(() => {
     const userId = JSON.parse(localStorage.getItem("userId") || "null");
     console.log(userId);
     if (userId) {
       axios
-        .get(
-          `http://giveawayproject.jettonetto.org:8080/api/accounts/${userId}`
-        )
+        .get(`${BASE_URL}/accounts/${userId}`,{
+          headers :{
+            "ngrok-skip-browser-warning": "6942"
+          }
+        })
         .then((response) => {
           setUserData(response.data);
           form.setFieldsValue({
@@ -47,30 +50,35 @@ const Profile: React.FC = () => {
     Modal.confirm({
       title: "Confirm",
       content: "Are you sure you want to save the changes?",
-      okText: "Confirm", 
-      okButtonProps: { className: 'custom-confirm-button' }, 
-      cancelButtonProps: { className: 'custom-cancel-button' }, 
+      okText: "Confirm",
+      okButtonProps: { className: "custom-confirm-button" },
+      cancelButtonProps: { className: "custom-cancel-button" },
       onOk: () => {
         const userId = JSON.parse(localStorage.getItem("userId") || "null");
         if (userId) {
           form.validateFields().then((values) => {
             axios
-              .put(
-                `http://giveawayproject.jettonetto.org:8080/api/accounts/${userId}`,
-                values
-              )
+              .put(`${BASE_URL}/accounts/${userId}`, values,{
+                headers :{
+                  "ngrok-skip-browser-warning": "6942"
+                }
+              })
               .then((response) => {
                 notification.success({
                   message: "Success",
                   description: "User data updated successfully!",
                 });
-                setIsFormChanged(false); 
+                setIsFormChanged(false);
               })
               .catch((error) => {
-                console.error("There was an error updating the user data!", error);
+                console.error(
+                  "There was an error updating the user data!",
+                  error
+                );
                 notification.error({
                   message: "Error",
-                  description: "Failed to update user data. Please try again later.",
+                  description:
+                    "Failed to update user data. Please try again later.",
                 });
               });
           });
@@ -169,8 +177,8 @@ const Profile: React.FC = () => {
                           color: "white",
                           marginLeft: "480px",
                         }}
-                        onClick={handleSave} 
-                        disabled={!isFormChanged} 
+                        onClick={handleSave}
+                        disabled={!isFormChanged}
                       >
                         Save
                       </Button>

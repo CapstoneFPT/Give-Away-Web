@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Card, Button, Row, Col, Modal, Spin, message } from "antd";
 import { SmileOutlined as Icon } from "@ant-design/icons";
+import { BASE_URL } from "../../api/config";
 
 type Package = {
   pointPackageId: number;
@@ -19,7 +20,11 @@ const PointPackageShop = () => {
     const userId = JSON.parse(localStorage.getItem("userId") || "null");
     console.log(userId);
     axios
-      .get("http://giveawayproject.jettonetto.org:8080/api/pointpackages")
+      .get(`${BASE_URL}/pointpackages`,{
+        headers :{
+          "ngrok-skip-browser-warning": "6942"
+        }
+      })
       .then((response) => {
         const data = response.data.items;
         if (Array.isArray(data)) {
@@ -42,7 +47,15 @@ const PointPackageShop = () => {
       return;
     }
 
-    axios.post(`http://giveawayproject.jettonetto.org:8080/api/pointpackages/${pkg.pointPackageId}/purchase`, {memberId: userId })
+    axios
+      .post(`${BASE_URL}/pointpackages/${pkg.pointPackageId}/purchase`, {
+        memberId: userId,
+        
+      },{
+        headers :{
+          "ngrok-skip-browser-warning": "6942"
+        }
+      })
       .then((response) => {
         const { data } = response;
         if (data && data.paymentUrl) {
@@ -60,7 +73,7 @@ const PointPackageShop = () => {
   const handleIconClick = (pkg: Package) => {
     setIsModalVisible(true);
     setSelectedPackage(pkg);
-    console.log(pkg.pointPackageId)
+    console.log(pkg.pointPackageId);
   };
 
   const handleCancel = () => {
@@ -70,28 +83,26 @@ const PointPackageShop = () => {
   return (
     <div className="fund-container">
       <Card>
-        <h1 style={{ marginBottom: '10px', textAlign: 'center' }}>Add Fund</h1>
+        <h1 style={{ marginBottom: "10px", textAlign: "center" }}>Add Fund</h1>
         <Row gutter={24}>
           <Col span={16}>
             <Row gutter={[24, 24]}>
               {isLoading ? (
                 <Spin size="large" />
+              ) : packages.length > 0 ? (
+                packages.map((pkg) => (
+                  <Col span={12} key={pkg.pointPackageId}>
+                    <Card
+                      style={{ width: "100%" }}
+                      title={`${pkg.points} Points`}
+                      extra={<Icon onClick={() => handleIconClick(pkg)} />}
+                    >
+                      <p>Price: {pkg.price}</p>
+                    </Card>
+                  </Col>
+                ))
               ) : (
-                packages.length > 0 ? (
-                  packages.map((pkg) => (
-                    <Col span={12} key={pkg.pointPackageId}>
-                      <Card
-                        style={{ width: "100%" }}
-                        title={`${pkg.points} Points`}
-                        extra={<Icon onClick={() => handleIconClick(pkg)} />}
-                      >
-                        <p>Price: {pkg.price}</p>
-                      </Card>
-                    </Col>
-                  ))
-                ) : (
-                  <p>No packages available</p>
-                )
+                <p>No packages available</p>
               )}
             </Row>
           </Col>
@@ -103,7 +114,11 @@ const PointPackageShop = () => {
                   <p>Price: {selectedPackage.price}</p>
                 </div>
               )}
-              <Button onClick={() => selectedPackage && handleBuy(selectedPackage)}>Checkout</Button>
+              <Button
+                onClick={() => selectedPackage && handleBuy(selectedPackage)}
+              >
+                Checkout
+              </Button>
             </Card>
           </Col>
         </Row>
@@ -117,7 +132,11 @@ const PointPackageShop = () => {
           <Button key="back" onClick={handleCancel}>
             Cancel
           </Button>,
-          <Button key="buy" type="primary" onClick={() => selectedPackage && handleBuy(selectedPackage)}>
+          <Button
+            key="buy"
+            type="primary"
+            onClick={() => selectedPackage && handleBuy(selectedPackage)}
+          >
             Buy
           </Button>,
         ]}
