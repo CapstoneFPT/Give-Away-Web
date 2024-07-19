@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Button, Modal, Input, Dropdown } from "antd";
-import { UserOutlined, EyeOutlined, EyeInvisibleOutlined, GoogleOutlined } from "@ant-design/icons";
+import {
+  UserOutlined,
+  EyeOutlined,
+  EyeInvisibleOutlined,
+  GoogleOutlined,
+} from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
 import type { MenuProps } from "antd";
 import { ApiAuthLoginPostRequest, AuthApi } from "../api/apis/AuthApi";
@@ -43,19 +48,22 @@ const Login = () => {
           password: password,
         },
       };
-  
+
       const authApi = new AuthApi();
       const response = await authApi.apiAuthLoginPost(request);
-  
+
       if (response.resultStatus === "Success") {
         const userId = response.data?.id ?? null;
-        localStorage.setItem("user", JSON.stringify(response.data?.accessToken));
+        localStorage.setItem(
+          "user",
+          JSON.stringify(response.data?.accessToken)
+        );
         localStorage.setItem("userId", JSON.stringify(userId));
         localStorage.setItem("role", JSON.stringify(response.data?.role));
-  
-        dispatch({ type: 'CLEAR_CART' }); // Clear cart on login
-        dispatch({ type: 'SET_USER', payload: userId });
-  
+
+        dispatch({ type: "CLEAR_CART" }); // Clear cart on login
+        dispatch({ type: "SET_USER", payload: userId });
+
         setIsModalLoginOpen(false); // hide modal after login
         setIsLoggedIn(true);
       } else {
@@ -65,18 +73,16 @@ const Login = () => {
       console.error("An error occurred while trying to login:", error);
     }
   };
-  
-  
+
   const handleLogout = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("userId");
     localStorage.removeItem("role");
-    dispatch({ type: 'CLEAR_CART' }); // Clear cart in context
-    localStorage.removeItem('cart'); // Clear cart from localStorage
+    dispatch({ type: "CLEAR_CART" }); // Clear cart in context
+    localStorage.removeItem("cart"); // Clear cart from localStorage
+    // localStorage.clear();
     setIsLoggedIn(false);
   };
-  
-  
 
   const dropDownItems: MenuProps["items"] = [
     { key: "1", label: <Link to="/consign">Consign</Link> },
@@ -174,7 +180,13 @@ const Login = () => {
       >
         <div style={{ height: "550px" }}>
           <h2 style={styles.loginTitle}>Give Away</h2>
-          <h3 style={{ textAlign: "center", marginBottom: "30px", color: "#a19696" }}>
+          <h3
+            style={{
+              textAlign: "center",
+              marginBottom: "30px",
+              color: "#a19696",
+            }}
+          >
             Login with your email & password
           </h3>
           <div style={styles.inputContainer}>
@@ -217,10 +229,16 @@ const Login = () => {
           <div style={{ marginTop: "20px", textAlign: "center" }}>
             <div style={{ marginBottom: "10px" }}>
               Don't have an account?
-              <Link to="/register" onClick={handleCancel}> Register </Link>
+              <Link to="/register" onClick={handleCancel}>
+                {" "}
+                Register{" "}
+              </Link>
             </div>
             <div>
-              <Link to="/forgotPassword" onClick={handleCancel}> Forgot password </Link>
+              <Link to="/forgotPassword" onClick={handleCancel}>
+                {" "}
+                Forgot password{" "}
+              </Link>
             </div>
           </div>
         </div>

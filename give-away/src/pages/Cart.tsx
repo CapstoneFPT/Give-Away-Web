@@ -1,9 +1,23 @@
 import React, { useState, useEffect } from "react";
-import { Card, Button, Divider, Row, Col, Typography, Select, Form, Input, Modal, message } from "antd";
+import {
+  Card,
+  Button,
+  Divider,
+  Row,
+  Col,
+  Typography,
+  Select,
+  Form,
+  Input,
+  Modal,
+  message,
+  notification,
+} from "antd";
 import { useCart } from "./CartContext";
-import { DeleteOutlined } from '@ant-design/icons';
+import { DeleteOutlined } from "@ant-design/icons";
 import Checkbox from "antd/es/checkbox/Checkbox";
-import axios from 'axios';
+import axios from "axios";
+import { BASE_URL } from "../api/config";
 
 const { Option } = Select;
 
@@ -29,7 +43,7 @@ const Cart: React.FC = () => {
   const handleConfirmRemove = () => {
     if (itemToRemove) {
       const { itemId } = itemToRemove;
-      dispatch({ type: 'REMOVE_FROM_CART', payload: { itemId } });
+      dispatch({ type: "REMOVE_FROM_CART", payload: { itemId } });
       setShowConfirm(false);
       setItemToRemove(null);
       setSelectedItems((prevSelectedItems) =>
@@ -49,39 +63,114 @@ const Cart: React.FC = () => {
   };
 
   const handleCheckOut = () => {
-    form.validateFields().then((values) => {
-      if (!userId) {
-        console.error("User ID not found in localStorage");
-        console.log('hihi',userId)
-        return;
-      }
+    form
+      .validateFields()
+      .then((values) => {
+        if (!userId) {
+          console.error("User ID not found in localStorage");
+          console.log("hihi", userId);
+          return;
+        }
 
-      if (selectedItems.length === 0) {
-        message.error("Please select at least one item.");
-        return;
-      }
+        if (selectedItems.length === 0) {
+          message.error("Please select at least one item.");
+          return;
+        }
 
-      const orderData = {
-        paymentMethod: values.paymentMethod,
-        recipientName: values.recipientName,
-        address: values.address,
-        phone: values.phone,
-        listItemId: selectedItems, // This is now an array of strings
-      };
-      console.log('Order Data:', orderData);
+        const orderData = {
+          paymentMethod: values.paymentMethod,
+          recipientName: values.recipientName,
+          address: values.address,
+          phone: values.phone,
+          listItemId: selectedItems, // This is now an array of strings
+        };
+        console.log("Order Data:", orderData);
 
-      axios.post(`http://giveawayproject.jettonetto.org:8080/api/accounts/${userId}/orders`, orderData)
-        .then(response => {
-          console.log('Order placed successfully:', response);
-          message.success('Order placed successfully');
-        })
-        .catch(error => {
-          console.error('Error placing order:', error);
-          message.error('Error placing order');
-        });
-    }).catch((errorInfo) => {
-      console.error('Validation Failed:', errorInfo);
-    });
+        axios
+          .post(`${BASE_URL}/accounts/${userId}/orders`, orderData, {
+            headers: {
+              "ngrok-skip-browser-warning": "6942",
+            },
+          })
+          .then((response) => {
+            console.log("Order placed successfully:", response);
+            notification.success({
+              message: "Success",
+              description: "Order placed successfully",
+            });
+            selectedItems.forEach((itemId) => {
+              dispatch({ type: "REMOVE_FROM_CART", payload: { itemId } });
+            });
+            setSelectedItems([]);
+
+            const orderId = response.data.data.orderId;
+            if (values.paymentMethod === "QRCode") {
+              axios
+                .post(
+                  `${BASE_URL}/orders/${orderId}/pay/vnpay`,
+                  { memberId: userId },
+                  {
+                    headers: {
+                      "ngrok-skip-browser-warning": "6942",
+                    },
+                  }
+                )
+                .then((response) => {
+                  console.log("Payment successful:", response);
+                  notification.success({
+                    message: "Payment Success",
+                    description: "Payment was successful",
+                  });
+                  const paymentUrl = response.data.paymentUrl;
+                  if (paymentUrl) {
+                    window.location.href = paymentUrl;
+                  }
+                })
+                .catch((error) => {
+                  console.error("Error during payment:", error);
+                  notification.error({
+                    message: "Payment Error",
+                    description: "Error during payment",
+                  });
+                });
+            } else if (values.paymentMethod === "Point") {
+              axios
+                .post(
+                  `${BASE_URL}/orders/${orderId}/pay/points`,
+                  { memberId: userId },
+                  {
+                    headers: {
+                      "ngrok-skip-browser-warning": "6942",
+                    },
+                  }
+                )
+                .then((response) => {
+                  console.log("Payment successful:", response);
+                  notification.success({
+                    message: "Payment Success",
+                    description: "Payment was successful",
+                  });
+                })
+                .catch((error) => {
+                  console.error("Error during payment:", error);
+                  notification.error({
+                    message: "Payment Error",
+                    description: "Error during payment",
+                  });
+                });
+            }
+          })
+          .catch((error) => {
+            console.error("Error placing order:", error);
+            notification.error({
+              message: "Error",
+              description: "Error placing order",
+            });
+          });
+      })
+      .catch((errorInfo) => {
+        console.error("Validation Failed:", errorInfo);
+      });
   };
 
   const calculateTotalPrice = () => {
@@ -111,7 +200,10 @@ const Cart: React.FC = () => {
                   <Typography>Brand: {item.brand}</Typography>
                   <Typography>Gender: {item.gender}</Typography>
                 </Col>
-                <Col span={4} style={{ display: "flex", justifyContent: "space-between" }}>
+                <Col
+                  span={4}
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                >
                   <Checkbox
                     checked={selectedItems.includes(item.itemId)}
                     onChange={() => handleCheckboxChange(item.itemId)}
@@ -132,23 +224,34 @@ const Cart: React.FC = () => {
       </Col>
       <Col span={8}>
         <Card title="Receiving Information">
-          <Form layout="vertical" form={form} onValuesChange={() => form.validateFields()}>
+          <Form
+            layout="vertical"
+            form={form}
+            onValuesChange={() => form.validateFields()}
+          >
             <Form.Item
               label="Payment Method"
               name="paymentMethod"
-              rules={[{ required: true, message: "Please select a payment method" }]}
+              rules={[
+                { required: true, message: "Please select a payment method" },
+              ]}
               style={{ marginBottom: "10px" }}
             >
-              <Select placeholder="Select payment method" style={{ width: 150 }}>
+              <Select
+                placeholder="Select payment method"
+                style={{ width: 150 }}
+              >
                 <Option value="QRCode">QRCode</Option>
                 <Option value="COD">COD</Option>
-                <Option value="Wallet points">Wallet points</Option>
+                <Option value="Point">Point</Option>
               </Select>
             </Form.Item>
             <Form.Item
               label="Recipient Name"
               name="recipientName"
-              rules={[{ required: true, message: "Please enter recipient name" }]}
+              rules={[
+                { required: true, message: "Please enter recipient name" },
+              ]}
             >
               <Input placeholder="Recipient Name" />
             </Form.Item>
@@ -178,7 +281,7 @@ const Cart: React.FC = () => {
                   marginBottom: "10px",
                 }}
               >
-                <Typography style={{ color: 'orange', fontSize: '20px' }}>
+                <Typography style={{ color: "orange", fontSize: "20px" }}>
                   Total price: {calculateTotalPrice()} VND
                 </Typography>
               </div>
