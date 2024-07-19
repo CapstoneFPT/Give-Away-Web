@@ -36,7 +36,7 @@ const Register = () => {
     }
 
     try {
-      const response = await fetch("http://giveawayproject.jettonetto.org:8080/api/auth/register", {
+      const response = await fetch("${BASE_URL}/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -156,7 +156,10 @@ const Register = () => {
           </div>
 
           <div style={{ textAlign: "center" }}>
-            <Button style={styles.buttonRegisterModalLayout} onClick={handleRegister}>
+            <Button
+              style={styles.buttonRegisterModalLayout}
+              onClick={handleRegister}
+            >
               Register
             </Button>
           </div>

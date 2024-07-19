@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import { Button, Card, Form, Input, notification, Modal } from "antd";
 import { MailOutlined, LockOutlined } from "@ant-design/icons";
+import { BASE_URL } from "../api/config";
 
 interface Styles {
   inputContainer: React.CSSProperties;
@@ -52,34 +53,38 @@ const ForgotPassword = () => {
     console.log(values);
     try {
       const { email, password, confirmPassword } = values;
-      const response = await fetch(`http://giveawayproject.jettonetto.org:8080/api/auth/forgot-password?Email=${email}&Password=${password}&ConfirmPassword=${confirmPassword}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      const response = await fetch(
+        `${BASE_URL}/auth/forgot-password?Email=${email}&Password=${password}&ConfirmPassword=${confirmPassword}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (response.ok) {
         notification.success({
-          message: 'Success',
-          description: 'Your password reset request has been sent. Please check your email for the OTP.',
+          message: "Success",
+          description:
+            "Your password reset request has been sent. Please check your email for the OTP.",
         });
         setIsModalVisible(true);
       } else {
-        throw new Error('Failed to send password reset request');
+        throw new Error("Failed to send password reset request");
       }
     } catch (error) {
       notification.error({
-        message: 'Error',
-        description: 'An error occurred while processing your request.',
+        message: "Error",
+        description: "An error occurred while processing your request.",
       });
     }
   };
 
   const onFinishFailed = (errorInfo: any) => {
     notification.error({
-      message: 'Error',
-      description: 'Please fill in all required fields.',
+      message: "Error",
+      description: "Please fill in all required fields.",
     });
   };
 
@@ -98,49 +103,55 @@ const ForgotPassword = () => {
     }
   };
 
- const handleOtpSubmit = async () => {
-  const confirmtoken = otp.join(""); // Chuyển mảng OTP thành chuỗi
+  const handleOtpSubmit = async () => {
+    const confirmtoken = otp.join(""); // Chuyển mảng OTP thành chuỗi
 
-  if (confirmtoken.length === 6) {
-    try {
-      const response = await fetch(`http://giveawayproject.jettonetto.org:8080/api/auth/reset-password?confirmtoken=${confirmtoken}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ confirmtoken }), // Sử dụng confirmtoken thay vì otp
+    if (confirmtoken.length === 6) {
+      try {
+        const response = await fetch(
+          `${BASE_URL}/auth/reset-password?confirmtoken=${confirmtoken}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ confirmtoken }),
+             // Sử dụng confirmtoken thay vì otp
+             
+          }
+          
+        );
+
+        if (response.ok) {
+          notification.success({
+            message: "OTP Verified",
+            description: "Your OTP has been verified successfully.",
+          });
+          setIsModalVisible(false);
+        } else {
+          const errorData = await response.json();
+          throw new Error(errorData.message || "Failed to verify OTP");
+        }
+      } catch (error) {
+        if (error instanceof Error) {
+          notification.error({
+            message: "Error",
+            description: `An error occurred while verifying your OTP: ${error.message}`,
+          });
+        } else {
+          notification.error({
+            message: "Error",
+            description: "An unknown error occurred while verifying your OTP.",
+          });
+        }
+      }
+    } else {
+      notification.error({
+        message: "Invalid OTP",
+        description: "Please enter a valid 6-digit OTP.",
       });
-
-      if (response.ok) {
-        notification.success({
-          message: 'OTP Verified',
-          description: 'Your OTP has been verified successfully.',
-        });
-        setIsModalVisible(false);
-      } else {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to verify OTP');
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        notification.error({
-          message: 'Error',
-          description: `An error occurred while verifying your OTP: ${error.message}`,
-        });
-      } else {
-        notification.error({
-          message: 'Error',
-          description: 'An unknown error occurred while verifying your OTP.',
-        });
-      }
     }
-  } else {
-    notification.error({
-      message: 'Invalid OTP',
-      description: 'Please enter a valid 6-digit OTP.',
-    });
-  }
-};
+  };
 
   return (
     <>
@@ -171,7 +182,7 @@ const ForgotPassword = () => {
           >
             <Form.Item
               name="email"
-              rules={[{ required: true, message: 'Please input your Email!' }]}
+              rules={[{ required: true, message: "Please input your Email!" }]}
               style={styles.inputContainer}
             >
               <Input prefix={<MailOutlined />} placeholder="Email" />
@@ -179,34 +190,48 @@ const ForgotPassword = () => {
 
             <Form.Item
               name="password"
-              rules={[{ required: true, message: 'Please input your Password!' }]}
+              rules={[
+                { required: true, message: "Please input your Password!" },
+              ]}
               style={styles.inputContainer}
             >
-              <Input.Password prefix={<LockOutlined />} placeholder="Password" />
+              <Input.Password
+                prefix={<LockOutlined />}
+                placeholder="Password"
+              />
             </Form.Item>
 
             <Form.Item
               name="confirmPassword"
-              dependencies={['password']}
+              dependencies={["password"]}
               hasFeedback
               rules={[
-                { required: true, message: 'Please confirm your Password!' },
+                { required: true, message: "Please confirm your Password!" },
                 ({ getFieldValue }) => ({
                   validator(_, value) {
-                    if (!value || getFieldValue('password') === value) {
+                    if (!value || getFieldValue("password") === value) {
                       return Promise.resolve();
                     }
-                    return Promise.reject(new Error('The two passwords do not match!'));
+                    return Promise.reject(
+                      new Error("The two passwords do not match!")
+                    );
                   },
                 }),
               ]}
               style={styles.inputContainer}
             >
-              <Input.Password prefix={<LockOutlined />} placeholder="Confirm Password" />
+              <Input.Password
+                prefix={<LockOutlined />}
+                placeholder="Confirm Password"
+              />
             </Form.Item>
 
             <Form.Item style={{ textAlign: "center" }}>
-              <Button type="primary" htmlType="submit" style={styles.buttonSendModalLayout}>
+              <Button
+                type="primary"
+                htmlType="submit"
+                style={styles.buttonSendModalLayout}
+              >
                 Send
               </Button>
             </Form.Item>
@@ -218,30 +243,48 @@ const ForgotPassword = () => {
         title="Enter your code for reset password"
         visible={isModalVisible}
         footer={[
-          <Button key="cancel" onClick={() => setIsModalVisible(false)} style={styles.modalButton}>
+          <Button
+            key="cancel"
+            onClick={() => setIsModalVisible(false)}
+            style={styles.modalButton}
+          >
             Cancel
           </Button>,
-        <Button key="submit" type="primary" onClick={handleOtpSubmit} style={styles.modalButton}>
-        OK
-      </Button>,
-    ]}
-    onCancel={() => setIsModalVisible(false)}
-  >
-    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100px" }}>
-      {otp.map((value, index) => (
-        <Input
-          key={index}
-          value={value}
-          onChange={(e) => handleOtpChange(e.target.value, index)}
-          maxLength={1}
-          style={styles.otpInput}
-          ref={(el) => (inputRefs.current[index] = el as HTMLInputElement | null)}
-        />
-      ))}
-    </div>
-  </Modal>
-</>
-);
+          <Button
+            key="submit"
+            type="primary"
+            onClick={handleOtpSubmit}
+            style={styles.modalButton}
+          >
+            OK
+          </Button>,
+        ]}
+        onCancel={() => setIsModalVisible(false)}
+      >
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100px",
+          }}
+        >
+          {otp.map((value, index) => (
+            <Input
+              key={index}
+              value={value}
+              onChange={(e) => handleOtpChange(e.target.value, index)}
+              maxLength={1}
+              style={styles.otpInput}
+              ref={(el) =>
+                (inputRefs.current[index] = el as HTMLInputElement | null)
+              }
+            />
+          ))}
+        </div>
+      </Modal>
+    </>
+  );
 };
 
 export default ForgotPassword;
