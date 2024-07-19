@@ -3,6 +3,7 @@ import { Card, Row, Col, Button, Typography } from "antd";
 import Footer from "../components/Footer/Footer";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import { BASE_URL } from "../api/config";
 
 const { Title, Paragraph } = Typography;
 
@@ -14,9 +15,9 @@ interface Product {
   brand: string;
   categoryName: string;
   size: string;
-  gender:string;
+  gender: string;
   shopAddress: string;
-  color: string
+  color: string;
 }
 
 const styles = {
@@ -34,17 +35,23 @@ const styles = {
 
 const DetailProductAunction: React.FC = () => {
   const { auctionItemID } = useParams<{ auctionItemID: string }>();
-  console.log(auctionItemID)
+  console.log(auctionItemID);
   const [product, setProduct] = useState<Product | null>(null);
   const [selectedImage, setSelectedImage] = useState<string>("");
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await axios.get(`http://giveawayproject.jettonetto.org:8080/api/fashionitems/${auctionItemID}`);
+        const response = await axios.get(
+          `${BASE_URL}/fashionitems/${auctionItemID} `,{
+            headers :{
+              "ngrok-skip-browser-warning": "6942"
+            }
+          }
+        );
         setProduct(response.data.data);
         // setSelectedImage(response.data.images[0]);
-        console.log(response)
+        console.log(response);
       } catch (error) {
         console.error("Error fetching product data:", error);
       }
@@ -61,20 +68,20 @@ const DetailProductAunction: React.FC = () => {
     <>
       <Card>
         <Card>
-          <h1 style={{ textAlign: 'center', fontSize: '40px' }}>Detail Product Auction</h1>
-          <Row gutter={[16, 16]} style={{ margin: '10px' }}>
+          <h1 style={{ textAlign: "center", fontSize: "40px" }}>
+            Detail Product Auction
+          </h1>
+          <Row gutter={[16, 16]} style={{ margin: "10px" }}>
             <Col span={4}>
               <Row gutter={[10, 8]}>
-                
-                  <Col span={24} >
-                    <img
-                      // src={image}
-                      // alt={`Thumbnail ${index}`}
-                      // style={{ width: "90%", height: '230px', cursor: "pointer", border: selectedImage === image ? "2px solid #1890ff" : "none" }}
-                      // onClick={() => setSelectedImage(image)}
-                    />
-                  </Col>
-                
+                <Col span={24}>
+                  <img
+                  // src={image}
+                  // alt={`Thumbnail ${index}`}
+                  // style={{ width: "90%", height: '230px', cursor: "pointer", border: selectedImage === image ? "2px solid #1890ff" : "none" }}
+                  // onClick={() => setSelectedImage(image)}
+                  />
+                </Col>
               </Row>
             </Col>
             <Col span={12}>
@@ -107,15 +114,36 @@ const DetailProductAunction: React.FC = () => {
               </Card>
             </Col>
             <Card>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Officia vel fuga iusto? Modi eius ratione delectus? Ullam natus debitis pariatur fugiat vitae error voluptas explicabo ex! Ipsum, magni. Quidem, numquam.
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Officia vel fuga iusto? Modi eius ratione delectus? Ullam natus debitis pariatur fugiat vitae error voluptas explicabo ex! Ipsum, magni. Quidem, numquam.
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Officia vel fuga iusto? Modi eius ratione delectus? Ullam natus debitis pariatur fugiat vitae error voluptas explicabo ex! Ipsum, magni. Quidem, numquam.
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Officia vel fuga iusto? Modi eius ratione delectus? Ullam natus debitis pariatur fugiat vitae error voluptas explicabo ex! Ipsum, magni. Quidem, numquam.
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Officia vel fuga iusto? Modi eius ratione delectus? Ullam natus debitis pariatur fugiat vitae error voluptas explicabo ex! Ipsum, magni. Quidem, numquam.
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Officia vel fuga iusto? Modi eius ratione delectus? Ullam natus debitis pariatur fugiat vitae error voluptas explicabo ex! Ipsum, magni. Quidem, numquam.
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Officia vel fuga iusto? Modi eius ratione delectus? Ullam natus debitis pariatur fugiat vitae error voluptas explicabo ex! Ipsum, magni. Quidem, numquam.
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Officia vel fuga iusto? Modi eius ratione delectus? Ullam natus debitis pariatur fugiat vitae error voluptas explicabo ex! Ipsum, magni. Quidem, numquam.
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Officia vel fuga iusto? Modi eius ratione delectus? Ullam natus debitis pariatur fugiat vitae error voluptas explicabo ex! Ipsum, magni. Quidem, numquam.
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Officia
+              vel fuga iusto? Modi eius ratione delectus? Ullam natus debitis
+              pariatur fugiat vitae error voluptas explicabo ex! Ipsum, magni.
+              Quidem, numquam. Lorem ipsum dolor sit amet, consectetur
+              adipisicing elit. Officia vel fuga iusto? Modi eius ratione
+              delectus? Ullam natus debitis pariatur fugiat vitae error voluptas
+              explicabo ex! Ipsum, magni. Quidem, numquam. Lorem ipsum dolor sit
+              amet, consectetur adipisicing elit. Officia vel fuga iusto? Modi
+              eius ratione delectus? Ullam natus debitis pariatur fugiat vitae
+              error voluptas explicabo ex! Ipsum, magni. Quidem, numquam. Lorem
+              ipsum dolor sit amet, consectetur adipisicing elit. Officia vel
+              fuga iusto? Modi eius ratione delectus? Ullam natus debitis
+              pariatur fugiat vitae error voluptas explicabo ex! Ipsum, magni.
+              Quidem, numquam. Lorem ipsum dolor sit amet, consectetur
+              adipisicing elit. Officia vel fuga iusto? Modi eius ratione
+              delectus? Ullam natus debitis pariatur fugiat vitae error voluptas
+              explicabo ex! Ipsum, magni. Quidem, numquam. Lorem ipsum dolor sit
+              amet, consectetur adipisicing elit. Officia vel fuga iusto? Modi
+              eius ratione delectus? Ullam natus debitis pariatur fugiat vitae
+              error voluptas explicabo ex! Ipsum, magni. Quidem, numquam. Lorem
+              ipsum dolor sit amet, consectetur adipisicing elit. Officia vel
+              fuga iusto? Modi eius ratione delectus? Ullam natus debitis
+              pariatur fugiat vitae error voluptas explicabo ex! Ipsum, magni.
+              Quidem, numquam. Lorem ipsum dolor sit amet, consectetur
+              adipisicing elit. Officia vel fuga iusto? Modi eius ratione
+              delectus? Ullam natus debitis pariatur fugiat vitae error voluptas
+              explicabo ex! Ipsum, magni. Quidem, numquam. Lorem ipsum dolor sit
+              amet, consectetur adipisicing elit. Officia vel fuga iusto? Modi
+              eius ratione delectus? Ullam natus debitis pariatur fugiat vitae
+              error voluptas explicabo ex! Ipsum, magni. Quidem, numquam.
             </Card>
             <div style={{ margin: "30px" }}>
               <Button style={styles.buttonDetail}>Deposit</Button>

@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Layout, Menu, Button, Row, Col, Card, Pagination, Spin } from "antd";
+import { Layout, Menu, Button, Row, Col, Card, Pagination, Spin, notification } from "antd";
 import Sider from "antd/es/layout/Sider";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import { Content } from "antd/es/layout/layout";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useCart } from "../CartContext"; // Import useCart
+import { useCart } from "../CartContext";
+import { BASE_URL } from "../../api/config";
 
 interface Product {
   itemId: any;
@@ -19,7 +20,7 @@ interface Product {
 }
 
 const Men: React.FC = () => {
-  const { dispatch } = useCart();
+  const { state, dispatch, isItemInCart } = useCart();
   const [products, setProducts] = useState<Product[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
@@ -35,8 +36,15 @@ const Men: React.FC = () => {
     setIsLoading(true);
     try {
       const response = await axios.get(
-        `http://giveawayproject.jettonetto.org:8080/api/fashionitems?PageSize=${pageSize}&Status=Available&Type=ItemBase&Type=ConsignedForSale&GenderType=Male&pageNumber=${page}`
+        `${BASE_URL}/fashionitems?PageSize=${pageSize}&Status=Available&Type=ItemBase&Type=ConsignedForSale&GenderType=Male&pageNumber=${page}`,
+        {
+          headers: {
+            "ngrok-skip-browser-warning": "6942",
+          },
+        }
       );
+
+      console.debug(response);
       const data = response.data;
       if (data && data.data.items && Array.isArray(data.data.items)) {
         setProducts(data.data.items);
@@ -52,8 +60,19 @@ const Men: React.FC = () => {
   };
 
   const handleAddToCart = (product: Product) => {
-    dispatch({ type: 'ADD_TO_CART', payload: { ...product } });
-    console.log("Adding item to cart with itemId:", product.itemId);
+    if (isItemInCart(product.itemId)) {
+      notification.warning({
+        message: "Already in Cart",
+        description: `The item "${product.name}" is already in your cart.`,
+      });
+    } else {
+      dispatch({ type: "ADD_TO_CART", payload: { ...product } });
+      notification.success({
+        message: "Added to Cart",
+        description: `The item "${product.name}" has been added to your cart.`,
+      });
+      console.log("Adding item to cart with itemId:", product.itemId);
+    }
   };
 
   const goToDetailPage = (itemId: any) => {
@@ -90,7 +109,7 @@ const Men: React.FC = () => {
         <Content>
           <div style={{ textAlign: "center", marginBottom: "15px" }}>
             <h1>Men Collection</h1>
-            {isLoading && <Spin style={{ textAlign: 'center' }} size="large" />}
+            {isLoading && <Spin style={{ textAlign: "center" }} size="large" />}
           </div>
           <Row gutter={[16, 16]}>
             {products.map((product: Product) => (
@@ -101,11 +120,11 @@ const Men: React.FC = () => {
                     description={`${product.sellingPrice} VND`}
                   />
                 </Card>
-                <div style={{ textAlign: 'center' }}>
+                <div style={{ textAlign: "center" }}>
                   <Button
                     type="primary"
                     style={{
-                      textAlign: 'center',
+                      textAlign: "center",
                       marginTop: "10px",
                       backgroundColor: "#000000",
                       color: "white",
@@ -113,7 +132,7 @@ const Men: React.FC = () => {
                       height: "35px",
                       border: "2px solid black",
                       borderRadius: "15px",
-                      fontSize: '16px',
+                      fontSize: "16px",
                     }}
                     onClick={() => handleAddToCart(product)}
                   >
@@ -129,7 +148,11 @@ const Men: React.FC = () => {
               fetchProducts(page);
             }}
             current={currentPage}
-            style={{ justifyContent: "center", display: "flex", marginTop: '50px' }}
+            style={{
+              justifyContent: "center",
+              display: "flex",
+              marginTop: "50px",
+            }}
             pageSize={pageSize}
             total={totalCount}
             showSizeChanger={false}
