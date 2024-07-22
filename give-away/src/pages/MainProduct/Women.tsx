@@ -1,78 +1,77 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Layout, Menu, Button, Row, Col, Card, Pagination, Spin } from "antd";
+import { Layout, Menu, Button, Row, Col, Card, Pagination, Spin,notification } from "antd";
 import Sider from "antd/es/layout/Sider";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import { Content } from "antd/es/layout/layout";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useCart } from "../CartContext";
 import { BASE_URL } from "../../api/config";
 
 interface Product {
   itemId: any;
   name: string;
+  size: string;
+  color: string;
+  gender: string;
+  brand: string;
   sellingPrice: number;
+  shopAddress: string;
 }
 
-const Women = () => {
+const Women: React.FC = () => {
+  const { state, dispatch, isItemInCart } = useCart();
   const [products, setProducts] = useState<Product[]>([]);
   const [totalCount, setTotalCount] = useState(0);
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
-  const [pageSize, setPageSize] = useState(12);
+  const pageSize = 12;
   const navigate = useNavigate();
-
   useEffect(() => {
-    axios
-      .get(
-        `${BASE_URL}/fashionitems?PageSize=12&Status=Available&Type=ItemBase&Type=ConsignedForSale&GenderType=Female`,{
-          headers :{
-            "ngrok-skip-browser-warning": "6942"
-          }
-        }
-      )
-      .then((response) => {
-        const data = response.data;
-        console.log("Products fetched:", data);
-        if (data && data.data.items && Array.isArray(data.data.items)) {
-          setProducts(data.data.items);
-        } else {
-          console.error("Data is not in expected format:", data);
-        }
-      })
-      .catch((error) => {
-        console.error("There was an error fetching the products!", error);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, []);
+    fetchProducts(currentPage);
+  }, [currentPage]);
 
-  const pageChange = (page: number, pageSize: number) => {
+const fetchProducts = async (page: number) => {
     setIsLoading(true);
-    axios
-      .get(
-        `${BASE_URL}/fashionitems?Status=Available&Type=ItemBase&Type=ConsignedForSale&pageNumber&pageSize=12&GenderType=Female` ,{
-          headers :{
-            "ngrok-skip-browser-warning": "6942"
-          }
+    try {
+      const response = await axios.get(
+        `${BASE_URL}/fashionitems?PageSize=${pageSize}&Status=Available&Type=ItemBase&Type=ConsignedForSale&GenderType=Female&pageNumber=${page}`,
+        {
+          headers: {
+            "ngrok-skip-browser-warning": "6942",
+          },
         }
-      )
-      .then((response) => {
-        const data = response.data;
-        setTotalCount(data.data.totalCount);
+      );
+
+      console.debug(response);
+      const data = response.data;
+      if (data && data.data.items && Array.isArray(data.data.items)) {
         setProducts(data.data.items);
-        setCurrentPage(page); // Update current page without Math.min
-      })
-      .catch((error) => {
-        console.error("Failed to fetch women items:", error);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+        setTotalCount(data.data.totalCount);
+      } else {
+        console.error("Data is not in expected format:", data);
+      }
+    } catch (error) {
+      console.error("There was an error fetching the products!", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
+
   const handleAddToCart = (product: Product) => {
-    // addToCart({ ...product, price: product.sellingPrice });
-    console.log("Adding item to cart with itemId:", product.itemId);
+    if (isItemInCart(product.itemId)) {
+      notification.warning({
+        message: "Already in Cart",
+        description: `The item "${product.name}" is already in your cart.`,
+      });
+    } else {
+      dispatch({ type: "ADD_TO_CART", payload: { ...product } });
+      notification.success({
+        message: "Added to Cart",
+        description: `The item "${product.name}" has been added to your cart.`,
+      });
+      console.log("Adding item to cart with itemId:", product.itemId);
+    }
   };
 
   const goToDetailPage = (itemId: any) => {
@@ -91,7 +90,9 @@ const Women = () => {
             marginTop: "10px",
             marginLeft: "10px",
           }}
-        ></Button>
+        >
+          Filter
+        </Button>
         <Menu
           mode="inline"
           defaultSelectedKeys={["1"]}
@@ -105,8 +106,8 @@ const Women = () => {
       <Layout style={{ padding: "0 24px 24px" }}>
         <Content>
           <div style={{ textAlign: "center", marginBottom: "15px" }}>
-            <h1> Women Collection</h1>
-            <div> {isLoading && <Spin size="large" />}</div>
+            <h1>Men Collection</h1>
+            {isLoading && <Spin style={{ textAlign: "center" }} size="large" />}
           </div>
           <Row gutter={[16, 16]}>
             {products.map((product: Product) => (
@@ -128,28 +129,28 @@ const Women = () => {
                       width: "170px",
                       height: "35px",
                       border: "2px solid black",
-                      padding: "10px 20px",
                       borderRadius: "15px",
                       fontSize: "16px",
                     }}
                     onClick={() => handleAddToCart(product)}
                   >
-                    Add to Cart
-                    <ShoppingCartOutlined />
+                    Add to Cart <ShoppingCartOutlined />
                   </Button>
                 </div>
               </Col>
             ))}
           </Row>
           <Pagination
-            onChange={pageChange}
+            onChange={(page) => {
+              setCurrentPage(page);
+              fetchProducts(page);
+            }}
             current={currentPage}
             style={{
               justifyContent: "center",
               display: "flex",
               marginTop: "50px",
             }}
-            defaultCurrent={1}
             pageSize={pageSize}
             total={totalCount}
             showSizeChanger={false}
