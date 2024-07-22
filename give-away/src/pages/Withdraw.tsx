@@ -1,5 +1,5 @@
-import React from "react";
-
+import React, { useState } from "react"; // Thêm useState
+import axios from "axios"; // Thêm import axios
 import {
   Button,
   Card,
@@ -8,12 +8,14 @@ import {
   Form,
   Input,
   Select,
-  Upload,
   message,
 } from "antd";
-import { UploadOutlined, SendOutlined } from "@ant-design/icons";
+import { SendOutlined } from "@ant-design/icons";
 import NavProfile from "../components/NavProfile/NavProfile";
+import { BASE_URL } from "../api/config";
+
 const { Option } = Select;
+
 const styles = {
   buttonRefunds: {
     marginLeft: "80%",
@@ -31,11 +33,43 @@ const styles = {
     padding: "20px",
   },
 };
+
 const Withdraw = () => {
-  const handleSubmit = (values: any) => {
-    // Simulate a successful form submission
-    message.success("Refund request sent successfully!");
-    console.log("Form values: ", values);
+  const userId = JSON.parse(localStorage.getItem("userId") || "null");
+  console.log(userId);
+  
+  const [form] = Form.useForm(); // Khởi tạo form
+  const [amount, setAmount] = useState(0); // State để lưu số tiền
+
+  const handleSubmit = async (values: any) => {
+    // Xác nhận số tiền cần rút
+    const confirmWithdraw = window.confirm(`Bạn có chắc chắn muốn rút ${values.amount} không?`);
+    if (!confirmWithdraw) return;
+
+    try {
+      // Tạo body dữ liệu theo định dạng yêu cầu
+      const requestBody = {
+        amount: values.amount,
+        bank: values.bank,
+        bankAccountNumber: values.bankAccount,
+        bankAccountName: values.bankName,
+      };
+
+      // Gọi API để rút tiền với userId
+      const response = await axios.post(
+        `${BASE_URL}/accounts/${userId}/withdraws`,
+        requestBody // Truyền dữ liệu vào body
+      );
+      message.success("Refund request sent successfully!");
+      console.log("Form values: ", values);
+      console.log("API response: ", response.data); // Log phản hồi từ API
+
+      // Reset form sau khi gửi thành công
+      form.resetFields();
+    } catch (error) {
+      message.error("Send refund request failed. Please check your information!");
+      console.error("API error: ", error); // Log lỗi từ API
+    }
   };
 
   const handleSubmitFailed = (errorInfo: any) => {
@@ -43,6 +77,7 @@ const Withdraw = () => {
     message.error("Send refund request failed. Please check your information!");
     console.log("Failed:", errorInfo);
   };
+
   const banks = [
     "Vietcombank",
     "Techcombank",
@@ -54,7 +89,6 @@ const Withdraw = () => {
     "VPBank",
     "MB Bank",
     "TPBank",
-    // Add more banks as needed
   ];
 
   return (
@@ -79,6 +113,7 @@ const Withdraw = () => {
             </h3>
 
             <Form
+              form={form} // Gán form vào component
               style={styles.formContainer}
               name="refundForm"
               initialValues={{ remember: true }}
@@ -112,7 +147,7 @@ const Withdraw = () => {
                 rules={[
                   {
                     required: true,
-                    message: "Please enter the amount to be refunded!",
+                    message: "Please enter the bank name!",
                   },
                 ]}
               >
@@ -170,6 +205,7 @@ const Withdraw = () => {
                       event.preventDefault();
                     }
                   }}
+                  onChange={(e) => setAmount(Number(e.target.value))} // Cập nhật số tiền
                 />
               </Form.Item>
 
