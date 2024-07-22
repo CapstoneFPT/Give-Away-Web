@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Layout, Menu, Button, Row, Col, Card, Pagination, Spin, notification } from "antd";
 import Sider from "antd/es/layout/Sider";
@@ -5,7 +6,7 @@ import { ShoppingCartOutlined } from "@ant-design/icons";
 import { Content } from "antd/es/layout/layout";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useCart } from "../CartContext";
+import { useCart } from "../../pages/CartContext";
 import { BASE_URL } from "../../api/config";
 
 interface Product {
@@ -17,18 +18,15 @@ interface Product {
   brand: string;
   sellingPrice: number;
   shopAddress: string;
-  isOrderedYet: boolean; // Add this line
 }
 
-const Men: React.FC = () => {
+const ItemDisplayHome: React.FC = () => {
   const { state, dispatch, isItemInCart } = useCart();
   const [products, setProducts] = useState<Product[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
-  const [userId, setUserId] = useState<string | null>(null);
-
-  const pageSize = 12;
+  const pageSize = 24;
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -38,9 +36,8 @@ const Men: React.FC = () => {
   const fetchProducts = async (page: number) => {
     setIsLoading(true);
     try {
-      const userId = JSON.parse(localStorage.getItem("userId") || "null"); 
       const response = await axios.get(
-        `${BASE_URL}/fashionitems?PageSize=${pageSize}&MemberId=${userId}&Status=Available&Type=ItemBase&Type=ConsignedForSale&GenderType=Male&pageNumber=${page}`,
+        `${BASE_URL}/fashionitems?PageSize=${pageSize}&Status=Available&Type=ItemBase&Type=ConsignedForSale&pageNumber=${page}`,
         {
           headers: {
             "ngrok-skip-browser-warning": "6942",
@@ -64,12 +61,7 @@ const Men: React.FC = () => {
   };
 
   const handleAddToCart = (product: Product) => {
-    if (product.isOrderedYet) {
-      notification.error({
-        message: "Already Ordered",
-        description: `The item "${product.name}" has already been ordered.`,
-      });
-    } else if (isItemInCart(product.itemId)) {
+    if (isItemInCart(product.itemId)) {
       notification.warning({
         message: "Already in Cart",
         description: `The item "${product.name}" is already in your cart.`,
@@ -90,34 +82,13 @@ const Men: React.FC = () => {
   };
 
   return (
-    <Layout>
-      <Sider width={210} style={{ background: "#fff", marginTop: "20px" }}>
-        <Button
-          style={{
-            width: "100px",
-            color: "white",
-            backgroundColor: "black",
-            marginBottom: "20px",
-            marginTop: "10px",
-            marginLeft: "10px",
-          }}
-        >
-          Filter
-        </Button>
-        <Menu
-          mode="inline"
-          defaultSelectedKeys={["1"]}
-          style={{ height: "100%", borderRight: 0 }}
-        >
-          <Menu.Item key="1">Category 1</Menu.Item>
-          <Menu.Item key="2">Category 2</Menu.Item>
-          <Menu.Item key="3">Category 3</Menu.Item>
-        </Menu>
-      </Sider>
-      <Layout style={{ padding: "0 24px 24px" }}>
+     
+       
+      <Card>
+        <Layout style={{ padding: "0 24px 24px" }}>
         <Content>
           <div style={{ textAlign: "center", marginBottom: "15px" }}>
-            <h1>Men Collection</h1>
+            <h1>Collection</h1>
             {isLoading && <Spin style={{ textAlign: "center" }} size="large" />}
           </div>
           <Row gutter={[16, 16]}>
@@ -168,8 +139,9 @@ const Men: React.FC = () => {
           />
         </Content>
       </Layout>
-    </Layout>
+      </Card>
+    
   );
 };
 
-export default Men;
+export default ItemDisplayHome;

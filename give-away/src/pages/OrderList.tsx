@@ -60,13 +60,18 @@ const OrderList = () => {
       dataIndex: 'createdDate',
       key: 'createdDate',
     },
-
+    {
+      title: 'Payment Method',
+      dataIndex: 'paymentMethod',
+      key: 'paymentMethod',
+    },
+    
     {
       title: 'Status',
       dataIndex: 'status',
       key: 'status',
       render: (status: string) => (
-        <Tag color={status === 'Completed' ? 'green' : status === 'awaiting payment' ? 'yellow' : status === 'on delivery' ? 'blue' : 'red'}>
+        <Tag color={status === 'Completed' ? 'green' : status === 'AwaitingPayment' ? 'yellow' : status === 'OnDelivery' ? 'blue' : 'red'}>
           {status.toUpperCase()}
         </Tag>
       ),

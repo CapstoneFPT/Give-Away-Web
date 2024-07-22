@@ -35,11 +35,12 @@ const Hero: React.FC = () => {
           </h1>
         </div>
         <Carousel style={{ marginTop: "2%" }} autoplay={true}>
-          <div>
+          <div >
             <img
               style={{ width: "100%", height: "30%" }}
               src="https://emoi.vn/wp-content/uploads/2020/11/do-secondhand-7.png"
               alt="Hero 1"
+              
             />
           </div>
           <div>
