@@ -61,6 +61,7 @@ const Login = () => {
         localStorage.setItem("userId", JSON.stringify(userId));
         localStorage.setItem("role", JSON.stringify(response.data?.role));
 
+
         dispatch({ type: "CLEAR_CART" }); // Clear cart on login
         dispatch({ type: "SET_USER", payload: userId });
 

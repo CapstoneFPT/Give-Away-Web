@@ -3,7 +3,6 @@ import "./App.css";
 import Navbar from "./components/Navbar/Navbar";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Shop from "./pages/Shop";
-
 import Cart from "./pages/Cart";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -12,20 +11,16 @@ import ForgotPassword from "./pages/ForgotPassword";
 import Breadcrumb from "./components/Breadcrums/Breadcrumb";
 import DetailProductAunction from "./pages/DetailProductAunction";
 import RuleAunction from "./pages/RuleAunction";
-
 import RuleDeposit from "./pages/RuleDeposit";
 import AunctionList from "./pages/AunctionList";
 import Aunction from "./pages/Aunction";
-
 import Consign from "./pages/ConsignForm";
 import Profile from "./pages/Profile";
 import Branches from "./pages/Branches";
 import Footer from "./components/Footer/Footer";
-
 import ChangePassword from "./pages/ChangePassword";
 import Refunds from "./pages/Refunds";
 import Withdraw from "./pages/Withdraw";
-
 import MyConsign from "./pages/Transaction/MyConsign";
 import AuctionHistory from "./pages/Transaction/AuctionHistory";
 import OrderList from "./pages/OrderList";
@@ -37,6 +32,7 @@ import Women from "./pages/MainProduct/Women";
 import ItemDetail from "./components/ItemsDisplay/ItemDetail";
 import { CartProvider } from "./pages/CartContext";
 import Deposit from "./pages/Deposit";
+import ImageUpload from "./pages/Firebase/ImageUpload";
 
 function App(): JSX.Element {
   return (
@@ -53,7 +49,6 @@ function App(): JSX.Element {
                 </>
               }
             />
-
             <Route
               path="/:category/:clothingType/:productId"
               element={
@@ -282,7 +277,6 @@ function App(): JSX.Element {
                 </>
               }
             />
-
             <Route
               path="/women"
               element={
@@ -294,15 +288,22 @@ function App(): JSX.Element {
                 </>
               }
             />
-
             <Route
               path="/itemDetail/:itemId"
               element={
                 <>
                   <Navbar />
                   <ItemDetail />
-
                   <Footer />
+                </>
+              }
+            />
+            <Route
+              path="/upload" // Thêm route cho component upload ảnh
+              element={
+                <>
+                  <Navbar />
+                  <ImageUpload />
                 </>
               }
             />

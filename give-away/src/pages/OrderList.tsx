@@ -1,59 +1,66 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, Row, Col, Table, Button, Tag } from "antd";
 import NavProfile from "../components/NavProfile/NavProfile";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import { BASE_URL } from "../api/config";
 
 const OrderList = () => {
-  const [data] = useState([
-    {
-      id: '1',
-      codeOrders: 'ORD001',
-      date: '2024-06-01',
-      status: 'Cancelled',
-    },
-    {
-      id: '2',
-      codeOrders: 'ORD002',
-      date: '2024-05-15',
-      status: 'on delivery',
-    },
-    {
-      id: '3',
-      codeOrders: 'ORD003',
-      date: '2024-04-22',
-      status: 'Completed',
-    },
-    {
-      id: '4',
-      codeOrders: 'ORD004',
-      date: '2024-03-30',
-      status: 'awaiting payment',
-    },
-    {
-      id: '5',
-      codeOrders: 'ORD005',
-      date: '2024-02-18',
-      status: 'Completed',
-    },
-    {
-      id: '6',
-      codeOrders: 'ORD006',
-      date: '2024-01-25',
-      status: 'Cancelled',
-    },
-  ]);
+  const [data, setData] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      const userId = JSON.parse(localStorage.getItem("userId") || "null");
+      console.log(userId);
+
+      if (!userId) {
+        setError('User ID not found in localStorage');
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const response = await axios.get(`${BASE_URL}/accounts/${userId}/orders`);
+        console.log(response.data); // Log the API response for debugging
+
+        // Check if response.data is an array or adjust if nested
+        const orders = Array.isArray(response.data.data) ? response.data.data : response.data.data.items || [];
+        setData(orders);
+      } catch (err) {
+        console.error(err); // Log detailed error for debugging
+        setError('Failed to fetch orders');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchOrders();
+  }, []);
 
   const columns = [
     {
       title: 'Code Orders',
-      dataIndex: 'codeOrders',
-      key: 'codeOrders',
+      dataIndex: 'orderCode',
+      key: 'orderCode',
     },
     {
       title: 'Date',
-      dataIndex: 'date',
-      key: 'date',
+      dataIndex: 'createdDate',
+      key: 'createdDate',
     },
+    {
+      title: 'Total Price',
+      dataIndex: 'totalPrice',
+      key: 'totalPrice' ,
+    },
+    {
+      title: 'Date',
+      dataIndex: 'createdDate',
+      key: 'createdDate',
+    },
+
     {
       title: 'Status',
       dataIndex: 'status',
@@ -85,6 +92,9 @@ const OrderList = () => {
     },
   ];
 
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
+
   return (
     <Card>
       <Row gutter={[16, 16]}>
@@ -111,7 +121,7 @@ const OrderList = () => {
             <Table
               dataSource={data}
               columns={columns}
-              rowKey="id"
+              rowKey="id" // Ensure `id` exists in your data objects
               pagination={{ pageSize: 4 }}
               style={{ marginTop: '20px' }}
             />
