@@ -33,6 +33,8 @@ import ItemDetail from "./components/ItemsDisplay/ItemDetail";
 import { CartProvider } from "./pages/CartContext";
 import Deposit from "./pages/Deposit";
 import ImageUpload from "./pages/Firebase/ImageUpload";
+import ItemDisplayHome from "./components/ItemsDisplay/ItemDisplayHome";
+import CarouselComponent from "./components/Navbar/CarouselComponent";
 
 function App(): JSX.Element {
   return (
@@ -44,7 +46,7 @@ function App(): JSX.Element {
               path="/"
               element={
                 <>
-                  <Navbar />
+                  {/* <Navbar /> */}
                   <Shop />
                 </>
               }
@@ -304,6 +306,22 @@ function App(): JSX.Element {
                 <>
                   <Navbar />
                   <ImageUpload />
+                </>
+              }
+            />
+            <Route
+              path="/" // Thêm route cho component upload ảnh
+              element={
+                <>
+                  <ItemDisplayHome />
+                </>
+              }
+            />
+             <Route
+              path="/" // Thêm route cho component upload ảnh
+              element={
+                <>
+                  <CarouselComponent />
                 </>
               }
             />
