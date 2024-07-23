@@ -1,5 +1,15 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Layout, Menu, Button, Row, Col, Card, Pagination, Spin,notification } from "antd";
+import {
+  Layout,
+  Menu,
+  Button,
+  Row,
+  Col,
+  Card,
+  Pagination,
+  Spin,
+  notification,
+} from "antd";
 import Sider from "antd/es/layout/Sider";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import { Content } from "antd/es/layout/layout";
@@ -7,6 +17,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../CartContext";
 import { BASE_URL } from "../../api/config";
+const backgroundImageUrl = require("../../components/Assets/88532663-women-modern-fashion-clothes-and-accessories-background-with-frame-for-text-flat-lay-female-casual.jpg");
 
 interface Product {
   itemId: any;
@@ -15,6 +26,7 @@ interface Product {
   color: string;
   gender: string;
   brand: string;
+  images: string;
   sellingPrice: number;
   shopAddress: string;
 }
@@ -31,7 +43,7 @@ const Women: React.FC = () => {
     fetchProducts(currentPage);
   }, [currentPage]);
 
-const fetchProducts = async (page: number) => {
+  const fetchProducts = async (page: number) => {
     setIsLoading(true);
     try {
       const response = await axios.get(
@@ -79,85 +91,118 @@ const fetchProducts = async (page: number) => {
     navigate(`/itemDetail/${itemId}`);
   };
   return (
-    <Layout>
-      <Sider width={210} style={{ background: "#fff", marginTop: "20px" }}>
-        <Button
-          style={{
-            width: "100px",
-            color: "white",
-            backgroundColor: "black",
-            marginBottom: "20px",
-            marginTop: "10px",
-            marginLeft: "10px",
-          }}
-        >
-          Filter
-        </Button>
-        <Menu
-          mode="inline"
-          defaultSelectedKeys={["1"]}
-          style={{ height: "100%", borderRight: 0 }}
-        >
-          <Menu.Item key="1">Category 1</Menu.Item>
-          <Menu.Item key="2">Category 2</Menu.Item>
-          <Menu.Item key="3">Category 3</Menu.Item>
-        </Menu>
-      </Sider>
-      <Layout style={{ padding: "0 24px 24px" }}>
-        <Content>
-          <div style={{ textAlign: "center", marginBottom: "15px" }}>
-            <h1>Men Collection</h1>
-            {isLoading && <Spin style={{ textAlign: "center" }} size="large" />}
-          </div>
-          <Row gutter={[16, 16]}>
-            {products.map((product: Product) => (
-              <Col key={product.itemId} xs={22} sm={12} md={8} lg={4}>
-                <Card hoverable onClick={() => goToDetailPage(product.itemId)}>
-                  <Card.Meta
-                    title={product.name}
-                    description={`${product.sellingPrice} VND`}
-                  />
-                </Card>
-                <div style={{ textAlign: "center" }}>
-                  <Button
-                    type="primary"
-                    style={{
-                      textAlign: "center",
-                      marginTop: "10px",
-                      backgroundColor: "#000000",
-                      color: "white",
-                      width: "170px",
-                      height: "35px",
-                      border: "2px solid black",
-                      borderRadius: "15px",
-                      fontSize: "16px",
-                    }}
-                    onClick={() => handleAddToCart(product)}
-                  >
-                    Add to Cart <ShoppingCartOutlined />
-                  </Button>
-                </div>
-              </Col>
-            ))}
-          </Row>
-          <Pagination
-            onChange={(page) => {
-              setCurrentPage(page);
-              fetchProducts(page);
-            }}
-            current={currentPage}
+    <div
+      style={{
+        backgroundImage: `url(${backgroundImageUrl})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        minHeight: "100vh",
+        backgroundColor: "rgba(255, 255, 255, 0)",
+      }}
+    >
+      <Row gutter={[16, 16]}>
+        <Col span={4}>
+          {" "}
+          <Sider width={210} style={{ background: "#fff", marginTop: "20px" }}>
+            <Button
+              style={{
+                width: "100px",
+                color: "white",
+                backgroundColor: "black",
+                marginBottom: "20px",
+                marginTop: "10px",
+                marginLeft: "10px",
+              }}
+            >
+              Filter
+            </Button>
+            <Menu
+              mode="inline"
+              defaultSelectedKeys={["1"]}
+              style={{ height: "100%", borderRight: 0 }}
+            >
+              <Menu.Item key="1">Category 1</Menu.Item>
+              <Menu.Item key="2">Category 2</Menu.Item>
+              <Menu.Item key="3">Category 3</Menu.Item>
+            </Menu>
+          </Sider>
+        </Col>
+        <Col span={20}>
+          <Layout
             style={{
-              justifyContent: "center",
-              display: "flex",
-              marginTop: "50px",
+              padding: "0 24px 24px",
+              backgroundColor: "rgba(255, 255, 255, 0)",
             }}
-            pageSize={pageSize}
-            total={totalCount}
-            showSizeChanger={false}
-          />
-        </Content>
-      </Layout>
-    </Layout>
+          >
+            <Content>
+              <div style={{ textAlign: "center", marginBottom: "15px" }}>
+                <h1>Women Collection</h1>
+                {isLoading && (
+                  <Spin style={{ textAlign: "center" }} size="large" />
+                )}
+              </div>
+              <Row gutter={[16, 16]}>
+                {products.map((product: Product) => (
+                  <Col key={product.itemId} xs={22} sm={12} md={8} lg={6}>
+                    <Card
+                      hoverable
+                      onClick={() => goToDetailPage(product.itemId)}
+                      cover={
+                        <img
+                          alt={product.name}
+                          src={product.images}
+                          style={{ height: "300px", objectFit: "cover" }}
+                        />
+                      }
+                    >
+                      <Card.Meta
+                        title={product.name}
+                        description={`${product.sellingPrice} VND`}
+                      />
+                      <div style={{ textAlign: "center", marginTop: "5px" }}>
+                        <Button
+                          type="primary"
+                          style={{
+                            backgroundColor: "#000000",
+                            color: "white",
+                            width: "200px",
+                            height: "35px",
+                            border: "2px solid black",
+                            borderRadius: "15px",
+                            fontSize: "16px",
+                          }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleAddToCart(product);
+                          }}
+                        >
+                          Add to Cart <ShoppingCartOutlined />
+                        </Button>
+                      </div>
+                    </Card>
+                  </Col>
+                ))}
+              </Row>
+              <Pagination
+                onChange={(page) => {
+                  setCurrentPage(page);
+                  fetchProducts(page);
+                }}
+                current={currentPage}
+                style={{
+                  justifyContent: "center",
+                  display: "flex",
+                  marginTop: "50px",
+                }}
+                pageSize={pageSize}
+                total={totalCount}
+                showSizeChanger={false}
+              />
+            </Content>
+          </Layout>
+        </Col>
+      </Row>
+    </div>
   );
 };
 
