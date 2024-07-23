@@ -14,7 +14,7 @@ const Shop = () => {
         {/* Define other routes and components here */}
       </div>
       <Hero />
-      <Offers />
+      {/* <Offers /> */}
       <ItemDisplayHome/>
 
       <NewsLetter />

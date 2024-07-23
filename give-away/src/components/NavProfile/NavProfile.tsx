@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   AppstoreOutlined,
   KeyOutlined,
@@ -8,6 +8,9 @@ import {
 } from "@ant-design/icons";
 import { Button, Menu, Card } from "antd";
 import { useNavigate } from "react-router-dom";
+import { BASE_URL } from "../../api/config";
+import axios from "axios";
+
 
 
 
@@ -23,7 +26,26 @@ const MenuItemWithButton = ({ key, icon, label, to }: { key: string; icon: React
 };
 
 const NavProfile: React.FC = () => {
+  const [balance, setBalance] = useState(0);
+
+  useEffect(() => {
+    const fetchBalance = async () => {
+      const userId = JSON.parse(localStorage.getItem("userId") || "null"); 
+      try {
+        const response = await axios.get(`${BASE_URL}/accounts/${userId}`); 
+        setBalance(response.data.data.balance);
+      } catch (error) {
+        console.error("Error fetching balance:", error);
+      }
+    };
+
+    fetchBalance();
+  }, []);
   const [collapsed, setCollapsed] = useState(false);
+
+  const formatBalance = (balance:any) => {
+    return new Intl.NumberFormat('de-DE').format(balance);
+  };
 
   const toggleCollapsed = () => {
     setCollapsed(!collapsed);
@@ -60,13 +82,18 @@ const NavProfile: React.FC = () => {
           >
             <div
               style={{
-                fontSize: "35px",
-                color: "#e5ef36",
+                fontSize: "1.7em",
+                color: "#d1d124",
                 fontWeight: "bolder",
+                textShadow: "1px 1px 2px rgba(0, 0, 0, 0.1)",
+                padding: "0.2em 0.4em",
+                borderRadius: "5px",
+                backgroundColor: "rgba(255, 255, 255, 0.573)",
                 textAlign: "center",
               }}
             >
-              225 <DollarOutlined spin />
+              {formatBalance(balance)} UP
+               <DollarOutlined spin />
             </div>
           </Card>
           <Card

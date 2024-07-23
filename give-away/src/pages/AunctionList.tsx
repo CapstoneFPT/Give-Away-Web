@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Button, Space, Table } from "antd";
+import { Button, Card, Space, Table } from "antd";
 import { Link } from "react-router-dom";
 import moment from "moment";
 import { AuctionApi, AuctionListResponse } from "../api";
-
+const backgroundImageUrl = require('../components/Assets/adobestock_573340270.jpg');
 const { Column } = Table;
 
 const AunctionList = () => {
@@ -42,10 +42,17 @@ const AunctionList = () => {
 
   return (
     <>
-      <div style={{ width: "90%", marginLeft: "80px" }}>
-        <h1 style={{ textAlign: "center", margin: "30px" }}>Auction List</h1>
+      <div style={{ width: "90%", marginLeft: "80px",backgroundImage: `url(${backgroundImageUrl})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          minHeight: '100vh', backgroundColor: 'rgba(255, 255, 255, 0)'
+        }}>
+      
+       
+      
+      <h1 style={{ textAlign: "center", margin: "30px",  }}>Auction List</h1>
         {data && (
-          <Table pagination={false} dataSource={data}>
+          <Table style={{backgroundColor: 'rgba(255, 255, 255, 0)'}} pagination={false} dataSource={data}>
             <Column title="Auction ID" dataIndex="auctionId" key="auctionId" />
             <Column title="Title" dataIndex="title" key="title" />
             <Column title="Start Date" dataIndex="startDate" key="startDate" />
@@ -84,6 +91,7 @@ const AunctionList = () => {
             />
           </Table>
         )}
+      
       </div>
     </>
   );

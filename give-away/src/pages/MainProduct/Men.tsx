@@ -7,6 +7,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../CartContext";
 import { BASE_URL } from "../../api/config";
+const backgroundImageUrl = require('../../components/Assets/shutterstock_455310238.jpg');
+
 
 interface Product {
   itemId: any;
@@ -15,6 +17,7 @@ interface Product {
   color: string;
   gender: string;
   brand: string;
+  images: string;
   sellingPrice: number;
   shopAddress: string;
   isOrderedYet: boolean; // Add this line
@@ -90,8 +93,16 @@ const Men: React.FC = () => {
   };
 
   return (
-    <Layout>
-      <Sider width={210} style={{ background: "#fff", marginTop: "20px" }}>
+    <div style={{
+      backgroundImage: `url(${backgroundImageUrl})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      minHeight: '100vh',
+      backgroundColor: 'rgba(255, 255, 255, 0)'
+    }}>
+      <Row gutter={[16,16]}>
+        <Col span={4}>
+        <Sider width={210} style={{ background: "#fff", marginTop: "20px", }}>
         <Button
           style={{
             width: "100px",
@@ -114,40 +125,47 @@ const Men: React.FC = () => {
           <Menu.Item key="3">Category 3</Menu.Item>
         </Menu>
       </Sider>
-      <Layout style={{ padding: "0 24px 24px" }}>
+        </Col>
+        <Col span={20}>
+        <Layout style={{ padding: "0 24px 24px",backgroundColor: 'rgba(255, 255, 255, 0)' }}>
         <Content>
-          <div style={{ textAlign: "center", marginBottom: "15px" }}>
+          <div style={{ textAlign: "center", marginBottom: "15px" ,backgroundColor: 'rgba(255, 255, 255, 0)' }}>
             <h1>Men Collection</h1>
             {isLoading && <Spin style={{ textAlign: "center" }} size="large" />}
           </div>
           <Row gutter={[16, 16]}>
             {products.map((product: Product) => (
-              <Col key={product.itemId} xs={22} sm={12} md={8} lg={4}>
-                <Card hoverable onClick={() => goToDetailPage(product.itemId)}>
+              <Col key={product.itemId} xs={22} sm={12} md={8} lg={6}>
+                <Card  hoverable onClick={() => goToDetailPage(product.itemId)}
+                  cover={<img alt={product.name} src={product.images} style={{ height: '300px', objectFit: 'cover' }} />}
+                >
                   <Card.Meta
                     title={product.name}
                     description={`${product.sellingPrice} VND`}
+                    
                   />
+                    <div style={{ textAlign: "center", marginTop: "5px" }}>
+                    <Button
+                      type="primary"
+                      style={{
+                        backgroundColor: "#000000",
+                        color: "white",
+                        width: "200px",
+                        height: "35px",
+                        border: "2px solid black",
+                        borderRadius: "15px",
+                        fontSize: "16px",
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleAddToCart(product);
+                      }}
+                    >
+                      Add to Cart <ShoppingCartOutlined />
+                    </Button>
+                  </div>
                 </Card>
-                <div style={{ textAlign: "center" }}>
-                  <Button
-                    type="primary"
-                    style={{
-                      textAlign: "center",
-                      marginTop: "10px",
-                      backgroundColor: "#000000",
-                      color: "white",
-                      width: "170px",
-                      height: "35px",
-                      border: "2px solid black",
-                      borderRadius: "15px",
-                      fontSize: "16px",
-                    }}
-                    onClick={() => handleAddToCart(product)}
-                  >
-                    Add to Cart <ShoppingCartOutlined />
-                  </Button>
-                </div>
+               
               </Col>
             ))}
           </Row>
@@ -168,7 +186,15 @@ const Men: React.FC = () => {
           />
         </Content>
       </Layout>
-    </Layout>
+        </Col>
+      </Row>
+     
+     
+      
+      
+    </div>
+      
+    
   );
 };
 
