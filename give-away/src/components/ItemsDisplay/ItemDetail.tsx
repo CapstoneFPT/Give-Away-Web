@@ -31,7 +31,7 @@ interface Product {
   sellingPrice: number;
   shopAddress: string;
   size: string;
-  // images: string[];
+  images: string[];
 }
 
 const ItemDetail: React.FC = () => {
@@ -76,7 +76,7 @@ const ItemDetail: React.FC = () => {
         <Row gutter={[16, 16]} style={{ margin: "10px" }}>
           <Col span={4}>
             <Row gutter={[10, 8]}>
-              {/* {product.images.map((image, index) => (
+              {product.images.map((image, index) => (
                 <Col span={24} key={index}>
                   <img
                     src={image}
@@ -91,7 +91,7 @@ const ItemDetail: React.FC = () => {
                     onClick={() => setSelectedImage(image)}
                   />
                 </Col>
-              ))} */}
+              ))}
             </Row>
           </Col>
           <Col span={11}>
