@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Card, Row, Col, Table, Button, Tag } from "antd";
 import NavProfile from "../components/NavProfile/NavProfile";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL } from "../api/config";
 
@@ -9,6 +9,7 @@ const OrderList = () => {
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -65,7 +66,6 @@ const OrderList = () => {
       dataIndex: 'paymentMethod',
       key: 'paymentMethod',
     },
-    
     {
       title: 'Status',
       dataIndex: 'status',
@@ -80,19 +80,18 @@ const OrderList = () => {
       title: 'Actions',
       key: 'actions',
       render: (text: string, record: any) => (
-        <Link to={`/order-detail/${record.id}`}>
-          <Button
-            type="primary"
-            style={{
-              backgroundColor: 'black',
-              borderColor: 'black',
-              width: '100px',
-              height: '35px',
-            }}
-          >
-            Detail
-          </Button>
-        </Link>
+        <Button
+          type="primary"
+          style={{
+            backgroundColor: 'black',
+            borderColor: 'black',
+            width: '100px',
+            height: '35px',
+          }}
+          onClick={() => navigate(`/order-detail/${record.orderId}`)}
+        >
+          Detail
+        </Button>
       ),
     },
   ];
@@ -126,7 +125,7 @@ const OrderList = () => {
             <Table
               dataSource={data}
               columns={columns}
-              rowKey="id" // Ensure `id` exists in your data objects
+              rowKey="id" 
               pagination={{ pageSize: 4 }}
               style={{ marginTop: '20px' }}
             />

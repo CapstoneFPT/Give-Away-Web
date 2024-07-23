@@ -86,7 +86,6 @@ const Login = () => {
   };
 
   const dropDownItems: MenuProps["items"] = [
-    { key: "1", label: <Link to="/consign">Consign</Link> },
     { key: "2", label: <Link to="/add-fund">Add Fund</Link> },
     { key: "3", label: <Link to="/profile">Profile</Link> },
     {

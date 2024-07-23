@@ -1,16 +1,16 @@
-
 import React, { useState, useEffect } from "react";
-import { Layout, Menu, Button, Row, Col, Card, Pagination, Spin, notification } from "antd";
-import Sider from "antd/es/layout/Sider";
+import { Layout, Button, Row, Col, Card, Pagination, Spin, notification } from "antd";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import { Content } from "antd/es/layout/layout";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../../pages/CartContext";
 import { BASE_URL } from "../../api/config";
+const backgroundImageUrl = require('../Assets/freepik_5229782.jpg');
 
 interface Product {
   itemId: any;
+  images: string;
   name: string;
   size: string;
   color: string;
@@ -82,43 +82,54 @@ const ItemDisplayHome: React.FC = () => {
   };
 
   return (
-     
-       
-      <Card>
-        <Layout style={{ padding: "0 24px 24px" }}>
+    <Card style={{
+      backgroundImage: `url(${backgroundImageUrl})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      minHeight: '100vh',
+      backgroundColor: 'rgba(255, 255, 255, 0)'
+    }}>
+      <Layout style={{ padding: "0 24px 24px", backgroundColor: 'rgba(255, 255, 255, 0)' }}>
         <Content>
           <div style={{ textAlign: "center", marginBottom: "15px" }}>
             <h1>Collection</h1>
             {isLoading && <Spin style={{ textAlign: "center" }} size="large" />}
           </div>
-          <Row gutter={[16, 16]}>
+          <Row gutter={[20, 10]} justify="center">
             {products.map((product: Product) => (
-              <Col key={product.itemId} xs={22} sm={12} md={8} lg={4}>
-                <Card hoverable onClick={() => goToDetailPage(product.itemId)}>
+              <Col key={product.itemId} xs={24} sm={12} md={8} lg={6}>
+                <Card
+                style={{width:'330px'}}
+                  hoverable
+                  onClick={() => goToDetailPage(product.itemId)}
+                  cover={<img alt={product.name} src={product.images} style={{ height: '300px', objectFit: 'cover' }} />}
+                >
                   <Card.Meta
+                    style={{ height: '60px' }}
                     title={product.name}
                     description={`${product.sellingPrice} VND`}
                   />
+                  <div style={{ textAlign: "center", marginTop: "5px" }}>
+                    <Button
+                      type="primary"
+                      style={{
+                        backgroundColor: "#000000",
+                        color: "white",
+                        width: "200px",
+                        height: "35px",
+                        border: "2px solid black",
+                        borderRadius: "15px",
+                        fontSize: "16px",
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleAddToCart(product);
+                      }}
+                    >
+                      Add to Cart <ShoppingCartOutlined />
+                    </Button>
+                  </div>
                 </Card>
-                <div style={{ textAlign: "center" }}>
-                  <Button
-                    type="primary"
-                    style={{
-                      textAlign: "center",
-                      marginTop: "10px",
-                      backgroundColor: "#000000",
-                      color: "white",
-                      width: "170px",
-                      height: "35px",
-                      border: "2px solid black",
-                      borderRadius: "15px",
-                      fontSize: "16px",
-                    }}
-                    onClick={() => handleAddToCart(product)}
-                  >
-                    Add to Cart <ShoppingCartOutlined />
-                  </Button>
-                </div>
               </Col>
             ))}
           </Row>
@@ -139,8 +150,7 @@ const ItemDisplayHome: React.FC = () => {
           />
         </Content>
       </Layout>
-      </Card>
-    
+    </Card>
   );
 };
 
