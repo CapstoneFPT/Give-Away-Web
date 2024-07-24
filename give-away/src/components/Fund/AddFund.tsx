@@ -2,75 +2,118 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Card, Button, Row, Col, Modal, Spin, message } from "antd";
 import { SmileOutlined as Icon } from "@ant-design/icons";
-import { BASE_URL } from "../../api/config";
+import {
+  PointPackageApi,
+  PointPackageListResponse,
+  PointPackageListResponseFromJSON,
+} from "../../api";
 
 type Package = {
-  pointPackageId: number;
+  pointPackageId: string;
   points: number;
   price: string;
 };
 
 const PointPackageShop = () => {
-  const [packages, setPackages] = useState<Package[]>([]);
+  const [packages, setPackages] = useState<PointPackageListResponse[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [selectedPackage, setSelectedPackage] = useState<Package | null>(null);
+  const [selectedPackage, setSelectedPackage] = useState<PointPackageListResponse | null>(null);
 
   useEffect(() => {
     const userId = JSON.parse(localStorage.getItem("userId") || "null");
     console.log(userId);
-    axios
-      .get(`${BASE_URL}/pointpackages`,{
-        headers :{
-          "ngrok-skip-browser-warning": "6942"
+    // axios
+    //   .get(`${BASE_URL}/pointpackages`, {
+    //     headers: {
+    //       "ngrok-skip-browser-warning": "6942",
+    //     },
+    //   })
+    //   .then((response) => {
+    //     const data = response.data.items;
+    //     if (Array.isArray(data)) {
+    //       setPackages(data);
+    //     } else {
+    //       message.error("Data is not in expected format");
+    //     }
+    //     setIsLoading(false);
+    //   })
+    //   .catch((error) => {
+    //     console.error("There was an error fetching the packages!", error);
+    //     setIsLoading(false);
+    //   });
+
+    async function fetchPointPackages() {
+      const pointPackageApi = new PointPackageApi();
+      const response = await pointPackageApi.apiPointpackagesGet(
+        {},
+        {
+          headers: {
+            "ngrok-skip-browser-warning": "6942",
+          },
         }
-      })
-      .then((response) => {
-        const data = response.data.items;
-        if (Array.isArray(data)) {
-          setPackages(data);
-        } else {
-          message.error("Data is not in expected format");
-        }
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        console.error("There was an error fetching the packages!", error);
-        setIsLoading(false);
-      });
+      );
+
+      setPackages(response.items || []);
+      setIsLoading(false);
+    }
+
+    fetchPointPackages()
   }, []);
 
-  const handleBuy = (pkg: Package) => {
+  const handleBuy = async (pkg: PointPackageListResponse) => {
     const userId = JSON.parse(localStorage.getItem("userId") || "null");
     if (!userId) {
       message.error("User ID not found. Please log in again.");
       return;
     }
 
-    axios
-      .post(`${BASE_URL}/pointpackages/${pkg.pointPackageId}/purchase`, {
-        memberId: userId,
-        
-      },{
-        headers :{
-          "ngrok-skip-browser-warning": "6942"
-        }
-      })
-      .then((response) => {
-        const { data } = response;
-        if (data && data.paymentUrl) {
-          window.location.href = data.paymentUrl; // Redirect to payment URL
-        } else {
-          message.error("Failed to get payment URL. Please try again.");
-        }
-      })
-      .catch((error) => {
-        console.error("There was an error purchasing the package!", error);
-        message.error("There was an error purchasing the package!");
-      });
+    // axios
+    //   .post(`${BASE_URL}/pointpackages/${pkg.pointPackageId}/purchase`, {
+    //     memberId: userId,
+
+    //   },{
+    //     headers :{
+    //       "ngrok-skip-browser-warning": "6942"
+    //     }
+    //   })
+    //   .then((response) => {
+    //     const { data } = response;
+    //     if (data && data.paymentUrl) {
+    //       window.location.href = data.paymentUrl; // Redirect to payment URL
+    //     } else {
+    //       message.error("Failed to get payment URL. Please try again.");
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     console.error("There was an error purchasing the package!", error);
+    //     message.error("There was an error purchasing the package!");
+    //   });
+
+    const pointPackageApi = new PointPackageApi();
+    try {
+      console.log(pkg.pointPackageId);
+      console.log(userId)
+      const response =
+        await pointPackageApi.apiPointpackagesPointPackageIdPurchasePost({
+          pointPackageId: pkg.pointPackageId!,
+          purchasePointPackageRequest: {
+            memberId: userId,
+          },
+        });
+
+      if (response.paymentUrl) {
+        window.location.href = response.paymentUrl;
+      } else {
+        message.error("Failed to get payment URL. Please try again.");
+      }
+    } catch (error) {
+      console.error("Point package purchase error", error);
+      message.error("Point package purchase error");
+    }
   };
 
-  const handleIconClick = (pkg: Package) => {
+  const handleIconClick = (pkg: PointPackageListResponse) => {
     setIsModalVisible(true);
     setSelectedPackage(pkg);
     console.log(pkg.pointPackageId);
@@ -126,7 +169,7 @@ const PointPackageShop = () => {
 
       <Modal
         title="Package Details"
-        visible={isModalVisible}
+        open={isModalVisible}
         onCancel={handleCancel}
         footer={[
           <Button key="back" onClick={handleCancel}>

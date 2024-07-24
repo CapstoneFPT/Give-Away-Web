@@ -58,6 +58,36 @@ export interface RefundResponse {
     orderDetailId?: string;
     /**
      * 
+     * @type {string}
+     * @memberof RefundResponse
+     */
+    customerName?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof RefundResponse
+     */
+    customerEmail?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof RefundResponse
+     */
+    responseFromShop?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof RefundResponse
+     */
+    refundPercentage?: number | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof RefundResponse
+     */
+    refundAmount?: number | null;
+    /**
+     * 
      * @type {Array<string>}
      * @memberof RefundResponse
      */
@@ -97,6 +127,11 @@ export function RefundResponseFromJSONTyped(json: any, ignoreDiscriminator: bool
         'description': json['description'] == null ? undefined : json['description'],
         'createdDate': json['createdDate'] == null ? undefined : (new Date(json['createdDate'])),
         'orderDetailId': json['orderDetailId'] == null ? undefined : json['orderDetailId'],
+        'customerName': json['customerName'] == null ? undefined : json['customerName'],
+        'customerEmail': json['customerEmail'] == null ? undefined : json['customerEmail'],
+        'responseFromShop': json['responseFromShop'] == null ? undefined : json['responseFromShop'],
+        'refundPercentage': json['refundPercentage'] == null ? undefined : json['refundPercentage'],
+        'refundAmount': json['refundAmount'] == null ? undefined : json['refundAmount'],
         'images': json['images'] == null ? undefined : json['images'],
         'refundStatus': json['refundStatus'] == null ? undefined : RefundStatusFromJSON(json['refundStatus']),
         'orderDetailsResponse': json['orderDetailsResponse'] == null ? undefined : OrderDetailsResponseFromJSON(json['orderDetailsResponse']),
@@ -113,6 +148,11 @@ export function RefundResponseToJSON(value?: RefundResponse | null): any {
         'description': value['description'],
         'createdDate': value['createdDate'] == null ? undefined : ((value['createdDate']).toISOString()),
         'orderDetailId': value['orderDetailId'],
+        'customerName': value['customerName'],
+        'customerEmail': value['customerEmail'],
+        'responseFromShop': value['responseFromShop'],
+        'refundPercentage': value['refundPercentage'],
+        'refundAmount': value['refundAmount'],
         'images': value['images'],
         'refundStatus': RefundStatusToJSON(value['refundStatus']),
         'orderDetailsResponse': OrderDetailsResponseToJSON(value['orderDetailsResponse']),

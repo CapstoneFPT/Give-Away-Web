@@ -30,8 +30,6 @@ import type {
   OrderStatus,
   PayOrderWithCashRequest,
   PayOrderWithCashResponse,
-  RefundResponsePaginationResponseResult,
-  RefundStatus,
   ShopDetailResponseListResult,
   ShopDetailResponseResult,
   TransactionRequest,
@@ -68,10 +66,6 @@ import {
     PayOrderWithCashRequestToJSON,
     PayOrderWithCashResponseFromJSON,
     PayOrderWithCashResponseToJSON,
-    RefundResponsePaginationResponseResultFromJSON,
-    RefundResponsePaginationResponseResultToJSON,
-    RefundStatusFromJSON,
-    RefundStatusToJSON,
     ShopDetailResponseListResultFromJSON,
     ShopDetailResponseListResultToJSON,
     ShopDetailResponseResultFromJSON,
@@ -136,14 +130,6 @@ export interface ApiShopsShopIdOrdersOrderIdPayWithCashPostRequest {
 export interface ApiShopsShopIdOrdersPostRequest {
     shopId: string;
     createOrderRequest?: CreateOrderRequest;
-}
-
-export interface ApiShopsShopIdRefundsGetRequest {
-    shopId: string;
-    pageNumber?: number;
-    pageSize?: number;
-    status?: Array<RefundStatus>;
-    previousTime?: Date;
 }
 
 /**
@@ -630,61 +616,6 @@ export class ShopApi extends runtime.BaseAPI {
      */
     async apiShopsShopIdOrdersPost(requestParameters: ApiShopsShopIdOrdersPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<OrderResponseResult> {
         const response = await this.apiShopsShopIdOrdersPostRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     */
-    async apiShopsShopIdRefundsGetRaw(requestParameters: ApiShopsShopIdRefundsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RefundResponsePaginationResponseResult>> {
-        if (requestParameters['shopId'] == null) {
-            throw new runtime.RequiredError(
-                'shopId',
-                'Required parameter "shopId" was null or undefined when calling apiShopsShopIdRefundsGet().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        if (requestParameters['pageNumber'] != null) {
-            queryParameters['PageNumber'] = requestParameters['pageNumber'];
-        }
-
-        if (requestParameters['pageSize'] != null) {
-            queryParameters['PageSize'] = requestParameters['pageSize'];
-        }
-
-        if (requestParameters['status'] != null) {
-            queryParameters['Status'] = requestParameters['status'];
-        }
-
-        if (requestParameters['previousTime'] != null) {
-            queryParameters['PreviousTime'] = (requestParameters['previousTime'] as any).toISOString();
-        }
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        if (this.configuration && this.configuration.accessToken) {
-            const token = this.configuration.accessToken;
-            const tokenString = await token("Bearer", []);
-
-            if (tokenString) {
-                headerParameters["Authorization"] = `Bearer ${tokenString}`;
-            }
-        }
-        const response = await this.request({
-            path: `/api/shops/{shopId}/refunds`.replace(`{${"shopId"}}`, encodeURIComponent(String(requestParameters['shopId']))),
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => RefundResponsePaginationResponseResultFromJSON(jsonValue));
-    }
-
-    /**
-     */
-    async apiShopsShopIdRefundsGet(requestParameters: ApiShopsShopIdRefundsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RefundResponsePaginationResponseResult> {
-        const response = await this.apiShopsShopIdRefundsGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

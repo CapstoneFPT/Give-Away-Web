@@ -15,21 +15,35 @@
 
 import * as runtime from '../runtime';
 import type {
+  ApprovalRefundRequest,
   CreateRefundRequest,
   RefundResponseListResult,
+  RefundResponsePaginationResponseResult,
   RefundResponseResult,
   RefundStatus,
 } from '../models/index';
 import {
+    ApprovalRefundRequestFromJSON,
+    ApprovalRefundRequestToJSON,
     CreateRefundRequestFromJSON,
     CreateRefundRequestToJSON,
     RefundResponseListResultFromJSON,
     RefundResponseListResultToJSON,
+    RefundResponsePaginationResponseResultFromJSON,
+    RefundResponsePaginationResponseResultToJSON,
     RefundResponseResultFromJSON,
     RefundResponseResultToJSON,
     RefundStatusFromJSON,
     RefundStatusToJSON,
 } from '../models/index';
+
+export interface ApiRefundsGetRequest {
+    pageNumber?: number;
+    pageSize?: number;
+    shopId?: string;
+    status?: Array<RefundStatus>;
+    previousTime?: Date;
+}
 
 export interface ApiRefundsPostRequest {
     createRefundRequest?: Array<CreateRefundRequest>;
@@ -37,7 +51,11 @@ export interface ApiRefundsPostRequest {
 
 export interface ApiRefundsRefundIdApprovalPutRequest {
     refundId: string;
-    refundStatus?: RefundStatus;
+    approvalRefundRequest?: ApprovalRefundRequest;
+}
+
+export interface ApiRefundsRefundIdConfirmReceivedAndRefundPutRequest {
+    refundId: string;
 }
 
 export interface ApiRefundsRefundIdGetRequest {
@@ -48,6 +66,58 @@ export interface ApiRefundsRefundIdGetRequest {
  * 
  */
 export class RefundApi extends runtime.BaseAPI {
+
+    /**
+     */
+    async apiRefundsGetRaw(requestParameters: ApiRefundsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RefundResponsePaginationResponseResult>> {
+        const queryParameters: any = {};
+
+        if (requestParameters['pageNumber'] != null) {
+            queryParameters['PageNumber'] = requestParameters['pageNumber'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['PageSize'] = requestParameters['pageSize'];
+        }
+
+        if (requestParameters['shopId'] != null) {
+            queryParameters['ShopId'] = requestParameters['shopId'];
+        }
+
+        if (requestParameters['status'] != null) {
+            queryParameters['Status'] = requestParameters['status'];
+        }
+
+        if (requestParameters['previousTime'] != null) {
+            queryParameters['PreviousTime'] = (requestParameters['previousTime'] as any).toISOString();
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("Bearer", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/api/refunds`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => RefundResponsePaginationResponseResultFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiRefundsGet(requestParameters: ApiRefundsGetRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RefundResponsePaginationResponseResult> {
+        const response = await this.apiRefundsGetRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
 
     /**
      */
@@ -96,11 +166,9 @@ export class RefundApi extends runtime.BaseAPI {
 
         const queryParameters: any = {};
 
-        if (requestParameters['refundStatus'] != null) {
-            queryParameters['refundStatus'] = requestParameters['refundStatus'];
-        }
-
         const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
 
         if (this.configuration && this.configuration.accessToken) {
             const token = this.configuration.accessToken;
@@ -115,6 +183,7 @@ export class RefundApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
+            body: ApprovalRefundRequestToJSON(requestParameters['approvalRefundRequest']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => RefundResponseResultFromJSON(jsonValue));
@@ -124,6 +193,45 @@ export class RefundApi extends runtime.BaseAPI {
      */
     async apiRefundsRefundIdApprovalPut(requestParameters: ApiRefundsRefundIdApprovalPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RefundResponseResult> {
         const response = await this.apiRefundsRefundIdApprovalPutRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiRefundsRefundIdConfirmReceivedAndRefundPutRaw(requestParameters: ApiRefundsRefundIdConfirmReceivedAndRefundPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RefundResponseResult>> {
+        if (requestParameters['refundId'] == null) {
+            throw new runtime.RequiredError(
+                'refundId',
+                'Required parameter "refundId" was null or undefined when calling apiRefundsRefundIdConfirmReceivedAndRefundPut().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("Bearer", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/api/refunds/{refundId}/confirm-received-and-refund`.replace(`{${"refundId"}}`, encodeURIComponent(String(requestParameters['refundId']))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => RefundResponseResultFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiRefundsRefundIdConfirmReceivedAndRefundPut(requestParameters: ApiRefundsRefundIdConfirmReceivedAndRefundPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RefundResponseResult> {
+        const response = await this.apiRefundsRefundIdConfirmReceivedAndRefundPutRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

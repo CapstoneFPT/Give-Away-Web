@@ -19,6 +19,7 @@ models/AccountResponsePaginationResponse.ts
 models/AccountResponseResult.ts
 models/AccountStatus.ts
 models/AddFashionItemForConsignRequest.ts
+models/ApprovalRefundRequest.ts
 models/ApproveWithdrawResponse.ts
 models/Auction.ts
 models/AuctionDeposit.ts
@@ -123,6 +124,7 @@ models/PointPackage.ts
 models/PointPackageDetailResponse.ts
 models/PointPackageListResponse.ts
 models/PointPackageListResponsePaginationResponse.ts
+models/PointPackagePurchaseResponse.ts
 models/PointPackageStatus.ts
 models/ProblemDetails.ts
 models/PurchaseOrderRequest.ts

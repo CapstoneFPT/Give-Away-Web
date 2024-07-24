@@ -17,6 +17,7 @@ import * as runtime from '../runtime';
 import type {
   PointPackageDetailResponse,
   PointPackageListResponsePaginationResponse,
+  PointPackagePurchaseResponse,
   PointPackageStatus,
   PurchasePointPackageRequest,
 } from '../models/index';
@@ -25,6 +26,8 @@ import {
     PointPackageDetailResponseToJSON,
     PointPackageListResponsePaginationResponseFromJSON,
     PointPackageListResponsePaginationResponseToJSON,
+    PointPackagePurchaseResponseFromJSON,
+    PointPackagePurchaseResponseToJSON,
     PointPackageStatusFromJSON,
     PointPackageStatusToJSON,
     PurchasePointPackageRequestFromJSON,
@@ -167,7 +170,7 @@ export class PointPackageApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiPointpackagesPointPackageIdPurchasePostRaw(requestParameters: ApiPointpackagesPointPackageIdPurchasePostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+    async apiPointpackagesPointPackageIdPurchasePostRaw(requestParameters: ApiPointpackagesPointPackageIdPurchasePostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PointPackagePurchaseResponse>> {
         if (requestParameters['pointPackageId'] == null) {
             throw new runtime.RequiredError(
                 'pointPackageId',
@@ -197,13 +200,14 @@ export class PointPackageApi extends runtime.BaseAPI {
             body: PurchasePointPackageRequestToJSON(requestParameters['purchasePointPackageRequest']),
         }, initOverrides);
 
-        return new runtime.VoidApiResponse(response);
+        return new runtime.JSONApiResponse(response, (jsonValue) => PointPackagePurchaseResponseFromJSON(jsonValue));
     }
 
     /**
      */
-    async apiPointpackagesPointPackageIdPurchasePost(requestParameters: ApiPointpackagesPointPackageIdPurchasePostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.apiPointpackagesPointPackageIdPurchasePostRaw(requestParameters, initOverrides);
+    async apiPointpackagesPointPackageIdPurchasePost(requestParameters: ApiPointpackagesPointPackageIdPurchasePostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PointPackagePurchaseResponse> {
+        const response = await this.apiPointpackagesPointPackageIdPurchasePostRaw(requestParameters, initOverrides);
+        return await response.value();
     }
 
 }

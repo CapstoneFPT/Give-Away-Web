@@ -58,6 +58,18 @@ export interface Refund {
     description?: string | null;
     /**
      * 
+     * @type {number}
+     * @memberof Refund
+     */
+    refundPercentage?: number | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof Refund
+     */
+    responseFromShop?: string | null;
+    /**
+     * 
      * @type {Date}
      * @memberof Refund
      */
@@ -113,6 +125,8 @@ export function RefundFromJSONTyped(json: any, ignoreDiscriminator: boolean): Re
         
         'refundId': json['refundId'] == null ? undefined : json['refundId'],
         'description': json['description'] == null ? undefined : json['description'],
+        'refundPercentage': json['refundPercentage'] == null ? undefined : json['refundPercentage'],
+        'responseFromShop': json['responseFromShop'] == null ? undefined : json['responseFromShop'],
         'createdDate': json['createdDate'] == null ? undefined : (new Date(json['createdDate'])),
         'orderDetailId': json['orderDetailId'] == null ? undefined : json['orderDetailId'],
         'orderDetail': json['orderDetail'] == null ? undefined : OrderDetailFromJSON(json['orderDetail']),
@@ -130,6 +144,8 @@ export function RefundToJSON(value?: Refund | null): any {
         
         'refundId': value['refundId'],
         'description': value['description'],
+        'refundPercentage': value['refundPercentage'],
+        'responseFromShop': value['responseFromShop'],
         'createdDate': value['createdDate'] == null ? undefined : ((value['createdDate']).toISOString()),
         'orderDetailId': value['orderDetailId'],
         'orderDetail': OrderDetailToJSON(value['orderDetail']),

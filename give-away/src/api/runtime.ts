@@ -15,7 +15,7 @@
 import { BASE_URL } from "./config";
 
 
-export const BASE_PATH = `${BASE_URL}/`.replace(/\/+$/, "");
+export const BASE_PATH = `${BASE_URL}`.replace(/\/+$/, "");
 
 export interface ConfigurationParameters {
     basePath?: string; // override base path
