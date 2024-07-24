@@ -176,8 +176,8 @@ const Cart: React.FC = () => {
 
   const calculateTotalPrice = () => {
     return state.cartItems
-      .filter((item) => selectedItems.includes(item.itemId))
-      .reduce((total, item) => total + item.sellingPrice, 0);
+      .filter((item) => selectedItems.includes(item.itemId!))
+      .reduce((total, item) => total + item.sellingPrice!, 0);
   };
 
   return (
@@ -206,8 +206,8 @@ const Cart: React.FC = () => {
                   style={{ display: "flex", justifyContent: "space-between" }}
                 >
                   <Checkbox
-                    checked={selectedItems.includes(item.itemId)}
-                    onChange={() => handleCheckboxChange(item.itemId)}
+                    checked={selectedItems.includes(item.itemId!)}
+                    onChange={() => handleCheckboxChange(item.itemId!)}
                   ></Checkbox>
                   <Button
                     type="link"

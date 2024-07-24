@@ -43,19 +43,19 @@ export interface BidListResponsePaginationResponse {
      * @type {string}
      * @memberof BidListResponsePaginationResponse
      */
-    searchTerm?: string;
+    searchTerm?: string | null;
     /**
      * 
      * @type {Array<string>}
      * @memberof BidListResponsePaginationResponse
      */
-    filters?: Array<string>;
+    filters?: Array<string> | null;
     /**
      * 
      * @type {string}
      * @memberof BidListResponsePaginationResponse
      */
-    orderBy?: string;
+    orderBy?: string | null;
     /**
      * 
      * @type {number}
@@ -85,7 +85,7 @@ export interface BidListResponsePaginationResponse {
      * @type {Array<BidListResponse>}
      * @memberof BidListResponsePaginationResponse
      */
-    items?: Array<BidListResponse>;
+    items?: Array<BidListResponse> | null;
 }
 
 /**

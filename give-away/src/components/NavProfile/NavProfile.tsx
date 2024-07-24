@@ -10,6 +10,7 @@ import { Button, Menu, Card } from "antd";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../../api/config";
 import axios from "axios";
+import { AccountApi } from "../../api";
 
 
 
@@ -32,8 +33,10 @@ const NavProfile: React.FC = () => {
     const fetchBalance = async () => {
       const userId = JSON.parse(localStorage.getItem("userId") || "null"); 
       try {
-        const response = await axios.get(`${BASE_URL}/accounts/${userId}`); 
-        setBalance(response.data.data.balance);
+        // const response = await axios.get(`${BASE_URL}/accounts/${userId}`); 
+        const accountApi = new AccountApi();
+        const response = await accountApi.apiAccountsIdGet({id : userId});
+        setBalance(response.data?.balance || 0);
       } catch (error) {
         console.error("Error fetching balance:", error);
       }

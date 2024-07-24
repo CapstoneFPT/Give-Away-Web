@@ -25,7 +25,16 @@ export const CategoryStatus = {
 export type CategoryStatus = typeof CategoryStatus[keyof typeof CategoryStatus];
 
 
-
+export function instanceOfCategoryStatus(value: any): boolean {
+    for (const key in CategoryStatus) {
+        if (Object.prototype.hasOwnProperty.call(CategoryStatus, key)) {
+            if ((CategoryStatus as Record<string, CategoryStatus>)[key] === value) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
 
 export function CategoryStatusFromJSON(json: any): CategoryStatus {
     return CategoryStatusFromJSONTyped(json, false);

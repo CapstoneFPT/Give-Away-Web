@@ -24,6 +24,7 @@ import type {
   CreateAuctionDepositRequest,
   CreateAuctionRequest,
   CreateBidRequest,
+  HasMemberPlacedDepositResult,
   ProblemDetails,
   UpdateAuctionRequest,
   UpdateBidRequest,
@@ -47,6 +48,8 @@ import {
     CreateAuctionRequestToJSON,
     CreateBidRequestFromJSON,
     CreateBidRequestToJSON,
+    HasMemberPlacedDepositResultFromJSON,
+    HasMemberPlacedDepositResultToJSON,
     ProblemDetailsFromJSON,
     ProblemDetailsToJSON,
     UpdateAuctionRequestFromJSON,
@@ -69,6 +72,17 @@ export interface ApiAuctionsAuctionIdDepositsDepositIdPutRequest {
     auctionId: string;
     depositId: string;
     body?: object;
+}
+
+export interface ApiAuctionsAuctionIdDepositsGetRequest {
+    auctionId: string;
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiAuctionsAuctionIdDepositsHasDepositGetRequest {
+    auctionId: string;
+    memberId?: string;
 }
 
 export interface ApiAuctionsAuctionIdDepositsPlaceDepositPostRequest {
@@ -108,16 +122,16 @@ export interface ApiAuctionsIdBidsGetRequest {
     pageSize?: number;
 }
 
+export interface ApiAuctionsIdBidsLatestGetRequest {
+    id: string;
+}
+
 export interface ApiAuctionsIdBidsPlaceBidPostRequest {
     id: string;
     createBidRequest?: CreateBidRequest;
 }
 
 export interface ApiAuctionsIdDeleteRequest {
-    id: string;
-}
-
-export interface ApiAuctionsIdDepositsGetRequest {
     id: string;
 }
 
@@ -142,7 +156,7 @@ export interface ApiAuctionsPostRequest {
  * 
  */
 export class AuctionApi extends runtime.BaseAPI {
-    
+
     /**
      */
     async apiAuctionsAuctionIdDepositsDepositIdDeleteRaw(requestParameters: ApiAuctionsAuctionIdDepositsDepositIdDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
@@ -285,6 +299,96 @@ export class AuctionApi extends runtime.BaseAPI {
 
     /**
      */
+    async apiAuctionsAuctionIdDepositsGetRaw(requestParameters: ApiAuctionsAuctionIdDepositsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AuctionDepositListResponsePaginationResponse>> {
+        if (requestParameters['auctionId'] == null) {
+            throw new runtime.RequiredError(
+                'auctionId',
+                'Required parameter "auctionId" was null or undefined when calling apiAuctionsAuctionIdDepositsGet().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['Page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['PageSize'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("Bearer", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/api/auctions/{auctionId}/deposits`.replace(`{${"auctionId"}}`, encodeURIComponent(String(requestParameters['auctionId']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => AuctionDepositListResponsePaginationResponseFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiAuctionsAuctionIdDepositsGet(requestParameters: ApiAuctionsAuctionIdDepositsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AuctionDepositListResponsePaginationResponse> {
+        const response = await this.apiAuctionsAuctionIdDepositsGetRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiAuctionsAuctionIdDepositsHasDepositGetRaw(requestParameters: ApiAuctionsAuctionIdDepositsHasDepositGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<HasMemberPlacedDepositResult>> {
+        if (requestParameters['auctionId'] == null) {
+            throw new runtime.RequiredError(
+                'auctionId',
+                'Required parameter "auctionId" was null or undefined when calling apiAuctionsAuctionIdDepositsHasDepositGet().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['memberId'] != null) {
+            queryParameters['MemberId'] = requestParameters['memberId'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("Bearer", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/api/auctions/{auctionId}/deposits/has-deposit`.replace(`{${"auctionId"}}`, encodeURIComponent(String(requestParameters['auctionId']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => HasMemberPlacedDepositResultFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiAuctionsAuctionIdDepositsHasDepositGet(requestParameters: ApiAuctionsAuctionIdDepositsHasDepositGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<HasMemberPlacedDepositResult> {
+        const response = await this.apiAuctionsAuctionIdDepositsHasDepositGetRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
     async apiAuctionsAuctionIdDepositsPlaceDepositPostRaw(requestParameters: ApiAuctionsAuctionIdDepositsPlaceDepositPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AuctionDepositDetailResponse>> {
         if (requestParameters['auctionId'] == null) {
             throw new runtime.RequiredError(
@@ -323,6 +427,37 @@ export class AuctionApi extends runtime.BaseAPI {
     async apiAuctionsAuctionIdDepositsPlaceDepositPost(requestParameters: ApiAuctionsAuctionIdDepositsPlaceDepositPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AuctionDepositDetailResponse> {
         const response = await this.apiAuctionsAuctionIdDepositsPlaceDepositPostRaw(requestParameters, initOverrides);
         return await response.value();
+    }
+
+    /**
+     */
+    async apiAuctionsCurrentTimeGetRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("Bearer", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/api/auctions/current-time`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async apiAuctionsCurrentTimeGet(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.apiAuctionsCurrentTimeGetRaw(initOverrides);
     }
 
     /**
@@ -597,6 +732,45 @@ export class AuctionApi extends runtime.BaseAPI {
 
     /**
      */
+    async apiAuctionsIdBidsLatestGetRaw(requestParameters: ApiAuctionsIdBidsLatestGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<BidDetailResponse>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiAuctionsIdBidsLatestGet().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("Bearer", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/api/auctions/{id}/bids/latest`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => BidDetailResponseFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiAuctionsIdBidsLatestGet(requestParameters: ApiAuctionsIdBidsLatestGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<BidDetailResponse> {
+        const response = await this.apiAuctionsIdBidsLatestGetRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
     async apiAuctionsIdBidsPlaceBidPostRaw(requestParameters: ApiAuctionsIdBidsPlaceBidPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<BidDetailResponse>> {
         if (requestParameters['id'] == null) {
             throw new runtime.RequiredError(
@@ -673,45 +847,6 @@ export class AuctionApi extends runtime.BaseAPI {
      */
     async apiAuctionsIdDelete(requestParameters: ApiAuctionsIdDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.apiAuctionsIdDeleteRaw(requestParameters, initOverrides);
-    }
-
-    /**
-     */
-    async apiAuctionsIdDepositsGetRaw(requestParameters: ApiAuctionsIdDepositsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AuctionDepositListResponsePaginationResponse>> {
-        if (requestParameters['id'] == null) {
-            throw new runtime.RequiredError(
-                'id',
-                'Required parameter "id" was null or undefined when calling apiAuctionsIdDepositsGet().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        if (this.configuration && this.configuration.accessToken) {
-            const token = this.configuration.accessToken;
-            const tokenString = await token("Bearer", []);
-
-            if (tokenString) {
-                headerParameters["Authorization"] = `Bearer ${tokenString}`;
-            }
-        }
-        const response = await this.request({
-            path: `/api/auctions/{id}/deposits`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => AuctionDepositListResponsePaginationResponseFromJSON(jsonValue));
-    }
-
-    /**
-     */
-    async apiAuctionsIdDepositsGet(requestParameters: ApiAuctionsIdDepositsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AuctionDepositListResponsePaginationResponse> {
-        const response = await this.apiAuctionsIdDepositsGetRaw(requestParameters, initOverrides);
-        return await response.value();
     }
 
     /**

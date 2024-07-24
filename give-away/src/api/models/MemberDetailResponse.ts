@@ -30,25 +30,25 @@ export interface MemberDetailResponse {
      * @type {string}
      * @memberof MemberDetailResponse
      */
-    fullName?: string;
+    fullName?: string | null;
     /**
      * 
      * @type {string}
      * @memberof MemberDetailResponse
      */
-    email?: string;
+    email?: string | null;
     /**
      * 
      * @type {string}
      * @memberof MemberDetailResponse
      */
-    phone?: string;
+    phone?: string | null;
     /**
      * 
      * @type {string}
      * @memberof MemberDetailResponse
      */
-    status?: string;
+    status?: string | null;
 }
 
 /**

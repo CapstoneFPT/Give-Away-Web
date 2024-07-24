@@ -27,7 +27,16 @@ export const AuctionStatus = {
 export type AuctionStatus = typeof AuctionStatus[keyof typeof AuctionStatus];
 
 
-
+export function instanceOfAuctionStatus(value: any): boolean {
+    for (const key in AuctionStatus) {
+        if (Object.prototype.hasOwnProperty.call(AuctionStatus, key)) {
+            if ((AuctionStatus as Record<string, AuctionStatus>)[key] === value) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
 
 export function AuctionStatusFromJSON(json: any): AuctionStatus {
     return AuctionStatusFromJSONTyped(json, false);

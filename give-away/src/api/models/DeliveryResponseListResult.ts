@@ -37,7 +37,7 @@ export interface DeliveryResponseListResult {
      * @type {Array<DeliveryResponse>}
      * @memberof DeliveryResponseListResult
      */
-    data?: Array<DeliveryResponse>;
+    data?: Array<DeliveryResponse> | null;
     /**
      * 
      * @type {ResultStatus}
@@ -49,7 +49,7 @@ export interface DeliveryResponseListResult {
      * @type {Array<string>}
      * @memberof DeliveryResponseListResult
      */
-    messages?: Array<string>;
+    messages?: Array<string> | null;
 }
 
 /**

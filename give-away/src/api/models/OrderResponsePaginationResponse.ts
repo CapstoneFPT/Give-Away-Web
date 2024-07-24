@@ -43,19 +43,19 @@ export interface OrderResponsePaginationResponse {
      * @type {string}
      * @memberof OrderResponsePaginationResponse
      */
-    searchTerm?: string;
+    searchTerm?: string | null;
     /**
      * 
      * @type {Array<string>}
      * @memberof OrderResponsePaginationResponse
      */
-    filters?: Array<string>;
+    filters?: Array<string> | null;
     /**
      * 
      * @type {string}
      * @memberof OrderResponsePaginationResponse
      */
-    orderBy?: string;
+    orderBy?: string | null;
     /**
      * 
      * @type {number}
@@ -85,7 +85,7 @@ export interface OrderResponsePaginationResponse {
      * @type {Array<OrderResponse>}
      * @memberof OrderResponsePaginationResponse
      */
-    items?: Array<OrderResponse>;
+    items?: Array<OrderResponse> | null;
 }
 
 /**

@@ -31,7 +31,7 @@ export interface LoginResponse {
      * @type {string}
      * @memberof LoginResponse
      */
-    accessToken?: string;
+    accessToken?: string | null;
     /**
      * 
      * @type {Roles}
@@ -49,7 +49,13 @@ export interface LoginResponse {
      * @type {string}
      * @memberof LoginResponse
      */
-    email?: string;
+    email?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof LoginResponse
+     */
+    shopId?: string | null;
 }
 
 /**
@@ -73,6 +79,7 @@ export function LoginResponseFromJSONTyped(json: any, ignoreDiscriminator: boole
         'role': json['role'] == null ? undefined : RolesFromJSON(json['role']),
         'id': json['id'] == null ? undefined : json['id'],
         'email': json['email'] == null ? undefined : json['email'],
+        'shopId': json['shopId'] == null ? undefined : json['shopId'],
     };
 }
 
@@ -86,6 +93,7 @@ export function LoginResponseToJSON(value?: LoginResponse | null): any {
         'role': RolesToJSON(value['role']),
         'id': value['id'],
         'email': value['email'],
+        'shopId': value['shopId'],
     };
 }
 

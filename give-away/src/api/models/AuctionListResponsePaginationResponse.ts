@@ -43,19 +43,19 @@ export interface AuctionListResponsePaginationResponse {
      * @type {string}
      * @memberof AuctionListResponsePaginationResponse
      */
-    searchTerm?: string;
+    searchTerm?: string | null;
     /**
      * 
      * @type {Array<string>}
      * @memberof AuctionListResponsePaginationResponse
      */
-    filters?: Array<string>;
+    filters?: Array<string> | null;
     /**
      * 
      * @type {string}
      * @memberof AuctionListResponsePaginationResponse
      */
-    orderBy?: string;
+    orderBy?: string | null;
     /**
      * 
      * @type {number}
@@ -85,7 +85,7 @@ export interface AuctionListResponsePaginationResponse {
      * @type {Array<AuctionListResponse>}
      * @memberof AuctionListResponsePaginationResponse
      */
-    items?: Array<AuctionListResponse>;
+    items?: Array<AuctionListResponse> | null;
 }
 
 /**

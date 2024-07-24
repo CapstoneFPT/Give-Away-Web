@@ -13,13 +13,6 @@
  */
 
 import { mapValues } from '../runtime';
-import type { StaffDetailResponse } from './StaffDetailResponse';
-import {
-    StaffDetailResponseFromJSON,
-    StaffDetailResponseFromJSONTyped,
-    StaffDetailResponseToJSON,
-} from './StaffDetailResponse';
-
 /**
  * 
  * @export
@@ -37,7 +30,7 @@ export interface ShopDetailResponse {
      * @type {string}
      * @memberof ShopDetailResponse
      */
-    address?: string;
+    address?: string | null;
     /**
      * 
      * @type {string}
@@ -46,10 +39,10 @@ export interface ShopDetailResponse {
     staffId?: string;
     /**
      * 
-     * @type {StaffDetailResponse}
+     * @type {string}
      * @memberof ShopDetailResponse
      */
-    staff?: StaffDetailResponse;
+    phone?: string | null;
 }
 
 /**
@@ -72,7 +65,7 @@ export function ShopDetailResponseFromJSONTyped(json: any, ignoreDiscriminator: 
         'shopId': json['shopId'] == null ? undefined : json['shopId'],
         'address': json['address'] == null ? undefined : json['address'],
         'staffId': json['staffId'] == null ? undefined : json['staffId'],
-        'staff': json['staff'] == null ? undefined : StaffDetailResponseFromJSON(json['staff']),
+        'phone': json['phone'] == null ? undefined : json['phone'],
     };
 }
 
@@ -85,7 +78,7 @@ export function ShopDetailResponseToJSON(value?: ShopDetailResponse | null): any
         'shopId': value['shopId'],
         'address': value['address'],
         'staffId': value['staffId'],
-        'staff': StaffDetailResponseToJSON(value['staff']),
+        'phone': value['phone'],
     };
 }
 

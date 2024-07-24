@@ -17,6 +17,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../CartContext";
 import { BASE_URL } from "../../api/config";
+import { FashionItemApi, FashionItemDetailResponse } from "../../api";
 const backgroundImageUrl = require("../../components/Assets/88532663-women-modern-fashion-clothes-and-accessories-background-with-frame-for-text-flat-lay-female-casual.jpg");
 
 interface Product {
@@ -34,7 +35,7 @@ interface Product {
 
 const Women: React.FC = () => {
   const { state, dispatch, isItemInCart } = useCart();
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<FashionItemDetailResponse[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
@@ -48,20 +49,34 @@ const Women: React.FC = () => {
     setIsLoading(true);
     try {
       const userId = JSON.parse(localStorage.getItem("userId") || "null"); 
-      const response = await axios.get(
-        `${BASE_URL}/fashionitems?PageSize=${pageSize}&Status=Available&Type=ItemBase&Type=ConsignedForSale&GenderType=Female&pageNumber=${page}&memberId=${userId}`,
-        {
-          headers: {
-            "ngrok-skip-browser-warning": "6942",
-          },
-        }
-      );
+      // const response = await axios.get(
+      //   `${BASE_URL}/fashionitems?PageSize=${pageSize}&Status=Available&Type=ItemBase&Type=ConsignedForSale&GenderType=Female&pageNumber=${page}&memberId=${userId}`,
+      //   {
+      //     headers: {
+      //       "ngrok-skip-browser-warning": "6942",
+      //     },
+      //   }
+      // );
+
+      const fashionItemApi = new FashionItemApi();
+      const response = await fashionItemApi.apiFashionitemsGet({
+        memberId: userId,
+        pageNumber: page,
+        pageSize: pageSize,
+        status: ["Available"],
+        type: ["ItemBase", "ConsignedForSale"],
+        genderType: "Female",
+      }, {
+        headers: {
+          "ngrok-skip-browser-warning": "6942",
+        },
+      });
 
       console.debug(response);
       const data = response.data;
-      if (data && data.data.items && Array.isArray(data.data.items)) {
-        setProducts(data.data.items);
-        setTotalCount(data.data.totalCount);
+      if (data && data.items && Array.isArray(data.items)) {
+        setProducts(data.items);
+        setTotalCount(data.totalCount || 0);
       } else {
         console.error("Data is not in expected format:", data);
       }
@@ -72,7 +87,7 @@ const Women: React.FC = () => {
     }
   };
 
-  const handleAddToCart = (product: Product) => {
+  const handleAddToCart = (product: FashionItemDetailResponse) => {
     if (product.isOrderedYet) {
       notification.error({
         message: "Already Ordered",
@@ -149,15 +164,15 @@ const Women: React.FC = () => {
                 )}
               </div>
               <Row gutter={[16, 16]}>
-                {products.map((product: Product) => (
+                {products.map((product: FashionItemDetailResponse) => (
                   <Col key={product.itemId} xs={22} sm={12} md={8} lg={6}>
                     <Card
                       hoverable
                       onClick={() => goToDetailPage(product.itemId)}
                       cover={
                         <img
-                          alt={product.name}
-                          src={product.images}
+                          alt={product.name? product.name : "N/A"}
+                          src={product.images? product.images[0] : "N/A"}
                           style={{ height: "300px", objectFit: "cover" }}
                         />
                       }

@@ -24,7 +24,7 @@ export interface UpdateBidRequest {
      * @type {boolean}
      * @memberof UpdateBidRequest
      */
-    isWinning?: boolean;
+    isWinning?: boolean | null;
 }
 
 /**

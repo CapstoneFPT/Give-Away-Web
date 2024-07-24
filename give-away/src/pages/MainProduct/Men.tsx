@@ -7,29 +7,29 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../CartContext";
 import { BASE_URL } from "../../api/config";
+import { FashionItemApi, FashionItemDetailResponse } from "../../api";
 const backgroundImageUrl = require('../../components/Assets/shutterstock_455310238.jpg');
 
 
-interface Product {
-  itemId: any;
-  name: string;
-  size: string;
-  color: string;
-  gender: string;
-  brand: string;
-  images: string;
-  sellingPrice: number;
-  shopAddress: string;
-  isOrderedYet: boolean; // Add this line
-}
+// interface Product {
+//   itemId: any;
+//   name: string;
+//   size: string;
+//   color: string;
+//   gender: string;
+//   brand: string;
+//   images: string;
+//   sellingPrice: number;
+//   shopAddress: string;
+//   isOrderedYet: boolean; // Add this line
+// }
 
 const Men: React.FC = () => {
-  const { state, dispatch, isItemInCart } = useCart();
-  const [products, setProducts] = useState<Product[]>([]);
+  const { dispatch, isItemInCart } = useCart();
+  const [products, setProducts] = useState<FashionItemDetailResponse[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
-  const [userId, setUserId] = useState<string | null>(null);
 
   const pageSize = 12;
   const navigate = useNavigate();
@@ -42,20 +42,36 @@ const Men: React.FC = () => {
     setIsLoading(true);
     try {
       const userId = JSON.parse(localStorage.getItem("userId") || "null"); 
-      const response = await axios.get(
-        `${BASE_URL}/fashionitems?PageSize=${pageSize}&MemberId=${userId}&Status=Available&Type=ItemBase&Type=ConsignedForSale&GenderType=Male&pageNumber=${page}`,
-        {
-          headers: {
-            "ngrok-skip-browser-warning": "6942",
-          },
-        }
-      );
+      // const response = await axios.get(
+      //   `${BASE_URL}/fashionitems?PageSize=${pageSize}&MemberId=${userId}&Status=Available&Type=ItemBase&Type=ConsignedForSale&GenderType=Male&pageNumber=${page}`,
+      //   {
+      //     headers: {
+      //       "ngrok-skip-browser-warning": "6942",
+      //     },
+      //   }
+      // );
+
+      const fashionItemApi = new FashionItemApi();
+
+      const response = await fashionItemApi.apiFashionitemsGet({
+        memberId: userId,
+        pageNumber: page,
+        pageSize: pageSize,
+        status: ["Available"],
+        type: ["ItemBase", "ConsignedForSale"],
+        genderType: "Male",
+      },{
+        headers: {
+          "ngrok-skip-browser-warning": "6942",
+        },
+        
+      });
 
       console.debug(response);
       const data = response.data;
-      if (data && data.data.items && Array.isArray(data.data.items)) {
-        setProducts(data.data.items);
-        setTotalCount(data.data.totalCount);
+      if (data && data.items && Array.isArray(data.items)) {
+        setProducts(data.items);
+        setTotalCount(data.totalCount || 0);
       } else {
         console.error("Data is not in expected format:", data);
       }
@@ -66,7 +82,7 @@ const Men: React.FC = () => {
     }
   };
 
-  const handleAddToCart = (product: Product) => {
+  const handleAddToCart = (product: FashionItemDetailResponse) => {
     if (product.isOrderedYet) {
       notification.error({
         message: "Already Ordered",
@@ -134,10 +150,10 @@ const Men: React.FC = () => {
             {isLoading && <Spin style={{ textAlign: "center" }} size="large" />}
           </div>
           <Row gutter={[16, 16]}>
-            {products.map((product: Product) => (
+            {products.map((product: FashionItemDetailResponse) => (
               <Col key={product.itemId} xs={22} sm={12} md={8} lg={6}>
                 <Card  hoverable onClick={() => goToDetailPage(product.itemId)}
-                  cover={<img alt={product.name} src={product.images} style={{ height: '300px', objectFit: 'cover' }} />}
+                  cover={<img alt={product.name? product.name : "N/A"} src={product.images? product.images[0] : "N/A"} style={{ height: '300px', objectFit: 'cover' }} />}
                 >
                   <Card.Meta
                     title={product.name}

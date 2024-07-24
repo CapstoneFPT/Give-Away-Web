@@ -25,7 +25,16 @@ export const FashionItemType = {
 export type FashionItemType = typeof FashionItemType[keyof typeof FashionItemType];
 
 
-
+export function instanceOfFashionItemType(value: any): boolean {
+    for (const key in FashionItemType) {
+        if (Object.prototype.hasOwnProperty.call(FashionItemType, key)) {
+            if ((FashionItemType as Record<string, FashionItemType>)[key] === value) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
 
 export function FashionItemTypeFromJSON(json: any): FashionItemType {
     return FashionItemTypeFromJSONTyped(json, false);

@@ -55,13 +55,13 @@ export interface WalletDetailResponse {
      * @type {string}
      * @memberof WalletDetailResponse
      */
-    bankAccountNumber?: string;
+    bankAccountNumber?: string | null;
     /**
      * 
      * @type {string}
      * @memberof WalletDetailResponse
      */
-    bankName?: string;
+    bankName?: string | null;
 }
 
 /**

@@ -26,7 +26,16 @@ export const OrderStatus = {
 export type OrderStatus = typeof OrderStatus[keyof typeof OrderStatus];
 
 
-
+export function instanceOfOrderStatus(value: any): boolean {
+    for (const key in OrderStatus) {
+        if (Object.prototype.hasOwnProperty.call(OrderStatus, key)) {
+            if ((OrderStatus as Record<string, OrderStatus>)[key] === value) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
 
 export function OrderStatusFromJSON(json: any): OrderStatus {
     return OrderStatusFromJSONTyped(json, false);

@@ -43,49 +43,49 @@ export interface Account {
      * @type {string}
      * @memberof Account
      */
-    email?: string;
+    email?: string | null;
     /**
      * 
      * @type {string}
      * @memberof Account
      */
-    phone?: string;
+    phone?: string | null;
     /**
      * 
      * @type {string}
      * @memberof Account
      */
-    passwordHash?: string;
+    passwordHash?: string | null;
     /**
      * 
      * @type {string}
      * @memberof Account
      */
-    passwordSalt?: string;
+    passwordSalt?: string | null;
     /**
      * 
      * @type {string}
      * @memberof Account
      */
-    fullname?: string;
+    fullname?: string | null;
     /**
      * 
      * @type {Date}
      * @memberof Account
      */
-    verifiedAt?: Date;
+    verifiedAt?: Date | null;
     /**
      * 
      * @type {string}
      * @memberof Account
      */
-    passwordResetToken?: string;
+    passwordResetToken?: string | null;
     /**
      * 
      * @type {Date}
      * @memberof Account
      */
-    resetTokenExpires?: Date;
+    resetTokenExpires?: Date | null;
     /**
      * 
      * @type {Roles}
@@ -98,6 +98,12 @@ export interface Account {
      * @memberof Account
      */
     status?: AccountStatus;
+    /**
+     * 
+     * @type {number}
+     * @memberof Account
+     */
+    balance?: number;
 }
 
 /**
@@ -128,6 +134,7 @@ export function AccountFromJSONTyped(json: any, ignoreDiscriminator: boolean): A
         'resetTokenExpires': json['resetTokenExpires'] == null ? undefined : (new Date(json['resetTokenExpires'])),
         'role': json['role'] == null ? undefined : RolesFromJSON(json['role']),
         'status': json['status'] == null ? undefined : AccountStatusFromJSON(json['status']),
+        'balance': json['balance'] == null ? undefined : json['balance'],
     };
 }
 
@@ -148,6 +155,7 @@ export function AccountToJSON(value?: Account | null): any {
         'resetTokenExpires': value['resetTokenExpires'] == null ? undefined : ((value['resetTokenExpires'] as any).toISOString()),
         'role': RolesToJSON(value['role']),
         'status': AccountStatusToJSON(value['status']),
+        'balance': value['balance'],
     };
 }
 

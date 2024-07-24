@@ -37,7 +37,7 @@ export interface Shop {
      * @type {string}
      * @memberof Shop
      */
-    address?: string;
+    address?: string | null;
     /**
      * 
      * @type {Staff}
@@ -55,7 +55,7 @@ export interface Shop {
      * @type {string}
      * @memberof Shop
      */
-    phone?: string;
+    phone?: string | null;
 }
 
 /**

@@ -13,18 +13,25 @@
  */
 
 import { mapValues } from '../runtime';
+import type { GenderType } from './GenderType';
+import {
+    GenderTypeFromJSON,
+    GenderTypeFromJSONTyped,
+    GenderTypeToJSON,
+} from './GenderType';
+import type { SizeType } from './SizeType';
+import {
+    SizeTypeFromJSON,
+    SizeTypeFromJSONTyped,
+    SizeTypeToJSON,
+} from './SizeType';
+
 /**
  * 
  * @export
  * @interface FashionItemDetailRequest
  */
 export interface FashionItemDetailRequest {
-    /**
-     * 
-     * @type {string}
-     * @memberof FashionItemDetailRequest
-     */
-    type: string;
     /**
      * 
      * @type {number}
@@ -48,38 +55,55 @@ export interface FashionItemDetailRequest {
      * @type {number}
      * @memberof FashionItemDetailRequest
      */
-    quantity: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof FashionItemDetailRequest
-     */
-    value?: number;
+    condition: number;
     /**
      * 
      * @type {string}
      * @memberof FashionItemDetailRequest
      */
-    condition: string;
+    brand?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof FashionItemDetailRequest
+     */
+    color?: string | null;
+    /**
+     * 
+     * @type {GenderType}
+     * @memberof FashionItemDetailRequest
+     */
+    gender?: GenderType;
+    /**
+     * 
+     * @type {SizeType}
+     * @memberof FashionItemDetailRequest
+     */
+    size?: SizeType;
     /**
      * 
      * @type {string}
      * @memberof FashionItemDetailRequest
      */
     categoryId: string;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof FashionItemDetailRequest
+     */
+    images: Array<string>;
 }
 
 /**
  * Check if a given object implements the FashionItemDetailRequest interface.
  */
 export function instanceOfFashionItemDetailRequest(value: object): value is FashionItemDetailRequest {
-    if (!('type' in value) || value['type'] === undefined) return false;
     if (!('sellingPrice' in value) || value['sellingPrice'] === undefined) return false;
     if (!('name' in value) || value['name'] === undefined) return false;
     if (!('note' in value) || value['note'] === undefined) return false;
-    if (!('quantity' in value) || value['quantity'] === undefined) return false;
     if (!('condition' in value) || value['condition'] === undefined) return false;
     if (!('categoryId' in value) || value['categoryId'] === undefined) return false;
+    if (!('images' in value) || value['images'] === undefined) return false;
     return true;
 }
 
@@ -93,14 +117,16 @@ export function FashionItemDetailRequestFromJSONTyped(json: any, ignoreDiscrimin
     }
     return {
         
-        'type': json['type'],
         'sellingPrice': json['sellingPrice'],
         'name': json['name'],
         'note': json['note'],
-        'quantity': json['quantity'],
-        'value': json['value'] == null ? undefined : json['value'],
         'condition': json['condition'],
+        'brand': json['brand'] == null ? undefined : json['brand'],
+        'color': json['color'] == null ? undefined : json['color'],
+        'gender': json['gender'] == null ? undefined : GenderTypeFromJSON(json['gender']),
+        'size': json['size'] == null ? undefined : SizeTypeFromJSON(json['size']),
         'categoryId': json['categoryId'],
+        'images': json['images'],
     };
 }
 
@@ -110,14 +136,16 @@ export function FashionItemDetailRequestToJSON(value?: FashionItemDetailRequest 
     }
     return {
         
-        'type': value['type'],
         'sellingPrice': value['sellingPrice'],
         'name': value['name'],
         'note': value['note'],
-        'quantity': value['quantity'],
-        'value': value['value'],
         'condition': value['condition'],
+        'brand': value['brand'],
+        'color': value['color'],
+        'gender': GenderTypeToJSON(value['gender']),
+        'size': SizeTypeToJSON(value['size']),
         'categoryId': value['categoryId'],
+        'images': value['images'],
     };
 }
 

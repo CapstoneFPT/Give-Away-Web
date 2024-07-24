@@ -15,23 +15,38 @@
 
 import * as runtime from '../runtime';
 import type {
+  CategoryLeavesResponse,
   CategoryListResult,
-  CategoryRequest,
   CategoryResult,
+  CategoryStatus,
+  CategoryTreeResult,
+  CreateCategoryRequest,
   FashionItemDetailResponsePaginationResponseResult,
   FashionItemStatus,
+  FashionItemType,
+  GenderType,
 } from '../models/index';
 import {
+    CategoryLeavesResponseFromJSON,
+    CategoryLeavesResponseToJSON,
     CategoryListResultFromJSON,
     CategoryListResultToJSON,
-    CategoryRequestFromJSON,
-    CategoryRequestToJSON,
     CategoryResultFromJSON,
     CategoryResultToJSON,
+    CategoryStatusFromJSON,
+    CategoryStatusToJSON,
+    CategoryTreeResultFromJSON,
+    CategoryTreeResultToJSON,
+    CreateCategoryRequestFromJSON,
+    CreateCategoryRequestToJSON,
     FashionItemDetailResponsePaginationResponseResultFromJSON,
     FashionItemDetailResponsePaginationResponseResultToJSON,
     FashionItemStatusFromJSON,
     FashionItemStatusToJSON,
+    FashionItemTypeFromJSON,
+    FashionItemTypeToJSON,
+    GenderTypeFromJSON,
+    GenderTypeToJSON,
 } from '../models/index';
 
 export interface ApiCategoriesCategoryIdFahsionitemsGetRequest {
@@ -39,18 +54,37 @@ export interface ApiCategoriesCategoryIdFahsionitemsGetRequest {
     searchTerm?: string;
     pageNumber?: number;
     pageSize?: number;
-    status?: FashionItemStatus;
-    type?: string;
+    memberId?: string;
+    status?: Array<FashionItemStatus>;
+    type?: Array<FashionItemType>;
     shopId?: string;
+    genderType?: GenderType;
 }
 
 export interface ApiCategoriesCategoryIdGetRequest {
     categoryId: string;
 }
 
-export interface ApiCategoriesParentIdPostRequest {
-    parentId: string;
-    categoryRequest?: CategoryRequest;
+export interface ApiCategoriesCategoryIdPostRequest {
+    categoryId: string;
+    createCategoryRequest?: CreateCategoryRequest;
+}
+
+export interface ApiCategoriesConditionGetRequest {
+    categoryId?: string;
+    searchName?: string;
+    parentId?: string;
+    level?: number;
+    status?: CategoryStatus;
+}
+
+export interface ApiCategoriesLeavesGetRequest {
+    shopId?: string;
+}
+
+export interface ApiCategoriesTreeGetRequest {
+    shopId?: string;
+    rootCategoryId?: string;
 }
 
 /**
@@ -82,6 +116,10 @@ export class CategoryApi extends runtime.BaseAPI {
             queryParameters['PageSize'] = requestParameters['pageSize'];
         }
 
+        if (requestParameters['memberId'] != null) {
+            queryParameters['MemberId'] = requestParameters['memberId'];
+        }
+
         if (requestParameters['status'] != null) {
             queryParameters['Status'] = requestParameters['status'];
         }
@@ -92,6 +130,10 @@ export class CategoryApi extends runtime.BaseAPI {
 
         if (requestParameters['shopId'] != null) {
             queryParameters['ShopId'] = requestParameters['shopId'];
+        }
+
+        if (requestParameters['genderType'] != null) {
+            queryParameters['GenderType'] = requestParameters['genderType'];
         }
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -162,6 +204,100 @@ export class CategoryApi extends runtime.BaseAPI {
 
     /**
      */
+    async apiCategoriesCategoryIdPostRaw(requestParameters: ApiCategoriesCategoryIdPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CategoryResult>> {
+        if (requestParameters['categoryId'] == null) {
+            throw new runtime.RequiredError(
+                'categoryId',
+                'Required parameter "categoryId" was null or undefined when calling apiCategoriesCategoryIdPost().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("Bearer", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/api/categories/{categoryId}`.replace(`{${"categoryId"}}`, encodeURIComponent(String(requestParameters['categoryId']))),
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: CreateCategoryRequestToJSON(requestParameters['createCategoryRequest']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CategoryResultFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiCategoriesCategoryIdPost(requestParameters: ApiCategoriesCategoryIdPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CategoryResult> {
+        const response = await this.apiCategoriesCategoryIdPostRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiCategoriesConditionGetRaw(requestParameters: ApiCategoriesConditionGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CategoryListResult>> {
+        const queryParameters: any = {};
+
+        if (requestParameters['categoryId'] != null) {
+            queryParameters['CategoryId'] = requestParameters['categoryId'];
+        }
+
+        if (requestParameters['searchName'] != null) {
+            queryParameters['SearchName'] = requestParameters['searchName'];
+        }
+
+        if (requestParameters['parentId'] != null) {
+            queryParameters['ParentId'] = requestParameters['parentId'];
+        }
+
+        if (requestParameters['level'] != null) {
+            queryParameters['Level'] = requestParameters['level'];
+        }
+
+        if (requestParameters['status'] != null) {
+            queryParameters['Status'] = requestParameters['status'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("Bearer", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/api/categories/condition`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CategoryListResultFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiCategoriesConditionGet(requestParameters: ApiCategoriesConditionGetRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CategoryListResult> {
+        const response = await this.apiCategoriesConditionGetRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
     async apiCategoriesGetRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CategoryListResult>> {
         const queryParameters: any = {};
 
@@ -194,19 +330,14 @@ export class CategoryApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiCategoriesParentIdPostRaw(requestParameters: ApiCategoriesParentIdPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CategoryResult>> {
-        if (requestParameters['parentId'] == null) {
-            throw new runtime.RequiredError(
-                'parentId',
-                'Required parameter "parentId" was null or undefined when calling apiCategoriesParentIdPost().'
-            );
-        }
-
+    async apiCategoriesLeavesGetRaw(requestParameters: ApiCategoriesLeavesGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CategoryLeavesResponse>> {
         const queryParameters: any = {};
 
-        const headerParameters: runtime.HTTPHeaders = {};
+        if (requestParameters['shopId'] != null) {
+            queryParameters['shopId'] = requestParameters['shopId'];
+        }
 
-        headerParameters['Content-Type'] = 'application/json';
+        const headerParameters: runtime.HTTPHeaders = {};
 
         if (this.configuration && this.configuration.accessToken) {
             const token = this.configuration.accessToken;
@@ -217,20 +348,59 @@ export class CategoryApi extends runtime.BaseAPI {
             }
         }
         const response = await this.request({
-            path: `/api/categories/{parentId}`.replace(`{${"parentId"}}`, encodeURIComponent(String(requestParameters['parentId']))),
-            method: 'POST',
+            path: `/api/categories/leaves`,
+            method: 'GET',
             headers: headerParameters,
             query: queryParameters,
-            body: CategoryRequestToJSON(requestParameters['categoryRequest']),
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => CategoryResultFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => CategoryLeavesResponseFromJSON(jsonValue));
     }
 
     /**
      */
-    async apiCategoriesParentIdPost(requestParameters: ApiCategoriesParentIdPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CategoryResult> {
-        const response = await this.apiCategoriesParentIdPostRaw(requestParameters, initOverrides);
+    async apiCategoriesLeavesGet(requestParameters: ApiCategoriesLeavesGetRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CategoryLeavesResponse> {
+        const response = await this.apiCategoriesLeavesGetRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiCategoriesTreeGetRaw(requestParameters: ApiCategoriesTreeGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CategoryTreeResult>> {
+        const queryParameters: any = {};
+
+        if (requestParameters['shopId'] != null) {
+            queryParameters['shopId'] = requestParameters['shopId'];
+        }
+
+        if (requestParameters['rootCategoryId'] != null) {
+            queryParameters['rootCategoryId'] = requestParameters['rootCategoryId'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("Bearer", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/api/categories/tree`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CategoryTreeResultFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiCategoriesTreeGet(requestParameters: ApiCategoriesTreeGetRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CategoryTreeResult> {
+        const response = await this.apiCategoriesTreeGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

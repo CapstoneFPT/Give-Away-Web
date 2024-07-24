@@ -19,6 +19,12 @@ import {
     AuctionStatusFromJSONTyped,
     AuctionStatusToJSON,
 } from './AuctionStatus';
+import type { ShopDetailResponse } from './ShopDetailResponse';
+import {
+    ShopDetailResponseFromJSON,
+    ShopDetailResponseFromJSONTyped,
+    ShopDetailResponseToJSON,
+} from './ShopDetailResponse';
 
 /**
  * 
@@ -37,7 +43,7 @@ export interface AuctionListResponse {
      * @type {string}
      * @memberof AuctionListResponse
      */
-    title?: string;
+    title?: string | null;
     /**
      * 
      * @type {Date}
@@ -74,6 +80,12 @@ export interface AuctionListResponse {
      * @memberof AuctionListResponse
      */
     auctionItemId?: string;
+    /**
+     * 
+     * @type {ShopDetailResponse}
+     * @memberof AuctionListResponse
+     */
+    shop?: ShopDetailResponse;
 }
 
 /**
@@ -101,6 +113,7 @@ export function AuctionListResponseFromJSONTyped(json: any, ignoreDiscriminator:
         'status': json['status'] == null ? undefined : AuctionStatusFromJSON(json['status']),
         'shopId': json['shopId'] == null ? undefined : json['shopId'],
         'auctionItemId': json['auctionItemId'] == null ? undefined : json['auctionItemId'],
+        'shop': json['shop'] == null ? undefined : ShopDetailResponseFromJSON(json['shop']),
     };
 }
 
@@ -118,6 +131,7 @@ export function AuctionListResponseToJSON(value?: AuctionListResponse | null): a
         'status': AuctionStatusToJSON(value['status']),
         'shopId': value['shopId'],
         'auctionItemId': value['auctionItemId'],
+        'shop': ShopDetailResponseToJSON(value['shop']),
     };
 }
 

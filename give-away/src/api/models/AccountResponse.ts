@@ -13,6 +13,19 @@
  */
 
 import { mapValues } from '../runtime';
+import type { AccountStatus } from './AccountStatus';
+import {
+    AccountStatusFromJSON,
+    AccountStatusFromJSONTyped,
+    AccountStatusToJSON,
+} from './AccountStatus';
+import type { Roles } from './Roles';
+import {
+    RolesFromJSON,
+    RolesFromJSONTyped,
+    RolesToJSON,
+} from './Roles';
+
 /**
  * 
  * @export
@@ -30,31 +43,37 @@ export interface AccountResponse {
      * @type {string}
      * @memberof AccountResponse
      */
-    email?: string;
+    email?: string | null;
     /**
      * 
      * @type {string}
      * @memberof AccountResponse
      */
-    phone?: string;
+    phone?: string | null;
     /**
      * 
      * @type {string}
      * @memberof AccountResponse
      */
-    fullname?: string;
+    fullname?: string | null;
     /**
      * 
-     * @type {string}
+     * @type {Roles}
      * @memberof AccountResponse
      */
-    role?: string;
+    role?: Roles;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof AccountResponse
      */
-    status?: string;
+    balance?: number;
+    /**
+     * 
+     * @type {AccountStatus}
+     * @memberof AccountResponse
+     */
+    status?: AccountStatus;
 }
 
 /**
@@ -78,8 +97,9 @@ export function AccountResponseFromJSONTyped(json: any, ignoreDiscriminator: boo
         'email': json['email'] == null ? undefined : json['email'],
         'phone': json['phone'] == null ? undefined : json['phone'],
         'fullname': json['fullname'] == null ? undefined : json['fullname'],
-        'role': json['role'] == null ? undefined : json['role'],
-        'status': json['status'] == null ? undefined : json['status'],
+        'role': json['role'] == null ? undefined : RolesFromJSON(json['role']),
+        'balance': json['balance'] == null ? undefined : json['balance'],
+        'status': json['status'] == null ? undefined : AccountStatusFromJSON(json['status']),
     };
 }
 
@@ -93,8 +113,9 @@ export function AccountResponseToJSON(value?: AccountResponse | null): any {
         'email': value['email'],
         'phone': value['phone'],
         'fullname': value['fullname'],
-        'role': value['role'],
-        'status': value['status'],
+        'role': RolesToJSON(value['role']),
+        'balance': value['balance'],
+        'status': AccountStatusToJSON(value['status']),
     };
 }
 

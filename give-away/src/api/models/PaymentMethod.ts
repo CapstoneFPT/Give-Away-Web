@@ -20,12 +20,22 @@
 export const PaymentMethod = {
     Cod: 'COD',
     Point: 'Point',
-    QrCode: 'QRCode'
+    QrCode: 'QRCode',
+    Cash: 'Cash'
 } as const;
 export type PaymentMethod = typeof PaymentMethod[keyof typeof PaymentMethod];
 
 
-
+export function instanceOfPaymentMethod(value: any): boolean {
+    for (const key in PaymentMethod) {
+        if (Object.prototype.hasOwnProperty.call(PaymentMethod, key)) {
+            if ((PaymentMethod as Record<string, PaymentMethod>)[key] === value) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
 
 export function PaymentMethodFromJSON(json: any): PaymentMethod {
     return PaymentMethodFromJSONTyped(json, false);

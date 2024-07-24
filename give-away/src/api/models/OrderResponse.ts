@@ -19,12 +19,30 @@ import {
     OrderStatusFromJSONTyped,
     OrderStatusToJSON,
 } from './OrderStatus';
+import type { OrderDetailsResponse } from './OrderDetailsResponse';
+import {
+    OrderDetailsResponseFromJSON,
+    OrderDetailsResponseFromJSONTyped,
+    OrderDetailsResponseToJSON,
+} from './OrderDetailsResponse';
+import type { PurchaseType } from './PurchaseType';
+import {
+    PurchaseTypeFromJSON,
+    PurchaseTypeFromJSONTyped,
+    PurchaseTypeToJSON,
+} from './PurchaseType';
 import type { PaymentMethod } from './PaymentMethod';
 import {
     PaymentMethodFromJSON,
     PaymentMethodFromJSONTyped,
     PaymentMethodToJSON,
 } from './PaymentMethod';
+import type { ShopOrderResponse } from './ShopOrderResponse';
+import {
+    ShopOrderResponseFromJSON,
+    ShopOrderResponseFromJSONTyped,
+    ShopOrderResponseToJSON,
+} from './ShopOrderResponse';
 
 /**
  * 
@@ -52,6 +70,12 @@ export interface OrderResponse {
     totalPrice?: number;
     /**
      * 
+     * @type {string}
+     * @memberof OrderResponse
+     */
+    orderCode?: string | null;
+    /**
+     * 
      * @type {Date}
      * @memberof OrderResponse
      */
@@ -67,37 +91,79 @@ export interface OrderResponse {
      * @type {Date}
      * @memberof OrderResponse
      */
-    paymentDate?: Date;
+    paymentDate?: Date | null;
+    /**
+     * 
+     * @type {Date}
+     * @memberof OrderResponse
+     */
+    completedDate?: Date | null;
     /**
      * 
      * @type {string}
      * @memberof OrderResponse
      */
-    customerName?: string;
+    memberId?: string | null;
     /**
      * 
      * @type {string}
      * @memberof OrderResponse
      */
-    recipientName?: string;
+    customerName?: string | null;
     /**
      * 
      * @type {string}
      * @memberof OrderResponse
      */
-    contactNumber?: string;
+    recipientName?: string | null;
     /**
      * 
      * @type {string}
      * @memberof OrderResponse
      */
-    address?: string;
+    contactNumber?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof OrderResponse
+     */
+    address?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof OrderResponse
+     */
+    email?: string | null;
+    /**
+     * 
+     * @type {PurchaseType}
+     * @memberof OrderResponse
+     */
+    purchaseType?: PurchaseType;
     /**
      * 
      * @type {OrderStatus}
      * @memberof OrderResponse
      */
     status?: OrderStatus;
+    /**
+     * 
+     * @type {Array<ShopOrderResponse>}
+     * @memberof OrderResponse
+     */
+    shopOrderResponses?: Array<ShopOrderResponse> | null;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof OrderResponse
+     */
+    listItemNotAvailable?: Array<string> | null;
+    /**
+     * 
+     * @type {Array<OrderDetailsResponse>}
+     * @memberof OrderResponse
+     */
+    orderDetailItems?: Array<OrderDetailsResponse> | null;
 }
 
 /**
@@ -120,14 +186,22 @@ export function OrderResponseFromJSONTyped(json: any, ignoreDiscriminator: boole
         'orderId': json['orderId'] == null ? undefined : json['orderId'],
         'quantity': json['quantity'] == null ? undefined : json['quantity'],
         'totalPrice': json['totalPrice'] == null ? undefined : json['totalPrice'],
+        'orderCode': json['orderCode'] == null ? undefined : json['orderCode'],
         'createdDate': json['createdDate'] == null ? undefined : (new Date(json['createdDate'])),
         'paymentMethod': json['paymentMethod'] == null ? undefined : PaymentMethodFromJSON(json['paymentMethod']),
         'paymentDate': json['paymentDate'] == null ? undefined : (new Date(json['paymentDate'])),
+        'completedDate': json['completedDate'] == null ? undefined : (new Date(json['completedDate'])),
+        'memberId': json['memberId'] == null ? undefined : json['memberId'],
         'customerName': json['customerName'] == null ? undefined : json['customerName'],
         'recipientName': json['recipientName'] == null ? undefined : json['recipientName'],
         'contactNumber': json['contactNumber'] == null ? undefined : json['contactNumber'],
         'address': json['address'] == null ? undefined : json['address'],
+        'email': json['email'] == null ? undefined : json['email'],
+        'purchaseType': json['purchaseType'] == null ? undefined : PurchaseTypeFromJSON(json['purchaseType']),
         'status': json['status'] == null ? undefined : OrderStatusFromJSON(json['status']),
+        'shopOrderResponses': json['shopOrderResponses'] == null ? undefined : ((json['shopOrderResponses'] as Array<any>).map(ShopOrderResponseFromJSON)),
+        'listItemNotAvailable': json['listItemNotAvailable'] == null ? undefined : json['listItemNotAvailable'],
+        'orderDetailItems': json['orderDetailItems'] == null ? undefined : ((json['orderDetailItems'] as Array<any>).map(OrderDetailsResponseFromJSON)),
     };
 }
 
@@ -140,14 +214,22 @@ export function OrderResponseToJSON(value?: OrderResponse | null): any {
         'orderId': value['orderId'],
         'quantity': value['quantity'],
         'totalPrice': value['totalPrice'],
+        'orderCode': value['orderCode'],
         'createdDate': value['createdDate'] == null ? undefined : ((value['createdDate']).toISOString()),
         'paymentMethod': PaymentMethodToJSON(value['paymentMethod']),
-        'paymentDate': value['paymentDate'] == null ? undefined : ((value['paymentDate']).toISOString()),
+        'paymentDate': value['paymentDate'] == null ? undefined : ((value['paymentDate'] as any).toISOString()),
+        'completedDate': value['completedDate'] == null ? undefined : ((value['completedDate'] as any).toISOString()),
+        'memberId': value['memberId'],
         'customerName': value['customerName'],
         'recipientName': value['recipientName'],
         'contactNumber': value['contactNumber'],
         'address': value['address'],
+        'email': value['email'],
+        'purchaseType': PurchaseTypeToJSON(value['purchaseType']),
         'status': OrderStatusToJSON(value['status']),
+        'shopOrderResponses': value['shopOrderResponses'] == null ? undefined : ((value['shopOrderResponses'] as Array<any>).map(ShopOrderResponseToJSON)),
+        'listItemNotAvailable': value['listItemNotAvailable'],
+        'orderDetailItems': value['orderDetailItems'] == null ? undefined : ((value['orderDetailItems'] as Array<any>).map(OrderDetailsResponseToJSON)),
     };
 }
 

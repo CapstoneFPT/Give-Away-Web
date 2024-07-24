@@ -24,13 +24,13 @@ export interface LoginRequest {
      * @type {string}
      * @memberof LoginRequest
      */
-    email?: string;
+    email?: string | null;
     /**
      * 
      * @type {string}
      * @memberof LoginRequest
      */
-    password?: string;
+    password?: string | null;
 }
 
 /**

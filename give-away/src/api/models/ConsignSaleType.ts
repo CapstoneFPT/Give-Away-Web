@@ -19,12 +19,22 @@
  */
 export const ConsignSaleType = {
     ConsignedForSale: 'ConsignedForSale',
-    ConsignedForAuction: 'ConsignedForAuction'
+    ConsignedForAuction: 'ConsignedForAuction',
+    ForSale: 'ForSale'
 } as const;
 export type ConsignSaleType = typeof ConsignSaleType[keyof typeof ConsignSaleType];
 
 
-
+export function instanceOfConsignSaleType(value: any): boolean {
+    for (const key in ConsignSaleType) {
+        if (Object.prototype.hasOwnProperty.call(ConsignSaleType, key)) {
+            if ((ConsignSaleType as Record<string, ConsignSaleType>)[key] === value) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
 
 export function ConsignSaleTypeFromJSON(json: any): ConsignSaleType {
     return ConsignSaleTypeFromJSONTyped(json, false);

@@ -49,7 +49,7 @@ export interface CategoryResult {
      * @type {Array<string>}
      * @memberof CategoryResult
      */
-    messages?: Array<string>;
+    messages?: Array<string> | null;
 }
 
 /**

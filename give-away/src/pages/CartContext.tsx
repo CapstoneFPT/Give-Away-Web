@@ -6,6 +6,7 @@
     useEffect,
   } from "react";
   import { Modal } from "antd";
+import { FashionItemDetailResponse } from "../api";
 
   interface Product {
     itemId: any;
@@ -19,13 +20,13 @@
   }
 
   interface CartState {
-    cartItems: Product[];
+    cartItems: FashionItemDetailResponse[];
     userId: string | null;
     itemToRemove: Product | null;
   }
 
   type CartAction =
-    | { type: "ADD_TO_CART"; payload: Product }
+    | { type: "ADD_TO_CART"; payload: FashionItemDetailResponse }
     | { type: "REMOVE_FROM_CART"; payload: any }
     | { type: "SET_USER"; payload: string | null }
     | { type: "CLEAR_CART" };

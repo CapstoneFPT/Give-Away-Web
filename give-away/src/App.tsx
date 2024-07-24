@@ -35,6 +35,7 @@ import Deposit from "./pages/Deposit";
 import ImageUpload from "./pages/Firebase/ImageUpload";
 import ItemDisplayHome from "./components/ItemsDisplay/ItemDisplayHome";
 import CarouselComponent from "./components/Navbar/CarouselComponent";
+import Search from "./pages/MainProduct/Search";
 
 function App(): JSX.Element {
   return (
@@ -290,6 +291,14 @@ function App(): JSX.Element {
                 </>
               }
             />
+            <Route
+            path="/search"
+            element={
+              <>  <Navbar />
+                  <Breadcrumb />
+                  <Search />
+                  <Footer /></>
+            }/>
             <Route
               path="/itemDetail/:itemId"
               element={

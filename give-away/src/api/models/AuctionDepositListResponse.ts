@@ -43,6 +43,12 @@ export interface AuctionDepositListResponse {
      * @memberof AuctionDepositListResponse
      */
     amount?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof AuctionDepositListResponse
+     */
+    memberId?: string;
 }
 
 /**
@@ -66,6 +72,7 @@ export function AuctionDepositListResponseFromJSONTyped(json: any, ignoreDiscrim
         'auctionId': json['auctionId'] == null ? undefined : json['auctionId'],
         'depositDate': json['depositDate'] == null ? undefined : (new Date(json['depositDate'])),
         'amount': json['amount'] == null ? undefined : json['amount'],
+        'memberId': json['memberId'] == null ? undefined : json['memberId'],
     };
 }
 
@@ -79,6 +86,7 @@ export function AuctionDepositListResponseToJSON(value?: AuctionDepositListRespo
         'auctionId': value['auctionId'],
         'depositDate': value['depositDate'] == null ? undefined : ((value['depositDate']).toISOString()),
         'amount': value['amount'],
+        'memberId': value['memberId'],
     };
 }
 

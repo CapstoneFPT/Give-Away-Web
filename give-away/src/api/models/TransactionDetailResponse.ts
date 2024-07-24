@@ -55,7 +55,7 @@ export interface TransactionDetailResponse {
      * @type {string}
      * @memberof TransactionDetailResponse
      */
-    type?: string;
+    type?: string | null;
     /**
      * 
      * @type {string}
