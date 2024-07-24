@@ -3,19 +3,23 @@ import { Card, Row, Col, Table } from "antd";
 import NavProfile from "../../components/NavProfile/NavProfile";
 import axios from "axios";
 import { BASE_URL } from "../../api/config";
+import { AccountApi } from "../../api";
+import { GetWithdrawsResponse } from "../../api";
 
 const WithdrawHistory = () => {
   const userId = JSON.parse(localStorage.getItem("userId") || "null");
   console.log(userId);
 
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<GetWithdrawsResponse[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${BASE_URL}/accounts/${userId}/withdraws`);
-        const transactions = response.data.items; // Extracting transactions array from the response object
-        setData(transactions);
+        // const response = await axios.get(`${BASE_URL}/accounts/${userId}/withdraws`);
+        const accountApi =new AccountApi();
+        const response = await accountApi.apiAccountsAccountIdWithdrawsGet({accountId : userId});
+        const transactions = response.items; // Extracting transactions array from the response object
+        setData(transactions || []);
         console.log(transactions)
       } catch (error) {
         console.error("Error fetching data:", error);

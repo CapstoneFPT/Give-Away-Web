@@ -13,6 +13,7 @@ import {
 import { SendOutlined } from "@ant-design/icons";
 import NavProfile from "../components/NavProfile/NavProfile";
 import { BASE_URL } from "../api/config";
+import { AccountApi } from "../api";
 
 const { Option } = Select;
 
@@ -56,13 +57,19 @@ const Withdraw = () => {
       };
 
       // Gọi API để rút tiền với userId
-      const response = await axios.post(
-        `${BASE_URL}/accounts/${userId}/withdraws`,
-        requestBody // Truyền dữ liệu vào body
-      );
+      // const response = await axios.post(
+      //   `${BASE_URL}/accounts/${userId}/withdraws`,
+      //   requestBody // Truyền dữ liệu vào body
+      // );
+
+      const accountApi = new AccountApi();
+      const response = await accountApi.apiAccountsAccountIdWithdrawsPost({
+        accountId: userId,
+        createWithdrawRequest: requestBody,
+      })
       message.success("Refund request sent successfully!");
       console.log("Form values: ", values);
-      console.log("API response: ", response.data); // Log phản hồi từ API
+      console.log("API response: ", response); // Log phản hồi từ API
 
       // Reset form sau khi gửi thành công
       form.resetFields();
