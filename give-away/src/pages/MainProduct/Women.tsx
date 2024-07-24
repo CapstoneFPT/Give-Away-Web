@@ -29,6 +29,7 @@ interface Product {
   images: string;
   sellingPrice: number;
   shopAddress: string;
+  isOrderedYet: boolean;
 }
 
 const Women: React.FC = () => {
@@ -46,8 +47,9 @@ const Women: React.FC = () => {
   const fetchProducts = async (page: number) => {
     setIsLoading(true);
     try {
+      const userId = JSON.parse(localStorage.getItem("userId") || "null"); 
       const response = await axios.get(
-        `${BASE_URL}/fashionitems?PageSize=${pageSize}&Status=Available&Type=ItemBase&Type=ConsignedForSale&GenderType=Female&pageNumber=${page}`,
+        `${BASE_URL}/fashionitems?PageSize=${pageSize}&Status=Available&Type=ItemBase&Type=ConsignedForSale&GenderType=Female&pageNumber=${page}&memberId=${userId}`,
         {
           headers: {
             "ngrok-skip-browser-warning": "6942",
@@ -71,7 +73,12 @@ const Women: React.FC = () => {
   };
 
   const handleAddToCart = (product: Product) => {
-    if (isItemInCart(product.itemId)) {
+    if (product.isOrderedYet) {
+      notification.error({
+        message: "Already Ordered",
+        description: `The item "${product.name}" has already been ordered.`,
+      });
+    } else if (isItemInCart(product.itemId)) {
       notification.warning({
         message: "Already in Cart",
         description: `The item "${product.name}" is already in your cart.`,
