@@ -8,10 +8,12 @@ import SearchBar from "../SearchBar/SearchBar";
 import axios from "axios";
 import { BASE_URL } from "../../api/config";
 import { AccountApi } from "../../api";
+import { useCart } from "../../pages/CartContext";
 
 const Navbar = () => {
   const [menu, setMenu] = useState("shop");
   const [balance, setBalance] = useState(0);
+  const cart = useCart();
 
   useEffect(() => {
     const fetchBalance = async () => {
@@ -95,7 +97,7 @@ const Navbar = () => {
           <Login />
           <Link to="/cart" className="nav-cart">
             <img src={cart_icon} alt="" />
-            <div className="nav-cart-count">TotalItem</div>
+            <div className="nav-cart-count">{cart.state.cartItems.length}</div>
           </Link>
           <div style={{ fontSize: "1.2em",
                 color: "#d1d124",
