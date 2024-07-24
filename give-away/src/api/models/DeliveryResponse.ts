@@ -30,31 +30,31 @@ export interface DeliveryResponse {
      * @type {string}
      * @memberof DeliveryResponse
      */
-    recipientName?: string;
+    recipientName?: string | null;
     /**
      * 
      * @type {string}
      * @memberof DeliveryResponse
      */
-    phone?: string;
+    phone?: string | null;
     /**
      * 
      * @type {string}
      * @memberof DeliveryResponse
      */
-    address?: string;
+    address?: string | null;
     /**
      * 
      * @type {string}
      * @memberof DeliveryResponse
      */
-    addressType?: string;
+    addressType?: string | null;
     /**
      * 
      * @type {string}
      * @memberof DeliveryResponse
      */
-    buyername?: string;
+    buyername?: string | null;
 }
 
 /**

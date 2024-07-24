@@ -12,8 +12,10 @@
  * Do not edit the class manually.
  */
 
+import { BASE_URL } from "./config";
 
-export const BASE_PATH = "http://giveawayproject.jettonetto.org:8080/".replace(/\/+$/, "");
+
+export const BASE_PATH = `${BASE_URL}/`.replace(/\/+$/, "");
 
 export interface ConfigurationParameters {
     basePath?: string; // override base path

@@ -21,13 +21,21 @@ export const ResultStatus = {
     Success: 'Success',
     NotFound: 'NotFound',
     Duplicated: 'Duplicated',
-    Error: 'Error',
-    Empty: 'Empty'
+    Error: 'Error'
 } as const;
 export type ResultStatus = typeof ResultStatus[keyof typeof ResultStatus];
 
 
-
+export function instanceOfResultStatus(value: any): boolean {
+    for (const key in ResultStatus) {
+        if (Object.prototype.hasOwnProperty.call(ResultStatus, key)) {
+            if ((ResultStatus as Record<string, ResultStatus>)[key] === value) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
 
 export function ResultStatusFromJSON(json: any): ResultStatus {
     return ResultStatusFromJSONTyped(json, false);

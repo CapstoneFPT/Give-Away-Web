@@ -1,12 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { Layout, Button, Row, Col, Card, Pagination, Spin, notification } from "antd";
+import {
+  Layout,
+  Button,
+  Row,
+  Col,
+  Card,
+  Pagination,
+  Spin,
+  notification,
+} from "antd";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import { Content } from "antd/es/layout/layout";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../../pages/CartContext";
 import { BASE_URL } from "../../api/config";
-const backgroundImageUrl = require('../Assets/freepik_5229782.jpg');
+import { FashionItemApi, FashionItemDetailResponse } from "../../api";
+const backgroundImageUrl = require("../Assets/freepik_5229782.jpg");
 
 interface Product {
   itemId: any;
@@ -22,7 +32,7 @@ interface Product {
 
 const ItemDisplayHome: React.FC = () => {
   const { state, dispatch, isItemInCart } = useCart();
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<FashionItemDetailResponse[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
@@ -36,8 +46,22 @@ const ItemDisplayHome: React.FC = () => {
   const fetchProducts = async (page: number) => {
     setIsLoading(true);
     try {
-      const response = await axios.get(
-        `${BASE_URL}/fashionitems?PageSize=${pageSize}&Status=Available&Type=ItemBase&Type=ConsignedForSale&pageNumber=${page}`,
+      // const response = await axios.get(
+      //   `${BASE_URL}/fashionitems?PageSize=${pageSize}&Status=Available&Type=ItemBase&Type=ConsignedForSale&pageNumber=${page}`,
+      //   {
+      //     headers: {
+      //       "ngrok-skip-browser-warning": "6942",
+      //     },
+      //   }
+      // );
+      const fashionItemApi = new FashionItemApi();
+      const response = await fashionItemApi.apiFashionitemsGet(
+        {
+          pageSize: pageSize,
+          status: ["Available"],
+          type: ["ItemBase", "ConsignedForSale"],
+          pageNumber: page,
+        },
         {
           headers: {
             "ngrok-skip-browser-warning": "6942",
@@ -47,9 +71,9 @@ const ItemDisplayHome: React.FC = () => {
 
       console.debug(response);
       const data = response.data;
-      if (data && data.data.items && Array.isArray(data.data.items)) {
-        setProducts(data.data.items);
-        setTotalCount(data.data.totalCount);
+      if (data && data.items && Array.isArray(data.items)) {
+        setProducts(data.items);
+        setTotalCount(data.totalCount || 0);
       } else {
         console.error("Data is not in expected format:", data);
       }
@@ -60,7 +84,7 @@ const ItemDisplayHome: React.FC = () => {
     }
   };
 
-  const handleAddToCart = (product: Product) => {
+  const handleAddToCart = (product: FashionItemDetailResponse) => {
     if (isItemInCart(product.itemId)) {
       notification.warning({
         message: "Already in Cart",
@@ -82,30 +106,43 @@ const ItemDisplayHome: React.FC = () => {
   };
 
   return (
-    <Card style={{
-      backgroundImage: `url(${backgroundImageUrl})`,
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      minHeight: '100vh',
-      backgroundColor: 'rgba(255, 255, 255, 0)'
-    }}>
-      <Layout style={{ padding: "0 24px 24px", backgroundColor: 'rgba(255, 255, 255, 0)' }}>
+    <Card
+      style={{
+        backgroundImage: `url(${backgroundImageUrl})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        minHeight: "100vh",
+        backgroundColor: "rgba(255, 255, 255, 0)",
+      }}
+    >
+      <Layout
+        style={{
+          padding: "0 24px 24px",
+          backgroundColor: "rgba(255, 255, 255, 0)",
+        }}
+      >
         <Content>
           <div style={{ textAlign: "center", marginBottom: "15px" }}>
             <h1>Collection</h1>
             {isLoading && <Spin style={{ textAlign: "center" }} size="large" />}
           </div>
           <Row gutter={[20, 10]} justify="center">
-            {products.map((product: Product) => (
+            {products.map((product: FashionItemDetailResponse) => (
               <Col key={product.itemId} xs={24} sm={12} md={8} lg={6}>
                 <Card
-                style={{width:'330px'}}
+                  style={{ width: "330px" }}
                   hoverable
                   onClick={() => goToDetailPage(product.itemId)}
-                  cover={<img alt={product.name} src={product.images} style={{ height: '300px', objectFit: 'cover' }} />}
+                  cover={
+                    <img
+                      alt={product.name? product.name : "N/A"}
+                      src={product.images? product.images[0] : "N/A"}
+                      style={{ height: "300px", objectFit: "cover" }}
+                    />
+                  }
                 >
                   <Card.Meta
-                    style={{ height: '60px' }}
+                    style={{ height: "60px" }}
                     title={product.name}
                     description={`${product.sellingPrice} VND`}
                   />

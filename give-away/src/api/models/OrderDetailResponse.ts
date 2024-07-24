@@ -46,16 +46,10 @@ export interface OrderDetailResponse {
     totalPrice?: number;
     /**
      * 
-     * @type {Date}
-     * @memberof OrderDetailResponse
-     */
-    createdDate?: Date;
-    /**
-     * 
      * @type {string}
      * @memberof OrderDetailResponse
      */
-    paymentMethod?: string;
+    paymentMethod?: string | null;
     /**
      * 
      * @type {Date}
@@ -107,7 +101,6 @@ export function OrderDetailResponseFromJSONTyped(json: any, ignoreDiscriminator:
         
         'orderId': json['orderId'] == null ? undefined : json['orderId'],
         'totalPrice': json['totalPrice'] == null ? undefined : json['totalPrice'],
-        'createdDate': json['createdDate'] == null ? undefined : (new Date(json['createdDate'])),
         'paymentMethod': json['paymentMethod'] == null ? undefined : json['paymentMethod'],
         'payementDate': json['payementDate'] == null ? undefined : (new Date(json['payementDate'])),
         'memberId': json['memberId'] == null ? undefined : json['memberId'],
@@ -125,7 +118,6 @@ export function OrderDetailResponseToJSON(value?: OrderDetailResponse | null): a
         
         'orderId': value['orderId'],
         'totalPrice': value['totalPrice'],
-        'createdDate': value['createdDate'] == null ? undefined : ((value['createdDate']).toISOString()),
         'paymentMethod': value['paymentMethod'],
         'payementDate': value['payementDate'] == null ? undefined : ((value['payementDate']).toISOString()),
         'memberId': value['memberId'],

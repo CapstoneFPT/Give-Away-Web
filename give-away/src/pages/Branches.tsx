@@ -57,9 +57,9 @@ const Branches: React.FC = () => {
     const fetchData = async () => {
       try {
         const [categoryResponse, fashionItemResponse, shopResponse] = await Promise.all([
-          fetch(`${BASE_URL}/categories/tree?shopId=${selectedShopId || ''}`),
-          fetch(`${BASE_URL}/fashionitems?Status=Available&Type=Itembase&Type=ConsignedForSale&ShopId=${selectedShopId || ''}`),
-          fetch(`${BASE_URL}/shops`),
+          fetch(`${BASE_URL + "/api"}/categories/tree?shopId=${selectedShopId || ''}`),
+          fetch(`${BASE_URL + "/api"}/fashionitems?Status=Available&Type=Itembase&Type=ConsignedForSale&ShopId=${selectedShopId || ''}`),
+          fetch(`${BASE_URL + "/api"}/shops`),
         ]);
         console.log(selectedShopId);
         if (!categoryResponse.ok || !fashionItemResponse.ok || !shopResponse.ok) {

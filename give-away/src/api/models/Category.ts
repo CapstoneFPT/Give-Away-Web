@@ -43,19 +43,13 @@ export interface Category {
      * @type {string}
      * @memberof Category
      */
-    name?: string;
-    /**
-     * 
-     * @type {Category}
-     * @memberof Category
-     */
-    parent?: Category;
+    name?: string | null;
     /**
      * 
      * @type {string}
      * @memberof Category
      */
-    parentId?: string;
+    parentId?: string | null;
     /**
      * 
      * @type {number}
@@ -64,10 +58,16 @@ export interface Category {
     level?: number;
     /**
      * 
+     * @type {Category}
+     * @memberof Category
+     */
+    parent?: Category;
+    /**
+     * 
      * @type {Array<FashionItem>}
      * @memberof Category
      */
-    fashionItems?: Array<FashionItem>;
+    fashionItems?: Array<FashionItem> | null;
     /**
      * 
      * @type {CategoryStatus}
@@ -95,9 +95,9 @@ export function CategoryFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
         
         'categoryId': json['categoryId'] == null ? undefined : json['categoryId'],
         'name': json['name'] == null ? undefined : json['name'],
-        'parent': json['parent'] == null ? undefined : CategoryFromJSON(json['parent']),
         'parentId': json['parentId'] == null ? undefined : json['parentId'],
         'level': json['level'] == null ? undefined : json['level'],
+        'parent': json['parent'] == null ? undefined : CategoryFromJSON(json['parent']),
         'fashionItems': json['fashionItems'] == null ? undefined : ((json['fashionItems'] as Array<any>).map(FashionItemFromJSON)),
         'status': json['status'] == null ? undefined : CategoryStatusFromJSON(json['status']),
     };
@@ -111,9 +111,9 @@ export function CategoryToJSON(value?: Category | null): any {
         
         'categoryId': value['categoryId'],
         'name': value['name'],
-        'parent': CategoryToJSON(value['parent']),
         'parentId': value['parentId'],
         'level': value['level'],
+        'parent': CategoryToJSON(value['parent']),
         'fashionItems': value['fashionItems'] == null ? undefined : ((value['fashionItems'] as Array<any>).map(FashionItemToJSON)),
         'status': CategoryStatusToJSON(value['status']),
     };

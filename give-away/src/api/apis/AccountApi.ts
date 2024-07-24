@@ -15,30 +15,95 @@
 
 import * as runtime from '../runtime';
 import type {
-  AccountResponse,
+  AccountResponsePaginationResponse,
   AccountResponseResult,
+  AccountStatus,
+  CartRequest,
+  ConsignSaleResponsePaginationResponseResult,
+  ConsignSaleResponseResult,
+  ConsignSaleStatus,
+  CreateConsignSaleRequest,
+  CreateInquiryRequest,
+  CreateInquiryResponse,
+  CreateWithdrawRequest,
+  CreateWithdrawResponse,
   DeliveryRequest,
   DeliveryResponseListResult,
   DeliveryResponseResult,
+  GetTransactionsResponse,
+  GetWithdrawsResponsePaginationResponse,
+  OrderResponsePaginationResponseResult,
+  OrderResponseResult,
+  OrderStatus,
   StringResult,
+  TransactionType,
   UpdateAccountRequest,
+  WithdrawStatus,
 } from '../models/index';
 import {
-    AccountResponseFromJSON,
-    AccountResponseToJSON,
+    AccountResponsePaginationResponseFromJSON,
+    AccountResponsePaginationResponseToJSON,
     AccountResponseResultFromJSON,
     AccountResponseResultToJSON,
+    AccountStatusFromJSON,
+    AccountStatusToJSON,
+    CartRequestFromJSON,
+    CartRequestToJSON,
+    ConsignSaleResponsePaginationResponseResultFromJSON,
+    ConsignSaleResponsePaginationResponseResultToJSON,
+    ConsignSaleResponseResultFromJSON,
+    ConsignSaleResponseResultToJSON,
+    ConsignSaleStatusFromJSON,
+    ConsignSaleStatusToJSON,
+    CreateConsignSaleRequestFromJSON,
+    CreateConsignSaleRequestToJSON,
+    CreateInquiryRequestFromJSON,
+    CreateInquiryRequestToJSON,
+    CreateInquiryResponseFromJSON,
+    CreateInquiryResponseToJSON,
+    CreateWithdrawRequestFromJSON,
+    CreateWithdrawRequestToJSON,
+    CreateWithdrawResponseFromJSON,
+    CreateWithdrawResponseToJSON,
     DeliveryRequestFromJSON,
     DeliveryRequestToJSON,
     DeliveryResponseListResultFromJSON,
     DeliveryResponseListResultToJSON,
     DeliveryResponseResultFromJSON,
     DeliveryResponseResultToJSON,
+    GetTransactionsResponseFromJSON,
+    GetTransactionsResponseToJSON,
+    GetWithdrawsResponsePaginationResponseFromJSON,
+    GetWithdrawsResponsePaginationResponseToJSON,
+    OrderResponsePaginationResponseResultFromJSON,
+    OrderResponsePaginationResponseResultToJSON,
+    OrderResponseResultFromJSON,
+    OrderResponseResultToJSON,
+    OrderStatusFromJSON,
+    OrderStatusToJSON,
     StringResultFromJSON,
     StringResultToJSON,
+    TransactionTypeFromJSON,
+    TransactionTypeToJSON,
     UpdateAccountRequestFromJSON,
     UpdateAccountRequestToJSON,
+    WithdrawStatusFromJSON,
+    WithdrawStatusToJSON,
 } from '../models/index';
+
+export interface ApiAccountsAccountIdConsignsalesGetRequest {
+    accountId: string;
+    pageNumber?: number;
+    pageSize?: number;
+    shopId?: string;
+    consignSaleCode?: string;
+    status?: ConsignSaleStatus;
+}
+
+export interface ApiAccountsAccountIdConsignsalesPostRequest {
+    accountId: string;
+    createConsignSaleRequest?: CreateConsignSaleRequest;
+}
 
 export interface ApiAccountsAccountIdDeliveriesDeliveryIdDeleteRequest {
     deliveryId: string;
@@ -60,9 +125,54 @@ export interface ApiAccountsAccountIdDeliveriesPostRequest {
     deliveryRequest?: DeliveryRequest;
 }
 
+export interface ApiAccountsAccountIdInquiriesPostRequest {
+    accountId: string;
+    createInquiryRequest?: CreateInquiryRequest;
+}
+
+export interface ApiAccountsAccountIdOrdersGetRequest {
+    accountId: string;
+    pageNumber?: number;
+    pageSize?: number;
+    status?: OrderStatus;
+    orderCode?: string;
+}
+
+export interface ApiAccountsAccountIdOrdersPostRequest {
+    accountId: string;
+    cartRequest?: CartRequest;
+}
+
 export interface ApiAccountsAccountIdPutRequest {
     accountId: string;
     updateAccountRequest?: UpdateAccountRequest;
+}
+
+export interface ApiAccountsAccountIdTransactionsGetRequest {
+    accountId: string;
+    page?: number;
+    pageSize?: number;
+    type?: TransactionType;
+}
+
+export interface ApiAccountsAccountIdWithdrawsGetRequest {
+    accountId: string;
+    page?: number;
+    pageSize?: number;
+    status?: WithdrawStatus;
+}
+
+export interface ApiAccountsAccountIdWithdrawsPostRequest {
+    accountId: string;
+    createWithdrawRequest?: CreateWithdrawRequest;
+}
+
+export interface ApiAccountsGetRequest {
+    page?: number;
+    pageSize?: number;
+    searchTerm?: string;
+    phone?: string;
+    status?: Array<AccountStatus>;
 }
 
 export interface ApiAccountsIdBanPutRequest {
@@ -77,6 +187,107 @@ export interface ApiAccountsIdGetRequest {
  * 
  */
 export class AccountApi extends runtime.BaseAPI {
+
+    /**
+     */
+    async apiAccountsAccountIdConsignsalesGetRaw(requestParameters: ApiAccountsAccountIdConsignsalesGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ConsignSaleResponsePaginationResponseResult>> {
+        if (requestParameters['accountId'] == null) {
+            throw new runtime.RequiredError(
+                'accountId',
+                'Required parameter "accountId" was null or undefined when calling apiAccountsAccountIdConsignsalesGet().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['pageNumber'] != null) {
+            queryParameters['PageNumber'] = requestParameters['pageNumber'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['PageSize'] = requestParameters['pageSize'];
+        }
+
+        if (requestParameters['shopId'] != null) {
+            queryParameters['ShopId'] = requestParameters['shopId'];
+        }
+
+        if (requestParameters['consignSaleCode'] != null) {
+            queryParameters['ConsignSaleCode'] = requestParameters['consignSaleCode'];
+        }
+
+        if (requestParameters['status'] != null) {
+            queryParameters['Status'] = requestParameters['status'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("Bearer", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/api/accounts/{accountId}/consignsales`.replace(`{${"accountId"}}`, encodeURIComponent(String(requestParameters['accountId']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => ConsignSaleResponsePaginationResponseResultFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiAccountsAccountIdConsignsalesGet(requestParameters: ApiAccountsAccountIdConsignsalesGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ConsignSaleResponsePaginationResponseResult> {
+        const response = await this.apiAccountsAccountIdConsignsalesGetRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiAccountsAccountIdConsignsalesPostRaw(requestParameters: ApiAccountsAccountIdConsignsalesPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ConsignSaleResponseResult>> {
+        if (requestParameters['accountId'] == null) {
+            throw new runtime.RequiredError(
+                'accountId',
+                'Required parameter "accountId" was null or undefined when calling apiAccountsAccountIdConsignsalesPost().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("Bearer", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/api/accounts/{accountId}/consignsales`.replace(`{${"accountId"}}`, encodeURIComponent(String(requestParameters['accountId']))),
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: CreateConsignSaleRequestToJSON(requestParameters['createConsignSaleRequest']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => ConsignSaleResponseResultFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiAccountsAccountIdConsignsalesPost(requestParameters: ApiAccountsAccountIdConsignsalesPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ConsignSaleResponseResult> {
+        const response = await this.apiAccountsAccountIdConsignsalesPostRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
 
     /**
      */
@@ -256,6 +467,145 @@ export class AccountApi extends runtime.BaseAPI {
 
     /**
      */
+    async apiAccountsAccountIdInquiriesPostRaw(requestParameters: ApiAccountsAccountIdInquiriesPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CreateInquiryResponse>> {
+        if (requestParameters['accountId'] == null) {
+            throw new runtime.RequiredError(
+                'accountId',
+                'Required parameter "accountId" was null or undefined when calling apiAccountsAccountIdInquiriesPost().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("Bearer", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/api/accounts/{accountId}/inquiries`.replace(`{${"accountId"}}`, encodeURIComponent(String(requestParameters['accountId']))),
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: CreateInquiryRequestToJSON(requestParameters['createInquiryRequest']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CreateInquiryResponseFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiAccountsAccountIdInquiriesPost(requestParameters: ApiAccountsAccountIdInquiriesPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CreateInquiryResponse> {
+        const response = await this.apiAccountsAccountIdInquiriesPostRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiAccountsAccountIdOrdersGetRaw(requestParameters: ApiAccountsAccountIdOrdersGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<OrderResponsePaginationResponseResult>> {
+        if (requestParameters['accountId'] == null) {
+            throw new runtime.RequiredError(
+                'accountId',
+                'Required parameter "accountId" was null or undefined when calling apiAccountsAccountIdOrdersGet().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['pageNumber'] != null) {
+            queryParameters['PageNumber'] = requestParameters['pageNumber'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['PageSize'] = requestParameters['pageSize'];
+        }
+
+        if (requestParameters['status'] != null) {
+            queryParameters['Status'] = requestParameters['status'];
+        }
+
+        if (requestParameters['orderCode'] != null) {
+            queryParameters['OrderCode'] = requestParameters['orderCode'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("Bearer", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/api/accounts/{accountId}/orders`.replace(`{${"accountId"}}`, encodeURIComponent(String(requestParameters['accountId']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => OrderResponsePaginationResponseResultFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiAccountsAccountIdOrdersGet(requestParameters: ApiAccountsAccountIdOrdersGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<OrderResponsePaginationResponseResult> {
+        const response = await this.apiAccountsAccountIdOrdersGetRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiAccountsAccountIdOrdersPostRaw(requestParameters: ApiAccountsAccountIdOrdersPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<OrderResponseResult>> {
+        if (requestParameters['accountId'] == null) {
+            throw new runtime.RequiredError(
+                'accountId',
+                'Required parameter "accountId" was null or undefined when calling apiAccountsAccountIdOrdersPost().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("Bearer", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/api/accounts/{accountId}/orders`.replace(`{${"accountId"}}`, encodeURIComponent(String(requestParameters['accountId']))),
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: CartRequestToJSON(requestParameters['cartRequest']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => OrderResponseResultFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiAccountsAccountIdOrdersPost(requestParameters: ApiAccountsAccountIdOrdersPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<OrderResponseResult> {
+        const response = await this.apiAccountsAccountIdOrdersPostRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
     async apiAccountsAccountIdPutRaw(requestParameters: ApiAccountsAccountIdPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AccountResponseResult>> {
         if (requestParameters['accountId'] == null) {
             throw new runtime.RequiredError(
@@ -298,8 +648,172 @@ export class AccountApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiAccountsGetRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<AccountResponse>>> {
+    async apiAccountsAccountIdTransactionsGetRaw(requestParameters: ApiAccountsAccountIdTransactionsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetTransactionsResponse>> {
+        if (requestParameters['accountId'] == null) {
+            throw new runtime.RequiredError(
+                'accountId',
+                'Required parameter "accountId" was null or undefined when calling apiAccountsAccountIdTransactionsGet().'
+            );
+        }
+
         const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['Page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['PageSize'] = requestParameters['pageSize'];
+        }
+
+        if (requestParameters['type'] != null) {
+            queryParameters['Type'] = requestParameters['type'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("Bearer", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/api/accounts/{accountId}/transactions`.replace(`{${"accountId"}}`, encodeURIComponent(String(requestParameters['accountId']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => GetTransactionsResponseFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiAccountsAccountIdTransactionsGet(requestParameters: ApiAccountsAccountIdTransactionsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetTransactionsResponse> {
+        const response = await this.apiAccountsAccountIdTransactionsGetRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiAccountsAccountIdWithdrawsGetRaw(requestParameters: ApiAccountsAccountIdWithdrawsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetWithdrawsResponsePaginationResponse>> {
+        if (requestParameters['accountId'] == null) {
+            throw new runtime.RequiredError(
+                'accountId',
+                'Required parameter "accountId" was null or undefined when calling apiAccountsAccountIdWithdrawsGet().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['Page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['PageSize'] = requestParameters['pageSize'];
+        }
+
+        if (requestParameters['status'] != null) {
+            queryParameters['Status'] = requestParameters['status'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("Bearer", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/api/accounts/{accountId}/withdraws`.replace(`{${"accountId"}}`, encodeURIComponent(String(requestParameters['accountId']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => GetWithdrawsResponsePaginationResponseFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiAccountsAccountIdWithdrawsGet(requestParameters: ApiAccountsAccountIdWithdrawsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetWithdrawsResponsePaginationResponse> {
+        const response = await this.apiAccountsAccountIdWithdrawsGetRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiAccountsAccountIdWithdrawsPostRaw(requestParameters: ApiAccountsAccountIdWithdrawsPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CreateWithdrawResponse>> {
+        if (requestParameters['accountId'] == null) {
+            throw new runtime.RequiredError(
+                'accountId',
+                'Required parameter "accountId" was null or undefined when calling apiAccountsAccountIdWithdrawsPost().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("Bearer", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/api/accounts/{accountId}/withdraws`.replace(`{${"accountId"}}`, encodeURIComponent(String(requestParameters['accountId']))),
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: CreateWithdrawRequestToJSON(requestParameters['createWithdrawRequest']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CreateWithdrawResponseFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiAccountsAccountIdWithdrawsPost(requestParameters: ApiAccountsAccountIdWithdrawsPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CreateWithdrawResponse> {
+        const response = await this.apiAccountsAccountIdWithdrawsPostRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiAccountsGetRaw(requestParameters: ApiAccountsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AccountResponsePaginationResponse>> {
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['Page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['PageSize'] = requestParameters['pageSize'];
+        }
+
+        if (requestParameters['searchTerm'] != null) {
+            queryParameters['SearchTerm'] = requestParameters['searchTerm'];
+        }
+
+        if (requestParameters['phone'] != null) {
+            queryParameters['Phone'] = requestParameters['phone'];
+        }
+
+        if (requestParameters['status'] != null) {
+            queryParameters['Status'] = requestParameters['status'];
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -318,13 +832,13 @@ export class AccountApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(AccountResponseFromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => AccountResponsePaginationResponseFromJSON(jsonValue));
     }
 
     /**
      */
-    async apiAccountsGet(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<AccountResponse>> {
-        const response = await this.apiAccountsGetRaw(initOverrides);
+    async apiAccountsGet(requestParameters: ApiAccountsGetRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AccountResponsePaginationResponse> {
+        const response = await this.apiAccountsGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

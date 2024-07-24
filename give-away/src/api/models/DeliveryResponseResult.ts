@@ -49,7 +49,7 @@ export interface DeliveryResponseResult {
      * @type {Array<string>}
      * @memberof DeliveryResponseResult
      */
-    messages?: Array<string>;
+    messages?: Array<string> | null;
 }
 
 /**

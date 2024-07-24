@@ -61,13 +61,13 @@ export interface AuctionFashionItemDetailResponse {
      * @type {string}
      * @memberof AuctionFashionItemDetailResponse
      */
-    name?: string;
+    name?: string | null;
     /**
      * 
      * @type {string}
      * @memberof AuctionFashionItemDetailResponse
      */
-    note?: string;
+    note?: string | null;
     /**
      * 
      * @type {number}
@@ -79,13 +79,7 @@ export interface AuctionFashionItemDetailResponse {
      * @type {number}
      * @memberof AuctionFashionItemDetailResponse
      */
-    value?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof AuctionFashionItemDetailResponse
-     */
-    condition?: string;
+    condition?: number;
     /**
      * 
      * @type {number}
@@ -147,7 +141,6 @@ export function AuctionFashionItemDetailResponseFromJSONTyped(json: any, ignoreD
         'name': json['name'] == null ? undefined : json['name'],
         'note': json['note'] == null ? undefined : json['note'],
         'quantity': json['quantity'] == null ? undefined : json['quantity'],
-        'value': json['value'] == null ? undefined : json['value'],
         'condition': json['condition'] == null ? undefined : json['condition'],
         'duration': json['duration'] == null ? undefined : json['duration'],
         'initialPrice': json['initialPrice'] == null ? undefined : json['initialPrice'],
@@ -170,7 +163,6 @@ export function AuctionFashionItemDetailResponseToJSON(value?: AuctionFashionIte
         'name': value['name'],
         'note': value['note'],
         'quantity': value['quantity'],
-        'value': value['value'],
         'condition': value['condition'],
         'duration': value['duration'],
         'initialPrice': value['initialPrice'],

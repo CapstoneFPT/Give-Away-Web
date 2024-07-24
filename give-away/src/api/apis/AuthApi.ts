@@ -16,6 +16,7 @@
 import * as runtime from '../runtime';
 import type {
   AccountResponseResult,
+  ChangePasswordRequest,
   CreateStaffAccountRequest,
   LoginRequest,
   LoginResponseResult,
@@ -25,6 +26,8 @@ import type {
 import {
     AccountResponseResultFromJSON,
     AccountResponseResultToJSON,
+    ChangePasswordRequestFromJSON,
+    ChangePasswordRequestToJSON,
     CreateStaffAccountRequestFromJSON,
     CreateStaffAccountRequestToJSON,
     LoginRequestFromJSON,
@@ -37,6 +40,11 @@ import {
     StringResultToJSON,
 } from '../models/index';
 
+export interface ApiAuthAccountIdChangePasswordPutRequest {
+    accountId: string;
+    changePasswordRequest?: ChangePasswordRequest;
+}
+
 export interface ApiAuthConfirmEmailGetRequest {
     id?: string;
     token?: string;
@@ -47,8 +55,9 @@ export interface ApiAuthCreateStaffAccountPostRequest {
 }
 
 export interface ApiAuthForgotPasswordGetRequest {
-    email?: string;
-    newpass?: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
 }
 
 export interface ApiAuthLoginPostRequest {
@@ -74,7 +83,49 @@ export class AuthApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiAuthConfirmEmailGetRaw(requestParameters: ApiAuthConfirmEmailGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<StringResult>> {
+    async apiAuthAccountIdChangePasswordPutRaw(requestParameters: ApiAuthAccountIdChangePasswordPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AccountResponseResult>> {
+        if (requestParameters['accountId'] == null) {
+            throw new runtime.RequiredError(
+                'accountId',
+                'Required parameter "accountId" was null or undefined when calling apiAuthAccountIdChangePasswordPut().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("Bearer", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/api/auth/{accountId}/change-password`.replace(`{${"accountId"}}`, encodeURIComponent(String(requestParameters['accountId']))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: ChangePasswordRequestToJSON(requestParameters['changePasswordRequest']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => AccountResponseResultFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiAuthAccountIdChangePasswordPut(requestParameters: ApiAuthAccountIdChangePasswordPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AccountResponseResult> {
+        const response = await this.apiAuthAccountIdChangePasswordPutRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiAuthConfirmEmailGetRaw(requestParameters: ApiAuthConfirmEmailGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         const queryParameters: any = {};
 
         if (requestParameters['id'] != null) {
@@ -102,14 +153,13 @@ export class AuthApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => StringResultFromJSON(jsonValue));
+        return new runtime.VoidApiResponse(response);
     }
 
     /**
      */
-    async apiAuthConfirmEmailGet(requestParameters: ApiAuthConfirmEmailGetRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<StringResult> {
-        const response = await this.apiAuthConfirmEmailGetRaw(requestParameters, initOverrides);
-        return await response.value();
+    async apiAuthConfirmEmailGet(requestParameters: ApiAuthConfirmEmailGetRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.apiAuthConfirmEmailGetRaw(requestParameters, initOverrides);
     }
 
     /**
@@ -150,14 +200,39 @@ export class AuthApi extends runtime.BaseAPI {
     /**
      */
     async apiAuthForgotPasswordGetRaw(requestParameters: ApiAuthForgotPasswordGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<StringResult>> {
+        if (requestParameters['email'] == null) {
+            throw new runtime.RequiredError(
+                'email',
+                'Required parameter "email" was null or undefined when calling apiAuthForgotPasswordGet().'
+            );
+        }
+
+        if (requestParameters['password'] == null) {
+            throw new runtime.RequiredError(
+                'password',
+                'Required parameter "password" was null or undefined when calling apiAuthForgotPasswordGet().'
+            );
+        }
+
+        if (requestParameters['confirmPassword'] == null) {
+            throw new runtime.RequiredError(
+                'confirmPassword',
+                'Required parameter "confirmPassword" was null or undefined when calling apiAuthForgotPasswordGet().'
+            );
+        }
+
         const queryParameters: any = {};
 
         if (requestParameters['email'] != null) {
-            queryParameters['email'] = requestParameters['email'];
+            queryParameters['Email'] = requestParameters['email'];
         }
 
-        if (requestParameters['newpass'] != null) {
-            queryParameters['newpass'] = requestParameters['newpass'];
+        if (requestParameters['password'] != null) {
+            queryParameters['Password'] = requestParameters['password'];
+        }
+
+        if (requestParameters['confirmPassword'] != null) {
+            queryParameters['ConfirmPassword'] = requestParameters['confirmPassword'];
         }
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -182,7 +257,7 @@ export class AuthApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiAuthForgotPasswordGet(requestParameters: ApiAuthForgotPasswordGetRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<StringResult> {
+    async apiAuthForgotPasswordGet(requestParameters: ApiAuthForgotPasswordGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<StringResult> {
         const response = await this.apiAuthForgotPasswordGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -326,7 +401,7 @@ export class AuthApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiAuthResetPasswordPutRaw(requestParameters: ApiAuthResetPasswordPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+    async apiAuthResetPasswordPutRaw(requestParameters: ApiAuthResetPasswordPutRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AccountResponseResult>> {
         const queryParameters: any = {};
 
         if (requestParameters['confirmtoken'] != null) {
@@ -350,13 +425,14 @@ export class AuthApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.VoidApiResponse(response);
+        return new runtime.JSONApiResponse(response, (jsonValue) => AccountResponseResultFromJSON(jsonValue));
     }
 
     /**
      */
-    async apiAuthResetPasswordPut(requestParameters: ApiAuthResetPasswordPutRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.apiAuthResetPasswordPutRaw(requestParameters, initOverrides);
+    async apiAuthResetPasswordPut(requestParameters: ApiAuthResetPasswordPutRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AccountResponseResult> {
+        const response = await this.apiAuthResetPasswordPutRaw(requestParameters, initOverrides);
+        return await response.value();
     }
 
     /**

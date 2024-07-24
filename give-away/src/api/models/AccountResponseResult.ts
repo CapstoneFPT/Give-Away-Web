@@ -49,7 +49,7 @@ export interface AccountResponseResult {
      * @type {Array<string>}
      * @memberof AccountResponseResult
      */
-    messages?: Array<string>;
+    messages?: Array<string> | null;
 }
 
 /**

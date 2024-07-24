@@ -30,19 +30,19 @@ export interface DeliveryDetailResponse {
      * @type {string}
      * @memberof DeliveryDetailResponse
      */
-    fullName?: string;
+    fullName?: string | null;
     /**
      * 
      * @type {string}
      * @memberof DeliveryDetailResponse
      */
-    phone?: string;
+    phone?: string | null;
     /**
      * 
      * @type {string}
      * @memberof DeliveryDetailResponse
      */
-    address?: string;
+    address?: string | null;
 }
 
 /**

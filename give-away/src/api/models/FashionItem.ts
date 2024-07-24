@@ -37,6 +37,12 @@ import {
     FashionItemTypeFromJSONTyped,
     FashionItemTypeToJSON,
 } from './FashionItemType';
+import type { Image } from './Image';
+import {
+    ImageFromJSON,
+    ImageFromJSONTyped,
+    ImageToJSON,
+} from './Image';
 import type { ConsignSaleDetail } from './ConsignSaleDetail';
 import {
     ConsignSaleDetailFromJSON,
@@ -85,25 +91,19 @@ export interface FashionItem {
      * @type {string}
      * @memberof FashionItem
      */
-    name?: string;
+    name?: string | null;
     /**
      * 
      * @type {string}
      * @memberof FashionItem
      */
-    note?: string;
+    note?: string | null;
     /**
      * 
      * @type {number}
      * @memberof FashionItem
      */
-    value?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof FashionItem
-     */
-    condition?: string;
+    condition?: number;
     /**
      * 
      * @type {ConsignSaleDetail}
@@ -133,7 +133,7 @@ export interface FashionItem {
      * @type {string}
      * @memberof FashionItem
      */
-    categoryId?: string;
+    categoryId?: string | null;
     /**
      * 
      * @type {FashionItemStatus}
@@ -151,19 +151,25 @@ export interface FashionItem {
      * @type {string}
      * @memberof FashionItem
      */
-    color?: string;
+    color?: string | null;
     /**
      * 
      * @type {string}
      * @memberof FashionItem
      */
-    brand?: string;
+    brand?: string | null;
     /**
      * 
      * @type {GenderType}
      * @memberof FashionItem
      */
     gender?: GenderType;
+    /**
+     * 
+     * @type {Array<Image>}
+     * @memberof FashionItem
+     */
+    images?: Array<Image> | null;
 }
 
 /**
@@ -188,7 +194,6 @@ export function FashionItemFromJSONTyped(json: any, ignoreDiscriminator: boolean
         'sellingPrice': json['sellingPrice'] == null ? undefined : json['sellingPrice'],
         'name': json['name'] == null ? undefined : json['name'],
         'note': json['note'] == null ? undefined : json['note'],
-        'value': json['value'] == null ? undefined : json['value'],
         'condition': json['condition'] == null ? undefined : json['condition'],
         'consignSaleDetail': json['consignSaleDetail'] == null ? undefined : ConsignSaleDetailFromJSON(json['consignSaleDetail']),
         'shop': json['shop'] == null ? undefined : ShopFromJSON(json['shop']),
@@ -200,6 +205,7 @@ export function FashionItemFromJSONTyped(json: any, ignoreDiscriminator: boolean
         'color': json['color'] == null ? undefined : json['color'],
         'brand': json['brand'] == null ? undefined : json['brand'],
         'gender': json['gender'] == null ? undefined : GenderTypeFromJSON(json['gender']),
+        'images': json['images'] == null ? undefined : ((json['images'] as Array<any>).map(ImageFromJSON)),
     };
 }
 
@@ -214,7 +220,6 @@ export function FashionItemToJSON(value?: FashionItem | null): any {
         'sellingPrice': value['sellingPrice'],
         'name': value['name'],
         'note': value['note'],
-        'value': value['value'],
         'condition': value['condition'],
         'consignSaleDetail': ConsignSaleDetailToJSON(value['consignSaleDetail']),
         'shop': ShopToJSON(value['shop']),
@@ -226,6 +231,7 @@ export function FashionItemToJSON(value?: FashionItem | null): any {
         'color': value['color'],
         'brand': value['brand'],
         'gender': GenderTypeToJSON(value['gender']),
+        'images': value['images'] == null ? undefined : ((value['images'] as Array<any>).map(ImageToJSON)),
     };
 }
 

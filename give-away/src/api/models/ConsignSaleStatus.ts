@@ -28,7 +28,16 @@ export const ConsignSaleStatus = {
 export type ConsignSaleStatus = typeof ConsignSaleStatus[keyof typeof ConsignSaleStatus];
 
 
-
+export function instanceOfConsignSaleStatus(value: any): boolean {
+    for (const key in ConsignSaleStatus) {
+        if (Object.prototype.hasOwnProperty.call(ConsignSaleStatus, key)) {
+            if ((ConsignSaleStatus as Record<string, ConsignSaleStatus>)[key] === value) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
 
 export function ConsignSaleStatusFromJSON(json: any): ConsignSaleStatus {
     return ConsignSaleStatusFromJSONTyped(json, false);

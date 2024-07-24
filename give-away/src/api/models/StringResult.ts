@@ -31,7 +31,7 @@ export interface StringResult {
      * @type {string}
      * @memberof StringResult
      */
-    data?: string;
+    data?: string | null;
     /**
      * 
      * @type {ResultStatus}
@@ -43,7 +43,7 @@ export interface StringResult {
      * @type {Array<string>}
      * @memberof StringResult
      */
-    messages?: Array<string>;
+    messages?: Array<string> | null;
 }
 
 /**

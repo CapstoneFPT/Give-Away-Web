@@ -25,6 +25,18 @@ import {
     FashionItemTypeFromJSONTyped,
     FashionItemTypeToJSON,
 } from './FashionItemType';
+import type { GenderType } from './GenderType';
+import {
+    GenderTypeFromJSON,
+    GenderTypeFromJSONTyped,
+    GenderTypeToJSON,
+} from './GenderType';
+import type { SizeType } from './SizeType';
+import {
+    SizeTypeFromJSON,
+    SizeTypeFromJSONTyped,
+    SizeTypeToJSON,
+} from './SizeType';
 
 /**
  * 
@@ -55,37 +67,19 @@ export interface FashionItemDetailResponse {
      * @type {string}
      * @memberof FashionItemDetailResponse
      */
-    name?: string;
+    name?: string | null;
     /**
      * 
      * @type {string}
      * @memberof FashionItemDetailResponse
      */
-    note?: string;
+    note?: string | null;
     /**
      * 
      * @type {number}
      * @memberof FashionItemDetailResponse
      */
-    quantity?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof FashionItemDetailResponse
-     */
-    value?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof FashionItemDetailResponse
-     */
-    condition?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof FashionItemDetailResponse
-     */
-    consignDuration?: number;
+    condition?: number;
     /**
      * 
      * @type {FashionItemStatus}
@@ -97,7 +91,7 @@ export interface FashionItemDetailResponse {
      * @type {string}
      * @memberof FashionItemDetailResponse
      */
-    shopAddress?: string;
+    shopAddress?: string | null;
     /**
      * 
      * @type {string}
@@ -106,28 +100,46 @@ export interface FashionItemDetailResponse {
     shopId?: string;
     /**
      * 
-     * @type {Date}
+     * @type {string}
      * @memberof FashionItemDetailResponse
      */
-    startDate?: Date;
+    categoryName?: string | null;
     /**
      * 
-     * @type {Date}
+     * @type {SizeType}
      * @memberof FashionItemDetailResponse
      */
-    endDate?: Date;
+    size?: SizeType;
     /**
      * 
      * @type {string}
      * @memberof FashionItemDetailResponse
      */
-    consigner?: string;
+    color?: string | null;
     /**
      * 
      * @type {string}
      * @memberof FashionItemDetailResponse
      */
-    categoryName?: string;
+    brand?: string | null;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof FashionItemDetailResponse
+     */
+    isOrderedYet?: boolean;
+    /**
+     * 
+     * @type {GenderType}
+     * @memberof FashionItemDetailResponse
+     */
+    gender?: GenderType;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof FashionItemDetailResponse
+     */
+    images?: Array<string> | null;
 }
 
 /**
@@ -152,17 +164,17 @@ export function FashionItemDetailResponseFromJSONTyped(json: any, ignoreDiscrimi
         'sellingPrice': json['sellingPrice'] == null ? undefined : json['sellingPrice'],
         'name': json['name'] == null ? undefined : json['name'],
         'note': json['note'] == null ? undefined : json['note'],
-        'quantity': json['quantity'] == null ? undefined : json['quantity'],
-        'value': json['value'] == null ? undefined : json['value'],
         'condition': json['condition'] == null ? undefined : json['condition'],
-        'consignDuration': json['consignDuration'] == null ? undefined : json['consignDuration'],
         'status': json['status'] == null ? undefined : FashionItemStatusFromJSON(json['status']),
         'shopAddress': json['shopAddress'] == null ? undefined : json['shopAddress'],
         'shopId': json['shopId'] == null ? undefined : json['shopId'],
-        'startDate': json['startDate'] == null ? undefined : (new Date(json['startDate'])),
-        'endDate': json['endDate'] == null ? undefined : (new Date(json['endDate'])),
-        'consigner': json['consigner'] == null ? undefined : json['consigner'],
         'categoryName': json['categoryName'] == null ? undefined : json['categoryName'],
+        'size': json['size'] == null ? undefined : SizeTypeFromJSON(json['size']),
+        'color': json['color'] == null ? undefined : json['color'],
+        'brand': json['brand'] == null ? undefined : json['brand'],
+        'isOrderedYet': json['isOrderedYet'] == null ? undefined : json['isOrderedYet'],
+        'gender': json['gender'] == null ? undefined : GenderTypeFromJSON(json['gender']),
+        'images': json['images'] == null ? undefined : json['images'],
     };
 }
 
@@ -177,17 +189,17 @@ export function FashionItemDetailResponseToJSON(value?: FashionItemDetailRespons
         'sellingPrice': value['sellingPrice'],
         'name': value['name'],
         'note': value['note'],
-        'quantity': value['quantity'],
-        'value': value['value'],
         'condition': value['condition'],
-        'consignDuration': value['consignDuration'],
         'status': FashionItemStatusToJSON(value['status']),
         'shopAddress': value['shopAddress'],
         'shopId': value['shopId'],
-        'startDate': value['startDate'] == null ? undefined : ((value['startDate'] as any).toISOString()),
-        'endDate': value['endDate'] == null ? undefined : ((value['endDate'] as any).toISOString()),
-        'consigner': value['consigner'],
         'categoryName': value['categoryName'],
+        'size': SizeTypeToJSON(value['size']),
+        'color': value['color'],
+        'brand': value['brand'],
+        'isOrderedYet': value['isOrderedYet'],
+        'gender': GenderTypeToJSON(value['gender']),
+        'images': value['images'],
     };
 }
 

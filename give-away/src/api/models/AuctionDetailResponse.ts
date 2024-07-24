@@ -49,7 +49,7 @@ export interface AuctionDetailResponse {
      * @type {string}
      * @memberof AuctionDetailResponse
      */
-    title?: string;
+    title?: string | null;
     /**
      * 
      * @type {Date}
@@ -86,6 +86,12 @@ export interface AuctionDetailResponse {
      * @memberof AuctionDetailResponse
      */
     auctionItemId?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof AuctionDetailResponse
+     */
+    stepIncrement?: number;
     /**
      * 
      * @type {ShopDetailResponse}
@@ -125,6 +131,7 @@ export function AuctionDetailResponseFromJSONTyped(json: any, ignoreDiscriminato
         'status': json['status'] == null ? undefined : AuctionStatusFromJSON(json['status']),
         'shopId': json['shopId'] == null ? undefined : json['shopId'],
         'auctionItemId': json['auctionItemId'] == null ? undefined : json['auctionItemId'],
+        'stepIncrement': json['stepIncrement'] == null ? undefined : json['stepIncrement'],
         'shop': json['shop'] == null ? undefined : ShopDetailResponseFromJSON(json['shop']),
         'auctionFashionItem': json['auctionFashionItem'] == null ? undefined : AuctionFashionItemDetailResponseFromJSON(json['auctionFashionItem']),
     };
@@ -144,6 +151,7 @@ export function AuctionDetailResponseToJSON(value?: AuctionDetailResponse | null
         'status': AuctionStatusToJSON(value['status']),
         'shopId': value['shopId'],
         'auctionItemId': value['auctionItemId'],
+        'stepIncrement': value['stepIncrement'],
         'shop': ShopDetailResponseToJSON(value['shop']),
         'auctionFashionItem': AuctionFashionItemDetailResponseToJSON(value['auctionFashionItem']),
     };

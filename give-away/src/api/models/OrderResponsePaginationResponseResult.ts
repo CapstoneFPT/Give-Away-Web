@@ -49,7 +49,7 @@ export interface OrderResponsePaginationResponseResult {
      * @type {Array<string>}
      * @memberof OrderResponsePaginationResponseResult
      */
-    messages?: Array<string>;
+    messages?: Array<string> | null;
 }
 
 /**

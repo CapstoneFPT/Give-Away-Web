@@ -43,19 +43,19 @@ export interface AuctionDepositListResponsePaginationResponse {
      * @type {string}
      * @memberof AuctionDepositListResponsePaginationResponse
      */
-    searchTerm?: string;
+    searchTerm?: string | null;
     /**
      * 
      * @type {Array<string>}
      * @memberof AuctionDepositListResponsePaginationResponse
      */
-    filters?: Array<string>;
+    filters?: Array<string> | null;
     /**
      * 
      * @type {string}
      * @memberof AuctionDepositListResponsePaginationResponse
      */
-    orderBy?: string;
+    orderBy?: string | null;
     /**
      * 
      * @type {number}
@@ -85,7 +85,7 @@ export interface AuctionDepositListResponsePaginationResponse {
      * @type {Array<AuctionDepositListResponse>}
      * @memberof AuctionDepositListResponsePaginationResponse
      */
-    items?: Array<AuctionDepositListResponse>;
+    items?: Array<AuctionDepositListResponse> | null;
 }
 
 /**

@@ -19,6 +19,12 @@ import {
     AccountFromJSONTyped,
     AccountToJSON,
 } from './Account';
+import type { ConsignSaleMethod } from './ConsignSaleMethod';
+import {
+    ConsignSaleMethodFromJSON,
+    ConsignSaleMethodFromJSONTyped,
+    ConsignSaleMethodToJSON,
+} from './ConsignSaleMethod';
 import type { Shop } from './Shop';
 import {
     ShopFromJSON,
@@ -31,6 +37,12 @@ import {
     ConsignSaleTypeFromJSONTyped,
     ConsignSaleTypeToJSON,
 } from './ConsignSaleType';
+import type { Transaction } from './Transaction';
+import {
+    TransactionFromJSON,
+    TransactionFromJSONTyped,
+    TransactionToJSON,
+} from './Transaction';
 import type { ConsignSaleStatus } from './ConsignSaleStatus';
 import {
     ConsignSaleStatusFromJSON,
@@ -67,7 +79,7 @@ export interface ConsignSale {
      * @type {string}
      * @memberof ConsignSale
      */
-    consignSaleCode?: string;
+    consignSaleCode?: string | null;
     /**
      * 
      * @type {Date}
@@ -79,19 +91,19 @@ export interface ConsignSale {
      * @type {number}
      * @memberof ConsignSale
      */
-    consignDuration?: number;
+    consignDuration?: number | null;
     /**
      * 
      * @type {Date}
      * @memberof ConsignSale
      */
-    startDate?: Date;
+    startDate?: Date | null;
     /**
      * 
      * @type {Date}
      * @memberof ConsignSale
      */
-    endDate?: Date;
+    endDate?: Date | null;
     /**
      * 
      * @type {Shop}
@@ -115,7 +127,7 @@ export interface ConsignSale {
      * @type {string}
      * @memberof ConsignSale
      */
-    memberId?: string;
+    memberId?: string | null;
     /**
      * 
      * @type {ConsignSaleStatus}
@@ -142,10 +154,46 @@ export interface ConsignSale {
     memberReceivedAmount?: number;
     /**
      * 
+     * @type {Transaction}
+     * @memberof ConsignSale
+     */
+    transaction?: Transaction;
+    /**
+     * 
+     * @type {string}
+     * @memberof ConsignSale
+     */
+    recipientName?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof ConsignSale
+     */
+    phone?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof ConsignSale
+     */
+    address?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof ConsignSale
+     */
+    email?: string | null;
+    /**
+     * 
+     * @type {ConsignSaleMethod}
+     * @memberof ConsignSale
+     */
+    consignSaleMethod?: ConsignSaleMethod;
+    /**
+     * 
      * @type {Array<ConsignSaleDetail>}
      * @memberof ConsignSale
      */
-    consignSaleDetails?: Array<ConsignSaleDetail>;
+    consignSaleDetails?: Array<ConsignSaleDetail> | null;
 }
 
 /**
@@ -180,6 +228,12 @@ export function ConsignSaleFromJSONTyped(json: any, ignoreDiscriminator: boolean
         'totalPrice': json['totalPrice'] == null ? undefined : json['totalPrice'],
         'soldPrice': json['soldPrice'] == null ? undefined : json['soldPrice'],
         'memberReceivedAmount': json['memberReceivedAmount'] == null ? undefined : json['memberReceivedAmount'],
+        'transaction': json['transaction'] == null ? undefined : TransactionFromJSON(json['transaction']),
+        'recipientName': json['recipientName'] == null ? undefined : json['recipientName'],
+        'phone': json['phone'] == null ? undefined : json['phone'],
+        'address': json['address'] == null ? undefined : json['address'],
+        'email': json['email'] == null ? undefined : json['email'],
+        'consignSaleMethod': json['consignSaleMethod'] == null ? undefined : ConsignSaleMethodFromJSON(json['consignSaleMethod']),
         'consignSaleDetails': json['consignSaleDetails'] == null ? undefined : ((json['consignSaleDetails'] as Array<any>).map(ConsignSaleDetailFromJSON)),
     };
 }
@@ -205,6 +259,12 @@ export function ConsignSaleToJSON(value?: ConsignSale | null): any {
         'totalPrice': value['totalPrice'],
         'soldPrice': value['soldPrice'],
         'memberReceivedAmount': value['memberReceivedAmount'],
+        'transaction': TransactionToJSON(value['transaction']),
+        'recipientName': value['recipientName'],
+        'phone': value['phone'],
+        'address': value['address'],
+        'email': value['email'],
+        'consignSaleMethod': ConsignSaleMethodToJSON(value['consignSaleMethod']),
         'consignSaleDetails': value['consignSaleDetails'] == null ? undefined : ((value['consignSaleDetails'] as Array<any>).map(ConsignSaleDetailToJSON)),
     };
 }

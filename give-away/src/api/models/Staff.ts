@@ -49,49 +49,49 @@ export interface Staff {
      * @type {string}
      * @memberof Staff
      */
-    email?: string;
+    email?: string | null;
     /**
      * 
      * @type {string}
      * @memberof Staff
      */
-    phone?: string;
+    phone?: string | null;
     /**
      * 
      * @type {string}
      * @memberof Staff
      */
-    passwordHash?: string;
+    passwordHash?: string | null;
     /**
      * 
      * @type {string}
      * @memberof Staff
      */
-    passwordSalt?: string;
+    passwordSalt?: string | null;
     /**
      * 
      * @type {string}
      * @memberof Staff
      */
-    fullname?: string;
+    fullname?: string | null;
     /**
      * 
      * @type {Date}
      * @memberof Staff
      */
-    verifiedAt?: Date;
+    verifiedAt?: Date | null;
     /**
      * 
      * @type {string}
      * @memberof Staff
      */
-    passwordResetToken?: string;
+    passwordResetToken?: string | null;
     /**
      * 
      * @type {Date}
      * @memberof Staff
      */
-    resetTokenExpires?: Date;
+    resetTokenExpires?: Date | null;
     /**
      * 
      * @type {Roles}
@@ -104,6 +104,12 @@ export interface Staff {
      * @memberof Staff
      */
     status?: AccountStatus;
+    /**
+     * 
+     * @type {number}
+     * @memberof Staff
+     */
+    balance?: number;
     /**
      * 
      * @type {Shop}
@@ -140,6 +146,7 @@ export function StaffFromJSONTyped(json: any, ignoreDiscriminator: boolean): Sta
         'resetTokenExpires': json['resetTokenExpires'] == null ? undefined : (new Date(json['resetTokenExpires'])),
         'role': json['role'] == null ? undefined : RolesFromJSON(json['role']),
         'status': json['status'] == null ? undefined : AccountStatusFromJSON(json['status']),
+        'balance': json['balance'] == null ? undefined : json['balance'],
         'shop': json['shop'] == null ? undefined : ShopFromJSON(json['shop']),
     };
 }
@@ -161,6 +168,7 @@ export function StaffToJSON(value?: Staff | null): any {
         'resetTokenExpires': value['resetTokenExpires'] == null ? undefined : ((value['resetTokenExpires'] as any).toISOString()),
         'role': RolesToJSON(value['role']),
         'status': AccountStatusToJSON(value['status']),
+        'balance': value['balance'],
         'shop': ShopToJSON(value['shop']),
     };
 }

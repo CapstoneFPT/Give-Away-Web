@@ -24,7 +24,7 @@ export interface CreateAuctionRequest {
      * @type {string}
      * @memberof CreateAuctionRequest
      */
-    title?: string;
+    title?: string | null;
     /**
      * 
      * @type {string}

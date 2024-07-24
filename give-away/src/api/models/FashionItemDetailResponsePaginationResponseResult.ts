@@ -49,7 +49,7 @@ export interface FashionItemDetailResponsePaginationResponseResult {
      * @type {Array<string>}
      * @memberof FashionItemDetailResponsePaginationResponseResult
      */
-    messages?: Array<string>;
+    messages?: Array<string> | null;
 }
 
 /**

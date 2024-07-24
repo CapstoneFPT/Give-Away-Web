@@ -31,49 +31,49 @@ export interface UpdateAuctionRequest {
      * @type {string}
      * @memberof UpdateAuctionRequest
      */
-    title?: string;
+    title?: string | null;
     /**
      * 
      * @type {Date}
      * @memberof UpdateAuctionRequest
      */
-    startDate?: Date;
+    startDate?: Date | null;
     /**
      * 
      * @type {Date}
      * @memberof UpdateAuctionRequest
      */
-    endDate?: Date;
+    endDate?: Date | null;
     /**
      * 
      * @type {string}
      * @memberof UpdateAuctionRequest
      */
-    shopId?: string;
+    shopId?: string | null;
     /**
      * 
      * @type {string}
      * @memberof UpdateAuctionRequest
      */
-    auctionItemId?: string;
+    auctionItemId?: string | null;
     /**
      * 
      * @type {Date}
      * @memberof UpdateAuctionRequest
      */
-    scheduleDate?: Date;
+    scheduleDate?: Date | null;
     /**
      * 
      * @type {string}
      * @memberof UpdateAuctionRequest
      */
-    timeslotId?: string;
+    timeslotId?: string | null;
     /**
      * 
      * @type {number}
      * @memberof UpdateAuctionRequest
      */
-    depositFee?: number;
+    depositFee?: number | null;
     /**
      * 
      * @type {AuctionStatus}

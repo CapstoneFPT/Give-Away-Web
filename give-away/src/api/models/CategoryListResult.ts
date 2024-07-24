@@ -37,7 +37,7 @@ export interface CategoryListResult {
      * @type {Array<Category>}
      * @memberof CategoryListResult
      */
-    data?: Array<Category>;
+    data?: Array<Category> | null;
     /**
      * 
      * @type {ResultStatus}
@@ -49,7 +49,7 @@ export interface CategoryListResult {
      * @type {Array<string>}
      * @memberof CategoryListResult
      */
-    messages?: Array<string>;
+    messages?: Array<string> | null;
 }
 
 /**

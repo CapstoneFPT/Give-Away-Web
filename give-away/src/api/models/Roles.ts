@@ -26,7 +26,16 @@ export const Roles = {
 export type Roles = typeof Roles[keyof typeof Roles];
 
 
-
+export function instanceOfRoles(value: any): boolean {
+    for (const key in Roles) {
+        if (Object.prototype.hasOwnProperty.call(Roles, key)) {
+            if ((Roles as Record<string, Roles>)[key] === value) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
 
 export function RolesFromJSON(json: any): Roles {
     return RolesFromJSONTyped(json, false);

@@ -6,6 +6,7 @@ import { ShoppingCartOutlined } from "@ant-design/icons";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL } from "../../api/config";
+import { FashionItemApi, FashionItemDetailResponse } from "../../api";
 
 const { Title, Paragraph } = Typography;
 
@@ -36,31 +37,51 @@ interface Product {
 
 const ItemDetail: React.FC = () => {
   const { itemId } = useParams<{ itemId: string }>();
-  const [product, setProduct] = useState<Product | null>(null);
+  const [product, setProduct] = useState<FashionItemDetailResponse | null>(null);
   const [selectedImage, setSelectedImage] = useState<string>("");
   console.log(product);
   useEffect(() => {
-    if (itemId) {
-      axios
-        .get(`${BASE_URL}/fashionitems/${itemId}`,{
-          headers :{
-            "ngrok-skip-browser-warning": "6942"
-          }
-        })
-        .then((response) => {
-          const data = response.data.data;
-          setProduct(data);
-          console.log(data);
-          // setSelectedImage(data.data.images[0]);
-        })
-        .catch((error) => {
+    if (itemId !== undefined) {
+      // axios
+      //   .get(`${BASE_URL}/fashionitems/${itemId}`,{
+      //     headers :{
+      //       "ngrok-skip-browser-warning": "6942"
+      //     }
+      //   })
+      //   .then((response) => {
+      //     const data = response.data.data;
+      //     setProduct(data);
+      //     console.log(data);
+      //     // setSelectedImage(data.data.images[0]);
+      //   })
+      //   .catch((error) => {
+      //     console.error(
+      //       "There was an error fetching the product details!",
+      //       error
+      //     );
+      //     message.error("Failed to fetch product details.");
+      //   });
+
+      async function fetchFashionItemDetails() {
+        try {
+          const fashionItemApi = new FashionItemApi();
+          const response = await fashionItemApi.apiFashionitemsIdGet({
+            id: itemId!,
+          });
+          console.debug(itemId, response.data);
+          setProduct(response.data!);
+        } catch (error) {
           console.error(
             "There was an error fetching the product details!",
             error
           );
           message.error("Failed to fetch product details.");
-        });
+        }
+      }
+      fetchFashionItemDetails();
     }
+    
+
   }, []);
 
   if (!product) {
@@ -76,7 +97,7 @@ const ItemDetail: React.FC = () => {
         <Row gutter={[16, 16]} style={{ margin: "10px" }}>
           <Col span={4}>
             <Row gutter={[10, 8]}>
-              {product.images.map((image, index) => (
+              {product.images?.map((image, index) => (
                 <Col span={24} key={index}>
                   <img
                     src={image}
@@ -97,7 +118,7 @@ const ItemDetail: React.FC = () => {
           <Col span={11}>
             <img
               src={selectedImage}
-              alt={product.name}
+              alt={product.name? product.name : "N/A"}
               style={{ width: "90%", height: "750px" }}
             />
           </Col>

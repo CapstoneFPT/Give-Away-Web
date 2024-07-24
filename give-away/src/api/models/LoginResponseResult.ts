@@ -49,7 +49,7 @@ export interface LoginResponseResult {
      * @type {Array<string>}
      * @memberof LoginResponseResult
      */
-    messages?: Array<string>;
+    messages?: Array<string> | null;
 }
 
 /**

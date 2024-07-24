@@ -24,7 +24,16 @@ export const GenderType = {
 export type GenderType = typeof GenderType[keyof typeof GenderType];
 
 
-
+export function instanceOfGenderType(value: any): boolean {
+    for (const key in GenderType) {
+        if (Object.prototype.hasOwnProperty.call(GenderType, key)) {
+            if ((GenderType as Record<string, GenderType>)[key] === value) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
 
 export function GenderTypeFromJSON(json: any): GenderType {
     return GenderTypeFromJSONTyped(json, false);

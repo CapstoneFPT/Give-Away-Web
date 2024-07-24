@@ -74,6 +74,12 @@ export interface AuctionDepositDetailResponse {
      * @memberof AuctionDepositDetailResponse
      */
     transaction?: TransactionDetailResponse;
+    /**
+     * 
+     * @type {Date}
+     * @memberof AuctionDepositDetailResponse
+     */
+    createdDate?: Date;
 }
 
 /**
@@ -100,6 +106,7 @@ export function AuctionDepositDetailResponseFromJSONTyped(json: any, ignoreDiscr
         'amount': json['amount'] == null ? undefined : json['amount'],
         'transactionId': json['transactionId'] == null ? undefined : json['transactionId'],
         'transaction': json['transaction'] == null ? undefined : TransactionDetailResponseFromJSON(json['transaction']),
+        'createdDate': json['createdDate'] == null ? undefined : (new Date(json['createdDate'])),
     };
 }
 
@@ -116,6 +123,7 @@ export function AuctionDepositDetailResponseToJSON(value?: AuctionDepositDetailR
         'amount': value['amount'],
         'transactionId': value['transactionId'],
         'transaction': TransactionDetailResponseToJSON(value['transaction']),
+        'createdDate': value['createdDate'] == null ? undefined : ((value['createdDate']).toISOString()),
     };
 }
 

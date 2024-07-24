@@ -20,8 +20,11 @@
 export const FashionItemStatus = {
     Available: 'Available',
     Unavailable: 'Unavailable',
+    OnDelivery: 'OnDelivery',
     Sold: 'Sold',
+    Refundable: 'Refundable',
     Pending: 'Pending',
+    PendingAuction: 'PendingAuction',
     AwaitingAuction: 'AwaitingAuction',
     Bidding: 'Bidding',
     Won: 'Won',
@@ -31,7 +34,16 @@ export const FashionItemStatus = {
 export type FashionItemStatus = typeof FashionItemStatus[keyof typeof FashionItemStatus];
 
 
-
+export function instanceOfFashionItemStatus(value: any): boolean {
+    for (const key in FashionItemStatus) {
+        if (Object.prototype.hasOwnProperty.call(FashionItemStatus, key)) {
+            if ((FashionItemStatus as Record<string, FashionItemStatus>)[key] === value) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
 
 export function FashionItemStatusFromJSON(json: any): FashionItemStatus {
     return FashionItemStatusFromJSONTyped(json, false);

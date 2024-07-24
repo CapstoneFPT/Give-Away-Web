@@ -43,19 +43,19 @@ export interface FashionItemDetailResponsePaginationResponse {
      * @type {string}
      * @memberof FashionItemDetailResponsePaginationResponse
      */
-    searchTerm?: string;
+    searchTerm?: string | null;
     /**
      * 
      * @type {Array<string>}
      * @memberof FashionItemDetailResponsePaginationResponse
      */
-    filters?: Array<string>;
+    filters?: Array<string> | null;
     /**
      * 
      * @type {string}
      * @memberof FashionItemDetailResponsePaginationResponse
      */
-    orderBy?: string;
+    orderBy?: string | null;
     /**
      * 
      * @type {number}
@@ -85,7 +85,7 @@ export interface FashionItemDetailResponsePaginationResponse {
      * @type {Array<FashionItemDetailResponse>}
      * @memberof FashionItemDetailResponsePaginationResponse
      */
-    items?: Array<FashionItemDetailResponse>;
+    items?: Array<FashionItemDetailResponse> | null;
 }
 
 /**

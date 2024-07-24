@@ -55,6 +55,12 @@ export interface BidDetailResponse {
      * @memberof BidDetailResponse
      */
     isWinning?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof BidDetailResponse
+     */
+    nextAmount?: number;
 }
 
 /**
@@ -80,6 +86,7 @@ export function BidDetailResponseFromJSONTyped(json: any, ignoreDiscriminator: b
         'amount': json['amount'] == null ? undefined : json['amount'],
         'createdDate': json['createdDate'] == null ? undefined : (new Date(json['createdDate'])),
         'isWinning': json['isWinning'] == null ? undefined : json['isWinning'],
+        'nextAmount': json['nextAmount'] == null ? undefined : json['nextAmount'],
     };
 }
 
@@ -95,6 +102,7 @@ export function BidDetailResponseToJSON(value?: BidDetailResponse | null): any {
         'amount': value['amount'],
         'createdDate': value['createdDate'] == null ? undefined : ((value['createdDate']).toISOString()),
         'isWinning': value['isWinning'],
+        'nextAmount': value['nextAmount'],
     };
 }
 
