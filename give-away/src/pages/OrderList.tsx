@@ -4,6 +4,7 @@ import NavProfile from "../components/NavProfile/NavProfile";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL } from "../api/config";
+import { AccountApi } from "../api";
 
 const OrderList = () => {
   const [data, setData] = useState<any[]>([]);
@@ -23,11 +24,13 @@ const OrderList = () => {
       }
 
       try {
-        const response = await axios.get(`${BASE_URL}/accounts/${userId}/orders`);
+        const accountApi = new AccountApi();
+        // const response = await axios.get(`${BASE_URL}/accounts/${userId}/orders`);
+        const response = await accountApi.apiAccountsAccountIdOrdersGet({accountId : userId});
         console.log(response.data); // Log the API response for debugging
 
         // Check if response.data is an array or adjust if nested
-        const orders = Array.isArray(response.data.data) ? response.data.data : response.data.data.items || [];
+        const orders = Array.isArray(response.data) ? response.data : response.data?.items || [];
         setData(orders);
       } catch (err) {
         console.error(err); // Log detailed error for debugging
