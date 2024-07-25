@@ -17,8 +17,8 @@ const WithdrawHistory = () => {
       try {
         // const response = await axios.get(`${BASE_URL}/accounts/${userId}/withdraws`);
         const accountApi =new AccountApi();
-        const response = await accountApi.apiAccountsAccountIdWithdrawsGet({accountId : userId});
-        const transactions = response.items; // Extracting transactions array from the response object
+        const response = await accountApi.apiAccountsAccountIdWithdrawsGet( userId);
+        const transactions = response.data.items; // Extracting transactions array from the response object
         setData(transactions || []);
         console.log(transactions)
       } catch (error) {

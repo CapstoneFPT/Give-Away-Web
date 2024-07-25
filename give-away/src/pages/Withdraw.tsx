@@ -63,10 +63,10 @@ const Withdraw = () => {
       // );
 
       const accountApi = new AccountApi();
-      const response = await accountApi.apiAccountsAccountIdWithdrawsPost({
-        accountId: userId,
-        createWithdrawRequest: requestBody,
-      })
+      const response = await accountApi.apiAccountsAccountIdWithdrawsPost(
+        userId,
+        requestBody
+      )
       message.success("Refund request sent successfully!");
       console.log("Form values: ", values);
       console.log("API response: ", response); // Log phản hồi từ API

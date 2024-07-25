@@ -6,7 +6,6 @@ import { Content } from "antd/es/layout/layout";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../CartContext";
-import { BASE_URL } from "../../api/config";
 import { FashionItemApi, FashionItemDetailResponse } from "../../api";
 const backgroundImageUrl = require('../../components/Assets/shutterstock_455310238.jpg');
 
@@ -53,25 +52,13 @@ const Men: React.FC = () => {
 
       const fashionItemApi = new FashionItemApi();
 
-      const response = await fashionItemApi.apiFashionitemsGet({
-        memberId: userId,
-        pageNumber: page,
-        pageSize: pageSize,
-        status: ["Available"],
-        type: ["ItemBase", "ConsignedForSale"],
-        genderType: "Male",
-      },{
-        headers: {
-          "ngrok-skip-browser-warning": "6942",
-        },
-        
-      });
+      const response = await fashionItemApi.apiFashionitemsGet(null!,page,pageSize,userId,["Available"],["ItemBase","ConsignedForSale"],null!,"Male");
 
       console.debug(response);
       const data = response.data;
-      if (data && data.items && Array.isArray(data.items)) {
-        setProducts(data.items);
-        setTotalCount(data.totalCount || 0);
+      if (data && data.data?.items && Array.isArray(data.data.items)) {
+        setProducts(data.data.items);
+        setTotalCount(data.data.totalCount || 0);
       } else {
         console.error("Data is not in expected format:", data);
       }

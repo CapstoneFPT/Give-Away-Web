@@ -35,8 +35,8 @@ const NavProfile: React.FC = () => {
       try {
         // const response = await axios.get(`${BASE_URL}/accounts/${userId}`); 
         const accountApi = new AccountApi();
-        const response = await accountApi.apiAccountsIdGet({id : userId});
-        setBalance(response.data?.balance || 0);
+        const response = await accountApi.apiAccountsIdGet(userId);
+        setBalance(response.data?.data?.balance || 0);
       } catch (error) {
         console.error("Error fetching balance:", error);
       }

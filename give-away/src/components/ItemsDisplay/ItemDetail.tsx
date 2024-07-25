@@ -65,11 +65,11 @@ const ItemDetail: React.FC = () => {
       async function fetchFashionItemDetails() {
         try {
           const fashionItemApi = new FashionItemApi();
-          const response = await fashionItemApi.apiFashionitemsIdGet({
-            id: itemId!,
-          });
+          const response = await fashionItemApi.apiFashionitemsIdGet(
+           itemId!
+          );
           console.debug(itemId, response.data);
-          setProduct(response.data!);
+          setProduct(response.data.data!);
         } catch (error) {
           console.error(
             "There was an error fetching the product details!",

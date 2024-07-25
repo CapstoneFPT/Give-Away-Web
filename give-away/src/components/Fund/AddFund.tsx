@@ -5,7 +5,7 @@ import { SmileOutlined as Icon } from "@ant-design/icons";
 import {
   PointPackageApi,
   PointPackageListResponse,
-  PointPackageListResponseFromJSON,
+
 } from "../../api";
 
 type Package = {
@@ -45,16 +45,9 @@ const PointPackageShop = () => {
 
     async function fetchPointPackages() {
       const pointPackageApi = new PointPackageApi();
-      const response = await pointPackageApi.apiPointpackagesGet(
-        {},
-        {
-          headers: {
-            "ngrok-skip-browser-warning": "6942",
-          },
-        }
-      );
+      const response = await pointPackageApi.apiPointpackagesGet(null!,null!,["Active"]);
 
-      setPackages(response.items || []);
+      setPackages(response.data.items || []);
       setIsLoading(false);
     }
 
@@ -95,15 +88,15 @@ const PointPackageShop = () => {
       console.log(pkg.pointPackageId);
       console.log(userId)
       const response =
-        await pointPackageApi.apiPointpackagesPointPackageIdPurchasePost({
-          pointPackageId: pkg.pointPackageId!,
-          purchasePointPackageRequest: {
+        await pointPackageApi.apiPointpackagesPointPackageIdPurchasePost(
+          pkg.pointPackageId!,
+           {
             memberId: userId,
           },
-        });
+        );
 
-      if (response.paymentUrl) {
-        window.location.href = response.paymentUrl;
+      if (response.data.paymentUrl) {
+        window.location.href = response.data.paymentUrl;
       } else {
         message.error("Failed to get payment URL. Please try again.");
       }
