@@ -5,8 +5,8 @@ import axios from "axios";
 import img from "../components/Assets/nam2.png";
 import NavProfile from "../components/NavProfile/NavProfile";
 import "./CSS/Profile.css";
-import { BASE_URL } from "../api/config";
-import { AccountApi } from "../api";
+
+import { AccountApi, UpdateAccountRequest } from "../api";
 
 const handlePhoneInput = (e: React.ChangeEvent<HTMLInputElement>) => {
   e.target.value = e.target.value.replace(/[^0-9]/g, "");
@@ -22,39 +22,16 @@ const Profile: React.FC = () => {
     const userId = JSON.parse(localStorage.getItem("userId") || "null");
     console.log(userId);
     if (userId) {
-      // axios
-      //   .get(`${BASE_URL}/accounts/${userId}`,{
-      //     headers :{
-      //       "ngrok-skip-browser-warning": "6942"
-      //     }
-      //   })
-      //   .then((response) => {
-      //     setUserData(response.data);
-      //     form.setFieldsValue({
-      //       fullname: response.data.data.fullname,
-      //       phone: response.data.data.phone,
-      //       email: response.data.data.email,
-      //     });
-      //     console.log(form.getFieldsValue());
-      //     console.log(response.data.data.fullname);
-      //   })
-      //   .catch((error) => {
-      //     console.error("There was an error fetching the user data!", error);
-      //     setError("Failed to fetch user data. Please try again later.");
-      //   });
-
       async function fetchUserData() {
         try {
           const accountApi = new AccountApi();
-          const response = await accountApi.apiAccountsIdGet({
-            id: userId,
-          });
+          const response = await accountApi.apiAccountsIdGet(userId);
 
           setUserData(response.data);
           form.setFieldsValue({
-            fullname: response.data?.fullname,
-            phone: response.data?.phone,
-            email: response.data?.email,
+            fullname: response.data?.data?.fullname!,
+            phone: response.data?.data?.phone!,
+           email: response.data.data?.email
           });
         } catch (error) {
           console.error("Error fetching user data:", error);
@@ -110,14 +87,9 @@ const Profile: React.FC = () => {
 
           try {
             await accountApi.apiAccountsAccountIdPut(
-              {
-                accountId: userId,
-                updateAccountRequest: result,
-              },
-              {
-                headers: {
-                  "ngrok-skip-browser-warning": "6942",
-                },
+              userId,{
+                fullname: result.fullname,
+                phone : result.phone
               }
             );
 

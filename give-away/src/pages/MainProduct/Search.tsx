@@ -39,25 +39,14 @@ const Search: React.FC = () => {
       const userId = JSON.parse(localStorage.getItem("userId") || "null");
       const fashionItemApi = new FashionItemApi();
       const response = await fashionItemApi.apiFashionitemsGet(
-        {
-          memberId: userId,
-          pageNumber: page,
-          pageSize: pageSize,
-          searchTerm: searchParam || "",
-          type: ["ItemBase", "ConsignedForSale"],
-        },
-        {
-          headers: {
-            "ngrok-skip-browser-warning": "6942",
-          },
-        }
+      searchParam!,page,pageSize,userId,["Available"],["ConsignedForSale","ItemBase"]
       );
 
       console.debug(response);
       const data = response.data;
-      if (data && data.items && Array.isArray(data.items)) {
-        setProducts(data.items);
-        setTotalCount(data.totalCount!);
+      if (data && data.data?.items && Array.isArray(data.data.items)) {
+        setProducts(data.data.items);
+        setTotalCount(data.data.totalCount!);
       } else {
         console.error("Data is not in expected format:", data);
       }
@@ -106,29 +95,7 @@ const Search: React.FC = () => {
     >
       <Row gutter={[16, 16]}>
         <Col span={4}>
-          <Sider width={210} style={{ background: "#fff", marginTop: "20px" }}>
-            <Button
-              style={{
-                width: "100px",
-                color: "white",
-                backgroundColor: "black",
-                marginBottom: "20px",
-                marginTop: "10px",
-                marginLeft: "10px",
-              }}
-            >
-              Filter
-            </Button>
-            <Menu
-              mode="inline"
-              defaultSelectedKeys={["1"]}
-              style={{ height: "100%", borderRight: 0 }}
-            >
-              <Menu.Item key="1">Category 1</Menu.Item>
-              <Menu.Item key="2">Category 2</Menu.Item>
-              <Menu.Item key="3">Category 3</Menu.Item>
-            </Menu>
-          </Sider>
+        
         </Col>
         <Col span={20}>
           <Layout

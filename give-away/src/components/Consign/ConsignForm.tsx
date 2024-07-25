@@ -1,12 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { Form, Input, Button, Checkbox, Card, Upload, Select } from "antd";
-import type { FormListFieldData, FormListOperation } from "antd/lib/form/FormList";
+import type {
+  FormListFieldData,
+  FormListOperation,
+} from "antd/lib/form/FormList";
 import { DeleteOutlined } from "@ant-design/icons";
 import { storage } from "../../pages/Firebase/firebase-config";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import "./ConsignForm.css";
-import { BASE_URL } from "../../api/config";
+// import { BASE_URL } from "../../api/config";
 import FormItemLabel from "antd/es/form/FormItemLabel";
+import {
+  AccountApi,
+  ConsignSaleApi,
+  CreateConsignSaleRequest,
+  ResultStatus,
+  ShopApi,
+} from "../../api";
 
 const normFile = (e: any) => {
   if (Array.isArray(e)) {
@@ -15,63 +25,47 @@ const normFile = (e: any) => {
   return e && e.fileList;
 };
 
-interface FormValues {
-  userInfo: { fullName: string; phone: string; clothBranches: string };
-  items: {
-    productName: string;
-    picture: string[]; // Store picture URLs here
-    description: string;
-    price: string;
-    clothBranches: string;
-    conditionPercentage: string;
-  }[];
-  termsAndRules: boolean;
-}
+// interface FormValues {
+//   userInfo: { fullName: string; phone: string; clothBranches: string };
+//   items: {
+
+//     productName: string;
+//     picture: string[]; // Store picture URLs here
+//     description: string;
+//     price: string;
+//     clothBranches: string;
+//     conditionPercentage: string;
+//   }[];
+//   termsAndRules: boolean;
+// }
 
 const ConsignForm = () => {
   const [fileList, setFileList] = useState<any[]>([]); // State to store file list
   const [uploading, setUploading] = useState<boolean>(false); // State to manage uploading status
   const [branches, setBranches] = useState<any[]>([]); // State to store branch options
+  const shopApi = new ShopApi();
   const userId = JSON.parse(localStorage.getItem("userId") || "null");
 
   useEffect(() => {
-    // Fetch branch data from API
+    const userId = JSON.parse(localStorage.getItem("userId") || "null");
+    console.log(userId);
     const fetchBranches = async () => {
       try {
-        // Thực hiện yêu cầu GET tới API
-        const response = await fetch(`${BASE_URL}/shops`, {
-          method: 'GET', // Phương thức GET mặc định, có thể bỏ qua nếu không cần thiết
-          headers: {
-            'Content-Type': 'application/json', // Đảm bảo header chính xác nếu cần
-          },
-        });
+        const response = await shopApi.apiShopsGet();
+        console.log(response);
 
-        // Kiểm tra nếu phản hồi không thành công
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
+        if (response.data.resultStatus !== ResultStatus.Success) {
+          throw new Error(`HTTP error! Status: ${response.data.resultStatus}`);
         }
+        console.log("Fetched data:", response); // Kiểm tra dữ liệu nhận được
+        const data = response.data;
 
-        // Phân tích dữ liệu JSON từ phản hồi
-        const result = await response.json();
-        console.log('Fetched data:', result); // Kiểm tra dữ liệu nhận được
-
-        // Trích xuất dữ liệu từ thuộc tính data
-        const { data } = result;
-
-        // Đảm bảo data là mảng trước khi cập nhật state
-        if (Array.isArray(data)) {
-          setBranches(data); // Đặt branches state với dữ liệu
-        } else {
-          console.error('Expected an array in "data" but got:', data);
-          setBranches([]); // Đặt branches thành mảng rỗng nếu dữ liệu không phải là mảng
-        }
+        setBranches(data.data || []);
       } catch (error) {
-        console.error('Failed to fetch branches:', error);
+        console.error("Failed to fetch branches:", error);
         setBranches([]); // Đặt branches thành mảng rỗng nếu có lỗi
       }
-      
     };
-    
 
     fetchBranches();
   }, []);
@@ -80,12 +74,12 @@ const ConsignForm = () => {
     setFileList(info.fileList); // Update file list
   };
 
-  const onFinish = async (values: FormValues) => {
+  const onFinish = async (values: CreateConsignSaleRequest) => {
     setUploading(true); // Start uploading
 
     // Process image uploads
     const itemsWithUrls = await Promise.all(
-      values.items.map(async (item) => {
+      values.fashionItemForConsigns!.map(async (item) => {
         const fileUrls = await Promise.all(
           fileList.map(async (file) => {
             if (file.originFileObj) {
@@ -98,11 +92,11 @@ const ConsignForm = () => {
                 const downloadURL = await getDownloadURL(storageRef);
                 return downloadURL;
               } catch (error) {
-                console.error('Upload error:', error);
-                return '';
+                console.error("Upload error:", error);
+                return "";
               }
             }
-            return '';
+            return "";
           })
         );
         return { ...item, picture: fileUrls };
@@ -111,17 +105,14 @@ const ConsignForm = () => {
 
     // Send form data including image URLs to the backend
     try {
-      const response = await fetch('/api/consign', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ ...values, items: itemsWithUrls }),
-      });
-      const result = await response.json();
-      console.log('Backend response:', result);
+      const consignApi = new AccountApi();
+      const response = await consignApi.apiAccountsAccountIdConsignsalesPost(
+        userId,
+        values
+      );
+      console.log("Backend response:", response);
     } catch (error) {
-      console.error('Backend error:', error);
+      console.error("Backend error:", error);
     }
 
     setUploading(false); // End uploading
@@ -177,13 +168,11 @@ const ConsignForm = () => {
               name={["userInfo", "Type"]}
               // rules={[{ required: true, message: "Missing Consgin Type" }]}
             >
-              <Select style={{width:'20%'}}>
+              <Select style={{ width: "20%" }}>
                 <label>Consigned For Auction</label>
                 <label>Consigned For Sale</label>
-
               </Select>
             </Form.Item>
-
           </div>
         </Card>
         <Card>
@@ -213,19 +202,25 @@ const ConsignForm = () => {
                     <Form.Item
                       {...restField}
                       name={[name, "productName"]}
-                      rules={[{ required: true, message: "Missing product name" }]}
+                      rules={[
+                        { required: true, message: "Missing product name" },
+                      ]}
                       className="form-item"
                     >
                       <Input placeholder="Product Name" />
                     </Form.Item>
-
 
                     <Form.Item
                       {...restField}
                       name={[name, "picture"]}
                       valuePropName="fileList"
                       getValueFromEvent={normFile}
-                      rules={[{ required: true, message: "Please upload at least one picture" }]}
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please upload at least one picture",
+                        },
+                      ]}
                     >
                       <Upload
                         className="upload-box"
@@ -239,22 +234,25 @@ const ConsignForm = () => {
                         </div>
                       </Upload>
                     </Form.Item>
-                    
-              <Form.Item
+
+                    <Form.Item
                       {...restField}
                       name={[name, "description"]}
-                      rules={[{ required: true, message: "Missing description" }]}
+                      rules={[
+                        { required: true, message: "Missing description" },
+                      ]}
                     >
-                      <Select style={{width:'50%'}}>
-                <label>Male</label>
-                <label>Female</label>
-
-              </Select>
+                      <Select style={{ width: "50%" }}>
+                        <label>Male</label>
+                        <label>Female</label>
+                      </Select>
                     </Form.Item>
                     <Form.Item
                       {...restField}
                       name={[name, "description"]}
-                      rules={[{ required: true, message: "Missing description" }]}
+                      rules={[
+                        { required: true, message: "Missing description" },
+                      ]}
                     >
                       <Input.TextArea placeholder="Description" />
                     </Form.Item>
@@ -263,7 +261,10 @@ const ConsignForm = () => {
                       name={[name, " dealPrice"]}
                       rules={[
                         { required: true, message: "Missing price" },
-                        { pattern: /^\d+(\.\d{1,2})?$/, message: "Invalid price" },
+                        {
+                          pattern: /^\d+(\.\d{1,2})?$/,
+                          message: "Invalid price",
+                        },
                       ]}
                     >
                       <Input placeholder="Deal Price" />
@@ -273,7 +274,10 @@ const ConsignForm = () => {
                       name={[name, " confirmedPrice"]}
                       rules={[
                         { required: true, message: "Missing price" },
-                        { pattern: /^\d+(\.\d{1,2})?$/, message: "Invalid price" },
+                        {
+                          pattern: /^\d+(\.\d{1,2})?$/,
+                          message: "Invalid price",
+                        },
                       ]}
                     >
                       <Input placeholder="Confirmed Price" />
@@ -281,7 +285,9 @@ const ConsignForm = () => {
                     <Form.Item
                       {...restField}
                       name={[name, "condition"]}
-                      rules={[{ required: true, message: "Missing product material" }]}
+                      rules={[
+                        { required: true, message: "Missing product material" },
+                      ]}
                       className="form-item"
                     >
                       <Input placeholder="Material" />
@@ -289,37 +295,53 @@ const ConsignForm = () => {
                     <Form.Item
                       {...restField}
                       name={[name, "description"]}
-                      rules={[{ required: true, message: "Missing description" }]}
+                      rules={[
+                        { required: true, message: "Missing description" },
+                      ]}
                     >
-                      <Select style={{width:'50%'}}>
-                      <label>XS</label>
-                      <label>S</label>
-                <label>M</label>
-                <label>L</label>
-                <label>XL</label>
-                <label>2XL</label>
-
-              </Select>
+                      <Select style={{ width: "50%" }}>
+                        <label>XS</label>
+                        <label>S</label>
+                        <label>M</label>
+                        <label>L</label>
+                        <label>XL</label>
+                        <label>2XL</label>
+                      </Select>
                     </Form.Item>
 
                     <Form.Item
                       {...restField}
                       name={[name, "conditionPercentage"]}
-                      rules={[{ required: true, message: "Missing condition percentage" }]}
+                      rules={[
+                        {
+                          required: true,
+                          message: "Missing condition percentage",
+                        },
+                      ]}
                     >
                       <Input placeholder="Condition Percentage" />
                     </Form.Item>
                     <Form.Item
                       {...restField}
                       name={[name, "conditionPercentage"]}
-                      rules={[{ required: true, message: "Missing condition percentage" }]}
+                      rules={[
+                        {
+                          required: true,
+                          message: "Missing condition percentage",
+                        },
+                      ]}
                     >
                       <Input placeholder="Color" />
                     </Form.Item>
                     <Form.Item
                       {...restField}
                       name={[name, "conditionPercentage"]}
-                      rules={[{ required: true, message: "Missing condition percentage" }]}
+                      rules={[
+                        {
+                          required: true,
+                          message: "Missing condition percentage",
+                        },
+                      ]}
                     >
                       <Input placeholder="brand" />
                     </Form.Item>
@@ -365,7 +387,14 @@ const ConsignForm = () => {
         <Form.Item
           name="termsAndRules"
           valuePropName="checked"
-          rules={[{ validator: (_, value) => value ? Promise.resolve() : Promise.reject('Should accept terms and rules') }]}
+          rules={[
+            {
+              validator: (_, value) =>
+                value
+                  ? Promise.resolve()
+                  : Promise.reject("Should accept terms and rules"),
+            },
+          ]}
         >
           <Checkbox>
             I have read and agree to the <a href="">terms and rules</a>

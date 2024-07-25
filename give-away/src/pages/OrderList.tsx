@@ -26,11 +26,11 @@ const OrderList = () => {
       try {
         const accountApi = new AccountApi();
         // const response = await axios.get(`${BASE_URL}/accounts/${userId}/orders`);
-        const response = await accountApi.apiAccountsAccountIdOrdersGet({accountId : userId});
+        const response = await accountApi.apiAccountsAccountIdOrdersGet( userId);
         console.log(response.data); // Log the API response for debugging
 
         // Check if response.data is an array or adjust if nested
-        const orders = Array.isArray(response.data) ? response.data : response.data?.items || [];
+        const orders = Array.isArray(response.data) ? response.data : response.data?.data?.items || [];
         setData(orders);
       } catch (err) {
         console.error(err); // Log detailed error for debugging

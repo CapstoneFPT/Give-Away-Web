@@ -46,10 +46,8 @@ const OrderDetail = () => {
       try {
         const orderApi = new OrderApi();
         // const response = await axios.get(`${BASE_URL}/orders/${id}/orderdetails`);
-        const response = await orderApi.apiOrdersOrderIdOrderdetailsGet({
-          orderId: id!,
-        });
-        setOrderDetails(response.data?.items || []);
+        const response = await orderApi.apiOrdersOrderIdOrderdetailsGet(id!);
+        setOrderDetails(response.data?.data!.items || []);
         console.log(response);
       } catch (error) {
         console.error("Failed to fetch order details", error);
@@ -140,11 +138,7 @@ const OrderDetail = () => {
                     {detail.fashionItemDetail?.condition}
                   </Descriptions.Item>
                 </Descriptions>
-                {isRefundEligible(
-                  detail.refundExpirationDate?.toDateString()
-                    ? detail.refundExpirationDate?.toDateString()
-                    : null
-                ) && (
+                {isRefundEligible(detail.refundExpirationDate!) && (
                   <Button
                     type="primary"
                     style={{
