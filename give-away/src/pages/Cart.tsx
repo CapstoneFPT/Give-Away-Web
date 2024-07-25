@@ -17,7 +17,6 @@ import { useCart } from "./CartContext";
 import { DeleteOutlined } from "@ant-design/icons";
 import Checkbox from "antd/es/checkbox/Checkbox";
 import axios from "axios";
-import { BASE_URL } from "../api/config";
 import { AccountApi, OrderApi } from "../api";
 
 const { Option } = Select;
@@ -65,115 +64,6 @@ const Cart: React.FC = () => {
   };
 
   const handleCheckOut = async () => {
-    // form
-    //   .validateFields()
-    //   .then((values) => {
-    //     if (!userId) {
-    //       console.error("User ID not found in localStorage");
-    //       console.log("hihi", userId);
-    //       return;
-    //     }
-
-    //     if (selectedItems.length === 0) {
-    //       message.error("Please select at least one item.");
-    //       return;
-    //     }
-
-    //     const orderData = {
-    //       paymentMethod: values.paymentMethod,
-    //       recipientName: values.recipientName,
-    //       address: values.address,
-    //       phone: values.phone,
-    //       listItemId: selectedItems, // This is now an array of strings
-    //     };
-    //     console.log("Order Data:", orderData);
-
-    //     axios
-    //       .post(`${BASE_URL}/accounts/${userId}/orders`, orderData, {
-    //         headers: {
-    //           "ngrok-skip-browser-warning": "6942",
-    //         },
-    //       })
-    //       .then((response) => {
-    //         console.log("Order placed successfully:", response);
-    //         notification.success({
-    //           message: "Success",
-    //           description: "Order placed successfully",
-    //         });
-    //         selectedItems.forEach((itemId) => {
-    //           dispatch({ type: "REMOVE_FROM_CART", payload: { itemId } });
-    //         });
-    //         setSelectedItems([]);
-
-    //         const orderId = response.data.data.orderId;
-    //         if (values.paymentMethod === "QRCode") {
-    //           axios
-    //             .post(
-    //               `${BASE_URL}/orders/${orderId}/pay/vnpay`,
-    //               { memberId: userId },
-    //               {
-    //                 headers: {
-    //                   "ngrok-skip-browser-warning": "6942",
-    //                 },
-    //               }
-    //             )
-    //             .then((response) => {
-    //               console.log("Payment successful:", response);
-    //               notification.success({
-    //                 message: "Payment Success",
-    //                 description: "Payment was successful",
-    //               });
-    //               const paymentUrl = response.data.paymentUrl;
-    //               if (paymentUrl) {
-    //                 window.location.href = paymentUrl;
-    //               }
-    //             })
-    //             .catch((error) => {
-    //               console.error("Error during payment:", error);
-    //               notification.error({
-    //                 message: "Payment Error",
-    //                 description: "Error during payment",
-    //               });
-    //             });
-    //         } else if (values.paymentMethod === "Point") {
-    //           axios
-    //             .post(
-    //               `${BASE_URL}/orders/${orderId}/pay/points`,
-    //               { memberId: userId },
-    //               {
-    //                 headers: {
-    //                   "ngrok-skip-browser-warning": "6942",
-    //                 },
-    //               }
-    //             )
-    //             .then((response) => {
-    //               console.log("Payment successful:", response);
-    //               notification.success({
-    //                 message: "Payment Success",
-    //                 description: "Payment was successful",
-    //               });
-    //             })
-    //             .catch((error) => {
-    //               console.error("Error during payment:", error);
-    //               notification.error({
-    //                 message: "Payment Error",
-    //                 description: "Error during payment",
-    //               });
-    //             });
-    //         }
-    //       })
-    //       .catch((error) => {
-    //         console.error("Error placing order:", error);
-    //         notification.error({
-    //           message: "Error",
-    //           description: "Error placing order",
-    //         });
-    //       });
-    //   })
-    //   .catch((errorInfo) => {
-    //     console.error("Validation Failed:", errorInfo);
-    //   });
-
     try {
       const validateResult = await form.validateFields();
       if (!userId) {
@@ -199,10 +89,8 @@ const Cart: React.FC = () => {
       const accountApi = new AccountApi();
 
       const response = await accountApi.apiAccountsAccountIdOrdersPost(
-        {
-          accountId: userId,
-          cartRequest: orderData,
-        }
+        userId,
+        orderData
       );
 
       notification.success({
@@ -214,21 +102,21 @@ const Cart: React.FC = () => {
       });
       setSelectedItems([]);
 
-      const orderId = response.data?.orderId;
+      const orderId = response.data?.data?.orderId;
 
       const orderApi = new OrderApi();
 
       switch (validateResult.paymentMethod) {
         case "QRCode":
           try {
-            const response = await orderApi.apiOrdersOrderIdPayVnpayPost({
-              orderId: orderId!,
-              purchaseOrderRequest: {
+            const response = await orderApi.apiOrdersOrderIdPayVnpayPost(
+              orderId!,
+              {
                 memberId: userId,
-              },
-            });
+              }
+            );
 
-            const paymentUrl = response.paymentUrl;
+            const paymentUrl = response.data.paymentUrl;
 
             if (paymentUrl) {
               window.location.href = paymentUrl;
@@ -242,12 +130,12 @@ const Cart: React.FC = () => {
           break;
         case "Point":
           try {
-            const response = await orderApi.apiOrdersOrderIdPayPointsPost({
-              orderId: orderId!,
-              purchaseOrderRequest: {
+            const response = await orderApi.apiOrdersOrderIdPayPointsPost(
+              orderId!,
+              {
                 memberId: userId,
-              },
-            });
+              }
+            );
           } catch (error) {
             notification.error({
               message: "Error",
@@ -259,7 +147,7 @@ const Cart: React.FC = () => {
           break;
       }
     } catch (error) {
-      console.error(error)
+      console.error(error);
       notification.error({
         message: "Error",
         description: "Error placing order",

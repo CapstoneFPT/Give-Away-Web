@@ -8,8 +8,9 @@ import {
 } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
 import type { MenuProps } from "antd";
-import { ApiAuthLoginPostRequest, AuthApi } from "../api/apis/AuthApi";
+
 import { useCart } from "../pages/CartContext";
+import { AuthApi, LoginRequest } from "../api";
 
 const Login = () => {
   const [isModalLoginOpen, setIsModalLoginOpen] = useState(false);
@@ -42,25 +43,22 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
-      const request: ApiAuthLoginPostRequest = {
-        loginRequest: {
-          email: email,
-          password: password,
-        },
+      const request: LoginRequest = {
+        email,
+        password,
       };
 
       const authApi = new AuthApi();
       const response = await authApi.apiAuthLoginPost(request);
 
-      if (response.resultStatus === "Success") {
-        const userId = response.data?.id ?? null;
+      if (response.data.resultStatus === "Success") {
+        const userId = response.data?.data?.id ?? null;
         localStorage.setItem(
           "user",
-          JSON.stringify(response.data?.accessToken)
+          JSON.stringify(response.data?.data?.accessToken)
         );
         localStorage.setItem("userId", JSON.stringify(userId));
-        localStorage.setItem("role", JSON.stringify(response.data?.role));
-
+        localStorage.setItem("role", JSON.stringify(response.data?.data?.role));
 
         dispatch({ type: "CLEAR_CART" }); // Clear cart on login
         dispatch({ type: "SET_USER", payload: userId });

@@ -19,8 +19,8 @@ const AunctionList = () => {
     const fetchData = async () => {
       try {
         const response = await auctionApi.apiAuctionsGet();
-        const fetchedData: AuctionListResponse[] = response.items
-          ? response.items.map((item: any) => ({
+        const fetchedData: AuctionListResponse[] = response.data.items
+          ? response.data.items.map((item: any) => ({
               ...item,
               startDate: moment(item.startDate).format("YYYY-MM-DD HH:mm"),
               endDate: moment(item.endDate).format("YYYY-MM-DD HH:mm"),

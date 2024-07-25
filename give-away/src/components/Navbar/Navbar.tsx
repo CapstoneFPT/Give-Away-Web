@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 import Login from "../../pages/Login";
 import SearchBar from "../SearchBar/SearchBar";
 import axios from "axios";
-import { BASE_URL } from "../../api/config";
 import { AccountApi } from "../../api";
 import { useCart } from "../../pages/CartContext";
 
@@ -22,15 +21,16 @@ const Navbar = () => {
         const accountApi = new AccountApi()
         // const response = await axios.get(`${BASE_URL}/accounts/${userId}`); 
 
-        const response = await accountApi.apiAccountsIdGet({id : userId})
-        setBalance(response.data?.balance || 0);
+        const response = await accountApi.apiAccountsIdGet(userId)
+      
+        setBalance(response.data?.data?.balance || 0);
       } catch (error) {
         console.error("Error fetching balance:", error);
       }
     };
 
     fetchBalance();
-  }, []);
+  }, [balance]);
 
   const handleSearch = () => {};
   const formatBalance = (balance:any) => {

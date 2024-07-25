@@ -9,16 +9,18 @@ import {
   MailOutlined,
 } from "@ant-design/icons";
 import { Input } from "antd";
+import { AuthApi } from "../api";
 
 const Register = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [formData, setFormData] = useState({
-    fullName: "",
+    fullname: "",
     email: "",
     phone: "",
     password: "",
     confirmPassword: "",
   });
+
 
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
@@ -34,17 +36,14 @@ const Register = () => {
       message.error("Passwords do not match!");
       return;
     }
+    
 
     try {
-      const response = await fetch("${BASE_URL}/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      
+      const authApi = new AuthApi()
+      const response = await authApi.apiAuthRegisterPost(formData)
 
-      if (response.ok) {
+      if (response) {
         message.success("Registration successful!");
       } else {
         message.error("Registration failed!");
@@ -103,8 +102,8 @@ const Register = () => {
               size="large"
               placeholder="Full Name"
               prefix={<UserOutlined />}
-              name="fullName"
-              value={formData.fullName}
+              name="fullname"
+              value={formData.fullname}
               onChange={handleInputChange}
             />
           </div>

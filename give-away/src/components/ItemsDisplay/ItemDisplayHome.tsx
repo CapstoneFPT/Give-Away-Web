@@ -14,7 +14,7 @@ import { Content } from "antd/es/layout/layout";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../../pages/CartContext";
-import { BASE_URL } from "../../api/config";
+
 import { FashionItemApi, FashionItemDetailResponse } from "../../api";
 const backgroundImageUrl = require("../Assets/freepik_5229782.jpg");
 
@@ -42,7 +42,8 @@ const ItemDisplayHome: React.FC = () => {
   useEffect(() => {
     fetchProducts(currentPage);
   }, [currentPage]);
-
+  const userId = JSON.parse(localStorage.getItem("userId") || "null");
+  console.log(userId);
   const fetchProducts = async (page: number) => {
     setIsLoading(true);
     try {
@@ -56,24 +57,14 @@ const ItemDisplayHome: React.FC = () => {
       // );
       const fashionItemApi = new FashionItemApi();
       const response = await fashionItemApi.apiFashionitemsGet(
-        {
-          pageSize: pageSize,
-          status: ["Available"],
-          type: ["ItemBase", "ConsignedForSale"],
-          pageNumber: page,
-        },
-        {
-          headers: {
-            "ngrok-skip-browser-warning": "6942",
-          },
-        }
+       null!,page,pageSize,userId,["Available"],["ConsignedForSale","ItemBase"]
       );
 
       console.debug(response);
       const data = response.data;
-      if (data && data.items && Array.isArray(data.items)) {
-        setProducts(data.items);
-        setTotalCount(data.totalCount || 0);
+      if (data && data.data?.items && Array.isArray(data.data.items)) {
+        setProducts(data.data.items);
+        setTotalCount(data.data.totalCount || 0);
       } else {
         console.error("Data is not in expected format:", data);
       }
