@@ -7,21 +7,7 @@ import hero_imae from "../Assets/hero_image.png";
 const Hero: React.FC = () => {
   return (
     <div className="hero">
-      {/* <div className="hero-left">
-        <h2>New arrivals only</h2>
-        <div>
-          <div className="hand-hand-icon">
-            <p>New</p>
-            <img src={hand_icon} alt="hand icon" />
-          </div>
-          <p>Collections</p>
-          <p>for everyone</p>
-        </div>
-        <div className="hero-latest-btn">
-          <div>Latest Collection</div>
-          <img src={arrow_icon} alt="arrow icon" />
-        </div>
-      </div> */}
+      
       <div className="hero-right">
         <div>
           <h1

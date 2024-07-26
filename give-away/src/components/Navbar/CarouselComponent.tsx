@@ -1,32 +1,50 @@
 // src/components/CarouselComponent.js
 import React from 'react';
-import { Carousel } from 'antd';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+import { Card,  } from 'antd';
+import { SettingOutlined } from '@ant-design/icons';
+
+
+const items = [
+  { id: 1, type: 'Giày Nam', imageUrl: 'path-to-mens-shoes-image.jpg' },
+  { id: 2, type: 'Giày Nữ', imageUrl: 'path-to-womens-shoes-image.jpg' },
+  { id: 3, type: 'Quần Áo Nam', imageUrl: 'path-to-mens-clothes-image.jpg' },
+  { id: 4, type: 'Quần Áo Nữ', imageUrl: 'path-to-womens-clothes-image.jpg' },
+  { id: 5, type: 'Phụ Kiện Nam', imageUrl: 'path-to-mens-accessories-image.jpg' },
+  { id: 6, type: 'Phụ Kiện Nữ', imageUrl: 'path-to-womens-accessories-image.jpg' },
+];
 
 const CarouselComponent = () => {
+  const settings = {
+    dots: false,
+    infinite: true,
+    speed: 5000,
+    slidesToShow: 3,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 10,
+    cssEase: 'linear'
+  };
+
+
   return (
-    <Carousel style={{ marginTop: "2%" }} autoplay={true}>
-      <div>
-        <img
-          style={{ width: "500%", height: "800px", objectFit: 'cover' }}
-          src="https://emoi.vn/wp-content/uploads/2020/11/do-secondhand-7.png"
-          alt="Hero 1"
-        />
-      </div>
-      <div>
-        <img
-          style={{ width: "100%", height: "750px", objectFit: 'cover' }}
-          src="https://cdn-images.vtv.vn/2022/1/13/photo-1-16420742504011699677621-crop-16420746973442116528313.jpg"
-          alt="Hero 2"
-        />
-      </div>
-      <div>
-        <img
-          style={{ width: "100%", height: "750px", objectFit: 'cover' }}
-          src="https://www.elleman.vn/app/uploads/2022/03/03/212156/Phoi-do-voi-phong-cach-retro-mua-He-elle-man-cover.jpg"
-          alt="Hero 3"
-        />
-      </div>
-    </Carousel>
+   <div style={{ padding: '20px' }}>
+      <h2>Secondhand Clothes</h2>
+      <Slider {...settings}>
+        {items.map(item => (
+          <div key={item.id}>
+            <Card
+              cover={<img src={item.imageUrl} alt={item.type} style={{ width: '100%', height: 'auto' }} />}
+              actions={[<SettingOutlined key="setting" />]}
+            >
+              <Card.Meta title={item.type} />
+            </Card>
+          </div>
+        ))}
+      </Slider>
+    </div>
   );
 };
 

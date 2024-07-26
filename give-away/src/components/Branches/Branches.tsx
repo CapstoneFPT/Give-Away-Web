@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { ResultStatus, ShopApi } from '../../api';
-import { Select } from 'antd';
+import { Card, List } from 'antd';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+import { ResultStatus, ShopApi } from '../../api';
+import { EnvironmentOutlined } from '@ant-design/icons';
+const backgroundImageUrl = require("../../components/Assets/background-quang-cao-thoi-trang-quan-ao_025656570.jpg");
 
-
-const { Option } = Select;
 
 const Branches: React.FC = () => {
   const shopApi = new ShopApi();
@@ -28,27 +28,36 @@ const Branches: React.FC = () => {
     fetchBranches();
   }, []);
 
-  const handleSelectChange = (value: string) => {
-    const branch = branches.find(branch => branch.id === value);
+  const handleBranchClick = (branch: any) => {
     setSelectedBranch(branch);
   };
 
   return (
-    <div style={{ display: 'flex' }}>
+   <Card style={{
+    backgroundImage: `url(${backgroundImageUrl})`,
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    minHeight: "65vh",
+   
+  }}>
+     <div style={{ display: 'flex', gap: '20px' }}>
       <div style={{ flex: 1 }}>
-        <Select style={{ width: '100%' }} onChange={handleSelectChange} placeholder="Select a branch">
-          {branches.map(branch => (
-            <Option key={branch.id} value={branch.id}>
-              {branch.address}
-            </Option>
-          ))}
-        </Select>
+        <Card  title="Branches">
+          <List
+            dataSource={branches}
+            renderItem={branch => (
+              <List.Item onClick={() => handleBranchClick(branch)} style={{ cursor: 'pointer' }}>
+                <EnvironmentOutlined style={{ marginRight: '8px' }}/> 
+                {branch.address}
+              </List.Item>
+            )}
+          />
+        </Card>
       </div>
-      <div style={{ flex: 2, height: '500px' }}>
-        <MapContainer center={[10.762622, 106.660172]} zoom={13} style={{ height: '100%', width: '100%' }}>
+      <div style={{ flex: 1.5, height: '600px' }}>
+        <MapContainer center={selectedBranch ? [selectedBranch.latitude, selectedBranch.longitude] : [10.762622, 106.660172]} zoom={13} style={{ height: '100%', width: '100%' }}>
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
           {selectedBranch && (
             <Marker
@@ -67,6 +76,7 @@ const Branches: React.FC = () => {
         </MapContainer>
       </div>
     </div>
+   </Card>
   );
 };
 

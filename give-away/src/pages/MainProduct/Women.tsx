@@ -18,7 +18,7 @@ import { useNavigate } from "react-router-dom";
 import { useCart } from "../CartContext";
 import { BASE_URL } from "../../api/config";
 import { FashionItemApi, FashionItemDetailResponse } from "../../api";
-const backgroundImageUrl = require("../../components/Assets/88532663-women-modern-fashion-clothes-and-accessories-background-with-frame-for-text-flat-lay-female-casual.jpg");
+const backgroundImageUrl = require("../../components/Assets/freepik_5229782.jpg");
 
 interface Product {
   itemId: any;
@@ -49,14 +49,7 @@ const Women: React.FC = () => {
     setIsLoading(true);
     try {
       const userId = JSON.parse(localStorage.getItem("userId") || "null"); 
-      // const response = await axios.get(
-      //   `${BASE_URL}/fashionitems?PageSize=${pageSize}&Status=Available&Type=ItemBase&Type=ConsignedForSale&GenderType=Female&pageNumber=${page}&memberId=${userId}`,
-      //   {
-      //     headers: {
-      //       "ngrok-skip-browser-warning": "6942",
-      //     },
-      //   }
-      // );
+    
 
       const fashionItemApi = new FashionItemApi();
       const response = await fashionItemApi.apiFashionitemsGet(

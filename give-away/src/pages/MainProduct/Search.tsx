@@ -16,7 +16,7 @@ import {
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import { Content } from "antd/es/layout/layout";
 import Sider from "antd/es/layout/Sider";
-import backgroundImageUrl from "../../components/Assets/shutterstock_455310238.jpg";
+import backgroundImageUrl from "../../components/Assets/719789-apparel-hanger-top-shirt-t-shirt-fashion-rack.jpg";
 const Search: React.FC = () => {
   const { dispatch, isItemInCart } = useCart();
   const [products, setProducts] = useState<FashionItemDetailResponse[]>([]);
