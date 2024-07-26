@@ -9,6 +9,7 @@
   background-color: #fefefe;
   margin-bottom: 10px;
   padding: 10px 20px;
+  
 }
 
 .nav-left,
@@ -39,7 +40,7 @@
 .nav-mid {
   flex-grow: 1;
   justify-content: flex-start;
-  margin-left: 20px;
+  margin-left: 10px;
 }
 
 .nav-menu {
@@ -53,7 +54,7 @@
 }
 
 .nav-right {
-  gap: 20px;
+  gap: 10px;
 }
 
 .nav-cart {
