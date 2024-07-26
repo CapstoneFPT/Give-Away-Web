@@ -10,18 +10,7 @@ import { FashionItemApi, FashionItemDetailResponse } from "../../api";
 const backgroundImageUrl = require('../../components/Assets/shutterstock_455310238.jpg');
 
 
-// interface Product {
-//   itemId: any;
-//   name: string;
-//   size: string;
-//   color: string;
-//   gender: string;
-//   brand: string;
-//   images: string;
-//   sellingPrice: number;
-//   shopAddress: string;
-//   isOrderedYet: boolean; // Add this line
-// }
+
 
 const Men: React.FC = () => {
   const { dispatch, isItemInCart } = useCart();
@@ -41,14 +30,7 @@ const Men: React.FC = () => {
     setIsLoading(true);
     try {
       const userId = JSON.parse(localStorage.getItem("userId") || "null"); 
-      // const response = await axios.get(
-      //   `${BASE_URL}/fashionitems?PageSize=${pageSize}&MemberId=${userId}&Status=Available&Type=ItemBase&Type=ConsignedForSale&GenderType=Male&pageNumber=${page}`,
-      //   {
-      //     headers: {
-      //       "ngrok-skip-browser-warning": "6942",
-      //     },
-      //   }
-      // );
+    
 
       const fashionItemApi = new FashionItemApi();
 
