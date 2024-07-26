@@ -12,6 +12,7 @@ import {
   Modal,
   message,
   notification,
+  Image,
 } from "antd";
 import { useCart } from "./CartContext";
 import { DeleteOutlined } from "@ant-design/icons";
@@ -171,6 +172,7 @@ const Cart: React.FC = () => {
             <Card key={item.itemId} style={{ marginBottom: "10px" }}>
               <Row>
                 <Col span={8}>
+                  
                   <Typography>{item.name}</Typography>
                 </Col>
                 <Col span={12}>

@@ -30,7 +30,7 @@ const CarouselComponent = () => {
 
 
   return (
-   <div style={{ padding: '20px' }}>
+   <div style={{ padding: '20px', width:'96%' }}>
       <h2>Secondhand Clothes</h2>
       <Slider {...settings}>
         {items.map(item => (

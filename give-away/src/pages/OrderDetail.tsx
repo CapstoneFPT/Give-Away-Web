@@ -12,17 +12,7 @@ import {
   OrderApi,
 } from "../api";
 
-// interface FashionItem {
-//   itemId: string;
-//   name: string;
-//   sellingPrice: string;
-//   color: string;
-//   condition: string;
-//   size: string;
-//   gender: string;
-//   brand: string;
-//   status: string;
-// }
+
 
 interface OrderDetail {
   orderDetailId: string;
@@ -39,13 +29,12 @@ const OrderDetail = () => {
   >(null);
   const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
-
+console.log(id)
   useEffect(() => {
     const fetchOrderDetails = async () => {
       setLoading(true);
       try {
         const orderApi = new OrderApi();
-        // const response = await axios.get(`${BASE_URL}/orders/${id}/orderdetails`);
         const response = await orderApi.apiOrdersOrderIdOrderdetailsGet(id!);
         setOrderDetails(response.data?.data!.items || []);
         console.log(response);
