@@ -25,20 +25,6 @@ const normFile = (e: any) => {
   return e && e.fileList;
 };
 
-// interface FormValues {
-//   userInfo: { fullName: string; phone: string; clothBranches: string };
-//   items: {
-
-//     productName: string;
-//     picture: string[]; // Store picture URLs here
-//     description: string;
-//     price: string;
-//     clothBranches: string;
-//     conditionPercentage: string;
-//   }[];
-//   termsAndRules: boolean;
-// }
-
 const ConsignForm = () => {
   const [fileList, setFileList] = useState<any[]>([]); // State to store file list
   const [uploading, setUploading] = useState<boolean>(false); // State to manage uploading status

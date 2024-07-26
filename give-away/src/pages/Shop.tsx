@@ -5,6 +5,8 @@ import NewsLetter from "../components/NewsLetter/NewsLetter";
 import Footer from "../components/Footer/Footer";
 import ItemDisplayHome from "../components/ItemsDisplay/ItemDisplayHome";
 import Navbar from "../components/Navbar/Navbar";
+import CarouselComponent from "../components/Navbar/CarouselComponent";
+import Branches from "../components/Branches/Branches";
 
 const Shop = () => {
   return (
@@ -15,8 +17,9 @@ const Shop = () => {
       </div>
       <Hero />
       {/* <Offers /> */}
+      <CarouselComponent/>
       <ItemDisplayHome/>
-
+      <Branches/>
       <NewsLetter />
       <Footer />
     </div>

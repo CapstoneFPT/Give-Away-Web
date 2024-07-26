@@ -16,7 +16,6 @@ import AunctionList from "./pages/AunctionList";
 import Aunction from "./pages/Aunction";
 import Consign from "./pages/ConsignForm";
 import Profile from "./pages/Profile";
-import Branches from "./pages/Branches";
 import Footer from "./components/Footer/Footer";
 import ChangePassword from "./pages/ChangePassword";
 import Refunds from "./pages/Refunds";
@@ -36,6 +35,7 @@ import ImageUpload from "./pages/Firebase/ImageUpload";
 import ItemDisplayHome from "./components/ItemsDisplay/ItemDisplayHome";
 import CarouselComponent from "./components/Navbar/CarouselComponent";
 import Search from "./pages/MainProduct/Search";
+import Branches from "./components/Branches/Branches";
 
 function App(): JSX.Element {
   return (
@@ -260,12 +260,11 @@ function App(): JSX.Element {
               }
             />
             <Route
-              path="/branches"
+              path="/branch"
               element={
                 <>
-                  <Navbar />
+                 
                   <Branches />
-                  <Footer />
                 </>
               }
             />
