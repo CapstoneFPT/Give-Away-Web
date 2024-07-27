@@ -79,6 +79,9 @@ const Women: React.FC = () => {
       });
     }
   };
+  const formatBalance = (balance:any) => {
+    return new Intl.NumberFormat('de-DE').format(balance);
+  };
 
   const goToDetailPage = (itemId: any) => {
     navigate(`/itemDetail/${itemId}`);
@@ -152,7 +155,7 @@ const Women: React.FC = () => {
                     >
                       <Card.Meta
                         title={product.name}
-                        description={`${product.sellingPrice} VND`}
+                        description={`${formatBalance(product.sellingPrice)}  VND`}
                       />
                       <div style={{ textAlign: "center", marginTop: "5px" }}>
                         <Button

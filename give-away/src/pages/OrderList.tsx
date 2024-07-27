@@ -60,7 +60,7 @@ const OrderList = () => {
     }
   };
 
-  const handleCheckout = (order: any) => {
+  const handleCheckout = async (order: any) => {
     setSelectedOrder(order);
     fetchOrderDetails(order.orderId); // Fetch order details when an order is selected
   };
@@ -223,7 +223,7 @@ const OrderList = () => {
                         <Select
                           placeholder="Select payment method"
                           style={{ width: 150 }}
-                          disabled
+                          
                         >
                           <Option value="QRCode">QRCode</Option>
                           <Option value="COD">COD</Option>

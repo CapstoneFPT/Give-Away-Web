@@ -17,6 +17,7 @@ import { FashionItemDetailResponse } from "../api";
     gender: string;
     brand: string;
     shopAddress: string;
+    image: string
   }
 
   interface CartState {
