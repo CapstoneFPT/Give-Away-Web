@@ -30,6 +30,7 @@ const OrderList = () => {
         const response = await accountApi.apiAccountsAccountIdOrdersGet(userId);
         const orders = Array.isArray(response.data) ? response.data : response.data?.data?.items || [];
         setData(orders);
+        console.log(orders)
       } catch (err) {
         console.error(err);
         setError('Failed to fetch orders');
@@ -65,20 +66,32 @@ const OrderList = () => {
 
     try {
       const orderApi = new OrderApi();
-      const response = await orderApi.apiOrdersOrderIdPayVnpayPost(selectedOrder.orderId, { memberId: userId });
-      const paymentUrl = response.data.paymentUrl;
 
-      if (paymentUrl) {
+      // First API call: Points payment
+      const responsePoint = await orderApi.apiOrdersOrderIdPayPointsPost(selectedOrder.orderId, { memberId: userId });
+
+      if (responsePoint.data.sucess) {
         notification.success({
           message: 'Checkout Successful',
-          description: 'Redirecting to payment page...',
+          description: 'Order has been paid with points.',
         });
-        window.location.href = paymentUrl;
       } else {
-        notification.error({
-          message: 'Checkout Failed',
-          description: 'Failed to get payment URL',
-        });
+        // Second API call: Regular payment
+        const response = await orderApi.apiOrdersOrderIdPayVnpayPost(selectedOrder.orderId, { memberId: userId });
+        const paymentUrl = response.data.paymentUrl;
+
+        if (paymentUrl) {
+          notification.success({
+            message: 'Checkout Successful',
+            description: 'Redirecting to payment page...',
+          });
+          window.location.href = paymentUrl;
+        } else {
+          notification.error({
+            message: 'Checkout Failed',
+            description: 'Failed to get payment URL',
+          });
+        }
       }
     } catch (error) {
       console.error("Failed to process checkout", error);
@@ -99,14 +112,7 @@ const OrderList = () => {
   };
 
   const columns = [
-    {
-      title: 'Product',
-      dataIndex: 'images',
-      key: 'images',
-      render: (images: string) => (
-        <img src={images} alt="" />
-      )
-    },
+   
     {
       title: 'Code Orders',
       dataIndex: 'orderCode',
@@ -121,6 +127,9 @@ const OrderList = () => {
       title: 'Total Price',
       dataIndex: 'totalPrice',
       key: 'totalPrice',
+      render: (totalPrice: number) =>(
+        <strong> {formatBalance(totalPrice)} VND</strong>
+      ) 
     },
     {
       title: 'Payment Method',
@@ -228,7 +237,7 @@ const OrderList = () => {
                               <Row>
                                 <Col span={12}>
                                   <p>Product Name: <strong>{product.fashionItemDetail?.name}</strong></p>
-                                  <p>Price: <strong>{product.fashionItemDetail?.sellingPrice}</strong></p>
+                                  <p>Price: <strong>{formatBalance(product.fashionItemDetail?.sellingPrice)} VND</strong></p>
                                 </Col>
                                 <Col span={12}>
                                   <p>Color: {product.fashionItemDetail?.color}</p>
@@ -293,7 +302,7 @@ const OrderList = () => {
                     </Form>
                   </Card>
                   <Card title='Total'>
-                    <p style={{ marginBottom: '10px', fontSize: '20px', fontWeight: 'bold', color: '#d1d124' }}>Total Price: {formatBalance(selectedOrder.totalPrice)}</p>
+                    <p style={{ marginBottom: '10px', fontSize: '20px', fontWeight: 'bold', color: '#d1d124' }}>Total Price: {formatBalance(selectedOrder.totalPrice)} VND</p>
                     <Button type="primary" onClick={handleCheckout}>
                       Checkout
                     </Button>

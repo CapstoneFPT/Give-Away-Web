@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Card, Row, Col, Button, Typography, message } from "antd";
+import { Card, Row, Col, Button, Typography, message, notification } from "antd";
 import { ShoppingCartOutlined } from "@ant-design/icons";
+import { useCart } from "../../pages/CartContext";
 
 import { useParams } from "react-router-dom";
 import { FashionItemApi, FashionItemDetailResponse } from "../../api";
@@ -36,6 +37,7 @@ interface Product {
 const ItemDetail: React.FC = () => {
   const { itemId } = useParams<{ itemId: string }>();
   const [product, setProduct] = useState<FashionItemDetailResponse | null>(null);
+  const { dispatch, isItemInCart } = useCart();
   const [selectedImage, setSelectedImage] = useState<string>("");
   console.log(product);
   useEffect(() => {
@@ -63,6 +65,27 @@ const ItemDetail: React.FC = () => {
     
 
   }, []);
+
+  const handleAddToCart = (product: FashionItemDetailResponse) => {
+    if (product.isOrderedYet) {
+      notification.error({
+        message: "Already Ordered",
+        description: `The item "${product.name}" has already been ordered.`,
+      });
+    } else if (isItemInCart(product.itemId)) {
+      notification.warning({
+        message: "Already in Cart",
+        description: `The item "${product.name}" is already in your cart.`,
+      });
+    } else {
+      dispatch({ type: "ADD_TO_CART", payload: { ...product } });
+      notification.success({
+        message: "Added to Cart",
+        description: `The item "${product.name}" has been added to your cart.`,
+      });
+      console.log("Adding item to cart with itemId:", product.itemId);
+    }
+  };
   const formatBalance = (sellingPrice:any) => {
     return new Intl.NumberFormat('de-DE').format(sellingPrice);
   };
@@ -145,6 +168,7 @@ const ItemDetail: React.FC = () => {
                   borderRadius: "30px",
                   fontSize: "18px",
                 }}
+                onClick={() => handleAddToCart(product)} 
               >
                 Add to cart
                 <ShoppingCartOutlined
