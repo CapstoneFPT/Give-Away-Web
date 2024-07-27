@@ -85,13 +85,13 @@ const ItemDetail: React.FC = () => {
                   <img
                     src={image}
                     alt={`Thumbnail ${index}`}
-                    style={{
-                      width: "90%",
-                      height: "230px",
-                      cursor: "pointer",
-                      border:
-                        selectedImage === image ? "2px solid #1890ff" : "none",
-                    }}
+                      style={{
+                        width: "90%",
+                        height: "230px",
+                        cursor: "pointer",
+                        border:
+                          selectedImage === image ? "2px solid #1890ff" : "none",
+                      }}
                     onClick={() => setSelectedImage(image)}
                   />
                 </Col>

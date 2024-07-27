@@ -3,7 +3,7 @@ import { Card, Row, Col, Button, Typography } from "antd";
 import Footer from "../components/Footer/Footer";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import { BASE_URL } from "../api/config";
+import { FashionItemApi, FashionItemDetailResponse } from "../api";
 
 const { Title, Paragraph } = Typography;
 
@@ -36,21 +36,20 @@ const styles = {
 const DetailProductAunction: React.FC = () => {
   const { auctionItemID } = useParams<{ auctionItemID: string }>();
   console.log(auctionItemID);
-  const [product, setProduct] = useState<Product | null>(null);
-  const [selectedImage, setSelectedImage] = useState<string>("");
+  const [product, setProduct] = useState<FashionItemDetailResponse | null>(
+    null
+  );
+  const [selectedImage, setSelectedImage] = useState<string | undefined>("");
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await axios.get(
-          `${BASE_URL}/fashionitems/${auctionItemID} `,{
-            headers :{
-              "ngrok-skip-browser-warning": "6942"
-            }
-          }
+        const fashionItemAuction = new FashionItemApi();
+        const response = await fashionItemAuction.apiFashionitemsIdGet(
+          auctionItemID!
         );
-        setProduct(response.data.data);
-        // setSelectedImage(response.data.images[0]);
+        setProduct(response.data.data!);
+        setSelectedImage(response.data.data?.images![0]);
         console.log(response);
       } catch (error) {
         console.error("Error fetching product data:", error);
@@ -74,18 +73,32 @@ const DetailProductAunction: React.FC = () => {
           <Row gutter={[16, 16]} style={{ margin: "10px" }}>
             <Col span={4}>
               <Row gutter={[10, 8]}>
-                <Col span={24}>
-                  <img
-                  // src={image}
-                  // alt={`Thumbnail ${index}`}
-                  // style={{ width: "90%", height: '230px', cursor: "pointer", border: selectedImage === image ? "2px solid #1890ff" : "none" }}
-                  // onClick={() => setSelectedImage(image)}
-                  />
-                </Col>
+                {product.images?.map((image, index) => (
+                  <Col span={24} key={index}>
+                    <img
+                      src={image}
+                      alt={`Thumnail : ${index}`}
+                      style={{
+                        width: "90%",
+                        height: "230px",
+                        cursor: "pointer",
+                        border:
+                          selectedImage === image
+                            ? "2px solid #1890ff"
+                            : "none",
+                      }}
+                      onClick={() => setSelectedImage(image)}
+                    />
+                  </Col>
+                ))}
               </Row>
             </Col>
             <Col span={12}>
-              {/* <img src={selectedImage} alt={product.name} style={{ width: "90%", height: '750px' }} /> */}
+              <img
+                src={selectedImage}
+                alt={product.name!}
+                style={{ width: "90%", height: "750px" }}
+              />
             </Col>
             <Col span={8}>
               <Card title="Product Details">
