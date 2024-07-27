@@ -16,7 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { useCart } from "../../pages/CartContext";
 
 import { FashionItemApi, FashionItemDetailResponse } from "../../api";
-const backgroundImageUrl = require("../Assets/freepik_5229782.jpg");
+import backgroundImageUrl  from "../Assets/freepik_5229782.jpg";
 
 interface Product {
   itemId: any;

@@ -5,7 +5,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { ResultStatus, ShopApi } from '../../api';
 import { EnvironmentOutlined } from '@ant-design/icons';
-const backgroundImageUrl = require("../../components/Assets/background-quang-cao-thoi-trang-quan-ao_025656570.jpg");
+import backgroundImageUrl from "../../components/Assets/background-quang-cao-thoi-trang-quan-ao_025656570.jpg";
 
 
 const Branches: React.FC = () => {
