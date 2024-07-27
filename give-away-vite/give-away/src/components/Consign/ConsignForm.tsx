@@ -9,8 +9,10 @@ import { storage } from "../../pages/Firebase/firebase-config";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import "./ConsignForm.css";
 // import { BASE_URL } from "../../api/config";
+import FormItemLabel from "antd/es/form/FormItemLabel";
 import {
   AccountApi,
+  ConsignSaleApi,
   CreateConsignSaleRequest,
   ResultStatus,
   ShopApi,

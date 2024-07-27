@@ -1,10 +1,10 @@
 // src/components/CarouselComponent.js
 import React from 'react';
 import Slider from 'react-slick';
-import { Card,  } from 'antd';
-import { SettingOutlined } from '@ant-design/icons';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import { Card,  } from 'antd';
+import { SettingOutlined } from '@ant-design/icons';
 
 
 const items = [
@@ -30,7 +30,7 @@ const CarouselComponent = () => {
 
 
   return (
-   <div style={{ padding: '20px' }}>
+   <div style={{ padding: '20px', width:'96%' }}>
       <h2>Secondhand Clothes</h2>
       <Slider {...settings}>
         {items.map(item => (

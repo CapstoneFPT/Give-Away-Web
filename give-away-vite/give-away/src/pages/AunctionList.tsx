@@ -3,7 +3,7 @@ import { Button, Card, Space, Table } from "antd";
 import { Link } from "react-router-dom";
 import moment from "moment";
 import { AuctionApi, AuctionListResponse } from "../api";
-import backgroundImageUrl from '../components/Assets/adobestock_573340270.jpg'
+import backgroundImageUrl from '../components/Assets/adobestock_573340270.jpg';
 const { Column } = Table;
 
 const AunctionList = () => {
