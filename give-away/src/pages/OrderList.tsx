@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Card, Row, Col, Table, Button, Tag, Modal, Form, Select, Input } from "antd";
+import { Card, Row, Col, Table, Button, Tag, Modal, Form, Select, Input, notification } from "antd";
 import NavProfile from "../components/NavProfile/NavProfile";
 import { useNavigate } from "react-router-dom";
 import { AccountApi, OrderApi } from "../api";
@@ -11,16 +11,14 @@ const OrderList = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
-  console.log(selectedOrder)
   const [orderDetails, setOrderDetails] = useState<any[]>([]);
   const [detailsLoading, setDetailsLoading] = useState<boolean>(false);
   const navigate = useNavigate();
+  const [form] = Form.useForm();
+  const userId = JSON.parse(localStorage.getItem("userId") || "null");
 
   useEffect(() => {
     const fetchOrders = async () => {
-      const userId = JSON.parse(localStorage.getItem("userId") || "null");
-      console.log(userId);
-
       if (!userId) {
         setError('User ID not found in localStorage');
         setLoading(false);
@@ -30,8 +28,6 @@ const OrderList = () => {
       try {
         const accountApi = new AccountApi();
         const response = await accountApi.apiAccountsAccountIdOrdersGet(userId);
-        console.log(response.data);
-
         const orders = Array.isArray(response.data) ? response.data : response.data?.data?.items || [];
         setData(orders);
       } catch (err) {
@@ -43,7 +39,7 @@ const OrderList = () => {
     };
 
     fetchOrders();
-  }, []);
+  }, [userId]);
 
   const fetchOrderDetails = async (orderId: string) => {
     setDetailsLoading(true);
@@ -51,18 +47,50 @@ const OrderList = () => {
       const orderApi = new OrderApi();
       const response = await orderApi.apiOrdersOrderIdOrderdetailsGet(orderId);
       setOrderDetails(response.data?.data!.items || []);
-      console.log(response);
     } catch (error) {
       console.error("Failed to fetch order details", error);
-      setOrderDetails(null!);
+      setOrderDetails([]);
     } finally {
       setDetailsLoading(false);
     }
   };
 
-  const handleCheckout = async (order: any) => {
+  const openCheckoutModal = async (order: any) => {
     setSelectedOrder(order);
-    fetchOrderDetails(order.orderId); // Fetch order details when an order is selected
+    await fetchOrderDetails(order.orderId);
+  };
+
+  const handleCheckout = async () => {
+    if (!selectedOrder) return;
+
+    try {
+      const orderApi = new OrderApi();
+      const response = await orderApi.apiOrdersOrderIdPayVnpayPost(selectedOrder.orderId, { memberId: userId });
+      const paymentUrl = response.data.paymentUrl;
+
+      if (paymentUrl) {
+        notification.success({
+          message: 'Checkout Successful',
+          description: 'Redirecting to payment page...',
+        });
+        window.location.href = paymentUrl;
+      } else {
+        notification.error({
+          message: 'Checkout Failed',
+          description: 'Failed to get payment URL',
+        });
+      }
+    } catch (error) {
+      console.error("Failed to process checkout", error);
+      notification.error({
+        message: 'Checkout Error',
+        description: 'Failed to process checkout',
+      });
+    }
+  };
+
+  const formatBalance = (sellingPrice: any) => {
+    return new Intl.NumberFormat('de-DE').format(sellingPrice);
   };
 
   const handleCloseModal = () => {
@@ -71,6 +99,14 @@ const OrderList = () => {
   };
 
   const columns = [
+    {
+      title: 'Product',
+      dataIndex: 'images',
+      key: 'images',
+      render: (images: string) => (
+        <img src={images} alt="" />
+      )
+    },
     {
       title: 'Code Orders',
       dataIndex: 'orderCode',
@@ -109,7 +145,7 @@ const OrderList = () => {
           {record.status === 'AwaitingPayment' ? (
             <Button
               type="primary"
-              onClick={() => handleCheckout(record)}
+              onClick={() => openCheckoutModal(record)}
             >
               Checkout
             </Button>
@@ -189,13 +225,19 @@ const OrderList = () => {
                         {orderDetails.length > 0 ? (
                           orderDetails.map((product) => (
                             <Card key={product.orderDetailId} style={{ marginBottom: '10px' }}>
-                              <p>Product Name: {product.fashionItemDetail?.name}</p>
-                              <p>Price: {product.fashionItemDetail?.sellingPrice}</p>
-                              <p>Color: {product.fashionItemDetail?.color}</p>
-                              <p>Size: {product.fashionItemDetail?.size}</p>
-                              <p>Gender: {product.fashionItemDetail?.gender}</p>
-                              <p>Brand: {product.fashionItemDetail?.brand}</p>
-                              <p>Condition: {product.fashionItemDetail?.condition}%</p>
+                              <Row>
+                                <Col span={12}>
+                                  <p>Product Name: <strong>{product.fashionItemDetail?.name}</strong></p>
+                                  <p>Price: <strong>{product.fashionItemDetail?.sellingPrice}</strong></p>
+                                </Col>
+                                <Col span={12}>
+                                  <p>Color: {product.fashionItemDetail?.color}</p>
+                                  <p>Size: {product.fashionItemDetail?.size}</p>
+                                  <p>Gender: {product.fashionItemDetail?.gender}</p>
+                                  <p>Brand: {product.fashionItemDetail?.brand}</p>
+                                  <p>Condition: {product.fashionItemDetail?.condition}%</p>
+                                </Col>
+                              </Row>
                             </Card>
                           ))
                         ) : (
@@ -213,7 +255,7 @@ const OrderList = () => {
                         paymentMethod: selectedOrder.paymentMethod,
                         recipientName: selectedOrder.recipientName,
                         address: selectedOrder.address,
-                        contactNumber: selectedOrder.contactNumber                       ,
+                        contactNumber: selectedOrder.contactNumber,
                       }}
                     >
                       <Form.Item
@@ -223,7 +265,7 @@ const OrderList = () => {
                         <Select
                           placeholder="Select payment method"
                           style={{ width: 150 }}
-                          
+                          disabled
                         >
                           <Option value="QRCode">QRCode</Option>
                           <Option value="COD">COD</Option>
@@ -243,7 +285,7 @@ const OrderList = () => {
                         <Input placeholder="Address" disabled />
                       </Form.Item>
                       <Form.Item
-                        label="contactNumber"
+                        label="Contact Number"
                         name="contactNumber"
                       >
                         <Input placeholder="Phone" disabled />
@@ -251,8 +293,8 @@ const OrderList = () => {
                     </Form>
                   </Card>
                   <Card title='Total'>
-                    <p>Total Price: {selectedOrder.totalPrice}</p>
-                    <Button type="primary">
+                    <p style={{ marginBottom: '10px', fontSize: '20px', fontWeight: 'bold', color: '#d1d124' }}>Total Price: {formatBalance(selectedOrder.totalPrice)}</p>
+                    <Button type="primary" onClick={handleCheckout}>
                       Checkout
                     </Button>
                   </Card>
