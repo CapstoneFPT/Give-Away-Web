@@ -1,73 +1,196 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { ResultStatus, ShopApi } from '../../api';
-import { Select } from 'antd';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import L from 'leaflet';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { Card, Button, Row, Col, Modal, Spin, message } from "antd";
+import { SmileOutlined as Icon } from "@ant-design/icons";
+import {
+  PointPackageApi,
+  PointPackageListResponse,
 
 
-const { Option } = Select;
+} from "../../api";
 
-const Branches: React.FC = () => {
-  const shopApi = new ShopApi();
-  const [branches, setBranches] = useState<any[]>([]);
-  const [selectedBranch, setSelectedBranch] = useState<any | null>(null);
+type Package = {
+  pointPackageId: string;
+  points: number;
+  price: string;
+};
+
+const PointPackageShop = () => {
+  const [packages, setPackages] = useState<PointPackageListResponse[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedPackage, setSelectedPackage] = useState<PointPackageListResponse | null>(null);
 
   useEffect(() => {
-    const fetchBranches = async () => {
-      try {
-        const response = await shopApi.apiShopsGet();
-        if (response.data.resultStatus !== ResultStatus.Success) {
-          throw new Error(`HTTP error! Status: ${response.data.resultStatus}`);
-        }
-        setBranches(response.data.data || []);
-      } catch (error) {
-        console.error('Failed to fetch branches', error);
-      }
-    };
-    fetchBranches();
+    const userId = JSON.parse(localStorage.getItem("userId") || "null");
+    console.log(userId);
+    // axios
+    //   .get(`${BASE_URL}/pointpackages`, {
+    //     headers: {
+    //       "ngrok-skip-browser-warning": "6942",
+    //     },
+    //   })
+    //   .then((response) => {
+    //     const data = response.data.items;
+    //     if (Array.isArray(data)) {
+    //       setPackages(data);
+    //     } else {
+    //       message.error("Data is not in expected format");
+    //     }
+    //     setIsLoading(false);
+    //   })
+    //   .catch((error) => {
+    //     console.error("There was an error fetching the packages!", error);
+    //     setIsLoading(false);
+    //   });
+
+    async function fetchPointPackages() {
+      const pointPackageApi = new PointPackageApi();
+     
+      const response = await pointPackageApi.apiPointpackagesGet(null!,null!,["Active"]);
+
+     
+      setPackages(response.data.items || []);
+      setIsLoading(false);
+    }
+
+    fetchPointPackages()
   }, []);
 
-  const handleSelectChange = (value: string) => {
-    const branch = branches.find(branch => branch.id === value);
-    setSelectedBranch(branch);
+  const handleBuy = async (pkg: PointPackageListResponse) => {
+    const userId = JSON.parse(localStorage.getItem("userId") || "null");
+    if (!userId) {
+      message.error("User ID not found. Please log in again.");
+      return;
+    }
+
+    // axios
+    //   .post(`${BASE_URL}/pointpackages/${pkg.pointPackageId}/purchase`, {
+    //     memberId: userId,
+
+    //   },{
+    //     headers :{
+    //       "ngrok-skip-browser-warning": "6942"
+    //     }
+    //   })
+    //   .then((response) => {
+    //     const { data } = response;
+    //     if (data && data.paymentUrl) {
+    //       window.location.href = data.paymentUrl; // Redirect to payment URL
+    //     } else {
+    //       message.error("Failed to get payment URL. Please try again.");
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     console.error("There was an error purchasing the package!", error);
+    //     message.error("There was an error purchasing the package!");
+    //   });
+
+    const pointPackageApi = new PointPackageApi();
+    try {
+      console.log(pkg.pointPackageId);
+      console.log(userId)
+      const response =
+       
+        await pointPackageApi.apiPointpackagesPointPackageIdPurchasePost(
+          pkg.pointPackageId!,
+           {
+            memberId: userId,
+          },
+        );
+        
+
+      if (response.data.paymentUrl) {
+        window.location.href = response.data.paymentUrl;
+      } else {
+        message.error("Failed to get payment URL. Please try again.");
+      }
+    } catch (error) {
+      console.error("Point package purchase error", error);
+      message.error("Point package purchase error");
+    }
+  };
+
+  const handleIconClick = (pkg: PointPackageListResponse) => {
+    setIsModalVisible(true);
+    setSelectedPackage(pkg);
+    console.log(pkg.pointPackageId);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
   };
 
   return (
-    <div style={{ display: 'flex' }}>
-      <div style={{ flex: 1 }}>
-        <Select style={{ width: '100%' }} onChange={handleSelectChange} placeholder="Select a branch">
-          {branches.map(branch => (
-            <Option key={branch.id} value={branch.id}>
-              {branch.address}
-            </Option>
-          ))}
-        </Select>
-      </div>
-      <div style={{ flex: 2, height: '500px' }}>
-        <MapContainer center={[10.762622, 106.660172]} zoom={13} style={{ height: '100%', width: '100%' }}>
-          <TileLayer
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          />
-          {selectedBranch && (
-            <Marker
-              position={[selectedBranch.latitude, selectedBranch.longitude]}
-              icon={L.icon({
-                iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
-                iconSize: [25, 41],
-                iconAnchor: [12, 41]
-              })}
-            >
-              <Popup>
-                {selectedBranch.address}
-              </Popup>
-            </Marker>
-          )}
-        </MapContainer>
-      </div>
+    <div className="fund-container">
+      <Card>
+        <h1 style={{ marginBottom: "10px", textAlign: "center" }}>Add Fund</h1>
+        <Row gutter={24}>
+          <Col span={16}>
+            <Row gutter={[24, 24]}>
+              {isLoading ? (
+                <Spin size="large" />
+              ) : packages.length > 0 ? (
+                packages.map((pkg) => (
+                  <Col span={12} key={pkg.pointPackageId}>
+                    <Card
+                      style={{ width: "100%" }}
+                      title={`${pkg.points} Points`}
+                      extra={<Icon onClick={() => handleIconClick(pkg)} />}
+                    >
+                      <p>Price: {pkg.price}</p>
+                    </Card>
+                  </Col>
+                ))
+              ) : (
+                <p>No packages available</p>
+              )}
+            </Row>
+          </Col>
+          <Col span={8}>
+            <Card title="Total">
+              {selectedPackage && (
+                <div>
+                  <p>Points: {selectedPackage.points}</p>
+                  <p>Price: {selectedPackage.price}</p>
+                </div>
+              )}
+              <Button
+                onClick={() => selectedPackage && handleBuy(selectedPackage)}
+              >
+                Checkout
+              </Button>
+            </Card>
+          </Col>
+        </Row>
+      </Card>
+
+      <Modal
+        title="Package Details"
+        open={isModalVisible}
+        onCancel={handleCancel}
+        footer={[
+          <Button key="back" onClick={handleCancel}>
+            Cancel
+          </Button>,
+          <Button
+            key="buy"
+            type="primary"
+            onClick={() => selectedPackage && handleBuy(selectedPackage)}
+          >
+            Buy
+          </Button>,
+        ]}
+      >
+        {selectedPackage && (
+          <div>
+            <p>Points: {selectedPackage.points}</p>
+            <p>Price: {selectedPackage.price}</p>
+          </div>
+        )}
+      </Modal>
     </div>
   );
 };
 
-export default Branches;
+export default PointPackageShop;

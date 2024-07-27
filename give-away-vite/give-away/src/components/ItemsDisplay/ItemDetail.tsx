@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Card, Row, Col, Button, Typography, message } from "antd";
-import Footer from "../Footer/Footer";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 
 import { useParams } from "react-router-dom";
-import axios from "axios";
-import { BASE_URL } from "../../api/config";
 import { FashionItemApi, FashionItemDetailResponse } from "../../api";
 
 const { Title, Paragraph } = Typography;
@@ -16,7 +13,7 @@ const styles = {
     color: "black",
   },
   price: {
-    color: "red",
+    color: "#d1d124",
     fontSize: "30px",
   },
 };
@@ -35,6 +32,7 @@ interface Product {
   images: string[];
 }
 
+
 const ItemDetail: React.FC = () => {
   const { itemId } = useParams<{ itemId: string }>();
   const [product, setProduct] = useState<FashionItemDetailResponse | null>(null);
@@ -42,25 +40,7 @@ const ItemDetail: React.FC = () => {
   console.log(product);
   useEffect(() => {
     if (itemId !== undefined) {
-      // axios
-      //   .get(`${BASE_URL}/fashionitems/${itemId}`,{
-      //     headers :{
-      //       "ngrok-skip-browser-warning": "6942"
-      //     }
-      //   })
-      //   .then((response) => {
-      //     const data = response.data.data;
-      //     setProduct(data);
-      //     console.log(data);
-      //     // setSelectedImage(data.data.images[0]);
-      //   })
-      //   .catch((error) => {
-      //     console.error(
-      //       "There was an error fetching the product details!",
-      //       error
-      //     );
-      //     message.error("Failed to fetch product details.");
-      //   });
+    
 
       async function fetchFashionItemDetails() {
         try {
@@ -83,6 +63,9 @@ const ItemDetail: React.FC = () => {
     
 
   }, []);
+  const formatBalance = (sellingPrice:any) => {
+    return new Intl.NumberFormat('de-DE').format(sellingPrice);
+  };
 
   if (!product) {
     return <p>...Loading</p>;
@@ -145,7 +128,7 @@ const ItemDetail: React.FC = () => {
               </Paragraph>
               <Paragraph style={styles.para}>
                 <strong style={styles.price}>
-                  Price: {product.sellingPrice} VND
+                  Price: {formatBalance(product.sellingPrice)} VND
                 </strong>
               </Paragraph>
 

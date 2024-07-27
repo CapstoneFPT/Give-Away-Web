@@ -5,6 +5,7 @@ import cart_icon from "../Assets/cart_icon.png";
 import { Link } from "react-router-dom";
 import Login from "../../pages/Login";
 import SearchBar from "../SearchBar/SearchBar";
+import axios from "axios";
 import { AccountApi } from "../../api";
 import { useCart } from "../../pages/CartContext";
 

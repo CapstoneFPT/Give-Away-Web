@@ -12,6 +12,7 @@ import {
   Modal,
   message,
   notification,
+  
 } from "antd";
 import { useCart } from "./CartContext";
 import { DeleteOutlined } from "@ant-design/icons";
@@ -82,7 +83,7 @@ const Cart: React.FC = () => {
         recipientName: validateResult.recipientName,
         address: validateResult.address,
         phone: validateResult.phone,
-        listItemId: selectedItems, // This is now an array of strings
+        listItemId: selectedItems, 
       };
       console.log("Order Data:", orderData);
 
@@ -154,6 +155,10 @@ const Cart: React.FC = () => {
       });
     }
   };
+  const formatBalance = (balance:any) => {
+    return new Intl.NumberFormat('de-DE').format(balance);
+  };
+  
   const calculateTotalPrice = () => {
     return state.cartItems
       .filter((item) => selectedItems.includes(item.itemId!))
@@ -171,12 +176,19 @@ const Cart: React.FC = () => {
             <Card key={item.itemId} style={{ marginBottom: "10px" }}>
               <Row>
                 <Col span={8}>
-                  <Typography>{item.name}</Typography>
+                
+                <img
+                style={{ height: "250px", objectFit: "cover" }}
+                 src={item.images && Array.isArray(item.images) ? item.images[0] : "N/A"} alt={item.name ? item.name : "N/A"}
+                 />
+                
+
+                  <Typography>Price: {formatBalance(item.sellingPrice)} VND</Typography>
                 </Col>
                 <Col span={12}>
-                  <Typography>Price: {item.sellingPrice} VND</Typography>
+                <Typography> Product Name: {item.name}</Typography>
                   <Typography>Size: {item.size}</Typography>
-                  <Typography>Branch: {item.shopAddress}</Typography>
+                  {/* <Typography>Branch: {item.shopAddress}</Typography> */}
                   <Typography>Color: {item.color}</Typography>
                   <Typography>Brand: {item.brand}</Typography>
                   <Typography>Gender: {item.gender}</Typography>
