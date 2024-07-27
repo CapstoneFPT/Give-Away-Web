@@ -35,6 +35,8 @@ const product: Product = {
 const Auction: React.FC = () => {
   const { auctionID } = useParams();
   console.log(auctionID);
+  const {auctionItemId} = useParams();
+  console.log(auctionItemId)
   const [selectedImage, setSelectedImage] = useState<string>(product.images[0]);
   const [bids, setBids] = useState<Bid[]>([]);
   const [selectedBid, setSelectedBid] = useState<number | undefined>(undefined);

@@ -4,6 +4,7 @@ import type { MenuProps } from "antd";
 import { CaretDownOutlined } from "@ant-design/icons";
 import DisplayItem from "../components/ItemsDisplay/ItemsDisplay";
 import { icons } from "antd/es/image/PreviewGroup";
+import { BASE_URL } from "../api/config";
 
 interface FashionItem {
   itemId: string;
@@ -56,9 +57,9 @@ const Branches: React.FC = () => {
     const fetchData = async () => {
       try {
         const [categoryResponse, fashionItemResponse, shopResponse] = await Promise.all([
-          fetch(`http://giveawayproject.jettonetto.org:8080/api/categories/tree?shopId=${selectedShopId || ''}`),
-          fetch(`http://giveawayproject.jettonetto.org:8080/api/fashionitems?Status=Available&Type=Itembase&Type=ConsignedForSale&ShopId=${selectedShopId || ''}`),
-          fetch(`http://giveawayproject.jettonetto.org:8080/api/shops`),
+          fetch(`${BASE_URL + "/api"}/categories/tree?shopId=${selectedShopId || ''}`),
+          fetch(`${BASE_URL + "/api"}/fashionitems?Status=Available&Type=Itembase&Type=ConsignedForSale&ShopId=${selectedShopId || ''}`),
+          fetch(`${BASE_URL + "/api"}/shops`),
         ]);
         console.log(selectedShopId);
         if (!categoryResponse.ok || !fashionItemResponse.ok || !shopResponse.ok) {
@@ -104,7 +105,7 @@ const Branches: React.FC = () => {
     }
     const filter = async () => {
       try {
-        const response = await fetch(`http://giveawayproject.jettonetto.org:8080/api/fashionitems?Status=Available&Type=Itembase&Type=ConsignedForSale&ShopId=${key}`);
+        const response = await fetch(`${BASE_URL}/fashionitems?Status=Available&Type=Itembase&Type=ConsignedForSale&ShopId=${key}`);
         const data = await response.json();
 
         setTotalCount(data.data.totalCount);
@@ -128,7 +129,7 @@ const Branches: React.FC = () => {
   const filterByCategory = async (categoryId: string) => {
     try {
       const shopIdParam = selectedShopId ? `${selectedShopId}` : "";
-      const response = await fetch(` http://giveawayproject.jettonetto.org:8080/api/categories/${categoryId}/fahsionitems?ShopId=${shopIdParam}`);
+      const response = await fetch(`${BASE_URL}/categories/${categoryId}/fahsionitems?ShopId=${shopIdParam}`);
       
       const data = await response.json();
       console.log('cate',categoryId)
@@ -199,7 +200,7 @@ const Branches: React.FC = () => {
 
     const fetchItems = async () => {
       try {
-        const response = await fetch(`http://giveawayproject.jettonetto.org:8080/api/fashionitems?Status=Available&Type=Itembase&Type=ConsignedForSale&pageNumber=${page}&pageSize=${pageSize}${stateApiLink}${categoryApiLink}`);
+        const response = await fetch(`${BASE_URL}/fashionitems?Status=Available&Type=Itembase&Type=ConsignedForSale&pageNumber=${page}&pageSize=${pageSize}${stateApiLink}${categoryApiLink}`);
         const data = await response.json();
 
         setTotalCount(data.data.totalCount);

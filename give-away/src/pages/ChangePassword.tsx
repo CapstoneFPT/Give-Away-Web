@@ -4,6 +4,7 @@ import { Button, Card, Row, Col, Form, Input, message, Modal } from "antd";
 import axios from "axios";
 import NavProfile from "../components/NavProfile/NavProfile";
 import "./CSS/ChangePassword.css";
+import { BASE_URL } from "../api/config";
 
 interface ChangePasswordFormValues {
   currentPassword: string;
@@ -41,16 +42,15 @@ const ChangePassword: React.FC = () => {
         console.log("userId", userId);
         console.log(values);
         axios
-          .put(
-            `http://giveawayproject.jettonetto.org:8080/api/auth/${userId}/change-password`,
-            {
-              currentPassword: values.currentPassword,
-              newPassword: values.newPassword,
-              confirmNewPassword: values.confirmPassword,
-              
-              
+          .put(`${BASE_URL}/auth/${userId}/change-password`, {
+            currentPassword: values.currentPassword,
+            newPassword: values.newPassword,
+            confirmNewPassword: values.confirmPassword,
+          },{
+            headers :{
+              "ngrok-skip-browser-warning": "6942"
             }
-          )
+          })
           .then((response) => {
             message.success("Password changed successfully!");
             setIsFormChanged(false);

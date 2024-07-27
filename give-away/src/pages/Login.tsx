@@ -1,17 +1,16 @@
-import React from "react";
-import { useState, useEffect } from "react";
-import { Button, Modal } from "antd";
+import React, { useState, useEffect } from "react";
+import { Button, Modal, Input, Dropdown } from "antd";
 import {
   UserOutlined,
   EyeOutlined,
   EyeInvisibleOutlined,
   GoogleOutlined,
 } from "@ant-design/icons";
-import { Link } from "react-router-dom";
-import { Input, Dropdown } from "antd";
+import { Link, useNavigate } from "react-router-dom";
 import type { MenuProps } from "antd";
 
-import { ApiAuthLoginPostRequest, AuthApi } from "../api/apis/AuthApi";
+import { useCart } from "../pages/CartContext";
+import { AuthApi, LoginRequest } from "../api";
 
 const Login = () => {
   const [isModalLoginOpen, setIsModalLoginOpen] = useState(false);
@@ -20,36 +19,20 @@ const Login = () => {
   const [password, setPassword] = useState("");
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const user = localStorage.getItem("user");
-  const userId = localStorage.getItem("userId");
-  const role = localStorage.getItem("role");
-  console.log(user);
-  console.log(userId);
-  console.log(role);
+  const navigate = useNavigate();
+  const { dispatch } = useCart();
+
   useEffect(() => {
     const role = localStorage.getItem("role");
-
     if (role) {
       setIsLoggedIn(true);
-      // Any additional setup based on the user being logged in
     }
   }, []);
 
   const showModalLogin = () => {
-    // your logic here
-    setIsModalLoginOpen(true); // show modal
+    setIsModalLoginOpen(true);
   };
 
-  const handleOk = () => {
-    setIsModalLoginOpen(false);
-  };
-  // const history = useHistory
-  const onClickRegister = () => {
-    setIsModalLoginOpen(false);
-  };
-  const onClickForgotPassword = () => {
-    setIsModalLoginOpen(false);
-  };
   const handleCancel = () => {
     setIsModalLoginOpen(false);
   };
@@ -57,34 +40,29 @@ const Login = () => {
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
   };
+
   const handleLogin = async () => {
     try {
-      const request: ApiAuthLoginPostRequest = {
-        loginRequest: {
-          email: email,
-          password: password,
-        },
+      const request: LoginRequest = {
+        email,
+        password,
       };
 
       const authApi = new AuthApi();
       const response = await authApi.apiAuthLoginPost(request);
 
-      if (response.resultStatus === "Success") {
-        console.log("Login successfully");
+      if (response.data.resultStatus === "Success") {
+        const userId = response.data?.data?.id ?? null;
         localStorage.setItem(
           "user",
-          JSON.stringify(response.data?.accessToken)
+          JSON.stringify(response.data?.data?.accessToken)
         );
-        localStorage.setItem("userId", JSON.stringify(response.data?.id));
-        localStorage.setItem("role", JSON.stringify(response.data?.role));
-        setTimeout(() => {
-          const user = localStorage.getItem("user");
-          const userId = localStorage.getItem("userId");
-          const role = localStorage.getItem("role");
-          console.log(user);
-          console.log(userId);
-          console.log(role);
-        }, 100);
+        localStorage.setItem("userId", JSON.stringify(userId));
+        localStorage.setItem("role", JSON.stringify(response.data?.data?.role));
+
+        dispatch({ type: "CLEAR_CART" }); // Clear cart on login
+        dispatch({ type: "SET_USER", payload: userId });
+
         setIsModalLoginOpen(false); // hide modal after login
         setIsLoggedIn(true);
       } else {
@@ -94,26 +72,20 @@ const Login = () => {
       console.error("An error occurred while trying to login:", error);
     }
   };
+
   const handleLogout = () => {
-    setIsModalLoginOpen(false);
     localStorage.removeItem("user");
     localStorage.removeItem("userId");
     localStorage.removeItem("role");
+    dispatch({ type: "CLEAR_CART" }); // Clear cart in context
+    localStorage.removeItem("cart"); // Clear cart from localStorage
+    // localStorage.clear();
     setIsLoggedIn(false);
   };
+
   const dropDownItems: MenuProps["items"] = [
-    {
-      key: "1",
-      label: <Link to="/consign">Consign</Link>,
-    },
-    {
-      key: "2",
-      label: <Link to="/add-fund">Add Fund</Link>,
-    },
-    {
-      key: "3",
-      label: <Link to="/profile">Profile</Link>,
-    },
+    { key: "2", label: <Link to="/add-fund">Add Fund</Link> },
+    { key: "3", label: <Link to="/profile">Profile</Link> },
     {
       key: "4",
       label: (
@@ -123,6 +95,7 @@ const Login = () => {
       ),
     },
   ];
+
   const styles: { [key: string]: React.CSSProperties } = {
     buttonLogin: {
       backgroundColor: "#000000",
@@ -157,9 +130,6 @@ const Login = () => {
       backgroundColor: "#000000",
       color: "white",
       width: "90%",
-    },
-    buttonLoginModal: {
-      backgroundColor: "#434040",
     },
     buttonMenu: {
       backgroundColor: "#000000",
@@ -204,7 +174,6 @@ const Login = () => {
         width={500}
         footer={null}
         onCancel={handleCancel}
-        onOk={handleOk}
         open={isModalLoginOpen}
       >
         <div style={{ height: "550px" }}>
@@ -245,8 +214,7 @@ const Login = () => {
           </div>
           <div style={{ textAlign: "center" }}>
             <Button style={styles.buttonLoginModalLayout} onClick={handleLogin}>
-              {" "}
-              Login{" "}
+              Login
             </Button>
           </div>
           <div style={{ textAlign: "center", marginTop: "30px" }}>
@@ -258,16 +226,16 @@ const Login = () => {
           </div>
           <div style={{ marginTop: "20px", textAlign: "center" }}>
             <div style={{ marginBottom: "10px" }}>
-              Don't have any account?
-              <Link onClick={onClickRegister} to={"/register"}>
+              Don't have an account?
+              <Link to="/register" onClick={handleCancel}>
                 {" "}
-                Register
+                Register{" "}
               </Link>
             </div>
             <div>
-              <Link onClick={onClickForgotPassword} to="/forgotPassword">
+              <Link to="/forgotPassword" onClick={handleCancel}>
                 {" "}
-                Forgot password
+                Forgot password{" "}
               </Link>
             </div>
           </div>

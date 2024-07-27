@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { MailOutlined, PhoneOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, Card, Row, Col, Form, Input, notification, Modal } from "antd"; 
-import axios from "axios"; 
+import { Button, Card, Row, Col, Form, Input, notification, Modal } from "antd";
+import axios from "axios";
 import img from "../components/Assets/nam2.png";
 import NavProfile from "../components/NavProfile/NavProfile";
-import './CSS/Profile.css'; 
+import "./CSS/Profile.css";
+
+import { AccountApi, UpdateAccountRequest } from "../api";
 
 const handlePhoneInput = (e: React.ChangeEvent<HTMLInputElement>) => {
   e.target.value = e.target.value.replace(/[^0-9]/g, "");
@@ -13,31 +15,31 @@ const handlePhoneInput = (e: React.ChangeEvent<HTMLInputElement>) => {
 const Profile: React.FC = () => {
   const [userData, setUserData] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
-  const [form] = Form.useForm(); 
-  const [isFormChanged, setIsFormChanged] = useState(false); 
+  const [form] = Form.useForm();
+  const [isFormChanged, setIsFormChanged] = useState(false);
 
   useEffect(() => {
     const userId = JSON.parse(localStorage.getItem("userId") || "null");
     console.log(userId);
     if (userId) {
-      axios
-        .get(
-          `http://giveawayproject.jettonetto.org:8080/api/accounts/${userId}`
-        )
-        .then((response) => {
+      async function fetchUserData() {
+        try {
+          const accountApi = new AccountApi();
+          const response = await accountApi.apiAccountsIdGet(userId);
+
           setUserData(response.data);
           form.setFieldsValue({
-            fullname: response.data.data.fullname,
-            phone: response.data.data.phone,
-            email: response.data.data.email,
+            fullname: response.data?.data?.fullname!,
+            phone: response.data?.data?.phone!,
+           email: response.data.data?.email
           });
-          console.log(form.getFieldsValue());
-          console.log(response.data.data.fullname);
-        })
-        .catch((error) => {
-          console.error("There was an error fetching the user data!", error);
+        } catch (error) {
+          console.error("Error fetching user data:", error);
           setError("Failed to fetch user data. Please try again later.");
-        });
+        }
+      }
+
+      fetchUserData();
     } else {
       setError("User ID not found in local storage.");
     }
@@ -47,33 +49,63 @@ const Profile: React.FC = () => {
     Modal.confirm({
       title: "Confirm",
       content: "Are you sure you want to save the changes?",
-      okText: "Confirm", 
-      okButtonProps: { className: 'custom-confirm-button' }, 
-      cancelButtonProps: { className: 'custom-cancel-button' }, 
-      onOk: () => {
+      okText: "Confirm",
+      okButtonProps: { className: "custom-confirm-button" },
+      cancelButtonProps: { className: "custom-cancel-button" },
+      onOk: async () => {
         const userId = JSON.parse(localStorage.getItem("userId") || "null");
         if (userId) {
-          form.validateFields().then((values) => {
-            axios
-              .put(
-                `http://giveawayproject.jettonetto.org:8080/api/accounts/${userId}`,
-                values
-              )
-              .then((response) => {
-                notification.success({
-                  message: "Success",
-                  description: "User data updated successfully!",
-                });
-                setIsFormChanged(false); 
-              })
-              .catch((error) => {
-                console.error("There was an error updating the user data!", error);
-                notification.error({
-                  message: "Error",
-                  description: "Failed to update user data. Please try again later.",
-                });
-              });
-          });
+          // form.validateFields().then((values) => {
+          //   axios
+          //     .put(`${BASE_URL}/accounts/${userId}`, values, {
+          //       headers: {
+          //         "ngrok-skip-browser-warning": "6942",
+          //       },
+          //     })
+          //     .then((response) => {
+          //       notification.success({
+          //         message: "Success",
+          //         description: "User data updated successfully!",
+          //       });
+          //       setIsFormChanged(false);
+          //     })
+          //     .catch((error) => {
+          //       console.error(
+          //         "There was an error updating the user data!",
+          //         error
+          //       );
+          //       notification.error({
+          //         message: "Error",
+          //         description:
+          //           "Failed to update user data. Please try again later.",
+          //       });
+          //     });
+          // });
+
+          const result = await form.validateFields();
+          const accountApi = new AccountApi();
+
+          try {
+            await accountApi.apiAccountsAccountIdPut(
+              userId,{
+                fullname: result.fullname,
+                phone : result.phone
+              }
+            );
+
+            notification.success({
+              message: "Success",
+              description: "User data updated successfully!",
+            });
+            setIsFormChanged(false);
+          } catch (error) {
+            console.error("There was an error updating the user data!", error);
+            notification.error({
+              message: "Error",
+              description:
+                "Failed to update user data. Please try again later.",
+            });
+          }
         }
       },
     });
@@ -169,8 +201,8 @@ const Profile: React.FC = () => {
                           color: "white",
                           marginLeft: "480px",
                         }}
-                        onClick={handleSave} 
-                        disabled={!isFormChanged} 
+                        onClick={handleSave}
+                        disabled={!isFormChanged}
                       >
                         Save
                       </Button>

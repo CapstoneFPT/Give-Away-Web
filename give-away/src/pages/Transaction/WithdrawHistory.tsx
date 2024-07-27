@@ -1,103 +1,63 @@
-import React, {  useState } from "react";
-import {  Card, Row, Col, Table } from "antd";
+import React, { useState, useEffect } from "react";
+import { Card, Row, Col, Table } from "antd";
 import NavProfile from "../../components/NavProfile/NavProfile";
+import axios from "axios";
+import { BASE_URL } from "../../api/config";
+import { AccountApi } from "../../api";
+import { GetWithdrawsResponse } from "../../api";
 
 const WithdrawHistory = () => {
-    // const [data, setData] = useState([]);
+  const userId = JSON.parse(localStorage.getItem("userId") || "null");
+  console.log(userId);
 
-  // // Giả sử bạn có một API để lấy dữ liệu lịch sử đấu giá
-  // useEffect(() => {
-  //   // Thay thế đường dẫn dưới đây bằng API thực tế của bạn
-  //   fetch('https://mockapi.io/endpoint/auction-history')
-  //     .then(response => response.json())
-  //     .then(data => setData(data))
-  //     .catch(error => console.error('Error fetching data:', error));
-  // }, []);
-  const [data] = useState([
-    {
-      id: '1',
-      itemName: 'Áo da lộn',
-      auctionDate: '2024-06-01',
-      bidPrice: '200 USD',
-      seller: 'Nguyễn Văn A',
-      image: 'https://img.freepik.com/free-psd-premium/3d-illustration-concept-with-background-pattern_24877-7475.jpg?size=338&ext=jpg&ga=GA1.1&semt=sph',
-      status: 'Won'
-    },
-    {
-      id: '2',
-      itemName: 'Giày tây',
-      auctionDate: '2024-05-15',
-      bidPrice: '1500 USD',
-      seller: 'Trần Thị B',
-      image: 'https://img.freepik.com/free-psd-premium/3d-illustration-concept-with-background-pattern_24877-7475.jpg?size=338&ext=jpg&ga=GA1.1&semt=sph',
-      status: 'Won'
-    },
-    {
-      id: '3',
-      itemName: 'Áo lông cừu',
-      auctionDate: '2024-04-22',
-      bidPrice: '300 USD',
-      seller: 'Lê Văn C',
-      image: 'https://img.freepik.com/free-psd-premium/3d-illustration-concept-with-background-pattern_24877-7475.jpg?size=338&ext=jpg&ga=GA1.1&semt=sph',
-      status: 'Won'
-    },
-    {
-      id: '4',
-      itemName: 'Giày da cá sấu',
-      auctionDate: '2024-03-30',
-      bidPrice: '500 USD',
-      seller: 'Phạm Thị D',
-      image: 'https://img.freepik.com/free-psd-premium/3d-illustration-concept-with-background-pattern_24877-7475.jpg?size=338&ext=jpg&ga=GA1.1&semt=sph',
-      status: 'Won'
-    },
-    {
-      id: '5',
-      itemName: 'Quần lông gấu',
-      auctionDate: '2024-02-18',
-      bidPrice: '700 USD',
-      seller: 'Nguyễn Văn E',
-      image: 'https://img.freepik.com/free-psd-premium/3d-illustration-concept-with-background-pattern_24877-7475.jpg?size=338&ext=jpg&ga=GA1.1&semt=sph',
-      status: 'Won'
-    },
-    {
-      id: '6',
-      itemName: 'Áo khoác lông ngỗng',
-      auctionDate: '2024-01-25',
-      bidPrice: '450 USD',
-      seller: 'Trần Thị F',
-      image: 'https://img.freepik.com/free-psd-premium/3d-illustration-concept-with-background-pattern_24877-7475.jpg?size=338&ext=jpg&ga=GA1.1&semt=sph',
-      status: 'Won'
-    },
-  ]);
+  const [data, setData] = useState<GetWithdrawsResponse[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // const response = await axios.get(`${BASE_URL}/accounts/${userId}/withdraws`);
+        const accountApi =new AccountApi();
+        const response = await accountApi.apiAccountsAccountIdWithdrawsGet( userId);
+        const transactions = response.data.items; // Extracting transactions array from the response object
+        setData(transactions || []);
+        console.log(transactions)
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, [userId]);
+
   const columns = [
     {
-      title: 'Product name',
-      dataIndex: 'itemName',
-      key: 'itemName',
+      title: 'Amount ',
+      dataIndex: 'amount',
+      key: 'amount',
+    },
+    
+    {
+      title: 'Created Date ',
+      dataIndex: 'createdDate',
+      key: 'createdDate',
     },
     {
-      title: 'Image',
-      dataIndex: 'image',
-      key: 'image',
-      render: (image: string) => (
-        <img src={image} alt="Product Image" style={{ width: '100px', height: '100px' }} />
-      ),
+      title: 'Bank Account ',
+      dataIndex: 'bankAccountNumber',
+      key: 'bankAccountNumber',
     },
     {
-      title: 'Auction date',
-      dataIndex: 'auctionDate',
-      key: 'auctionDate',
+      title: 'Bank Name ',
+      dataIndex: 'bankAccountName',
+      key: 'bankAccountName',
     },
     {
-      title: 'Successful bid price',
-      dataIndex: 'bidPrice',
-      key: 'bidPrice',
+      title: 'Bank ',
+      dataIndex: 'bank',
+      key: 'bank',
     },
-    {
-      title: 'Shop',
-      dataIndex: 'seller',
-      key: 'seller',
-    },
+
+   
     {
       title: 'Status',
       dataIndex: 'status',
@@ -107,41 +67,39 @@ const WithdrawHistory = () => {
 
   return (
     <Card>
-    <Row gutter={[16, 16]}>
-      <Col span={5}>
-        <NavProfile/>
-      </Col>
-      <Col span={19}>
-        <Card
-          style={{
-            borderRadius: "10px",
-            boxShadow: "2px 2px 7px #cbc1c1",
-          }}
-        >
-          <h3
+      <Row gutter={[16, 16]}>
+        <Col span={5}>
+          <NavProfile/>
+        </Col>
+        <Col span={19}>
+          <Card
             style={{
-              fontSize: "40px",
-              fontWeight: "bold",
-              textAlign: "center",
-              marginBottom: "10px",
+              borderRadius: "10px",
+              boxShadow: "2px 2px 7px #cbc1c1",
             }}
           >
-            Withdraw history
-           
-          </h3>
-          <Table
-           
-            dataSource={data}
-            columns={columns}
-            rowKey="id"
-            pagination={{ pageSize: 4 }}
-            style={{ marginTop: '20px' }}
-          />
-        </Card>
-      </Col>
-    </Row>
-  </Card>
-  )
+            <h3
+              style={{
+                fontSize: "40px",
+                fontWeight: "bold",
+                textAlign: "center",
+                marginBottom: "10px",
+              }}
+            >
+              Withdraw history
+            </h3>
+            <Table
+              dataSource={data}
+              columns={columns}
+              rowKey="id"
+              pagination={{ pageSize: 4 }}
+              style={{ marginTop: '20px' }}
+            />
+          </Card>
+        </Col>
+      </Row>
+    </Card>
+  );
 }
 
-export default WithdrawHistory
+export default WithdrawHistory;

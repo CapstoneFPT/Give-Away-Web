@@ -104,3 +104,6 @@
         </Content>
       </Layout>
     </Layout>
+
+
+                  {/* <Link to = '/itemDetail'> */}
