@@ -1,0 +1,29 @@
+.shop-category {
+  background-color: #f9f9f9;
+  padding: 20px;
+}
+.shopcategory-content {
+  display: flex;
+  justify-content: space-between;
+  margin: 20px 0;
+}
+.shop-category-header {
+  width: 100%;
+  margin-bottom: 20px;
+}
+.shop-category-header h1 {
+  text-align: center;
+}
+.shopcategory-products {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 50px;
+  justify-items: center;
+  align-items: center;
+  flex-grow: 1;
+}
+
+.shopcategory-loadmore {
+  display: flex;
+  justify-content: center;
+}

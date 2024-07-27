@@ -1,0 +1,109 @@
+"itemId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "type": "ItemBase",
+        "sellingPrice": 0,
+        "name": "string",
+        "note": "string",
+        "value": 0,
+        "condition": "string",
+        "consignDuration": 0,
+        "status": "Available",
+        "shopAddress": "string",
+        "shopId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "startDate": "2024-07-03T05:48:00.237Z",
+        "endDate": "2024-07-03T05:48:00.237Z",
+        "consigner": "string",
+        "categoryName": "string",
+        "size": "XS",
+        "color": "string",
+        "brand": "string",
+        "gender": "Male"
+
+
+
+
+
+        <Layout>
+      <Sider width={210} style={{ background: "#fff", marginTop: "20px" }}>
+        <Button
+          style={{ width: "100px", color: "white", backgroundColor: "black", marginBottom: "20px", marginTop: "10px", marginLeft: "10px" }}
+          onClick={toggleFilters}
+        >
+          {filtersVisible ? "HIDE FILTERS" : "SHOW FILTERS"}
+        </Button>
+        
+        <Menu
+          mode="inline"
+          defaultSelectedKeys={["1"]}
+          style={{ height: "100%", borderRight: 0 }}
+          onClick={handleMenuClick}
+        >
+          <Menu.Item key="1">Category 1</Menu.Item>
+          <Menu.Item key="2">Category 2</Menu.Item>
+          <Menu.Item key="3">Category 3</Menu.Item>
+          {/* Add more categories as needed */}
+        </Menu>
+      </Sider>
+      <Layout style={{ padding: "0 24px 24px" }}>
+        <Content>
+          <div style={{ textAlign: "center", marginBottom: "15px" }}>
+            <Title level={1}>
+              {props.category.charAt(0).toUpperCase() + props.category.slice(1)}{" "}
+              Collection
+            </Title>
+          </div>
+
+          <div>
+            {filtersVisible && (
+              <div style={{ marginBottom: "20px" }}>
+                {/* Add your filter components here */}
+              </div>
+            )}
+            <Row gutter={[16, 16]}>
+              {filteredProducts.map((item: any) => {
+                if (props.category === item.category) {
+                  return (
+                    <Col key={item.id} xs={22} sm={12} md={8} lg={4} >
+                      <Card
+                        hoverable
+                        onClick={() =>
+                          navigate(
+                            `/${item.category}/${item.clothType}/${item.name}`
+                          )
+                        }
+                        cover={<img alt={item.name} src={item.image} />}
+                      >
+                        <Card.Meta
+                          title={item.name}
+                          description={`New Price: ${item.new_price} - Old Price: ${item.old_price}`}
+                        />
+                        <Button
+                          type="primary"
+                          style={{
+                            marginTop: "10px",
+                            color: "white",
+                            backgroundColor: "black",
+                            width: "100%",
+                            height: "30px",
+                          }}
+                          onClick={() => addToCart(item)}
+                        >
+                          Add to Cart
+                        </Button>
+                      </Card>
+                    </Col>
+                  );
+                } else {
+                  return null;
+                }
+              })}
+            </Row>
+          </div>
+          <div style={{ textAlign: "center", marginTop: "20px" }}>
+            <Button type="primary">Explore more</Button>
+          </div>
+        </Content>
+      </Layout>
+    </Layout>
+
+
+                  {/* <Link to = '/itemDetail'> */}
