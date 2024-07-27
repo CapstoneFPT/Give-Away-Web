@@ -36,8 +36,7 @@ import ItemDisplayHome from "./components/ItemsDisplay/ItemDisplayHome";
 import CarouselComponent from "./components/Navbar/CarouselComponent";
 import Search from "./pages/MainProduct/Search";
 import Branches from "./components/Branches/Branches";
-
-function App(): JSX.Element {
+function App() {
   return (
     <BrowserRouter>
       <div>
@@ -263,7 +262,6 @@ function App(): JSX.Element {
               path="/branch"
               element={
                 <>
-                 
                   <Branches />
                 </>
               }
@@ -291,13 +289,17 @@ function App(): JSX.Element {
               }
             />
             <Route
-            path="/search"
-            element={
-              <>  <Navbar />
+              path="/search"
+              element={
+                <>
+                  {" "}
+                  <Navbar />
                   <Breadcrumb />
                   <Search />
-                  <Footer /></>
-            }/>
+                  <Footer />
+                </>
+              }
+            />
             <Route
               path="/itemDetail/:itemId"
               element={
@@ -314,22 +316,6 @@ function App(): JSX.Element {
                 <>
                   <Navbar />
                   <ImageUpload />
-                </>
-              }
-            />
-            <Route
-              path="/" // Thêm route cho component upload ảnh
-              element={
-                <>
-                  <ItemDisplayHome />
-                </>
-              }
-            />
-             <Route
-              path="/" // Thêm route cho component upload ảnh
-              element={
-                <>
-                  <CarouselComponent />
                 </>
               }
             />

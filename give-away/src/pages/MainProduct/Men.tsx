@@ -7,7 +7,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../CartContext";
 import { FashionItemApi, FashionItemDetailResponse } from "../../api";
-const backgroundImageUrl = require('../../components/Assets/shutterstock_455310238.jpg');
+import backgroundImageUrl from '../../components/Assets/shutterstock_455310238.jpg'
 
 const Men: React.FC = () => {
   const { dispatch, isItemInCart } = useCart();

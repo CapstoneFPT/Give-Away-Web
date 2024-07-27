@@ -16,7 +16,7 @@ import { Content } from "antd/es/layout/layout";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../CartContext";
 import { FashionItemApi, FashionItemDetailResponse } from "../../api";
-const backgroundImageUrl = require("../../components/Assets/freepik_5229782.jpg");
+import backgroundImageUrl  from "../../components/Assets/freepik_5229782.jpg"
 
 const Women: React.FC = () => {
   const { dispatch, isItemInCart } = useCart();
