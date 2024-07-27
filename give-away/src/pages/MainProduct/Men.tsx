@@ -68,6 +68,9 @@ const Men: React.FC = () => {
       console.log("Adding item to cart with itemId:", product.itemId);
     }
   };
+  const formatBalance = (sellingPrice:any) => {
+    return new Intl.NumberFormat('de-DE').format(sellingPrice);
+  };
 
   const goToDetailPage = (itemId: any) => {
     console.log("Navigating to itemDetail with itemId:", itemId);
@@ -123,7 +126,7 @@ const Men: React.FC = () => {
                     >
                       <Card.Meta
                         title={product.name}
-                        description={`${product.sellingPrice} VND`}
+                        description={`${formatBalance(product.sellingPrice)} VND`}
                         
                       />
                         <div style={{ textAlign: "center", marginTop: "5px" }}>

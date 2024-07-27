@@ -47,14 +47,7 @@ const ItemDisplayHome: React.FC = () => {
   const fetchProducts = async (page: number) => {
     setIsLoading(true);
     try {
-      // const response = await axios.get(
-      //   `${BASE_URL}/fashionitems?PageSize=${pageSize}&Status=Available&Type=ItemBase&Type=ConsignedForSale&pageNumber=${page}`,
-      //   {
-      //     headers: {
-      //       "ngrok-skip-browser-warning": "6942",
-      //     },
-      //   }
-      // );
+     
       const fashionItemApi = new FashionItemApi();
       const response = await fashionItemApi.apiFashionitemsGet(
        null!,page,pageSize,userId,["Available"],["ConsignedForSale","ItemBase"]
@@ -89,6 +82,9 @@ const ItemDisplayHome: React.FC = () => {
       });
       console.log("Adding item to cart with itemId:", product.itemId);
     }
+  };
+  const formatBalance = (sellingPrice:any) => {
+    return new Intl.NumberFormat('de-DE').format(sellingPrice);
   };
 
   const goToDetailPage = (itemId: any) => {
@@ -135,7 +131,7 @@ const ItemDisplayHome: React.FC = () => {
                   <Card.Meta
                     style={{ height: "60px" }}
                     title={product.name}
-                    description={`${product.sellingPrice} VND`}
+                    description={`${formatBalance(product.sellingPrice)} VND`}
                   />
                   <div style={{ textAlign: "center", marginTop: "5px" }}>
                     <Button
