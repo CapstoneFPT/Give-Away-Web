@@ -1,5 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { Layout, Menu, Button, Row, Col, Card, Pagination, Spin, notification } from "antd";
+import {
+  Layout,
+  Menu,
+  Button,
+  Row,
+  Col,
+  Card,
+  Pagination,
+  Spin,
+  notification,
+} from "antd";
 import Sider from "antd/es/layout/Sider";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import { Content } from "antd/es/layout/layout";
@@ -7,7 +17,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../CartContext";
 import { FashionItemApi, FashionItemDetailResponse } from "../../api";
-import backgroundImageUrl from '../../components/Assets/shutterstock_455310238.jpg'
+import backgroundImageUrl from "../../components/Assets/shutterstock_455310238.jpg";
+import ProductCard from "../../components/commons/ProductCard";
 
 const Men: React.FC = () => {
   const { dispatch, isItemInCart } = useCart();
@@ -26,12 +37,20 @@ const Men: React.FC = () => {
   const fetchProducts = async (page: number) => {
     setIsLoading(true);
     try {
-      const userId = JSON.parse(localStorage.getItem("userId") || "null"); 
-    
+      const userId = JSON.parse(localStorage.getItem("userId") || "null");
 
       const fashionItemApi = new FashionItemApi();
 
-      const response = await fashionItemApi.apiFashionitemsGet(null!,page,pageSize,userId,["Available"],["ItemBase","ConsignedForSale"],null!,"Male");
+      const response = await fashionItemApi.apiFashionitemsGet(
+        null!,
+        page,
+        pageSize,
+        userId,
+        ["Available"],
+        ["ItemBase", "ConsignedForSale"],
+        null!,
+        "Male"
+      );
 
       console.debug(response);
       const data = response.data;
@@ -68,8 +87,8 @@ const Men: React.FC = () => {
       console.log("Adding item to cart with itemId:", product.itemId);
     }
   };
-  const formatBalance = (sellingPrice:any) => {
-    return new Intl.NumberFormat('de-DE').format(sellingPrice);
+  const formatBalance = (sellingPrice: any) => {
+    return new Intl.NumberFormat("de-DE").format(sellingPrice);
   };
 
   const goToDetailPage = (itemId: any) => {
@@ -78,16 +97,18 @@ const Men: React.FC = () => {
   };
 
   return (
-    <div style={{
-      backgroundImage: `url(${backgroundImageUrl})`,
-      backgroundSize: 'cover',
-      minHeight: '100vh',
-      backgroundColor: 'rgba(255, 255, 255, 0)',
-      overflow: 'hidden'
-    }}>
-      <Row gutter={[16,16]}>
+    <div
+      style={{
+        backgroundImage: `url(${backgroundImageUrl})`,
+        backgroundSize: "cover",
+        minHeight: "100vh",
+        backgroundColor: "rgba(255, 255, 255, 0)",
+        overflow: "hidden",
+      }}
+    >
+      <Row gutter={[16, 16]}>
         <Col span={4}>
-          <Sider width={200} style={{ background: "#fff", marginTop: "20px", }}>
+          <Sider width={200} style={{ background: "#fff", marginTop: "20px" }}>
             <Button
               style={{
                 width: "100px",
@@ -112,45 +133,29 @@ const Men: React.FC = () => {
           </Sider>
         </Col>
         <Col span={20}>
-          <Layout style={{ backgroundColor: 'rgba(255, 255, 255, 0)' }}>
-            <Content style={{ padding: '20px', overflow: 'hidden' }}>
-              <div style={{ textAlign: "center", marginBottom: "15px" ,backgroundColor: 'rgba(255, 255, 255, 0)' }}>
+          <Layout style={{ backgroundColor: "rgba(255, 255, 255, 0)" }}>
+            <Content style={{ padding: "20px", overflow: "hidden" }}>
+              <div
+                style={{
+                  textAlign: "center",
+                  marginBottom: "15px",
+                  backgroundColor: "rgba(255, 255, 255, 0)",
+                }}
+              >
                 <h1>Men Collection</h1>
-                {isLoading && <Spin style={{ textAlign: "center" }} size="large" />}
+                {isLoading && (
+                  <Spin style={{ textAlign: "center" }} size="large" />
+                )}
               </div>
               <Row gutter={[16, 16]}>
                 {products.map((product: FashionItemDetailResponse) => (
                   <Col key={product.itemId} xs={22} sm={12} md={6} lg={6}>
-                    <Card  hoverable onClick={() => goToDetailPage(product.itemId)}
-                      cover={<img alt={product.name? product.name : "N/A"} src={product.images? product.images[0] : "N/A"} style={{ height: '300px', objectFit: 'cover' }} />}
-                    >
-                      <Card.Meta
-                        title={product.name}
-                        description={`${formatBalance(product.sellingPrice)} VND`}
-                        
-                      />
-                        <div style={{ textAlign: "center", marginTop: "5px" }}>
-                        <Button
-                          type="primary"
-                          style={{
-                            backgroundColor: "#000000",
-                            color: "white",
-                            width: "200px",
-                            height: "35px",
-                            border: "2px solid black",
-                            borderRadius: "15px",
-                            fontSize: "16px",
-                          }}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleAddToCart(product);
-                          }}
-                        >
-                          Add to Cart <ShoppingCartOutlined />
-                        </Button>
-                      </div>
-                    </Card>
-                  
+                    <ProductCard
+                      product={product}
+                      onAddToCart={handleAddToCart}
+                      formatBalance={formatBalance}
+                      onCardClick={goToDetailPage}
+                    />
                   </Col>
                 ))}
               </Row>

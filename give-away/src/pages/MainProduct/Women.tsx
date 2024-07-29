@@ -16,7 +16,8 @@ import { Content } from "antd/es/layout/layout";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../CartContext";
 import { FashionItemApi, FashionItemDetailResponse } from "../../api";
-import backgroundImageUrl  from "../../components/Assets/freepik_5229782.jpg"
+import backgroundImageUrl from "../../components/Assets/freepik_5229782.jpg";
+import ProductCard from "../../components/commons/ProductCard";
 
 const Women: React.FC = () => {
   const { dispatch, isItemInCart } = useCart();
@@ -34,7 +35,7 @@ const Women: React.FC = () => {
   const fetchProducts = async (page: number) => {
     setIsLoading(true);
     try {
-      const userId = JSON.parse(localStorage.getItem("userId") || "null"); 
+      const userId = JSON.parse(localStorage.getItem("userId") || "null");
       const fashionItemApi = new FashionItemApi();
       const response = await fashionItemApi.apiFashionitemsGet(
         null!,
@@ -44,7 +45,7 @@ const Women: React.FC = () => {
         ["Available"],
         ["ItemBase", "ConsignedForSale"],
         null!,
-        "Female",
+        "Female"
       );
       const data = response.data;
       if (data && data.data?.items && Array.isArray(data.data.items)) {
@@ -79,8 +80,8 @@ const Women: React.FC = () => {
       });
     }
   };
-  const formatBalance = (balance:any) => {
-    return new Intl.NumberFormat('de-DE').format(balance);
+  const formatBalance = (balance: any) => {
+    return new Intl.NumberFormat("de-DE").format(balance);
   };
 
   const goToDetailPage = (itemId: any) => {
@@ -95,7 +96,7 @@ const Women: React.FC = () => {
         backgroundPosition: "center",
         minHeight: "100vh",
         backgroundColor: "rgba(255, 255, 255, 0)",
-        overflow: 'hidden'
+        overflow: "hidden",
       }}
     >
       <Row gutter={[16, 16]}>
@@ -129,10 +130,10 @@ const Women: React.FC = () => {
             style={{
               padding: "0 24px 24px",
               backgroundColor: "rgba(255, 255, 255, 0)",
-              overflow: 'hidden'
+              overflow: "hidden",
             }}
           >
-            <Content style={{ overflow: 'hidden' }}>
+            <Content style={{ overflow: "hidden" }}>
               <div style={{ textAlign: "center", marginBottom: "15px" }}>
                 <h1>Women Collection</h1>
                 {isLoading && (
@@ -142,42 +143,12 @@ const Women: React.FC = () => {
               <Row gutter={[16, 16]}>
                 {products.map((product: FashionItemDetailResponse) => (
                   <Col key={product.itemId} xs={22} sm={12} md={8} lg={6}>
-                    <Card
-                      hoverable
-                      onClick={() => goToDetailPage(product.itemId)}
-                      cover={
-                        <img
-                          alt={product.name ? product.name : "N/A"}
-                          src={product.images ? product.images[0] : "N/A"}
-                          style={{ height: "300px", objectFit: "cover" }}
-                        />
-                      }
-                    >
-                      <Card.Meta
-                        title={product.name}
-                        description={`${formatBalance(product.sellingPrice)}  VND`}
-                      />
-                      <div style={{ textAlign: "center", marginTop: "5px" }}>
-                        <Button
-                          type="primary"
-                          style={{
-                            backgroundColor: "#000000",
-                            color: "white",
-                            width: "200px",
-                            height: "35px",
-                            border: "2px solid black",
-                            borderRadius: "15px",
-                            fontSize: "16px",
-                          }}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleAddToCart(product);
-                          }}
-                        >
-                          Add to Cart <ShoppingCartOutlined />
-                        </Button>
-                      </div>
-                    </Card>
+                    <ProductCard
+                      product={product}
+                      onAddToCart={handleAddToCart}
+                      formatBalance={formatBalance}
+                      onCardClick={goToDetailPage}
+                    />
                   </Col>
                 ))}
               </Row>
