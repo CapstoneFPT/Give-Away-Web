@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Card, Row, Col, Button, Typography, message, notification } from "antd";
+import {
+  Card,
+  Row,
+  Col,
+  Button,
+  Typography,
+  message,
+  notification,
+} from "antd";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import { useCart } from "../../pages/CartContext";
 
@@ -33,25 +41,23 @@ interface Product {
   images: string[];
 }
 
-
 const ItemDetail: React.FC = () => {
   const { itemId } = useParams<{ itemId: string }>();
-  const [product, setProduct] = useState<FashionItemDetailResponse | null>(null);
+  const [product, setProduct] = useState<FashionItemDetailResponse | null>(
+    null
+  );
   const { dispatch, isItemInCart } = useCart();
   const [selectedImage, setSelectedImage] = useState<string>("");
   console.log(product);
   useEffect(() => {
     if (itemId !== undefined) {
-    
-
       async function fetchFashionItemDetails() {
         try {
           const fashionItemApi = new FashionItemApi();
-          const response = await fashionItemApi.apiFashionitemsIdGet(
-           itemId!
-          );
+          const response = await fashionItemApi.apiFashionitemsIdGet(itemId!);
           console.debug(itemId, response.data);
           setProduct(response.data.data!);
+          setSelectedImage(response.data.data?.images[0]! || "");
         } catch (error) {
           console.error(
             "There was an error fetching the product details!",
@@ -62,8 +68,6 @@ const ItemDetail: React.FC = () => {
       }
       fetchFashionItemDetails();
     }
-    
-
   }, []);
 
   const handleAddToCart = (product: FashionItemDetailResponse) => {
@@ -86,8 +90,8 @@ const ItemDetail: React.FC = () => {
       console.log("Adding item to cart with itemId:", product.itemId);
     }
   };
-  const formatBalance = (sellingPrice:any) => {
-    return new Intl.NumberFormat('de-DE').format(sellingPrice);
+  const formatBalance = (sellingPrice: any) => {
+    return new Intl.NumberFormat("de-DE").format(sellingPrice);
   };
 
   if (!product) {
@@ -108,13 +112,13 @@ const ItemDetail: React.FC = () => {
                   <img
                     src={image}
                     alt={`Thumbnail ${index}`}
-                      style={{
-                        width: "90%",
-                        height: "230px",
-                        cursor: "pointer",
-                        border:
-                          selectedImage === image ? "2px solid #1890ff" : "none",
-                      }}
+                    style={{
+                      width: "90%",
+                      height: "230px",
+                      cursor: "pointer",
+                      border:
+                        selectedImage === image ? "2px solid #1890ff" : "none",
+                    }}
                     onClick={() => setSelectedImage(image)}
                   />
                 </Col>
@@ -124,37 +128,46 @@ const ItemDetail: React.FC = () => {
           <Col span={11}>
             <img
               src={selectedImage}
-              alt={product.name? product.name : "N/A"}
+              alt={product.name ? product.name : "N/A"}
               style={{ width: "90%", height: "750px" }}
             />
           </Col>
           <Col span={9}>
             <Card>
               <Paragraph style={styles.para}>
-                <strong>Product Name: </strong> {product.name}
+                <strong style={{ fontSize: "30px" }}>{product.name}</strong>
               </Paragraph>
-              <Paragraph style={styles.para}>
-                <strong>Brand:</strong> {product.brand}
-              </Paragraph>
-              <Paragraph style={styles.para}>
-                <strong>Category:</strong> {product.categoryName}{" "}
-                <strong style={{ marginLeft: "50px" }}>Gender:</strong>{" "}
-                {product.gender}
-              </Paragraph>
-              <Paragraph style={styles.para}>
-                <strong>Size:</strong> {product.size}{" "}
-                <strong style={{ marginLeft: "150px" }}>Color:</strong>{" "}
-                {product.color}
-              </Paragraph>
-              <Paragraph style={styles.para}>
-                <strong>Shop Address:</strong> {product.shopAddress}
-              </Paragraph>
+              <Row gutter={[16, 16]}>
+                <Col span={12}>
+                  <Paragraph style={styles.para}>
+                    <strong>Brand:</strong> {product.brand}
+                  </Paragraph>
+                  <Paragraph style={styles.para}>
+                    <strong>Category:</strong> {product.categoryName}
+                  </Paragraph>
+                  <Paragraph style={styles.para}>
+                    <strong>Shop Address:</strong> {product.shopAddress}
+                  </Paragraph>
+                </Col>
+
+                <Col span={12}>
+                  <Paragraph style={styles.para}>
+                    <strong>Gender:</strong> {product.gender}
+                  </Paragraph>
+                  <Paragraph style={styles.para}>
+                    <strong>Size:</strong> {product.size}
+                  </Paragraph>
+                  <Paragraph style={styles.para}>
+                    <strong>Color:</strong>
+                    {product.color}
+                  </Paragraph>
+                </Col>
+              </Row>
               <Paragraph style={styles.para}>
                 <strong style={styles.price}>
                   Price: {formatBalance(product.sellingPrice)} VND
                 </strong>
               </Paragraph>
-
               <Button
                 style={{
                   textAlign: "center",
@@ -163,12 +176,12 @@ const ItemDetail: React.FC = () => {
                   color: "white",
                   width: "170px",
                   height: "50px",
-                  border: "2px solid black",
+                  // border: "2px solid black",
                   padding: "10px 20px",
-                  borderRadius: "30px",
+                  // borderRadius: "30px",
                   fontSize: "18px",
                 }}
-                onClick={() => handleAddToCart(product)} 
+                onClick={() => handleAddToCart(product)}
               >
                 Add to cart
                 <ShoppingCartOutlined

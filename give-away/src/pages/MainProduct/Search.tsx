@@ -17,6 +17,7 @@ import { ShoppingCartOutlined } from "@ant-design/icons";
 import { Content } from "antd/es/layout/layout";
 import Sider from "antd/es/layout/Sider";
 import backgroundImageUrl from "../../components/Assets/719789-apparel-hanger-top-shirt-t-shirt-fashion-rack.jpg";
+import ProductCard from "../../components/commons/ProductCard";
 const Search: React.FC = () => {
   const { dispatch, isItemInCart } = useCart();
   const [products, setProducts] = useState<FashionItemDetailResponse[]>([]);
@@ -39,7 +40,12 @@ const Search: React.FC = () => {
       const userId = JSON.parse(localStorage.getItem("userId") || "null");
       const fashionItemApi = new FashionItemApi();
       const response = await fashionItemApi.apiFashionitemsGet(
-      searchParam!,page,pageSize,userId,["Available"],["ConsignedForSale","ItemBase"]
+        searchParam!,
+        page,
+        pageSize,
+        userId,
+        ["Available"],
+        ["ConsignedForSale", "ItemBase"]
       );
 
       console.debug(response);
@@ -56,7 +62,9 @@ const Search: React.FC = () => {
       setIsLoading(false);
     }
   };
-
+  const formatBalance = (sellingPrice: any) => {
+    return new Intl.NumberFormat("de-DE").format(sellingPrice);
+  };
   const handleAddToCart = (product: FashionItemDetailResponse) => {
     if (product.isOrderedYet) {
       notification.error({
@@ -94,9 +102,7 @@ const Search: React.FC = () => {
       }}
     >
       <Row gutter={[16, 16]}>
-        <Col span={4}>
-        
-        </Col>
+        <Col span={4}></Col>
         <Col span={20}>
           <Layout
             style={{
@@ -120,42 +126,12 @@ const Search: React.FC = () => {
               <Row gutter={[16, 16]}>
                 {products.map((product: FashionItemDetailResponse) => (
                   <Col key={product.itemId} xs={22} sm={12} md={8} lg={6}>
-                    <Card
-                      hoverable
-                      onClick={() => goToDetailPage(product.itemId)}
-                      cover={
-                        <img
-                          alt={product.name ? product.name : "N/A"}
-                          src={product.images ? product.images[0] : ""}
-                          style={{ height: "300px", objectFit: "cover" }}
-                        />
-                      }
-                    >
-                      <Card.Meta
-                        title={product.name}
-                        description={`${product.sellingPrice} VND`}
-                      />
-                      <div style={{ textAlign: "center", marginTop: "5px" }}>
-                        <Button
-                          type="primary"
-                          style={{
-                            backgroundColor: "#000000",
-                            color: "white",
-                            width: "200px",
-                            height: "35px",
-                            border: "2px solid black",
-                            borderRadius: "15px",
-                            fontSize: "16px",
-                          }}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleAddToCart(product);
-                          }}
-                        >
-                          Add to Cart <ShoppingCartOutlined />
-                        </Button>
-                      </div>
-                    </Card>
+                    <ProductCard
+                      product={product}
+                      onAddToCart={handleAddToCart}
+                      formatBalance={formatBalance}
+                      onCardClick={goToDetailPage}
+                    />
                   </Col>
                 ))}
               </Row>

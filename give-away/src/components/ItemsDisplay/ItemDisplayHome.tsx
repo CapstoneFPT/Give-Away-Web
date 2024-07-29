@@ -16,7 +16,8 @@ import { useNavigate } from "react-router-dom";
 import { useCart } from "../../pages/CartContext";
 
 import { FashionItemApi, FashionItemDetailResponse } from "../../api";
-import backgroundImageUrl  from "../Assets/freepik_5229782.jpg";
+import backgroundImageUrl from "../Assets/freepik_5229782.jpg";
+import ProductCard from "../commons/ProductCard";
 
 interface Product {
   itemId: any;
@@ -47,10 +48,14 @@ const ItemDisplayHome: React.FC = () => {
   const fetchProducts = async (page: number) => {
     setIsLoading(true);
     try {
-     
       const fashionItemApi = new FashionItemApi();
       const response = await fashionItemApi.apiFashionitemsGet(
-       null!,page,pageSize,userId,["Available"],["ConsignedForSale","ItemBase"]
+        null!,
+        page,
+        pageSize,
+        userId,
+        ["Available"],
+        ["ConsignedForSale", "ItemBase"]
       );
 
       console.debug(response);
@@ -83,8 +88,8 @@ const ItemDisplayHome: React.FC = () => {
       console.log("Adding item to cart with itemId:", product.itemId);
     }
   };
-  const formatBalance = (sellingPrice:any) => {
-    return new Intl.NumberFormat('de-DE').format(sellingPrice);
+  const formatBalance = (sellingPrice: any) => {
+    return new Intl.NumberFormat("de-DE").format(sellingPrice);
   };
 
   const goToDetailPage = (itemId: any) => {
@@ -99,15 +104,12 @@ const ItemDisplayHome: React.FC = () => {
         backgroundSize: "cover",
         backgroundPosition: "center",
         minHeight: "100vh",
-       
       }}
     >
       <Layout
         style={{
           padding: "0 24px 24px",
-          backgroundColor: 'rgb(225, 225, 225, 0.1)'
-
-         
+          backgroundColor: "rgb(225, 225, 225, 0.1)",
         }}
       >
         <Content>
@@ -118,44 +120,12 @@ const ItemDisplayHome: React.FC = () => {
           <Row gutter={[20, 10]} justify="center">
             {products.map((product: FashionItemDetailResponse) => (
               <Col key={product.itemId} xs={24} sm={12} md={8} lg={6}>
-                <Card
-                  style={{ width: "330px", boxShadow:'-moz-initial', textAlign:'center' }}
-                  hoverable 
-                  onClick={() => goToDetailPage(product.itemId)}
-                  cover={
-                    <img
-                      alt={product.name? product.name : "N/A"}
-                      src={product.images? product.images[0] : "N/A"}
-                      style={{ height: "300px", objectFit: "cover" }}
-                    />
-                  }
-                >
-                  <Card.Meta
-                    style={{ height: "60px", fontWeight:'bold', color:'black', fontSize:'18px' }}
-                    title={product.name}
-                    description={`${formatBalance(product.sellingPrice)} VND`}
-                  />
-                  <div style={{  marginTop: "15px", textAlign:'center' }}>
-                    <Button
-                      type="primary"
-                      style={{
-                        backgroundColor: "rgb(28, 26, 26, 0.95)",
-                        color: "white",
-                        width: "140px",
-                        height: "36px",
-                        border: "0.1px solid gray",
-                        borderRadius: "0px",
-                        fontSize: "16px",
-                      }}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleAddToCart(product);
-                      }}
-                    >
-                      Add to Cart 
-                    </Button>
-                  </div>
-                </Card>
+                <ProductCard
+                  product={product}
+                  formatBalance={formatBalance}
+                  onAddToCart={handleAddToCart}
+                  onCardClick={goToDetailPage}
+                />
               </Col>
             ))}
           </Row>
