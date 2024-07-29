@@ -65,6 +65,9 @@ dependencies:
   util:
     specifier: ^0.12.5
     version: 0.12.5
+  vietqr:
+    specifier: ^1.1.9
+    version: 1.1.9
 
 devDependencies:
   '@openapitools/openapi-generator-cli':
@@ -1842,6 +1845,14 @@ packages:
     engines: {node: '>= 0.4'}
     dependencies:
       possible-typed-array-names: 1.0.0
+    dev: false
+
+  /axios@0.24.0:
+    resolution: {integrity: sha512-Q6cWsys88HoPgAaFAVUb0WpPk0O8iTeisR9IMqy9G8AbO4NlpVknrnQS03zzF9PGAWgO3cgletO3VjV/P7VztA==}
+    dependencies:
+      follow-redirects: 1.15.6
+    transitivePeerDependencies:
+      - debug
     dev: false
 
   /axios@1.6.8:
@@ -4383,6 +4394,14 @@ packages:
       is-generator-function: 1.0.10
       is-typed-array: 1.1.13
       which-typed-array: 1.1.15
+    dev: false
+
+  /vietqr@1.1.9:
+    resolution: {integrity: sha512-OFrS7uiLky07dUKKMUizgqxSxFGb7wRsMHOd/LX0Sd1NNFG/U5Tx6+sG4+X1Q5gpH/2VZw92+3Pd0ihGDDE45Q==}
+    dependencies:
+      axios: 0.24.0
+    transitivePeerDependencies:
+      - debug
     dev: false
 
   /vite@5.3.5:

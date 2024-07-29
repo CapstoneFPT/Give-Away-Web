@@ -14,6 +14,7 @@ import { SendOutlined } from "@ant-design/icons";
 import NavProfile from "../components/NavProfile/NavProfile";
 import { BASE_URL } from "../api/config";
 import { AccountApi } from "../api";
+// import {VietQR} from 'vietqr';
 
 const { Option } = Select;
 
@@ -35,7 +36,7 @@ const styles = {
   },
 };
 
-const Withdraw = () => {
+const Withdraw =  () => {
   const userId = JSON.parse(localStorage.getItem("userId") || "null");
   console.log(userId);
   
@@ -85,6 +86,10 @@ const Withdraw = () => {
     console.log("Failed:", errorInfo);
   };
 
+  // const vietqr = new VietQR();
+
+  // const bankResponse = await vietqr.getBanks();
+  // console.log(bankResponse)
   const banks = [
     "Vietcombank",
     "Techcombank",

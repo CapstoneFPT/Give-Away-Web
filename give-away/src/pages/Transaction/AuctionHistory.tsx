@@ -3,16 +3,7 @@ import {  Card, Row, Col, Table } from "antd";
 import NavProfile from "../../components/NavProfile/NavProfile";
 
 const AuctionHistory = () => {
-  // const [data, setData] = useState([]);
 
-  // // Giả sử bạn có một API để lấy dữ liệu lịch sử đấu giá
-  // useEffect(() => {
-  //   // Thay thế đường dẫn dưới đây bằng API thực tế của bạn
-  //   fetch('https://mockapi.io/endpoint/auction-history')
-  //     .then(response => response.json())
-  //     .then(data => setData(data))
-  //     .catch(error => console.error('Error fetching data:', error));
-  // }, []);
   const [data] = useState([
     {
       id: '1',

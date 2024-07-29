@@ -8,8 +8,6 @@ import {
 } from "@ant-design/icons";
 import { Button, Menu, Card } from "antd";
 import { useNavigate } from "react-router-dom";
-import { BASE_URL } from "../../api/config";
-import axios from "axios";
 import { AccountApi } from "../../api";
 
 
@@ -66,7 +64,7 @@ const NavProfile: React.FC = () => {
       label: "Transaction",
       children: [
         { key: "9", label: "Withdraw history", to: "/transaction/withdraw-history" },
-        // { key: "10", label: "My orders history", to: "/transaction/My-orders" },
+        { key: "10", label: "My deposit history", to: "/transaction/deposit-history" },
         { key: "11", label: "My consign history", to: "/transaction/My-consign" },
         { key: "12", label: "My auction history", to: "/transaction/Auction-history" },
       ],

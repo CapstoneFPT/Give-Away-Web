@@ -20,7 +20,7 @@ const Shop = () => {
       <CarouselComponent/>
       <ItemDisplayHome/>
       <Branches/>
-      <NewsLetter />
+      {/* <NewsLetter /> */}
       <Footer />
     </div>
   );

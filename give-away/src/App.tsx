@@ -36,6 +36,7 @@ import ItemDisplayHome from "./components/ItemsDisplay/ItemDisplayHome";
 import CarouselComponent from "./components/Navbar/CarouselComponent";
 import Search from "./pages/MainProduct/Search";
 import Branches from "./components/Branches/Branches";
+import DepositHistory from "./pages/Transaction/DepositHistory";
 function App() {
   return (
     <BrowserRouter>
@@ -115,7 +116,7 @@ function App() {
               }
             />
             <Route
-              path="/detailProductAunction/:auctionItemID"
+              path="/detailProductAuction/:auctionItemID"
               element={
                 <>
                   <Navbar />
@@ -210,6 +211,16 @@ function App() {
                 <>
                   <Navbar />
                   <Withdraw />
+                </>
+              }
+            />
+            
+            <Route
+              path="/transaction/deposit-history"
+              element={
+                <>
+                  <Navbar />
+                  <DepositHistory/>
                 </>
               }
             />
