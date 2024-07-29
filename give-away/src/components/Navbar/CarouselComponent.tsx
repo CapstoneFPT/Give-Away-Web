@@ -1,4 +1,3 @@
-// src/components/CarouselComponent.js
 import React from 'react';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
@@ -8,7 +7,7 @@ import { SettingOutlined } from '@ant-design/icons';
 
 
 const items = [
-  { id: 1, type: 'Giày Nam', imageUrl: 'path-to-mens-shoes-image.jpg' },
+  { id: 1, type: 'Giày Nam', imageUrl:' ../Assets/6149ba9e8af74ca04a989ee3fcd1f72f.jpg' },
   { id: 2, type: 'Giày Nữ', imageUrl: 'path-to-womens-shoes-image.jpg' },
   { id: 3, type: 'Quần Áo Nam', imageUrl: 'path-to-mens-clothes-image.jpg' },
   { id: 4, type: 'Quần Áo Nữ', imageUrl: 'path-to-womens-clothes-image.jpg' },
@@ -30,14 +29,14 @@ const CarouselComponent = () => {
 
 
   return (
-   <div style={{ padding: '20px', width:'96%' }}>
-      <h2>Secondhand Clothes</h2>
+   <div style={{ padding: '30px', width:'96%', textAlign:'center' }}>
+      <h1 style={{marginBottom:'20px', fontWeight:'bold'}}>Secondhand Clothes</h1>
       <Slider {...settings}>
         {items.map(item => (
           <div key={item.id}>
-            <Card
+            <Card style={{padding:'5px', width: '470px', height:'180px'}}
               cover={<img src={item.imageUrl} alt={item.type} style={{ width: '100%', height: 'auto' }} />}
-              actions={[<SettingOutlined key="setting" />]}
+             
             >
               <Card.Meta title={item.type} />
             </Card>

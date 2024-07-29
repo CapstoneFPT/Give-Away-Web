@@ -1104,12 +1104,6 @@ export interface AuctionListResponse {
      * @memberof AuctionListResponse
      */
     'auctionItemId'?: string;
-    /**
-     * 
-     * @type {ShopDetailResponse}
-     * @memberof AuctionListResponse
-     */
-    'shop'?: ShopDetailResponse;
 }
 
 
@@ -6056,6 +6050,112 @@ export interface Timeslot {
 /**
  * 
  * @export
+ * @interface TimeslotListResponse
+ */
+export interface TimeslotListResponse {
+    /**
+     * 
+     * @type {string}
+     * @memberof TimeslotListResponse
+     */
+    'timeslotId'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TimeslotListResponse
+     */
+    'startTime'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TimeslotListResponse
+     */
+    'endTime'?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof TimeslotListResponse
+     */
+    'slot'?: number;
+    /**
+     * 
+     * @type {TimeSlotStatus}
+     * @memberof TimeslotListResponse
+     */
+    'status'?: TimeSlotStatus;
+}
+
+
+/**
+ * 
+ * @export
+ * @interface TimeslotListResponsePaginationResponse
+ */
+export interface TimeslotListResponsePaginationResponse {
+    /**
+     * 
+     * @type {number}
+     * @memberof TimeslotListResponsePaginationResponse
+     */
+    'pageNumber'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof TimeslotListResponsePaginationResponse
+     */
+    'pageSize'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof TimeslotListResponsePaginationResponse
+     */
+    'searchTerm'?: string | null;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof TimeslotListResponsePaginationResponse
+     */
+    'filters'?: Array<string> | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof TimeslotListResponsePaginationResponse
+     */
+    'orderBy'?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof TimeslotListResponsePaginationResponse
+     */
+    'totalCount'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof TimeslotListResponsePaginationResponse
+     */
+    'totalPages'?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof TimeslotListResponsePaginationResponse
+     */
+    'hasNext'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof TimeslotListResponsePaginationResponse
+     */
+    'hasPrevious'?: boolean;
+    /**
+     * 
+     * @type {Array<TimeslotListResponse>}
+     * @memberof TimeslotListResponsePaginationResponse
+     */
+    'items'?: Array<TimeslotListResponse> | null;
+}
+/**
+ * 
+ * @export
  * @interface Transaction
  */
 export interface Transaction {
@@ -8346,12 +8446,13 @@ export const AuctionApiAxiosParamCreator = function (configuration?: Configurati
         /**
          * 
          * @param {string} [searchTerm] 
+         * @param {boolean} [getExpiredAuctions] 
          * @param {number} [pageNumber] 
          * @param {number} [pageSize] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAuctionsGet: async (searchTerm?: string, pageNumber?: number, pageSize?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        apiAuctionsGet: async (searchTerm?: string, getExpiredAuctions?: boolean, pageNumber?: number, pageSize?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/auctions`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -8370,6 +8471,10 @@ export const AuctionApiAxiosParamCreator = function (configuration?: Configurati
 
             if (searchTerm !== undefined) {
                 localVarQueryParameter['SearchTerm'] = searchTerm;
+            }
+
+            if (getExpiredAuctions !== undefined) {
+                localVarQueryParameter['GetExpiredAuctions'] = getExpiredAuctions;
             }
 
             if (pageNumber !== undefined) {
@@ -8973,13 +9078,14 @@ export const AuctionApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {string} [searchTerm] 
+         * @param {boolean} [getExpiredAuctions] 
          * @param {number} [pageNumber] 
          * @param {number} [pageSize] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiAuctionsGet(searchTerm?: string, pageNumber?: number, pageSize?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AuctionListResponsePaginationResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAuctionsGet(searchTerm, pageNumber, pageSize, options);
+        async apiAuctionsGet(searchTerm?: string, getExpiredAuctions?: boolean, pageNumber?: number, pageSize?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AuctionListResponsePaginationResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAuctionsGet(searchTerm, getExpiredAuctions, pageNumber, pageSize, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AuctionApi.apiAuctionsGet']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -9219,13 +9325,14 @@ export const AuctionApiFactory = function (configuration?: Configuration, basePa
         /**
          * 
          * @param {string} [searchTerm] 
+         * @param {boolean} [getExpiredAuctions] 
          * @param {number} [pageNumber] 
          * @param {number} [pageSize] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAuctionsGet(searchTerm?: string, pageNumber?: number, pageSize?: number, options?: any): AxiosPromise<AuctionListResponsePaginationResponse> {
-            return localVarFp.apiAuctionsGet(searchTerm, pageNumber, pageSize, options).then((request) => request(axios, basePath));
+        apiAuctionsGet(searchTerm?: string, getExpiredAuctions?: boolean, pageNumber?: number, pageSize?: number, options?: any): AxiosPromise<AuctionListResponsePaginationResponse> {
+            return localVarFp.apiAuctionsGet(searchTerm, getExpiredAuctions, pageNumber, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -9440,14 +9547,15 @@ export class AuctionApi extends BaseAPI {
     /**
      * 
      * @param {string} [searchTerm] 
+     * @param {boolean} [getExpiredAuctions] 
      * @param {number} [pageNumber] 
      * @param {number} [pageSize] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AuctionApi
      */
-    public apiAuctionsGet(searchTerm?: string, pageNumber?: number, pageSize?: number, options?: RawAxiosRequestConfig) {
-        return AuctionApiFp(this.configuration).apiAuctionsGet(searchTerm, pageNumber, pageSize, options).then((request) => request(this.axios, this.basePath));
+    public apiAuctionsGet(searchTerm?: string, getExpiredAuctions?: boolean, pageNumber?: number, pageSize?: number, options?: RawAxiosRequestConfig) {
+        return AuctionApiFp(this.configuration).apiAuctionsGet(searchTerm, getExpiredAuctions, pageNumber, pageSize, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -14709,6 +14817,131 @@ export class TestApi extends BaseAPI {
      */
     public apiTestingUserGet(options?: RawAxiosRequestConfig) {
         return TestApiFp(this.configuration).apiTestingUserGet(options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+
+/**
+ * TimeslotApi - axios parameter creator
+ * @export
+ */
+export const TimeslotApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @param {number} [pageNumber] 
+         * @param {number} [pageSize] 
+         * @param {TimeSlotStatus} [status] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiTimeslotsGet: async (pageNumber?: number, pageSize?: number, status?: TimeSlotStatus, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/timeslots`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            if (pageNumber !== undefined) {
+                localVarQueryParameter['PageNumber'] = pageNumber;
+            }
+
+            if (pageSize !== undefined) {
+                localVarQueryParameter['PageSize'] = pageSize;
+            }
+
+            if (status !== undefined) {
+                localVarQueryParameter['Status'] = status;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * TimeslotApi - functional programming interface
+ * @export
+ */
+export const TimeslotApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = TimeslotApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @param {number} [pageNumber] 
+         * @param {number} [pageSize] 
+         * @param {TimeSlotStatus} [status] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiTimeslotsGet(pageNumber?: number, pageSize?: number, status?: TimeSlotStatus, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TimeslotListResponsePaginationResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiTimeslotsGet(pageNumber, pageSize, status, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['TimeslotApi.apiTimeslotsGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * TimeslotApi - factory interface
+ * @export
+ */
+export const TimeslotApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = TimeslotApiFp(configuration)
+    return {
+        /**
+         * 
+         * @param {number} [pageNumber] 
+         * @param {number} [pageSize] 
+         * @param {TimeSlotStatus} [status] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiTimeslotsGet(pageNumber?: number, pageSize?: number, status?: TimeSlotStatus, options?: any): AxiosPromise<TimeslotListResponsePaginationResponse> {
+            return localVarFp.apiTimeslotsGet(pageNumber, pageSize, status, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * TimeslotApi - object-oriented interface
+ * @export
+ * @class TimeslotApi
+ * @extends {BaseAPI}
+ */
+export class TimeslotApi extends BaseAPI {
+    /**
+     * 
+     * @param {number} [pageNumber] 
+     * @param {number} [pageSize] 
+     * @param {TimeSlotStatus} [status] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof TimeslotApi
+     */
+    public apiTimeslotsGet(pageNumber?: number, pageSize?: number, status?: TimeSlotStatus, options?: RawAxiosRequestConfig) {
+        return TimeslotApiFp(this.configuration).apiTimeslotsGet(pageNumber, pageSize, status, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

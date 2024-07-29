@@ -161,7 +161,7 @@ function App() {
               }
             />
             <Route
-              path="/aunction/:auctionId"
+              path="/auction/:auctionId"
               element={
                 <>
                   <Navbar />

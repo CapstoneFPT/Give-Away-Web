@@ -99,13 +99,15 @@ const ItemDisplayHome: React.FC = () => {
         backgroundSize: "cover",
         backgroundPosition: "center",
         minHeight: "100vh",
-        backgroundColor: "rgba(255, 255, 255, 0)",
+       
       }}
     >
       <Layout
         style={{
           padding: "0 24px 24px",
-          backgroundColor: "rgba(255, 255, 255, 0)",
+          backgroundColor: 'rgb(225, 225, 225, 0.1)'
+
+         
         }}
       >
         <Content>
@@ -117,8 +119,8 @@ const ItemDisplayHome: React.FC = () => {
             {products.map((product: FashionItemDetailResponse) => (
               <Col key={product.itemId} xs={24} sm={12} md={8} lg={6}>
                 <Card
-                  style={{ width: "330px" }}
-                  hoverable
+                  style={{ width: "330px", boxShadow:'-moz-initial', textAlign:'center' }}
+                  hoverable 
                   onClick={() => goToDetailPage(product.itemId)}
                   cover={
                     <img
@@ -129,20 +131,20 @@ const ItemDisplayHome: React.FC = () => {
                   }
                 >
                   <Card.Meta
-                    style={{ height: "60px" }}
+                    style={{ height: "60px", fontWeight:'bold', color:'black', fontSize:'18px' }}
                     title={product.name}
                     description={`${formatBalance(product.sellingPrice)} VND`}
                   />
-                  <div style={{ textAlign: "center", marginTop: "5px" }}>
+                  <div style={{  marginTop: "15px", textAlign:'center' }}>
                     <Button
                       type="primary"
                       style={{
-                        backgroundColor: "#000000",
+                        backgroundColor: "rgb(28, 26, 26, 0.95)",
                         color: "white",
-                        width: "200px",
-                        height: "35px",
-                        border: "2px solid black",
-                        borderRadius: "15px",
+                        width: "140px",
+                        height: "36px",
+                        border: "0.1px solid gray",
+                        borderRadius: "0px",
                         fontSize: "16px",
                       }}
                       onClick={(e) => {
@@ -150,7 +152,7 @@ const ItemDisplayHome: React.FC = () => {
                         handleAddToCart(product);
                       }}
                     >
-                      Add to Cart <ShoppingCartOutlined />
+                      Add to Cart 
                     </Button>
                   </div>
                 </Card>

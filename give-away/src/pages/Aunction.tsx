@@ -89,31 +89,34 @@ const Auction: React.FC = () => {
         </Col>
         <Col span={8}>
           <Card title="Product Details">
-            <Title level={3}>{product.name}</Title>
+          <Title level={3}>{product.name}</Title>
+            <Row gutter={[16,16]}>
+              <Col span= {8}> 
+           
+            
             <Paragraph>
-            <strong>Brand:</strong> 
+            <strong>Size:</strong> 
                
             </Paragraph>
             <Paragraph>
             <strong>Category:</strong> 
                
             </Paragraph>
-            
-
-            <Paragraph>
-            <strong>Size:</strong> 
+              </Col>
+              <Col span= {8}>
+              <Paragraph>
+            <strong>Brand:</strong> 
                
             </Paragraph>
-            
-
-            <Paragraph>
+              </Col>
+              <Paragraph>
               <strong>Description:</strong> 
               {product.description}
               </Paragraph>
-
+            </Row>
             <Paragraph style={{ color: '#32b94b',fontSize:'20px' }}><strong >Current Bid:</strong> {highestBid} VND</Paragraph>
           </Card>
-          <Card title="Bids History">
+          <Card title="Bids History" style={{marginTop:'10px'}}>
             <List
               style={{ maxHeight: '200px', overflowY: 'auto' }} 
               dataSource={bids}
@@ -153,10 +156,12 @@ const Auction: React.FC = () => {
           Lorem ipsum dolor sit amet, consectetur adipisicing elit. Officia vel fuga iusto? Modi eius ratione delectus? Ullam natus debitis pariatur fugiat vitae error voluptas explicabo ex! Ipsum, magni. Quidem, numquam.
         </Card>
       </Row>
+  
+    </Card>
     <Footer/>
+              
     </Card>
-      
-    </Card>
+    
   );
 };
 

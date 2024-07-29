@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Button, message, Table } from 'antd';
+import { Button, message, Table,Space } from 'antd';
 import axios from 'axios';
 import { AuctionApi, AuctionListResponse } from '../api';
 import moment from 'moment';
@@ -52,7 +52,7 @@ const Deposit = () => {
         memberId: userId!
       });
 
-      if (deposit.status === 200) {
+      if (deposit.status) {
         message.success('Deposit successful!');
         // navigate(`/auction/${auctionId}`);
       }
@@ -63,7 +63,7 @@ const Deposit = () => {
   };
 
   return (
-    <div style={{ width: '50%', margin: '0 auto', paddingTop: '50px' }}>
+    <div style={{ width: '100%', margin: '0 auto', paddingTop: '50px' }}>
       <h1 style={{ textAlign: 'center' }}>Deposit for Auction Item</h1>
       <Table 
         style={{ backgroundColor: 'rgba(255, 255, 255, 0)' }} 
@@ -71,6 +71,20 @@ const Deposit = () => {
         dataSource={data} 
         rowKey="auctionId"
       >
+          <Column
+              title="Product"
+              dataIndex="imageUrl"
+              key="imageUrl"
+              render={(_, record: { imageUrl: string }) => (
+                <Space size="middle">
+                  <img
+                    src={record.imageUrl}
+                    alt="Product"
+                    style={{ width: "150px", height: "150px" }}
+                  />
+                </Space>
+              )}
+            />
         <Column title="Auction ID" dataIndex="auctionId" key="auctionId" />
         <Column title="Title" dataIndex="title" key="title" />
         <Column title="Start Date" dataIndex="startDate" key="startDate" />

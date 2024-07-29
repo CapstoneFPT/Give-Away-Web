@@ -54,7 +54,7 @@ const Branches: React.FC = () => {
           />
         </Card>
       </div>
-      <div style={{ flex: 1.5, height: '600px' }}>
+      <div style={{ flex: 1, height: '350px' }}>
         <MapContainer center={selectedBranch ? [selectedBranch.latitude, selectedBranch.longitude] : [10.762622, 106.660172]} zoom={13} style={{ height: '100%', width: '100%' }}>
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
