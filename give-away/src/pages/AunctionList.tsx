@@ -103,7 +103,7 @@ const AuctionList = () => {
               )}
             />
 
-            <Column title="Auction ID" dataIndex="auctionId" key="auctionId" />
+            {/* <Column title="Auction ID" dataIndex="auctionId" key="auctionId" /> */}
             <Column title="Title" dataIndex="title" key="title" />
             <Column title="Start Date" dataIndex="startDate" key="startDate" />
             <Column title="End Date" dataIndex="endDate" key="endDate" />
@@ -112,18 +112,18 @@ const AuctionList = () => {
               dataIndex="depositFee"
               key="depositFee"
             />
-            <Column title="Shop ID" dataIndex="shopId" key="shopId" />
-            <Column
+            {/* <Column title="Shop ID" dataIndex="shopId" key="shopId" /> */}
+            {/* <Column
               title="Auction Item ID"
               dataIndex="auctionItemId"
               key="auctionItemId"
-            />
+            /> */}
             <Column title="Status" dataIndex="status" key="status" />
-            <Column
+            {/* <Column
               title="Step Increment"
               dataIndex="stepIncrement"
               key="stepIncrement"
-            />
+            /> */}
             <Column
               title="Action"
               key="action"

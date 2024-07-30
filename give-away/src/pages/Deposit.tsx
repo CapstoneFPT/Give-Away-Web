@@ -57,7 +57,7 @@ const Deposit = () => {
         // navigate(`/auction/${auctionId}`);
       }
     } catch (error) {
-      message.error('Deposit failed. Please try again.');
+      message.error('Deposit failed. Please try again.',);
       console.error('Error making deposit:', error);
     }
   };

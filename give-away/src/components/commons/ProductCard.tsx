@@ -12,7 +12,7 @@ interface ProductCardProps {
 const ProductCard: React.FC<ProductCardProps> = ({ product, formatBalance, onAddToCart, onCardClick }) => {
   return (
     <Card
-      style={{ width: "330px", boxShadow: '-moz-initial', textAlign: 'center' }}
+      style={{ width: "300px", boxShadow: '-moz-initial', textAlign: 'center' }}
       hoverable
       onClick={() => onCardClick(product.itemId!)}
       cover={
