@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Card, Row, Col, Table } from "antd";
 import NavProfile from "../../components/NavProfile/NavProfile";
-import axios from "axios";
-import { BASE_URL } from "../../api/config";
 import { AccountApi } from "../../api";
 import { GetWithdrawsResponse } from "../../api";
 
