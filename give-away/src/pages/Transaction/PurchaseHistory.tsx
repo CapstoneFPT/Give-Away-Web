@@ -6,21 +6,24 @@ import NavProfile from "../../components/NavProfile/NavProfile.tsx";
 const PurchaseHistory = () => {
     const userId = JSON.parse(localStorage.getItem("userId") || "null");
 
-    const [data,setData] = useState<GetTransactionsResponse[]>([]);
-    const [page, setPage] = useState(1);
+    const [data, setData] = useState<GetTransactionsResponse[]>([]);
+    const [total, setTotal] = useState(0);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const fetchData = async () => {
-            const accountApi = new AccountApi();
-            const response  = await accountApi.apiAccountsAccountIdTransactionsGet(userId!,page,10,TransactionType.Purchase);
-            console.log(response.data.items)
-            setData(response.data.items || []);
-        }
 
         fetchData();
-    }, [userId,page]);
+    }, [userId]);
+    const fetchData = async (page = 1, size = 10) => {
+        const accountApi = new AccountApi();
+        const response = await accountApi.apiAccountsAccountIdTransactionsGet(userId!, page, size, TransactionType.Purchase);
+        console.log(response.data.items)
+        setData(response.data.items || []);
+        setTotal(response.data.totalCount || 0);
+        setLoading(false);
+    }
 
-    const columns : TableColumnsType<GetTransactionsResponse> = [
+    const columns: TableColumnsType<GetTransactionsResponse> = [
         {
             title: 'Id',
             dataIndex: 'transactionId',
@@ -65,14 +68,20 @@ const PurchaseHistory = () => {
                                 marginBottom: "10px",
                             }}
                         >
-                            Withdraw history
+                            Purchase History
                         </h3>
                         <Table
                             dataSource={data}
                             columns={columns}
                             rowKey="id"
-                            pagination={{ pageSize: 10 }}
-                            style={{ marginTop: '20px' }}
+                            pagination={{
+                                total:total,
+                                onChange: (page, pageSize) => {
+                                    setLoading(true)
+                                    fetchData(page, pageSize)
+                                },
+                            }}
+                            style={{marginTop: '20px'}}
                         />
                     </Card>
                 </Col>

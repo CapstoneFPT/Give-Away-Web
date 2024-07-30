@@ -67,7 +67,7 @@ const RechargeHistory = () => {
                                 marginBottom: "10px",
                             }}
                         >
-                            Withdraw history
+                            Recharge History
                         </h3>
                         <Table
                             dataSource={data}
