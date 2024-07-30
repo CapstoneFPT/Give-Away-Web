@@ -38,6 +38,7 @@ import Search from "./pages/MainProduct/Search";
 import Branches from "./components/Branches/Branches";
 import DepositHistory from "./pages/Transaction/DepositHistory";
 import PurchaseHistory from "./pages/Transaction/PurchaseHistory.tsx";
+import RechargeHistory from "./pages/Transaction/RechargeHistory.tsx";
 
 function App() {
     return (
@@ -262,7 +263,12 @@ function App() {
                                 </>
                             }
                         />
-
+                        <Route path="transaction/recharge-history" element={
+                            <>
+                                <Navbar/>
+                                <RechargeHistory/>
+                            </>
+                        }/>
                         <Route
                             path="/order-list"
                             element={
