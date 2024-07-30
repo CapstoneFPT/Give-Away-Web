@@ -2,17 +2,14 @@ import React, { useEffect, useState } from "react";
 import { Card, Row, Col, Descriptions, Button, Spin, Tag } from "antd";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import NavProfile from "../components/NavProfile/NavProfile";
-import axios from "axios";
-import { BASE_URL } from "../api/config";
 import {
   FashionItem,
   FashionItemDetailResponse,
+  FashionItemDetailResponseOrderDetailResponse,
   FashionItemOrderDetailResponse,
   FashionItemStatus,
   OrderApi,
 } from "../api";
-
-
 
 interface OrderDetail {
   orderDetailId: string;
@@ -29,7 +26,7 @@ const OrderDetail = () => {
   >(null);
   const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
-console.log(id)
+
   useEffect(() => {
     const fetchOrderDetails = async () => {
       setLoading(true);
@@ -58,15 +55,18 @@ console.log(id)
   }
 
   const isRefundEligible = (refundExpirationDate: string | null) => {
-    if (!refundExpirationDate) return false;
+    if (!refundExpirationDate) return true;
     const expirationDate = new Date(refundExpirationDate);
     const currentDate = new Date();
     return expirationDate > currentDate;
   };
 
-  const handleRefundClick = (fashionItem: FashionItem) => {
-    navigate("/refunds", { state: { items: [fashionItem] } });
-  };
+  // const handleRefundClick = (fashionItem: FashionItemDetailResponseOrderDetailResponse) => {
+  //   navigate("/refunds", { state: [fashionItem]     });
+  // };
+  const handleRefundClick = (fashionItem: FashionItem, orderDetailId: string) => {
+    navigate("/refunds", { state: { items: [fashionItem], orderDetailId } });
+};
 
   return (
     <Card>
@@ -127,21 +127,28 @@ console.log(id)
                     {detail.fashionItemDetail?.condition}
                   </Descriptions.Item>
                 </Descriptions>
-                {isRefundEligible(detail.refundExpirationDate!) && (
-                  <Button
-                    type="primary"
-                    style={{
-                      marginTop: "10px",
-                      backgroundColor: "black",
-                      borderColor: "black",
-                      width: "100px",
-                      height: "35px",
-                    }}
-                    onClick={() => handleRefundClick(detail.fashionItemDetail!)}
-                  >
-                    Refund
-                  </Button>
-                )}
+                {isRefundEligible(detail.refundExpirationDate!) &&
+                  detail.fashionItemDetail?.status ===
+                    FashionItemStatus.Refundable && (
+                    <>
+                      
+                      <Button
+                        type="primary"
+                        style={{
+                          marginTop: "10px",
+                          backgroundColor: "black",
+                          borderColor: "black",
+                          width: "100px",
+                          height: "35px",
+                        }}
+                        onClick={() =>
+                          handleRefundClick(detail.fashionItemDetail!, detail.orderDetailId!)
+                        }
+                      >
+                        Refund
+                      </Button>
+                    </>
+                  )}
               </Card>
             ))}
             <Link to="/order-list">

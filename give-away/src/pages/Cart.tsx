@@ -183,15 +183,26 @@ const Cart: React.FC = () => {
                  />
                 
 
-                  <Typography>Price: {formatBalance(item.sellingPrice)} VND</Typography>
+                  
                 </Col>
                 <Col span={12}>
-                <Typography> Product Name: {item.name}</Typography>
-                  <Typography>Size: {item.size}</Typography>
+                <Typography style={{fontSize:'17px'}}>
+                   <strong>Product Name: </strong>
+                   {item.name}</Typography>
+                <Typography style={{fontSize:'18px', color:''}}>
+                    <strong> Price: {formatBalance(item.sellingPrice)} VND</strong>
+                   </Typography>
+               
+                  <Typography style={{fontSize:'17px'}}>
+                    <strong>Size: </strong>
+                     {item.size}</Typography>
                   {/* <Typography>Branch: {item.shopAddress}</Typography> */}
-                  <Typography>Color: {item.color}</Typography>
-                  <Typography>Brand: {item.brand}</Typography>
-                  <Typography>Gender: {item.gender}</Typography>
+                  <Typography style={{fontSize:'17px'}}>
+                    <strong>Color: </strong>
+                     {item.color}</Typography>
+                  <Typography style={{fontSize:'17px'}}>
+                    <strong>Brand:</strong> {item.brand}</Typography>
+                  <Typography style={{fontSize:'17px'}}><strong>Gender: </strong> {item.gender}</Typography>
                 </Col>
                 <Col
                   span={4}
@@ -274,8 +285,8 @@ const Cart: React.FC = () => {
                   marginBottom: "10px",
                 }}
               >
-                <Typography style={{ color: "orange", fontSize: "20px" }}>
-                  Total price: {calculateTotalPrice()} VND
+                <Typography style={{  fontSize: "20px" }}>
+                 <strong> Total price: {formatBalance(calculateTotalPrice())} VND</strong>
                 </Typography>
               </div>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
