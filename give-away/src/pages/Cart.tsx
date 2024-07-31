@@ -12,12 +12,10 @@ import {
   Modal,
   message,
   notification,
-  
 } from "antd";
 import { useCart } from "./CartContext";
 import { DeleteOutlined } from "@ant-design/icons";
 import Checkbox from "antd/es/checkbox/Checkbox";
-import axios from "axios";
 import { AccountApi, CartRequest, OrderApi } from "../api";
 import { useNavigate } from "react-router-dom";
 
@@ -26,7 +24,7 @@ const { Option } = Select;
 const Cart: React.FC = () => {
   const { state, dispatch } = useCart();
   const [showConfirm, setShowConfirm] = useState(false);
-  const [itemToRemove, setItemToRemove] = useState(null);
+  const [itemToRemove, setItemToRemove] = useState<any>(null);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [userId, setUserId] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -34,9 +32,22 @@ const Cart: React.FC = () => {
   const [form] = Form.useForm();
 
   useEffect(() => {
-    const userId = JSON.parse(localStorage.getItem("userId") || "null");
-    setUserId(userId);
-    console.log(userId);
+    try {
+      const storedUserId = localStorage.getItem("userId");
+      if (storedUserId) {
+        const parsedUserId = JSON.parse(storedUserId);
+        setUserId(parsedUserId);
+        console.log("User ID:", parsedUserId);
+      } else {
+        console.warn("No user ID found in localStorage");
+      }
+    } catch (error) {
+      console.error("Error parsing user ID from localStorage:", error);
+      notification.error({
+        message: "Error",
+        description: "Failed to load user information. Please try logging in again.",
+      });
+    }
   }, []);
 
   const handleDeleteItem = (item: any) => {
@@ -61,7 +72,7 @@ const Cart: React.FC = () => {
       const updatedSelectedItems = prevSelectedItems.includes(itemId)
         ? prevSelectedItems.filter((id) => id !== itemId)
         : [...prevSelectedItems, itemId];
-      console.log(itemId);
+      console.log("Selected item:", itemId);
       return updatedSelectedItems;
     });
   };
@@ -70,8 +81,10 @@ const Cart: React.FC = () => {
     try {
       const validateResult = await form.validateFields();
       if (!userId) {
-        console.error("User ID not found in localStorage");
-        console.log("hihi", userId);
+        notification.error({
+          message: "Error",
+          description: "User ID not found. Please log in and try again.",
+        });
         return;
       }
 
@@ -80,14 +93,13 @@ const Cart: React.FC = () => {
         return;
       }
 
-      const orderData : CartRequest = {
+      const orderData: CartRequest = {
         paymentMethod: validateResult.paymentMethod,
         recipientName: validateResult.recipientName,
         address: validateResult.address,
         phone: validateResult.phone,
-        itemIds: selectedItems, 
+        itemIds: selectedItems,
       };
-
 
       console.log("Order Data:", orderData);
 
@@ -108,6 +120,9 @@ const Cart: React.FC = () => {
       setSelectedItems([]);
 
       const orderId = response.data?.data?.orderId;
+      if (!orderId) {
+        throw new Error("Order ID not returned from the server");
+      }
 
       const orderApi = new OrderApi();
 
@@ -115,7 +130,7 @@ const Cart: React.FC = () => {
         case "QRCode":
           try {
             const response = await orderApi.apiOrdersOrderIdPayVnpayPost(
-              orderId!,
+              orderId,
               {
                 memberId: userId,
               }
@@ -125,49 +140,68 @@ const Cart: React.FC = () => {
 
             if (paymentUrl) {
               window.location.href = paymentUrl;
+            } else {
+              throw new Error("Payment URL not received");
             }
           } catch (error) {
+            console.error("Error during QR Code payment:", error);
             notification.error({
-              message: "Error",
-              description: "Error during payment",
+              message: "Payment Error",
+              description: "An error occurred during QR Code payment. Please try again.",
             });
           }
           break;
         case "Point":
           try {
-            const response = await orderApi.apiOrdersOrderIdPayPointsPost(
-              orderId!,
+            await orderApi.apiOrdersOrderIdPayPointsPost(
+              orderId,
               {
                 memberId: userId,
               }
             );
+            notification.success({
+              message: "Success",
+              description: "Payment with points successful",
+            });
           } catch (error) {
+            console.error("Error during Point payment:", error);
             notification.error({
-              message: "Error",
-              description: "Error during payment",
+              message: "Payment Error",
+              description: "An error occurred during Point payment. Please try again.",
             });
           }
           break;
-        default:
+        case "COD":
+          notification.success({
+            message: "Success",
+            description: "Cash on Delivery order placed successfully",
+          });
           break;
+        default:
+          notification.error({
+            message: "Error",
+            description: "Invalid payment method selected",
+          });
+          return;
       }
       navigate("/");
     } catch (error) {
-      console.error(error);
+      console.error("Error during checkout:", error);
       notification.error({
-        message: "Error",
-        description: "Error placing order",
+        message: "Checkout Error",
+        description: "An error occurred during checkout. Please try again.",
       });
     }
   };
-  const formatBalance = (balance:any) => {
+
+  const formatBalance = (balance: number) => {
     return new Intl.NumberFormat('de-DE').format(balance);
   };
   
   const calculateTotalPrice = () => {
     return state.cartItems
       .filter((item) => selectedItems.includes(item.itemId!))
-      .reduce((total, item) => total + item.sellingPrice!, 0);
+      .reduce((total, item) => total + (item.sellingPrice || 0), 0);
   };
 
   return (
@@ -181,33 +215,34 @@ const Cart: React.FC = () => {
             <Card key={item.itemId} style={{ marginBottom: "10px" }}>
               <Row>
                 <Col span={8}>
-                
-                <img
-                style={{ height: "250px", objectFit: "cover" }}
-                 src={item.images && Array.isArray(item.images) ? item.images[0] : "N/A"} alt={item.name ? item.name : "N/A"}
-                 />
-                
-
-                  
+                  <img
+                    style={{ height: "250px", objectFit: "cover" }}
+                    src={item.images && Array.isArray(item.images) ? item.images[0] : "N/A"}
+                    alt={item.name || "Product image"}
+                  />
                 </Col>
                 <Col span={12}>
-                <Typography style={{fontSize:'17px'}}>
-                   <strong>Product Name: </strong>
-                   {item.name}</Typography>
-                <Typography style={{fontSize:'18px', color:''}}>
-                    <strong> Price: {formatBalance(item.sellingPrice)} VND</strong>
-                   </Typography>
-               
+                  <Typography style={{fontSize:'17px'}}>
+                    <strong>Product Name: </strong>
+                    {item.name || "N/A"}
+                  </Typography>
+                  <Typography style={{fontSize:'18px'}}>
+                    <strong> Price: {formatBalance(item.sellingPrice || 0)} VND</strong>
+                  </Typography>
                   <Typography style={{fontSize:'17px'}}>
                     <strong>Size: </strong>
-                     {item.size}</Typography>
-                  {/* <Typography>Branch: {item.shopAddress}</Typography> */}
+                    {item.size || "N/A"}
+                  </Typography>
                   <Typography style={{fontSize:'17px'}}>
                     <strong>Color: </strong>
-                     {item.color}</Typography>
+                    {item.color || "N/A"}
+                  </Typography>
                   <Typography style={{fontSize:'17px'}}>
-                    <strong>Brand:</strong> {item.brand}</Typography>
-                  <Typography style={{fontSize:'17px'}}><strong>Gender: </strong> {item.gender}</Typography>
+                    <strong>Brand:</strong> {item.brand || "N/A"}
+                  </Typography>
+                  <Typography style={{fontSize:'17px'}}>
+                    <strong>Gender: </strong> {item.gender || "N/A"}
+                  </Typography>
                 </Col>
                 <Col
                   span={4}
@@ -216,7 +251,7 @@ const Cart: React.FC = () => {
                   <Checkbox
                     checked={selectedItems.includes(item.itemId!)}
                     onChange={() => handleCheckboxChange(item.itemId!)}
-                  ></Checkbox>
+                  />
                   <Button
                     type="link"
                     danger
@@ -290,8 +325,8 @@ const Cart: React.FC = () => {
                   marginBottom: "10px",
                 }}
               >
-                <Typography style={{  fontSize: "20px" }}>
-                 <strong> Total price: {formatBalance(calculateTotalPrice())} VND</strong>
+                <Typography style={{ fontSize: "20px" }}>
+                  <strong> Total price: {formatBalance(calculateTotalPrice())} VND</strong>
                 </Typography>
               </div>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -325,4 +360,5 @@ const Cart: React.FC = () => {
     </Row>
   );
 };
+
 export default Cart;
