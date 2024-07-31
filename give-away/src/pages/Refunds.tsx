@@ -75,6 +75,7 @@ const Refunds = () => {
       await refundApi.apiRefundsPost(requestData);
   
       message.success("Refund request sent successfully!");
+      navigate('/order-list');
     } catch (error) {
       message.error("Send refund request failed. Please check your information!");
       console.error("Failed to submit refund request:", error);
