@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import { Button, Card, message } from "antd"; // Import message from antd
+import { Button, Card, message, notification } from "antd"; // Import message from antd
 import {
   UserOutlined,
   EyeOutlined,
@@ -44,7 +44,10 @@ const Register = () => {
       const response = await authApi.apiAuthRegisterPost(formData)
 
       if (response) {
-        message.success("Registration successful!");
+        notification.success({
+          message : "Registration successful!",
+          description : "You have successfully registered. Check your email to verify your account.",
+        });
       } else {
         message.error("Registration failed!");
       }

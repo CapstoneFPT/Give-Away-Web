@@ -16,7 +16,6 @@ const styles = {
     height: '50px',
     border: '2px solid black',
     padding: '10px 20px',
-    borderRadius: '30px',
   },
   formContainer: {
     maxWidth: '800px',
@@ -76,6 +75,7 @@ const Refunds = () => {
       await refundApi.apiRefundsPost(requestData);
   
       message.success("Refund request sent successfully!");
+      navigate('/order-list');
     } catch (error) {
       message.error("Send refund request failed. Please check your information!");
       console.error("Failed to submit refund request:", error);
@@ -195,6 +195,7 @@ const Refunds = () => {
                   type="primary"
                   htmlType="submit"
                   disabled={uploading}
+                  loading={uploading}
                 >
                   Send request
                   <SendOutlined />

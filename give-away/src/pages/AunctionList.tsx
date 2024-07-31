@@ -22,7 +22,10 @@ const AuctionList = () => {
 
     const fetchData = async () => {
       try {
-        const response = await auctionApi.apiAuctionsGet();
+        const response = await auctionApi.apiAuctionsGet(null!,false,[
+          "Approved",
+          "OnGoing"
+        ]);
         const fetchedData: AuctionListResponse[] = response.data.items? response.data.items.map((item: any) => ({
               ...item,
               startDate: moment(item.startDate).format("YYYY-MM-DD HH:mm"),
