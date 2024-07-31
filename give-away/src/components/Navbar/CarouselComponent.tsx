@@ -13,24 +13,24 @@ import womenBrancelets from "../Assets/J18N-ROSECROSS-SILVER-1.jpg";
 const items = [
   {
     id: 1,
-    type: "Giày Nam",
+    type: "Men Shoe",
     imageUrl: mensShoes,
   },
   {
     id: 2,
-    type: "Giày Nữ",
+    type: "Women Shoe",
     imageUrl: womenShoes,
   },
-  { id: 3, type: "Quần Áo Nam", imageUrl: mensClothes },
-  { id: 4, type: "Quần Áo Nữ", imageUrl: womenClothes },
+  { id: 3, type: "Men clothes", imageUrl: mensClothes },
+  { id: 4, type: "Women clothes", imageUrl: womenClothes },
   {
     id: 5,
-    type: "Phụ Kiện Nam",
+    type: "Men Eyeglasses",
     imageUrl: mensEyeglasses,
   },
   {
     id: 6,
-    type: "Phụ Kiện Nữ",
+    type: "Women Brancelets",
     imageUrl: womenBrancelets,
   },
 ];

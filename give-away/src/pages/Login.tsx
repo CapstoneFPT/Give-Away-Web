@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Modal, Input, Dropdown } from "antd";
+import { Button, Modal, Input, Dropdown, notification } from "antd";
 import {
   UserOutlined,
   EyeOutlined,
@@ -63,12 +63,26 @@ const Login = () => {
         dispatch({ type: "CLEAR_CART" }); // Clear cart on login
         dispatch({ type: "SET_USER", payload: userId });
 
+        notification.success({
+          message: 'Login Successful',
+          description: 'You have successfully logged in!',
+        });
+
         setIsModalLoginOpen(false); // hide modal after login
         setIsLoggedIn(true);
+
+        navigate('/'); // Navigate to home page
       } else {
-        console.error("Failed to login");
+        notification.error({
+          message: 'Login Failed',
+          description: response.data.resultStatus || 'Invalid email or password',
+        });
       }
     } catch (error) {
+      notification.error({
+        message: 'Login Failed',
+        description: 'An error occurred while trying to login. Please try again later.',
+      });
       console.error("An error occurred while trying to login:", error);
     }
   };

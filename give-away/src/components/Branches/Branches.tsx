@@ -46,7 +46,7 @@ const Branches: React.FC = () => {
           <List
             dataSource={branches}
             renderItem={branch => (
-              <List.Item onClick={() => handleBranchClick(branch)} style={{ cursor: 'pointer' }}>
+              <List.Item  style={{ cursor: 'pointer' }}>
                 <EnvironmentOutlined style={{ marginRight: '8px' }}/> 
                 {branch.address}
               </List.Item>
