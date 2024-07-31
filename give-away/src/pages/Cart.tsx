@@ -18,7 +18,8 @@ import { useCart } from "./CartContext";
 import { DeleteOutlined } from "@ant-design/icons";
 import Checkbox from "antd/es/checkbox/Checkbox";
 import axios from "axios";
-import { AccountApi, OrderApi } from "../api";
+import { AccountApi, CartRequest, OrderApi } from "../api";
+import { useNavigate } from "react-router-dom";
 
 const { Option } = Select;
 
@@ -28,6 +29,7 @@ const Cart: React.FC = () => {
   const [itemToRemove, setItemToRemove] = useState(null);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [userId, setUserId] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const [form] = Form.useForm();
 
@@ -78,13 +80,15 @@ const Cart: React.FC = () => {
         return;
       }
 
-      const orderData = {
+      const orderData : CartRequest = {
         paymentMethod: validateResult.paymentMethod,
         recipientName: validateResult.recipientName,
         address: validateResult.address,
         phone: validateResult.phone,
-        listItemId: selectedItems, 
+        itemIds: selectedItems, 
       };
+
+
       console.log("Order Data:", orderData);
 
       const accountApi = new AccountApi();
@@ -147,6 +151,7 @@ const Cart: React.FC = () => {
         default:
           break;
       }
+      navigate("/");
     } catch (error) {
       console.error(error);
       notification.error({

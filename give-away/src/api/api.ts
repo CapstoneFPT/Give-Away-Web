@@ -1446,7 +1446,7 @@ export interface CartRequest {
      * @type {string}
      * @memberof CartRequest
      */
-    'address'?: string | null;
+    'address': string;
     /**
      * 
      * @type {string}
@@ -1464,7 +1464,7 @@ export interface CartRequest {
      * @type {Array<string>}
      * @memberof CartRequest
      */
-    'listItemId'?: Array<string> | null;
+    'itemIds'?: Array<string> | null;
 }
 
 
@@ -2529,19 +2529,7 @@ export interface CreateFeedbackRequest {
      * @type {string}
      * @memberof CreateFeedbackRequest
      */
-    'content'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof CreateFeedbackRequest
-     */
-    'createdDate'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof CreateFeedbackRequest
-     */
-    'shopId'?: string;
+    'content': string;
 }
 /**
  * 
@@ -2624,19 +2612,19 @@ export interface CreateOrderRequest {
      * @type {string}
      * @memberof CreateOrderRequest
      */
-    'address'?: string | null;
+    'address': string;
     /**
      * 
      * @type {string}
      * @memberof CreateOrderRequest
      */
-    'recipientName'?: string | null;
+    'recipientName': string;
     /**
      * 
      * @type {string}
      * @memberof CreateOrderRequest
      */
-    'phone'?: string | null;
+    'phone': string;
     /**
      * 
      * @type {string}
@@ -2648,7 +2636,7 @@ export interface CreateOrderRequest {
      * @type {Array<string>}
      * @memberof CreateOrderRequest
      */
-    'listItemId'?: Array<string> | null;
+    'itemIds'?: Array<string> | null;
 }
 /**
  * 
@@ -2661,7 +2649,7 @@ export interface CreateRefundRequest {
      * @type {string}
      * @memberof CreateRefundRequest
      */
-    'orderDetailIds'?: string;
+    'orderDetailIds': string;
     /**
      * 
      * @type {string}
@@ -5018,7 +5006,7 @@ export interface PayOrderWithCashRequest {
      * @type {number}
      * @memberof PayOrderWithCashRequest
      */
-    'amountGiven'?: number;
+    'amountGiven': number;
 }
 /**
  * 
