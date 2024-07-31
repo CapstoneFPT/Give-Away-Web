@@ -16,7 +16,6 @@ const styles = {
     height: '50px',
     border: '2px solid black',
     padding: '10px 20px',
-    borderRadius: '30px',
   },
   formContainer: {
     maxWidth: '800px',
@@ -195,6 +194,7 @@ const Refunds = () => {
                   type="primary"
                   htmlType="submit"
                   disabled={uploading}
+                  loading={uploading}
                 >
                   Send request
                   <SendOutlined />
