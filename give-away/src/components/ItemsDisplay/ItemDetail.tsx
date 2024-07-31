@@ -189,13 +189,13 @@ const ItemDetail: React.FC = () => {
                 />
               </Button>
             </Card>
+            <Card style={{ marginTop: "20px" }}>
+              <Paragraph style={styles.para}>
+                <strong>Description:</strong> {product.note}
+              </Paragraph>
+            </Card>
           </Col>
         </Row>
-        <Card style={{ marginTop: "20px" }}>
-          <Paragraph style={styles.para}>
-            <strong>Description:</strong> {product.note}
-          </Paragraph>
-        </Card>
       </Card>
     </Card>
   );

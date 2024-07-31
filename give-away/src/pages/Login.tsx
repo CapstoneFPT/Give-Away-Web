@@ -75,7 +75,7 @@ const Login = () => {
       } else {
         notification.error({
           message: 'Login Failed',
-          description: response.data.resultStatus || 'Invalid email or password',
+          description: response.data.resultStatus ,
         });
       }
     } catch (error) {
