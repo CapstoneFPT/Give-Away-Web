@@ -1,171 +1,225 @@
 import React, { useState, useEffect } from "react";
-import { Card, Row, Col, Table, Button, Tag, Modal, Form, Select, Input, notification } from "antd";
+import {
+  Card,
+  Row,
+  Col,
+  Table,
+  Button,
+  Tag,
+  Modal,
+  Form,
+  Select,
+  Input,
+  notification,
+  Spin,
+} from "antd";
 import NavProfile from "../components/NavProfile/NavProfile";
 import { useNavigate } from "react-router-dom";
-import { AccountApi, OrderApi } from "../api";
+import { AccountApi, OrderApi, OrderResponse, PaymentMethod } from "../api";
 
 const { Option } = Select;
 
-const OrderList = () => {
-  const [data, setData] = useState<any[]>([]);
+const OrderList: React.FC = () => {
+  const [data, setData] = useState<OrderResponse[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedOrder, setSelectedOrder] = useState<any>(null);
+  const [selectedOrder, setSelectedOrder] = useState<OrderResponse | null>(
+    null
+  );
   const [orderDetails, setOrderDetails] = useState<any[]>([]);
   const [detailsLoading, setDetailsLoading] = useState<boolean>(false);
   const navigate = useNavigate();
   const [form] = Form.useForm();
-  const userId = JSON.parse(localStorage.getItem("userId") || "null");
+  const [userId, setUserId] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchOrders = async () => {
-      if (!userId) {
-        setError('User ID not found in localStorage');
-        setLoading(false);
-        return;
-      }
-
+    const storedUserId = localStorage.getItem("userId");
+    if (storedUserId) {
       try {
-        const accountApi = new AccountApi();
-        const response = await accountApi.apiAccountsAccountIdOrdersGet(userId);
-        const orders = Array.isArray(response.data) ? response.data : response.data?.data?.items || [];
-        setData(orders);
-        console.log(orders)
-      } catch (err) {
-        console.error(err);
-        setError('Failed to fetch orders');
-      } finally {
+        setUserId(JSON.parse(storedUserId));
+      } catch (error) {
+        console.error("Failed to parse userId from localStorage:", error);
+        setError("Invalid user data. Please log in again.");
         setLoading(false);
       }
-    };
+    } else {
+      setError("User not logged in. Please log in to view orders.");
+      setLoading(false);
+    }
+  }, []);
 
-    fetchOrders();
+  useEffect(() => {
+    if (userId) {
+      fetchOrders();
+    }
   }, [userId]);
+
+  const fetchOrders = async () => {
+    if (!userId) {
+      setError("User ID not found. Please log in again.");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const accountApi = new AccountApi();
+      const response = await accountApi.apiAccountsAccountIdOrdersGet(userId);
+      const orders = response.data.data?.items || [];
+      setData(orders);
+    } catch (err) {
+      console.error("Failed to fetch orders:", err);
+      setError("Failed to fetch orders. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const fetchOrderDetails = async (orderId: string) => {
     setDetailsLoading(true);
     try {
       const orderApi = new OrderApi();
       const response = await orderApi.apiOrdersOrderIdOrderdetailsGet(orderId);
-      setOrderDetails(response.data?.data!.items || []);
+      setOrderDetails(response.data?.data?.items || []);
     } catch (error) {
-      console.error("Failed to fetch order details", error);
+      console.error("Failed to fetch order details:", error);
+      notification.error({
+        message: "Error",
+        description: "Failed to fetch order details. Please try again.",
+      });
       setOrderDetails([]);
     } finally {
       setDetailsLoading(false);
     }
   };
 
-  const openCheckoutModal = async (order: any) => {
+  const openCheckoutModal = async (order: OrderResponse) => {
     setSelectedOrder(order);
-    await fetchOrderDetails(order.orderId);
+    await fetchOrderDetails(order.orderId!);
   };
 
   const handleCheckout = async () => {
-    if (!selectedOrder) return;
+    if (!selectedOrder || !userId) {
+      notification.error({
+        message: "Checkout Error",
+        description: "Missing order information or user ID. Please try again.",
+      });
+      return;
+    }
 
     try {
       const orderApi = new OrderApi();
 
-      // First API call: Points payment
-      const responsePoint = await orderApi.apiOrdersOrderIdPayPointsPost(selectedOrder.orderId, { memberId: userId });
-
-      if (responsePoint.data.sucess) {
-        notification.success({
-          message: 'Checkout Successful',
-          description: 'Order has been paid with points.',
-        });
-      } else {
-        // Second API call: Regular payment
-        const response = await orderApi.apiOrdersOrderIdPayVnpayPost(selectedOrder.orderId, { memberId: userId });
-        const paymentUrl = response.data.paymentUrl;
-
-        if (paymentUrl) {
+      switch (selectedOrder.paymentMethod) {
+        case PaymentMethod.Points: {
+          await orderApi.apiOrdersOrderIdPayPointsPost(selectedOrder.orderId!, {
+            memberId: userId,
+          });
           notification.success({
-            message: 'Checkout Successful',
-            description: 'Redirecting to payment page...',
+            message: "Checkout Successful",
+            description: "Order has been paid with points.",
           });
-          window.location.href = paymentUrl;
-        } else {
-          notification.error({
-            message: 'Checkout Failed',
-            description: 'Failed to get payment URL',
-          });
+          break;
         }
+        case PaymentMethod.QrCode: {
+          const response = await orderApi.apiOrdersOrderIdPayVnpayPost(
+            selectedOrder.orderId!,
+            { memberId: userId }
+          );
+          const paymentUrl = response.data.paymentUrl;
+
+          if (paymentUrl) {
+            notification.success({
+              message: "Checkout Successful",
+              description: "Redirecting to payment page...",
+            });
+            window.location.href = paymentUrl;
+          } else {
+            throw new Error("Payment URL not received");
+          }
+          break;
+        }
+        default:
+          throw new Error("Unsupported payment method");
       }
     } catch (error) {
-      console.error("Failed to process checkout", error);
+      console.error("Failed to process checkout:", error);
       notification.error({
-        message: 'Checkout Error',
-        description: 'Failed to process checkout',
+        message: "Checkout Error",
+        description: "Failed to process checkout. Please try again later.",
       });
     }
   };
 
-  const formatBalance = (sellingPrice: any) => {
-    return new Intl.NumberFormat('de-DE').format(sellingPrice);
+  const formatBalance = (sellingPrice: number): string => {
+    return new Intl.NumberFormat("de-DE").format(sellingPrice);
   };
 
   const handleCloseModal = () => {
     setSelectedOrder(null);
-    setOrderDetails([]); // Clear order details when modal is closed
+    setOrderDetails([]);
   };
 
   const columns = [
-   
     {
-      title: 'Code Orders',
-      dataIndex: 'orderCode',
-      key: 'orderCode',
+      title: "Code Orders",
+      dataIndex: "orderCode",
+      key: "orderCode",
     },
     {
-      title: 'Date',
-      dataIndex: 'createdDate',
-      key: 'createdDate',
+      title: "Date",
+      dataIndex: "createdDate",
+      key: "createdDate",
     },
     {
-      title: 'Total Price',
-      dataIndex: 'totalPrice',
-      key: 'totalPrice',
-      render: (totalPrice: number) =>(
-        <strong> {formatBalance(totalPrice)} VND</strong>
-      ) 
+      title: "Total Price",
+      dataIndex: "totalPrice",
+      key: "totalPrice",
+      render: (totalPrice: number) => (
+        <strong>{formatBalance(totalPrice)} VND</strong>
+      ),
     },
     {
-      title: 'Payment Method',
-      dataIndex: 'paymentMethod',
-      key: 'paymentMethod',
+      title: "Payment Method",
+      dataIndex: "paymentMethod",
+      key: "paymentMethod",
     },
     {
-      title: 'Status',
-      dataIndex: 'status',
-      key: 'status',
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
       render: (status: string) => (
-        <Tag color={status === 'Completed' ? 'green' : status === 'AwaitingPayment' ? 'yellow' : status === 'OnDelivery' ? 'blue' : 'red'}>
+        <Tag
+          color={
+            status === "Completed"
+              ? "green"
+              : status === "AwaitingPayment"
+              ? "yellow"
+              : status === "OnDelivery"
+              ? "blue"
+              : "red"
+          }
+        >
           {status.toUpperCase()}
         </Tag>
       ),
     },
     {
-      title: 'Actions',
-      key: 'actions',
-      render: (text: string, record: any) => (
+      title: "Actions",
+      key: "actions",
+      render: (_: any, record: OrderResponse) => (
         <>
-          {record.status === 'AwaitingPayment' ? (
-            <Button
-              type="primary"
-              onClick={() => openCheckoutModal(record)}
-            >
+          {record.status === "AwaitingPayment" ? (
+            <Button type="primary" onClick={() => openCheckoutModal(record)}>
               Checkout
             </Button>
           ) : (
             <Button
               type="primary"
               style={{
-                backgroundColor: 'black',
-                borderColor: 'black',
-                width: '100px',
-                height: '35px',
+                backgroundColor: "black",
+                borderColor: "black",
+                width: "100px",
+                height: "35px",
               }}
               onClick={() => navigate(`/order-detail/${record.orderId}`)}
             >
@@ -177,8 +231,13 @@ const OrderList = () => {
     },
   ];
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>{error}</div>;
+  if (loading) return <Spin size="large" />;
+  if (error)
+    return (
+      <Card>
+        <div>{error}</div>
+      </Card>
+    );
 
   return (
     <Card>
@@ -206,113 +265,143 @@ const OrderList = () => {
             <Table
               dataSource={data}
               columns={columns}
-              rowKey="id"
+              rowKey="orderId"
               pagination={{ pageSize: 4 }}
-              style={{ marginTop: '20px' }}
+              style={{ marginTop: "20px" }}
             />
           </Card>
         </Col>
       </Row>
-      <div style={{ height: '500px' }}>
-        <Modal
-          title="Checkout"
-          visible={!!selectedOrder}
-          onCancel={handleCloseModal}
-          footer={null}
-          width={1100}
-          style={{ top: 20, height: '80vh' }}
-        >
-          {detailsLoading ? (
-            <div>Loading order details...</div>
-          ) : (
-            selectedOrder && (
-              <Row>
-                <Col span={16}>
-                  <Card title='Product' style={{ marginRight: '20px' }}>
-                    <Row>
-                      <Col span={24}>
-                        {orderDetails.length > 0 ? (
-                          orderDetails.map((product) => (
-                            <Card key={product.orderDetailId} style={{ marginBottom: '10px' }}>
-                              <Row>
-                                <Col span={12}>
-                                  <p>Product Name: <strong>{product.fashionItemDetail?.name}</strong></p>
-                                  <p>Price: <strong>{formatBalance(product.fashionItemDetail?.sellingPrice)} VND</strong></p>
-                                </Col>
-                                <Col span={12}>
-                                  <p>Color: {product.fashionItemDetail?.color}</p>
-                                  <p>Size: {product.fashionItemDetail?.size}</p>
-                                  <p>Gender: {product.fashionItemDetail?.gender}</p>
-                                  <p>Brand: {product.fashionItemDetail?.brand}</p>
-                                  <p>Condition: {product.fashionItemDetail?.condition}%</p>
-                                </Col>
-                              </Row>
-                            </Card>
-                          ))
-                        ) : (
-                          <p>No products available</p>
-                        )}
-                      </Col>
-                    </Row>
-                  </Card>
-                </Col>
-                <Col span={8}>
-                  <Card title='Information to Receiving'>
-                    <Form
-                      layout="vertical"
-                      initialValues={{
-                        paymentMethod: selectedOrder.paymentMethod,
-                        recipientName: selectedOrder.recipientName,
-                        address: selectedOrder.address,
-                        contactNumber: selectedOrder.contactNumber,
-                      }}
-                    >
-                      <Form.Item
-                        label="Payment Method"
-                        name="paymentMethod"
+      <Modal
+        title="Checkout"
+        visible={!!selectedOrder}
+        onCancel={handleCloseModal}
+        footer={null}
+        width={1100}
+        style={{ top: 20, height: "80vh" }}
+      >
+        {detailsLoading ? (
+          <Spin size="large" />
+        ) : (
+          selectedOrder && (
+            <Row>
+              <Col span={16}>
+                <Card title="Product" style={{ marginRight: "20px" }}>
+                  <Row>
+                    <Col span={24}>
+                      {orderDetails.length > 0 ? (
+                        orderDetails.map((product) => (
+                          <Card
+                            key={product.orderDetailId}
+                            style={{ marginBottom: "10px" }}
+                          >
+                            <Row>
+                              <Col span={12}>
+                                <p>
+                                  Product Name:{" "}
+                                  <strong>
+                                    {product.fashionItemDetail?.name || "N/A"}
+                                  </strong>
+                                </p>
+                                <p>
+                                  Price:{" "}
+                                  <strong>
+                                    {formatBalance(
+                                      product.fashionItemDetail?.sellingPrice ||
+                                        0
+                                    )}{" "}
+                                    VND
+                                  </strong>
+                                </p>
+                              </Col>
+                              <Col span={12}>
+                                <p>
+                                  Color:{" "}
+                                  {product.fashionItemDetail?.color || "N/A"}
+                                </p>
+                                <p>
+                                  Size:{" "}
+                                  {product.fashionItemDetail?.size || "N/A"}
+                                </p>
+                                <p>
+                                  Gender:{" "}
+                                  {product.fashionItemDetail?.gender || "N/A"}
+                                </p>
+                                <p>
+                                  Brand:{" "}
+                                  {product.fashionItemDetail?.brand || "N/A"}
+                                </p>
+                                <p>
+                                  Condition:{" "}
+                                  {product.fashionItemDetail?.condition ||
+                                    "N/A"}
+                                  %
+                                </p>
+                              </Col>
+                            </Row>
+                          </Card>
+                        ))
+                      ) : (
+                        <p>No products available</p>
+                      )}
+                    </Col>
+                  </Row>
+                </Card>
+              </Col>
+              <Col span={8}>
+                <Card title="Information to Receiving">
+                  <Form
+                    layout="vertical"
+                    initialValues={{
+                      paymentMethod: selectedOrder.paymentMethod,
+                      recipientName: selectedOrder.recipientName,
+                      address: selectedOrder.address,
+                      contactNumber: selectedOrder.contactNumber,
+                    }}
+                  >
+                    <Form.Item label="Payment Method" name="paymentMethod">
+                      <Select
+                        placeholder="Select payment method"
+                        style={{ width: 150 }}
+                        disabled
                       >
-                        <Select
-                          placeholder="Select payment method"
-                          style={{ width: 150 }}
-                          disabled
-                        >
-                          <Option value="QRCode">QRCode</Option>
-                          <Option value="COD">COD</Option>
-                          <Option value="Point">Point</Option>
-                        </Select>
-                      </Form.Item>
-                      <Form.Item
-                        label="Recipient Name"
-                        name="recipientName"
-                      >
-                        <Input placeholder="Recipient Name" disabled />
-                      </Form.Item>
-                      <Form.Item
-                        label="Address"
-                        name="address"
-                      >
-                        <Input placeholder="Address" disabled />
-                      </Form.Item>
-                      <Form.Item
-                        label="Contact Number"
-                        name="contactNumber"
-                      >
-                        <Input placeholder="Phone" disabled />
-                      </Form.Item>
-                    </Form>
-                  </Card>
-                  <Card title='Total'>
-                    <p style={{ marginBottom: '10px', fontSize: '20px', fontWeight: 'bold', color: '#d1d124' }}>Total Price: {formatBalance(selectedOrder.totalPrice)} VND</p>
-                    <Button type="primary" onClick={handleCheckout}>
-                      Checkout
-                    </Button>
-                  </Card>
-                </Col>
-              </Row>
-            )
-          )}
-        </Modal>
-      </div>
+                        <Option value="QRCode">QRCode</Option>
+                        <Option value="COD">COD</Option>
+                        <Option value="Point">Point</Option>
+                      </Select>
+                    </Form.Item>
+                    <Form.Item label="Recipient Name" name="recipientName">
+                      <Input placeholder="Recipient Name" disabled />
+                    </Form.Item>
+                    <Form.Item label="Address" name="address">
+                      <Input placeholder="Address" disabled />
+                    </Form.Item>
+                    <Form.Item label="Contact Number" name="contactNumber">
+                      <Input placeholder="Phone" disabled />
+                    </Form.Item>
+                  </Form>
+                </Card>
+                <Card title="Total">
+                  <p
+                    style={{
+                      marginBottom: "10px",
+                      fontSize: "20px",
+                      fontWeight: "bold",
+                      color: "#d1d124",
+                    }}
+                  >
+                    Total Price: {formatBalance(selectedOrder.totalPrice || 0)}{" "}
+                    VND
+                  </p>
+                  <Button type="primary" onClick={handleCheckout}>
+                    Checkout
+                  </Button>
+                </Card>
+              </Col>
+            </Row>
+          )
+        )}
+      </Modal>
     </Card>
   );
 };
