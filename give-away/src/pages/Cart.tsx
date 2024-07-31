@@ -309,7 +309,12 @@ const Cart: React.FC = () => {
             <Form.Item
               label="Phone"
               name="phone"
-              rules={[{ required: true, message: "Please enter phone number" }]}
+              rules={[{ required: true, message: "Please enter phone number" },
+                {
+                  pattern: /^(0|\+84)(\s?[1-9]\d{8})$/,
+                  message: "Please enter a valid phone number",
+                },
+              ]}
             >
               <Input placeholder="Phone" />
             </Form.Item>
