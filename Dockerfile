@@ -3,7 +3,7 @@ FROM node:18-alpine as build
 
 # Install pnpm
 RUN npm install -g pnpm
-
+RUN apt-get update && apt-get install -y tzdata
 WORKDIR /app
 
 # Copy pnpm-lock.yaml in addition to package.json

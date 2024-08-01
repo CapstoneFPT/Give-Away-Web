@@ -11,3 +11,4 @@ services:
       - ./src:/app/src
     environment:
       - NODE_ENV=development
+      - TZ=Asia/Saigon
