@@ -73,6 +73,7 @@ const OrderList: React.FC = () => {
       const response = await accountApi.apiAccountsAccountIdOrdersGet(userId);
       const orders = response.data.data?.items || [];
       setData(orders);
+      console.log(response)
     } catch (err) {
       console.error("Failed to fetch orders:", err);
       setError("Failed to fetch orders. Please try again later.");
