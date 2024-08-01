@@ -7,13 +7,14 @@ import {
   FashionItemOrderDetailResponse,
   FashionItemStatus,
   OrderApi,
+  OrderDetailsResponse,
 } from "../api";
 
 const { Title } = Typography;
 
 const OrderDetail = () => {
   const { id } = useParams<{ id: string }>();
-  const [orderDetails, setOrderDetails] = useState<FashionItemOrderDetailResponse[] | null>(null);
+  const [orderDetails, setOrderDetails] = useState<OrderDetailsResponse[] | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
   const location = useLocation();
@@ -53,8 +54,8 @@ const OrderDetail = () => {
     return expirationDate > currentDate;
   };
 
-  const handleRefundClick = (fashionItem: FashionItem, orderDetailId: string) => {
-    navigate("/refunds", { state: { items: [fashionItem], orderDetailId } });
+  const handleRefundClick = (orderDetail: OrderDetailsResponse, orderDetailId: string) => {
+    navigate("/refunds", { state: { items: [orderDetail], orderDetailId } });
   };
 
   return (
@@ -71,48 +72,49 @@ const OrderDetail = () => {
                 <Col span={12}>
                   <Card style={{ borderRadius: "10px" }}>
                     <Image.PreviewGroup>
-                      {detail.fashionItemDetail?.images?.map((image, index) => (
-                        image.url ? (
+                      {/* {detail.itemImage?.map((image, index) => (
+                        image ? (
                           <Image
                             key={index}
-                            src={image.url}
+                            src={image}
                             alt={`Fashion item ${index}`}
                             style={{ width: "100%", height: "auto", borderRadius: "10px" }}
                           />
                         ) : null
-                      ))}
+                      ))} */}
+                      <Image src={detail.itemImage![0]!} alt="Product Image" style={{ width: "200px", height: "auto", borderRadius: "10px" }} />
                     </Image.PreviewGroup>
                     <Descriptions column={1} bordered size="small" style={{ marginTop: "10px" }}>
                       <Descriptions.Item label="Item Name">
-                        {detail.fashionItemDetail?.name}
+                        {detail.itemName}
                         <Tag
                           color={
-                            detail.fashionItemDetail?.status === FashionItemStatus.Sold
+                            detail.itemStatus === FashionItemStatus.Sold
                               ? "green"
                               : "blue"
                           }
                           style={{ marginLeft: "10px" }}
                         >
-                          {detail.fashionItemDetail?.status}
+                          {detail.itemStatus}
                         </Tag>
                       </Descriptions.Item>
                       <Descriptions.Item label="Price">
-                        ${detail.fashionItemDetail?.sellingPrice}
+                        ${detail.unitPrice}
                       </Descriptions.Item>
                       <Descriptions.Item label="Color">
-                        {detail.fashionItemDetail?.color}
+                        {detail.itemColor}
                       </Descriptions.Item>
                       <Descriptions.Item label="Size">
-                        {detail.fashionItemDetail?.size}
+                        {detail.itemSize}
                       </Descriptions.Item>
                       <Descriptions.Item label="Gender">
-                        {detail.fashionItemDetail?.gender}
+                        {detail.itemGender}
                       </Descriptions.Item>
                       <Descriptions.Item label="Brand">
-                        {detail.fashionItemDetail?.brand}
+                        {detail.itemBrand}
                       </Descriptions.Item>
                       <Descriptions.Item label="Condition">
-                        {detail.fashionItemDetail?.condition}
+                        {detail.condition}
                       </Descriptions.Item>
                     </Descriptions>
                   </Card>
@@ -127,7 +129,7 @@ const OrderDetail = () => {
                         <Descriptions.Item label="Phone Number">{contactNumber}</Descriptions.Item>
                       </Descriptions>
                       {isRefundEligible(detail.refundExpirationDate!) &&
-                        detail.fashionItemDetail?.status === FashionItemStatus.Refundable && (
+                        detail.itemStatus === FashionItemStatus.Refundable && (
                           <Button
                             type="primary"
                             style={{
@@ -137,7 +139,7 @@ const OrderDetail = () => {
                               width: "100px",
                               height: "35px",
                             }}
-                            onClick={() => handleRefundClick(detail.fashionItemDetail!, detail.orderDetailId!)}
+                            onClick={() => handleRefundClick(detail, detail.orderDetailId!)}
                           >
                             Refund
                           </Button>

@@ -12,11 +12,17 @@ import {
   Input,
   notification,
   Spin,
-  Typography
+  Typography,
 } from "antd";
 import NavProfile from "../components/NavProfile/NavProfile";
 import { useNavigate } from "react-router-dom";
-import { AccountApi, OrderApi, OrderResponse, PaymentMethod } from "../api";
+import {
+  AccountApi,
+  OrderApi,
+  OrderDetailsResponse,
+  OrderResponse,
+  PaymentMethod,
+} from "../api";
 
 const { Option } = Select;
 
@@ -24,8 +30,10 @@ const OrderList: React.FC = () => {
   const [data, setData] = useState<OrderResponse[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedOrder, setSelectedOrder] = useState<OrderResponse | null>(null);
-  const [orderDetails, setOrderDetails] = useState<any[]>([]);
+  const [selectedOrder, setSelectedOrder] = useState<OrderResponse | null>(
+    null
+  );
+  const [orderDetails, setOrderDetails] = useState<OrderDetailsResponse[]>([]);
   const [detailsLoading, setDetailsLoading] = useState<boolean>(false);
   const navigate = useNavigate();
   const [form] = Form.useForm();
@@ -308,46 +316,27 @@ const OrderList: React.FC = () => {
                           >
                             <Row>
                               <Col span={12}>
+                              <img style={{
+                                width: "180px",
+                                height: "180px",
+                              }} src={product.itemImage![0]!} alt={product.itemName!}/>
+                              </Col>
+                              <Col span={12}>
                                 <Typography>
                                   Product Name:{" "}
-                                  <strong>
-                                    {product.fashionItemDetail?.name || "N/A"}
-                                  </strong>
+                                  <strong>{product.itemName || "N/A"}</strong>
                                 </Typography>
                                 <p>
                                   Price:{" "}
                                   <strong>
-                                    {formatBalance(
-                                      product.fashionItemDetail?.sellingPrice ||
-                                        0
-                                    )}{" "}
-                                    VND
+                                    {formatBalance(product.unitPrice || 0)} VND
                                   </strong>
                                 </p>
-                              </Col>
-                              <Col span={12}>
-                                <p>
-                                  Color:{" "}
-                                  {product.fashionItemDetail?.color || "N/A"}
-                                </p>
-                                <p>
-                                  Size:{" "}
-                                  {product.fashionItemDetail?.size || "N/A"}
-                                </p>
-                                <p>
-                                  Gender:{" "}
-                                  {product.fashionItemDetail?.gender || "N/A"}
-                                </p>
-                                <p>
-                                  Brand:{" "}
-                                  {product.fashionItemDetail?.brand || "N/A"}
-                                </p>
-                                <p>
-                                  Condition:{" "}
-                                  {product.fashionItemDetail?.condition ||
-                                    "N/A"}
-                                  %
-                                </p>
+                                <p>Color: {product.itemColor || "N/A"}</p>
+                                <p>Size: {product.itemSize || "N/A"}</p>
+                                <p>Gender: {product.itemGender || "N/A"}</p>
+                                <p>Brand: {product.itemBrand || "N/A"}</p>
+                                <p>Condition: {product.condition || "N/A"}%</p>
                               </Col>
                             </Row>
                           </Card>
