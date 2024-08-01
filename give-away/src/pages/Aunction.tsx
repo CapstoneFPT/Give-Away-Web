@@ -31,9 +31,9 @@ const Auction: React.FC = () => {
   const [timerKey, setTimerKey] = useState<number>(0);
   const [auctionStarted, setAuctionStarted] = useState<boolean>(false);
 
-  const addBid = useCallback((newBid: CreateBidRequest) => {
+  const addBid = useCallback((newBid: BidDetailResponse) => {
     setBids((prevBids) => [newBid, ...prevBids]);
-    setNextBidAmount(newBid.amount);
+    setNextBidAmount(newBid.nextAmount);
   }, []);
 
   const fetchData = async () => {
@@ -241,7 +241,7 @@ const Auction: React.FC = () => {
                         {bid.amount} VND
                       </span>
                     }
-                    description={bid.createdDate}
+                    description={new Date(bid.createdDate!).toLocaleString()}
                   />
                 </List.Item>
               )}
