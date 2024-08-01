@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Button, Card, Row, Col, Form, Input, Upload, message, Table, UploadFile } from 'antd';
+import { Button, Card, Row, Col, Form, Input, Upload, message, Table, UploadFile, TableColumnsType } from 'antd';
 import { UploadOutlined, SendOutlined } from '@ant-design/icons';
 import { useLocation, useNavigate } from 'react-router-dom';
 import NavProfile from '../components/NavProfile/NavProfile';
-import { CreateRefundRequest, RefundApi } from '../api';
+import { CreateRefundRequest, OrderDetailsResponse, RefundApi } from '../api';
 import { storage } from './Firebase/firebase-config'; // Import the storage instance from Firebase config
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
@@ -63,11 +63,11 @@ const Refunds = () => {
       const imageUrls = await Promise.all(fileList.map((file: UploadFile) => handleUpload(file.originFileObj!)));
   
       // Wrap requestData in an array if the API expects an array
-      const requestData: CreateRefundRequest[] = [{
+      const requestData: CreateRefundRequest = {
         orderDetailIds: orderDetailId,
         description: values.reason,
         images: imageUrls,
-      }];
+      };
   
       console.log(requestData);
   
@@ -87,41 +87,41 @@ const Refunds = () => {
     console.log('Failed:', errorInfo);
   };
 
-  const columns = [
+  const columns : TableColumnsType<OrderDetailsResponse> = [
     {
       title: 'Product',
-      dataIndex: 'images',
+      dataIndex: 'itemImage',
       key: 'images',
-      render: (text: string) => <img src={text} alt="item" style={{ width: '150px', height: '150px' }} />,
+      render: (text: string) => <img src={text} alt="item" style={{ width: '180px', height: '180px' }} />,
     },
     {
       title: 'Name',
-      dataIndex: 'name',
+      dataIndex: 'itemName',
       key: 'name',
     },
     {
       title: 'Color',
-      dataIndex: 'color',
+      dataIndex: 'itemColor',
       key: 'color',
     },
     {
       title: 'Size',
-      dataIndex: 'size',
+      dataIndex: 'itemSize',
       key: 'size',
     },
     {
       title: 'Gender',
-      dataIndex: 'gender',
+      dataIndex: 'itemGender',
       key: 'gender',
     },
     {
       title: 'Brand',
-      dataIndex: 'brand',
+      dataIndex: 'itemBrand',
       key: 'brand',
     },
     {
-      title: 'Selling Price',
-      dataIndex: 'sellingPrice',
+      title: 'Unit Price',
+      dataIndex: 'unitPrice',
       key: 'sellingPrice',
     },
   ];
