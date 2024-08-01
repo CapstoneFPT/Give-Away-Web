@@ -6,6 +6,7 @@ import { AuctionApi, AuctionItemDetailResponse, CreateBidRequest } from "../api"
 import Countdown from 'react-countdown';
 import signalRService from "../pages/service/signalrService";
 import "../pages/Auction.css";
+import signalrService from "../pages/service/signalrService";
 
 const { Title, Paragraph } = Typography;
 
@@ -13,11 +14,9 @@ const Auction: React.FC = () => {
   const { auctionId } = useParams<{ auctionId: string }>();
   const navigate = useNavigate();
   const userId = JSON.parse(localStorage.getItem("userId") || "null");
-
   const [product, setProduct] = useState<AuctionItemDetailResponse | null>(null);
   const [selectedImage, setSelectedImage] = useState<string>("");
   const [bids, setBids] = useState<CreateBidRequest[]>([]);
-  const [selectedBid, setSelectedBid] = useState<number | undefined>(undefined);
   const [nextBidAmount, setNextBidAmount] = useState<number | undefined>(undefined);
   const [remainingTime, setRemainingTime] = useState<number>(0);
   const [timerKey, setTimerKey] = useState<number>(0);
@@ -28,7 +27,7 @@ const Auction: React.FC = () => {
     setNextBidAmount(newBid.amount);
   }, []);
 
-  useEffect(() => {
+ 
     const fetchData = async () => {
       try {
         const auctionDetailApi = new AuctionApi();
@@ -74,8 +73,9 @@ const Auction: React.FC = () => {
       }
     };
 
+
     fetchData();
-  }, [auctionId]);
+
 
   useEffect(() => {
     const setupSignalR = async () => {
@@ -101,20 +101,16 @@ const Auction: React.FC = () => {
     };
   }, [auctionId, addBid, navigate]);
 
-  const handlePlaceBid = async () => {
-    if (selectedBid !== undefined && selectedBid >= (nextBidAmount || 0)) {
-      const newBid: CreateBidRequest = {
-        memberId: userId,
-        amount: selectedBid,
-      };
-
-      try {
-        const auctionDetailApi = new AuctionApi();
-        await auctionDetailApi.apiAuctionsIdBidsPlaceBidPost(auctionId!, newBid);
-        setSelectedBid(undefined);
-      } catch (error) {
-        console.error("Error placing bid:", error);
-      }
+  const handleBid = async () => {
+    if (!nextBidAmount) return;
+    const bidRequest: CreateBidRequest = {
+      memberId: userId,
+      amount: nextBidAmount,
+    };
+    try {
+      await signalrService.placeBid(auctionId!, bidRequest);
+    } catch (error) {
+      console.error("Bid Error: ", error);
     }
   };
 
@@ -227,7 +223,7 @@ const Auction: React.FC = () => {
               <Button
                 type="primary"
                 style={{ marginTop: '10px', backgroundColor: 'black', width: '100%' }}
-                onClick={handlePlaceBid}
+                onClick={handleBid}
               >
                 Place Bid
               </Button>

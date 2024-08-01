@@ -8,14 +8,13 @@ import { DeleteOutlined } from "@ant-design/icons";
 import { storage } from "../../pages/Firebase/firebase-config";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import "./ConsignForm.css";
-// import { BASE_URL } from "../../api/config";
 import FormItemLabel from "antd/es/form/FormItemLabel";
 import {
   AccountApi,
-  ConsignSaleApi,
   CreateConsignSaleRequest,
   ResultStatus,
   ShopApi,
+  SizeType,
 } from "../../api";
 
 const normFile = (e: any) => {
@@ -33,23 +32,17 @@ const ConsignForm = () => {
   const userId = JSON.parse(localStorage.getItem("userId") || "null");
 
   useEffect(() => {
-    const userId = JSON.parse(localStorage.getItem("userId") || "null");
-    console.log(userId);
     const fetchBranches = async () => {
       try {
         const response = await shopApi.apiShopsGet();
-        console.log(response);
-
         if (response.data.resultStatus !== ResultStatus.Success) {
           throw new Error(`HTTP error! Status: ${response.data.resultStatus}`);
         }
-        console.log("Fetched data:", response); // Kiểm tra dữ liệu nhận được
         const data = response.data;
-
         setBranches(data.data || []);
       } catch (error) {
         console.error("Failed to fetch branches:", error);
-        setBranches([]); // Đặt branches thành mảng rỗng nếu có lỗi
+        setBranches([]); // Set branches to empty array on error
       }
     };
 
@@ -60,14 +53,14 @@ const ConsignForm = () => {
     setFileList(info.fileList); // Update file list
   };
 
-  const onFinish = async (values: CreateConsignSaleRequest) => {
-    setUploading(true); // Start uploading
+  const onFinish = async (values: any) => {
+    setUploading(true);
 
-    // Process image uploads
+    // Prepare items with URLs
     const itemsWithUrls = await Promise.all(
-      values.fashionItemForConsigns!.map(async (item) => {
+      values.items.map(async (item: any) => {
         const fileUrls = await Promise.all(
-          fileList.map(async (file) => {
+          fileList.map(async (file: any) => {
             if (file.originFileObj) {
               const storageRef = ref(storage, `images/${file.name}`);
               const metadata = {
@@ -85,16 +78,34 @@ const ConsignForm = () => {
             return "";
           })
         );
-        return { ...item, picture: fileUrls };
+        return { 
+          name: item.productName, 
+          note: item.description,
+          dealPrice: item.dealPrice,
+          condition: item.conditionPercentage,
+          size: item.size,
+          color: item.color,
+          brand: item.brand,
+          gender: item.gender,
+          images: fileUrls 
+        };
       })
     );
+
+    const consignData: CreateConsignSaleRequest = {
+      shopId: values.userInfo.clothBranches,
+      type: "ConsignedForSale",
+      consignorName: values.userInfo.fullName,
+      phone: values.userInfo.phone,
+      fashionItemForConsigns: itemsWithUrls
+    };
 
     // Send form data including image URLs to the backend
     try {
       const consignApi = new AccountApi();
       const response = await consignApi.apiAccountsAccountIdConsignsalesPost(
-        userId,
-        values
+        userId, // Ensure userId is passed correctly
+        consignData // Pass the correct consignData object
       );
       console.log("Backend response:", response);
     } catch (error) {
@@ -144,19 +155,17 @@ const ConsignForm = () => {
             >
               <Select placeholder="Cloth Branches">
                 {branches.map((data: any) => (
-                  <Select.Option key={data} value={data.shopId}>
+                  <Select.Option key={data.shopId} value={data.shopId}>
                     {data.address}
                   </Select.Option>
                 ))}
               </Select>
             </Form.Item>
             <Form.Item
-              name={["userInfo", "Type"]}
-              // rules={[{ required: true, message: "Missing Consgin Type" }]}
+              name={["userInfo", "type"]}
             >
-              <Select style={{ width: "20%" }}>
-                <label>Consigned For Auction</label>
-                <label>Consigned For Sale</label>
+              <Select style={{ width: "20%" }} defaultValue="ConsignedForSale" disabled>
+                <Select.Option value="ConsignedForSale">Consigned For Sale</Select.Option>
               </Select>
             </Form.Item>
           </div>
@@ -176,7 +185,7 @@ const ConsignForm = () => {
                   flexWrap: "wrap",
                 }}
               >
-                {fields.map(({ key, name, ...restField }, index) => (
+                {fields.map(({ key, name, ...restField }) => (
                   <Card
                     key={key}
                     style={{
@@ -188,9 +197,7 @@ const ConsignForm = () => {
                     <Form.Item
                       {...restField}
                       name={[name, "productName"]}
-                      rules={[
-                        { required: true, message: "Missing product name" },
-                      ]}
+                      rules={[{ required: true, message: "Missing product name" }]}
                       className="form-item"
                     >
                       <Input placeholder="Product Name" />
@@ -201,12 +208,7 @@ const ConsignForm = () => {
                       name={[name, "picture"]}
                       valuePropName="fileList"
                       getValueFromEvent={normFile}
-                      rules={[
-                        {
-                          required: true,
-                          message: "Please upload at least one picture",
-                        },
-                      ]}
+                      rules={[{ required: true, message: "Please upload at least one picture" }]}
                     >
                       <Upload
                         className="upload-box"
@@ -223,113 +225,69 @@ const ConsignForm = () => {
 
                     <Form.Item
                       {...restField}
-                      name={[name, "description"]}
-                      rules={[
-                        { required: true, message: "Missing description" },
-                      ]}
+                      name={[name, "gender"]}
+                      rules={[{ required: true, message: "Missing gender" }]}
                     >
                       <Select style={{ width: "50%" }}>
-                        <label>Male</label>
-                        <label>Female</label>
+                        <Select.Option value="male">Male</Select.Option>
+                        <Select.Option value="female">Female</Select.Option>
                       </Select>
                     </Form.Item>
+
                     <Form.Item
                       {...restField}
                       name={[name, "description"]}
-                      rules={[
-                        { required: true, message: "Missing description" },
-                      ]}
+                      rules={[{ required: true, message: "Missing description" }]}
                     >
                       <Input.TextArea placeholder="Description" />
                     </Form.Item>
                     <Form.Item
                       {...restField}
-                      name={[name, " dealPrice"]}
+                      name={[name, "dealPrice"]}
                       rules={[
                         { required: true, message: "Missing price" },
-                        {
-                          pattern: /^\d+(\.\d{1,2})?$/,
-                          message: "Invalid price",
-                        },
+                        { pattern: /^\d+(\.\d{1,2})?$/, message: "Invalid price" },
                       ]}
                     >
                       <Input placeholder="Deal Price" />
                     </Form.Item>
+
                     <Form.Item
                       {...restField}
-                      name={[name, " confirmedPrice"]}
-                      rules={[
-                        { required: true, message: "Missing price" },
-                        {
-                          pattern: /^\d+(\.\d{1,2})?$/,
-                          message: "Invalid price",
-                        },
-                      ]}
-                    >
-                      <Input placeholder="Confirmed Price" />
-                    </Form.Item>
-                    <Form.Item
-                      {...restField}
-                      name={[name, "condition"]}
-                      rules={[
-                        { required: true, message: "Missing product material" },
-                      ]}
-                      className="form-item"
-                    >
-                      <Input placeholder="Material" />
-                    </Form.Item>
-                    <Form.Item
-                      {...restField}
-                      name={[name, "description"]}
-                      rules={[
-                        { required: true, message: "Missing description" },
-                      ]}
+                      name={[name, "size"]}
+                      rules={[{ required: true, message: "Missing size" }]}
                     >
                       <Select style={{ width: "50%" }}>
-                        <label>XS</label>
-                        <label>S</label>
-                        <label>M</label>
-                        <label>L</label>
-                        <label>XL</label>
-                        <label>2XL</label>
+                        <Select.Option value={SizeType.Xs}>{SizeType.Xs}</Select.Option>
+                        <Select.Option value={SizeType.S}>{SizeType.S}</Select.Option>
+                        <Select.Option value={SizeType.M}>{SizeType.M}</Select.Option>
+                        <Select.Option value={SizeType.L}>{SizeType.L}</Select.Option>
+                        <Select.Option value={SizeType.Xxl}>{SizeType.Xxl}</Select.Option>
+                        <Select.Option value={SizeType.Xxxl}>{SizeType.Xxxl}</Select.Option>
+                        <Select.Option value={SizeType.Xxxxl}>{SizeType.Xxxxl}</Select.Option>
                       </Select>
                     </Form.Item>
 
                     <Form.Item
                       {...restField}
                       name={[name, "conditionPercentage"]}
-                      rules={[
-                        {
-                          required: true,
-                          message: "Missing condition percentage",
-                        },
-                      ]}
+                      rules={[{ required: true, message: "Missing condition percentage" }]}
                     >
                       <Input placeholder="Condition Percentage" />
                     </Form.Item>
                     <Form.Item
                       {...restField}
-                      name={[name, "conditionPercentage"]}
-                      rules={[
-                        {
-                          required: true,
-                          message: "Missing condition percentage",
-                        },
-                      ]}
+                      name={[name, "color"]}
+                      rules={[{ required: true, message: "Missing color" }]}
                     >
                       <Input placeholder="Color" />
                     </Form.Item>
                     <Form.Item
                       {...restField}
-                      name={[name, "conditionPercentage"]}
-                      rules={[
-                        {
-                          required: true,
-                          message: "Missing condition percentage",
-                        },
-                      ]}
+                      name={[name, "brand"]}
+                      rules={[{ required: true, message: "Missing brand" }]}
                     >
-                      <Input placeholder="brand" />
+                      <Input placeholder="Brand" />
                     </Form.Item>
                     <Button
                       icon={<DeleteOutlined style={{ color: "red" }} />}

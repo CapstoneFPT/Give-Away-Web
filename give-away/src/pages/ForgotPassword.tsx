@@ -2,6 +2,8 @@ import React, { useState, useRef } from "react";
 import { Button, Card, Form, Input, notification, Modal } from "antd";
 import { MailOutlined, LockOutlined } from "@ant-design/icons";
 import { BASE_URL } from "../api/config";
+import { AuthApi } from "../api";
+import Password from "antd/es/input/Password";
 
 interface Styles {
   inputContainer: React.CSSProperties;
@@ -50,20 +52,12 @@ const ForgotPassword = () => {
   };
 
   const onFinish = async (values: any) => {
-    console.log(values);
+    const { email, password, confirmPassword } = values; // Lấy giá trị từ form
     try {
-      const { email, password, confirmPassword } = values;
-      const response = await fetch(
-        `${BASE_URL}/auth/forgot-password?Email=${email}&Password=${password}&ConfirmPassword=${confirmPassword}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (response.ok) {
+      const fogotPassWordApi = new AuthApi();
+      const response = await fogotPassWordApi.apiAuthForgotPasswordGet(email, password, confirmPassword); // Thêm await ở đây
+      
+      if (response) {
         notification.success({
           message: "Success",
           description:
@@ -107,30 +101,18 @@ const ForgotPassword = () => {
     const confirmtoken = otp.join(""); // Chuyển mảng OTP thành chuỗi
 
     if (confirmtoken.length === 6) {
+      const confirmOTP = new AuthApi();
       try {
-        const response = await fetch(
-          `${BASE_URL}/auth/reset-password?confirmtoken=${confirmtoken}`,
-          {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ confirmtoken }),
-             // Sử dụng confirmtoken thay vì otp
-             
-          }
-          
-        );
+        const response = await confirmOTP.apiAuthResetPasswordPut(confirmtoken); // Sử dụng API call mới
 
-        if (response.ok) {
+        if (response) {
           notification.success({
             message: "OTP Verified",
             description: "Your OTP has been verified successfully.",
           });
           setIsModalVisible(false);
         } else {
-          const errorData = await response.json();
-          throw new Error(errorData.message || "Failed to verify OTP");
+          throw new Error("Failed to verify OTP");
         }
       } catch (error) {
         if (error instanceof Error) {
@@ -151,7 +133,7 @@ const ForgotPassword = () => {
         description: "Please enter a valid 6-digit OTP.",
       });
     }
-  };
+};
 
   return (
     <>
@@ -190,9 +172,7 @@ const ForgotPassword = () => {
 
             <Form.Item
               name="password"
-              rules={[
-                { required: true, message: "Please input your Password!" },
-              ]}
+              rules={[{ required: true, message: "Please input your Password!" }]}
               style={styles.inputContainer}
             >
               <Input.Password
