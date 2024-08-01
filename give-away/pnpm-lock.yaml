@@ -53,9 +53,15 @@ dependencies:
   react-icons:
     specifier: ^5.2.1
     version: 5.2.1(react@18.3.1)
+  react-inner-image-zoom:
+    specifier: ^3.0.2
+    version: 3.0.2(prop-types@15.8.1)(react@18.3.1)
   react-leaflet:
     specifier: ^4.2.1
     version: 4.2.1(leaflet@1.9.4)(react-dom@18.3.1)(react@18.3.1)
+  react-medium-image-zoom:
+    specifier: ^5.2.8
+    version: 5.2.8(react-dom@18.3.1)(react@18.3.1)
   react-router-dom:
     specifier: ^6.25.1
     version: 6.25.1(react-dom@18.3.1)(react@18.3.1)
@@ -4000,6 +4006,16 @@ packages:
       react: 18.3.1
     dev: false
 
+  /react-inner-image-zoom@3.0.2(prop-types@15.8.1)(react@18.3.1):
+    resolution: {integrity: sha512-ICjyz0wdKmLufuQkUyg4iyP0yIF2elDeHjY1+S1pOKPggrW0g9V2SCmOSA39405ZX8GVVaxadmUYWwz3OF4V5A==}
+    peerDependencies:
+      prop-types: '>=15.6.2'
+      react: '>=16.8.0'
+    dependencies:
+      prop-types: 15.8.1
+      react: 18.3.1
+    dev: false
+
   /react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
     dev: false
@@ -4017,6 +4033,16 @@ packages:
     dependencies:
       '@react-leaflet/core': 2.1.0(leaflet@1.9.4)(react-dom@18.3.1)(react@18.3.1)
       leaflet: 1.9.4
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+    dev: false
+
+  /react-medium-image-zoom@5.2.8(react-dom@18.3.1)(react@18.3.1):
+    resolution: {integrity: sha512-ivnubZi/2GQcMTneQy5gjLxEQLenKu081844qqZ7/JvLxSh5YPF1TLq7s+5rc54dKa0jjPT8Zm2tiC0Sda6eIA==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
     dev: false

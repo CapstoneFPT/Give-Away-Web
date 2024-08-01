@@ -63,11 +63,12 @@ const Refunds = () => {
       const imageUrls = await Promise.all(fileList.map((file: UploadFile) => handleUpload(file.originFileObj!)));
   
       // Wrap requestData in an array if the API expects an array
-      const requestData: CreateRefundRequest[] = [{
+      const requestData: CreateRefundRequest = {
         orderDetailIds: orderDetailId,
         description: values.reason,
         images: imageUrls,
-      }];
+
+      };
   
       console.log(requestData);
   

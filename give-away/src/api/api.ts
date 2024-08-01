@@ -530,12 +530,6 @@ export interface Auction {
     'status'?: AuctionStatus;
     /**
      * 
-     * @type {Schedule}
-     * @memberof Auction
-     */
-    'schedule'?: Schedule;
-    /**
-     * 
      * @type {string}
      * @memberof Auction
      */
@@ -852,6 +846,12 @@ export interface AuctionFashionItem {
     'note'?: string | null;
     /**
      * 
+     * @type {string}
+     * @memberof AuctionFashionItem
+     */
+    'description'?: string | null;
+    /**
+     * 
      * @type {number}
      * @memberof AuctionFashionItem
      */
@@ -1016,6 +1016,36 @@ export interface AuctionItemDetailResponse {
      * @memberof AuctionItemDetailResponse
      */
     'condition'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof AuctionItemDetailResponse
+     */
+    'brand'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof AuctionItemDetailResponse
+     */
+    'color'?: string | null;
+    /**
+     * 
+     * @type {SizeType}
+     * @memberof AuctionItemDetailResponse
+     */
+    'size'?: SizeType;
+    /**
+     * 
+     * @type {GenderType}
+     * @memberof AuctionItemDetailResponse
+     */
+    'gender'?: GenderType;
+    /**
+     * 
+     * @type {string}
+     * @memberof AuctionItemDetailResponse
+     */
+    'description'?: string | null;
     /**
      * 
      * @type {number}
@@ -2382,7 +2412,13 @@ export interface CreateAuctionRequest {
      * @type {string}
      * @memberof CreateAuctionRequest
      */
-    'timeslotId'?: string;
+    'startTime'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateAuctionRequest
+     */
+    'endTime'?: string;
     /**
      * 
      * @type {number}
@@ -2715,44 +2751,6 @@ export interface CreateStaffAccountRequest {
 /**
  * 
  * @export
- * @interface CreateTimeslotData
- */
-export interface CreateTimeslotData {
-    /**
-     * 
-     * @type {string}
-     * @memberof CreateTimeslotData
-     */
-    'startTime': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof CreateTimeslotData
-     */
-    'endTime': string;
-    /**
-     * 
-     * @type {number}
-     * @memberof CreateTimeslotData
-     */
-    'slot': number;
-}
-/**
- * 
- * @export
- * @interface CreateTimeslotRequest
- */
-export interface CreateTimeslotRequest {
-    /**
-     * 
-     * @type {Array<CreateTimeslotData>}
-     * @memberof CreateTimeslotRequest
-     */
-    'data'?: Array<CreateTimeslotData> | null;
-}
-/**
- * 
- * @export
  * @interface CreateWithdrawRequest
  */
 export interface CreateWithdrawRequest {
@@ -3039,6 +3037,12 @@ export interface FashionItem {
      * @memberof FashionItem
      */
     'note'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof FashionItem
+     */
+    'description'?: string | null;
     /**
      * 
      * @type {number}
@@ -3517,100 +3521,6 @@ export interface FashionItemOrderDetailResponse {
 /**
  * 
  * @export
- * @interface FashionItemOrderDetailResponsePaginationResponse
- */
-export interface FashionItemOrderDetailResponsePaginationResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof FashionItemOrderDetailResponsePaginationResponse
-     */
-    'pageNumber'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof FashionItemOrderDetailResponsePaginationResponse
-     */
-    'pageSize'?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof FashionItemOrderDetailResponsePaginationResponse
-     */
-    'searchTerm'?: string | null;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof FashionItemOrderDetailResponsePaginationResponse
-     */
-    'filters'?: Array<string> | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof FashionItemOrderDetailResponsePaginationResponse
-     */
-    'orderBy'?: string | null;
-    /**
-     * 
-     * @type {number}
-     * @memberof FashionItemOrderDetailResponsePaginationResponse
-     */
-    'totalCount'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof FashionItemOrderDetailResponsePaginationResponse
-     */
-    'totalPages'?: number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof FashionItemOrderDetailResponsePaginationResponse
-     */
-    'hasNext'?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof FashionItemOrderDetailResponsePaginationResponse
-     */
-    'hasPrevious'?: boolean;
-    /**
-     * 
-     * @type {Array<FashionItemOrderDetailResponse>}
-     * @memberof FashionItemOrderDetailResponsePaginationResponse
-     */
-    'items'?: Array<FashionItemOrderDetailResponse> | null;
-}
-/**
- * 
- * @export
- * @interface FashionItemOrderDetailResponsePaginationResponseResult
- */
-export interface FashionItemOrderDetailResponsePaginationResponseResult {
-    /**
-     * 
-     * @type {FashionItemOrderDetailResponsePaginationResponse}
-     * @memberof FashionItemOrderDetailResponsePaginationResponseResult
-     */
-    'data'?: FashionItemOrderDetailResponsePaginationResponse;
-    /**
-     * 
-     * @type {ResultStatus}
-     * @memberof FashionItemOrderDetailResponsePaginationResponseResult
-     */
-    'resultStatus'?: ResultStatus;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof FashionItemOrderDetailResponsePaginationResponseResult
-     */
-    'messages'?: Array<string> | null;
-}
-
-
-/**
- * 
- * @export
  * @interface FashionItemOrderDetailResponseResult
  */
 export interface FashionItemOrderDetailResponseResult {
@@ -3649,6 +3559,7 @@ export const FashionItemStatus = {
     Refundable: 'Refundable',
     PendingForConsignSale: 'PendingForConsignSale',
     PendingAuction: 'PendingAuction',
+    PendingForRefund: 'PendingForRefund',
     PendingForOrder: 'PendingForOrder',
     AwaitingAuction: 'AwaitingAuction',
     Bidding: 'Bidding',
@@ -4702,6 +4613,12 @@ export interface OrderDetailsResponse {
      * @type {string}
      * @memberof OrderDetailsResponse
      */
+    'orderCode'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof OrderDetailsResponse
+     */
     'orderDetailId'?: string;
     /**
      * 
@@ -4723,6 +4640,72 @@ export interface OrderDetailsResponse {
     'itemName'?: string | null;
     /**
      * 
+     * @type {FashionItemType}
+     * @memberof OrderDetailsResponse
+     */
+    'itemType'?: FashionItemType;
+    /**
+     * 
+     * @type {string}
+     * @memberof OrderDetailsResponse
+     */
+    'itemNote'?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof OrderDetailsResponse
+     */
+    'condition'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof OrderDetailsResponse
+     */
+    'categoryName'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof OrderDetailsResponse
+     */
+    'itemColor'?: string | null;
+    /**
+     * 
+     * @type {SizeType}
+     * @memberof OrderDetailsResponse
+     */
+    'itemSize'?: SizeType;
+    /**
+     * 
+     * @type {string}
+     * @memberof OrderDetailsResponse
+     */
+    'itemBrand'?: string | null;
+    /**
+     * 
+     * @type {GenderType}
+     * @memberof OrderDetailsResponse
+     */
+    'itemGender'?: GenderType;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof OrderDetailsResponse
+     */
+    'itemImage'?: Array<string> | null;
+    /**
+     * 
+     * @type {FashionItemStatus}
+     * @memberof OrderDetailsResponse
+     */
+    'itemStatus'?: FashionItemStatus;
+    /**
+     * 
+     * @type {string}
+     * @memberof OrderDetailsResponse
+     */
+    'shopAddress'?: string | null;
+    /**
+     * 
      * @type {string}
      * @memberof OrderDetailsResponse
      */
@@ -4734,6 +4717,102 @@ export interface OrderDetailsResponse {
      */
     'createdDate'?: string;
 }
+
+
+/**
+ * 
+ * @export
+ * @interface OrderDetailsResponsePaginationResponse
+ */
+export interface OrderDetailsResponsePaginationResponse {
+    /**
+     * 
+     * @type {number}
+     * @memberof OrderDetailsResponsePaginationResponse
+     */
+    'pageNumber'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof OrderDetailsResponsePaginationResponse
+     */
+    'pageSize'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof OrderDetailsResponsePaginationResponse
+     */
+    'searchTerm'?: string | null;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof OrderDetailsResponsePaginationResponse
+     */
+    'filters'?: Array<string> | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof OrderDetailsResponsePaginationResponse
+     */
+    'orderBy'?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof OrderDetailsResponsePaginationResponse
+     */
+    'totalCount'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof OrderDetailsResponsePaginationResponse
+     */
+    'totalPages'?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof OrderDetailsResponsePaginationResponse
+     */
+    'hasNext'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof OrderDetailsResponsePaginationResponse
+     */
+    'hasPrevious'?: boolean;
+    /**
+     * 
+     * @type {Array<OrderDetailsResponse>}
+     * @memberof OrderDetailsResponsePaginationResponse
+     */
+    'items'?: Array<OrderDetailsResponse> | null;
+}
+/**
+ * 
+ * @export
+ * @interface OrderDetailsResponsePaginationResponseResult
+ */
+export interface OrderDetailsResponsePaginationResponseResult {
+    /**
+     * 
+     * @type {OrderDetailsResponsePaginationResponse}
+     * @memberof OrderDetailsResponsePaginationResponseResult
+     */
+    'data'?: OrderDetailsResponsePaginationResponse;
+    /**
+     * 
+     * @type {ResultStatus}
+     * @memberof OrderDetailsResponsePaginationResponseResult
+     */
+    'resultStatus'?: ResultStatus;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof OrderDetailsResponsePaginationResponseResult
+     */
+    'messages'?: Array<string> | null;
+}
+
+
 /**
  * 
  * @export
@@ -5529,33 +5608,6 @@ export interface RefundResponse {
 /**
  * 
  * @export
- * @interface RefundResponseListResult
- */
-export interface RefundResponseListResult {
-    /**
-     * 
-     * @type {Array<RefundResponse>}
-     * @memberof RefundResponseListResult
-     */
-    'data'?: Array<RefundResponse> | null;
-    /**
-     * 
-     * @type {ResultStatus}
-     * @memberof RefundResponseListResult
-     */
-    'resultStatus'?: ResultStatus;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof RefundResponseListResult
-     */
-    'messages'?: Array<string> | null;
-}
-
-
-/**
- * 
- * @export
  * @interface RefundResponsePaginationResponse
  */
 export interface RefundResponsePaginationResponse {
@@ -5759,55 +5811,6 @@ export const Roles = {
 export type Roles = typeof Roles[keyof typeof Roles];
 
 
-/**
- * 
- * @export
- * @interface Schedule
- */
-export interface Schedule {
-    /**
-     * 
-     * @type {string}
-     * @memberof Schedule
-     */
-    'scheduleId'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Schedule
-     */
-    'date'?: string;
-    /**
-     * 
-     * @type {Timeslot}
-     * @memberof Schedule
-     */
-    'timeslot'?: Timeslot;
-    /**
-     * 
-     * @type {string}
-     * @memberof Schedule
-     */
-    'timeslotId'?: string;
-    /**
-     * 
-     * @type {Auction}
-     * @memberof Schedule
-     */
-    'auction'?: Auction;
-    /**
-     * 
-     * @type {string}
-     * @memberof Schedule
-     */
-    'auctionId'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Schedule
-     */
-    'createdDate'?: string;
-}
 /**
  * 
  * @export
@@ -6187,171 +6190,6 @@ export interface SystemRevenueDto {
      * @memberof SystemRevenueDto
      */
     'endDate'?: string;
-}
-/**
- * 
- * @export
- * @enum {string}
- */
-
-export const TimeSlotStatus = {
-    Enabled: 'Enabled',
-    Disabled: 'Disabled'
-} as const;
-
-export type TimeSlotStatus = typeof TimeSlotStatus[keyof typeof TimeSlotStatus];
-
-
-/**
- * 
- * @export
- * @interface Timeslot
- */
-export interface Timeslot {
-    /**
-     * 
-     * @type {string}
-     * @memberof Timeslot
-     */
-    'timeslotId'?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof Timeslot
-     */
-    'slot'?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof Timeslot
-     */
-    'startTime'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Timeslot
-     */
-    'endTime'?: string;
-    /**
-     * 
-     * @type {TimeSlotStatus}
-     * @memberof Timeslot
-     */
-    'status'?: TimeSlotStatus;
-    /**
-     * 
-     * @type {string}
-     * @memberof Timeslot
-     */
-    'createdDate'?: string;
-}
-
-
-/**
- * 
- * @export
- * @interface TimeslotListResponse
- */
-export interface TimeslotListResponse {
-    /**
-     * 
-     * @type {string}
-     * @memberof TimeslotListResponse
-     */
-    'timeslotId'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof TimeslotListResponse
-     */
-    'startTime'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof TimeslotListResponse
-     */
-    'endTime'?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof TimeslotListResponse
-     */
-    'slot'?: number;
-    /**
-     * 
-     * @type {TimeSlotStatus}
-     * @memberof TimeslotListResponse
-     */
-    'status'?: TimeSlotStatus;
-}
-
-
-/**
- * 
- * @export
- * @interface TimeslotListResponsePaginationResponse
- */
-export interface TimeslotListResponsePaginationResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof TimeslotListResponsePaginationResponse
-     */
-    'pageNumber'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof TimeslotListResponsePaginationResponse
-     */
-    'pageSize'?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof TimeslotListResponsePaginationResponse
-     */
-    'searchTerm'?: string | null;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof TimeslotListResponsePaginationResponse
-     */
-    'filters'?: Array<string> | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof TimeslotListResponsePaginationResponse
-     */
-    'orderBy'?: string | null;
-    /**
-     * 
-     * @type {number}
-     * @memberof TimeslotListResponsePaginationResponse
-     */
-    'totalCount'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof TimeslotListResponsePaginationResponse
-     */
-    'totalPages'?: number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof TimeslotListResponsePaginationResponse
-     */
-    'hasNext'?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof TimeslotListResponsePaginationResponse
-     */
-    'hasPrevious'?: boolean;
-    /**
-     * 
-     * @type {Array<TimeslotListResponse>}
-     * @memberof TimeslotListResponsePaginationResponse
-     */
-    'items'?: Array<TimeslotListResponse> | null;
 }
 /**
  * 
@@ -13096,7 +12934,7 @@ export const OrderApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiOrdersOrderIdOrderdetailsGet(orderId: string, pageNumber?: number, pageSize?: number, shopId?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FashionItemOrderDetailResponsePaginationResponseResult>> {
+        async apiOrdersOrderIdOrderdetailsGet(orderId: string, pageNumber?: number, pageSize?: number, shopId?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<OrderDetailsResponsePaginationResponseResult>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.apiOrdersOrderIdOrderdetailsGet(orderId, pageNumber, pageSize, shopId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['OrderApi.apiOrdersOrderIdOrderdetailsGet']?.[localVarOperationServerIndex]?.url;
@@ -13210,7 +13048,7 @@ export const OrderApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiOrdersOrderIdOrderdetailsGet(orderId: string, pageNumber?: number, pageSize?: number, shopId?: string, options?: any): AxiosPromise<FashionItemOrderDetailResponsePaginationResponseResult> {
+        apiOrdersOrderIdOrderdetailsGet(orderId: string, pageNumber?: number, pageSize?: number, shopId?: string, options?: any): AxiosPromise<OrderDetailsResponsePaginationResponseResult> {
             return localVarFp.apiOrdersOrderIdOrderdetailsGet(orderId, pageNumber, pageSize, shopId, options).then((request) => request(axios, basePath));
         },
         /**
@@ -13770,11 +13608,11 @@ export const RefundApiAxiosParamCreator = function (configuration?: Configuratio
         },
         /**
          * 
-         * @param {Array<CreateRefundRequest>} [createRefundRequest] 
+         * @param {CreateRefundRequest} [createRefundRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiRefundsPost: async (createRefundRequest?: Array<CreateRefundRequest>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        apiRefundsPost: async (createRefundRequest?: CreateRefundRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/refunds`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -13948,11 +13786,11 @@ export const RefundApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {Array<CreateRefundRequest>} [createRefundRequest] 
+         * @param {CreateRefundRequest} [createRefundRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiRefundsPost(createRefundRequest?: Array<CreateRefundRequest>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RefundResponseListResult>> {
+        async apiRefundsPost(createRefundRequest?: CreateRefundRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RefundResponseResult>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.apiRefundsPost(createRefundRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['RefundApi.apiRefundsPost']?.[localVarOperationServerIndex]?.url;
@@ -14020,11 +13858,11 @@ export const RefundApiFactory = function (configuration?: Configuration, basePat
         },
         /**
          * 
-         * @param {Array<CreateRefundRequest>} [createRefundRequest] 
+         * @param {CreateRefundRequest} [createRefundRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiRefundsPost(createRefundRequest?: Array<CreateRefundRequest>, options?: any): AxiosPromise<RefundResponseListResult> {
+        apiRefundsPost(createRefundRequest?: CreateRefundRequest, options?: any): AxiosPromise<RefundResponseResult> {
             return localVarFp.apiRefundsPost(createRefundRequest, options).then((request) => request(axios, basePath));
         },
         /**
@@ -14082,12 +13920,12 @@ export class RefundApi extends BaseAPI {
 
     /**
      * 
-     * @param {Array<CreateRefundRequest>} [createRefundRequest] 
+     * @param {CreateRefundRequest} [createRefundRequest] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof RefundApi
      */
-    public apiRefundsPost(createRefundRequest?: Array<CreateRefundRequest>, options?: RawAxiosRequestConfig) {
+    public apiRefundsPost(createRefundRequest?: CreateRefundRequest, options?: RawAxiosRequestConfig) {
         return RefundApiFp(this.configuration).apiRefundsPost(createRefundRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -15082,200 +14920,6 @@ export class TestApi extends BaseAPI {
      */
     public apiTestingUserGet(options?: RawAxiosRequestConfig) {
         return TestApiFp(this.configuration).apiTestingUserGet(options).then((request) => request(this.axios, this.basePath));
-    }
-}
-
-
-
-/**
- * TimeslotApi - axios parameter creator
- * @export
- */
-export const TimeslotApiAxiosParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @param {number} [pageNumber] 
-         * @param {number} [pageSize] 
-         * @param {TimeSlotStatus} [status] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        apiTimeslotsGet: async (pageNumber?: number, pageSize?: number, status?: TimeSlotStatus, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/timeslots`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication Bearer required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-            if (pageNumber !== undefined) {
-                localVarQueryParameter['PageNumber'] = pageNumber;
-            }
-
-            if (pageSize !== undefined) {
-                localVarQueryParameter['PageSize'] = pageSize;
-            }
-
-            if (status !== undefined) {
-                localVarQueryParameter['Status'] = status;
-            }
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @param {CreateTimeslotRequest} [createTimeslotRequest] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        apiTimeslotsPost: async (createTimeslotRequest?: CreateTimeslotRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/timeslots`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication Bearer required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(createTimeslotRequest, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-    }
-};
-
-/**
- * TimeslotApi - functional programming interface
- * @export
- */
-export const TimeslotApiFp = function(configuration?: Configuration) {
-    const localVarAxiosParamCreator = TimeslotApiAxiosParamCreator(configuration)
-    return {
-        /**
-         * 
-         * @param {number} [pageNumber] 
-         * @param {number} [pageSize] 
-         * @param {TimeSlotStatus} [status] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async apiTimeslotsGet(pageNumber?: number, pageSize?: number, status?: TimeSlotStatus, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TimeslotListResponsePaginationResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiTimeslotsGet(pageNumber, pageSize, status, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['TimeslotApi.apiTimeslotsGet']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * 
-         * @param {CreateTimeslotRequest} [createTimeslotRequest] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async apiTimeslotsPost(createTimeslotRequest?: CreateTimeslotRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiTimeslotsPost(createTimeslotRequest, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['TimeslotApi.apiTimeslotsPost']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-    }
-};
-
-/**
- * TimeslotApi - factory interface
- * @export
- */
-export const TimeslotApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = TimeslotApiFp(configuration)
-    return {
-        /**
-         * 
-         * @param {number} [pageNumber] 
-         * @param {number} [pageSize] 
-         * @param {TimeSlotStatus} [status] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        apiTimeslotsGet(pageNumber?: number, pageSize?: number, status?: TimeSlotStatus, options?: any): AxiosPromise<TimeslotListResponsePaginationResponse> {
-            return localVarFp.apiTimeslotsGet(pageNumber, pageSize, status, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @param {CreateTimeslotRequest} [createTimeslotRequest] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        apiTimeslotsPost(createTimeslotRequest?: CreateTimeslotRequest, options?: any): AxiosPromise<object> {
-            return localVarFp.apiTimeslotsPost(createTimeslotRequest, options).then((request) => request(axios, basePath));
-        },
-    };
-};
-
-/**
- * TimeslotApi - object-oriented interface
- * @export
- * @class TimeslotApi
- * @extends {BaseAPI}
- */
-export class TimeslotApi extends BaseAPI {
-    /**
-     * 
-     * @param {number} [pageNumber] 
-     * @param {number} [pageSize] 
-     * @param {TimeSlotStatus} [status] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof TimeslotApi
-     */
-    public apiTimeslotsGet(pageNumber?: number, pageSize?: number, status?: TimeSlotStatus, options?: RawAxiosRequestConfig) {
-        return TimeslotApiFp(this.configuration).apiTimeslotsGet(pageNumber, pageSize, status, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @param {CreateTimeslotRequest} [createTimeslotRequest] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof TimeslotApi
-     */
-    public apiTimeslotsPost(createTimeslotRequest?: CreateTimeslotRequest, options?: RawAxiosRequestConfig) {
-        return TimeslotApiFp(this.configuration).apiTimeslotsPost(createTimeslotRequest, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

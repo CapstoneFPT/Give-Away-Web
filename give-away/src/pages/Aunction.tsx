@@ -5,6 +5,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { AuctionApi, AuctionItemDetailResponse, CreateBidRequest } from "../api";
 import Countdown from 'react-countdown';
 import signalRService from "../pages/service/signalrService";
+import "../pages/Auction.css";
 
 const { Title, Paragraph } = Typography;
 
@@ -27,20 +28,17 @@ const Auction: React.FC = () => {
     setNextBidAmount(newBid.amount);
   }, []);
 
-  const formatUTCToLocalTime = (utcTime: string): Date => {
-    const localTime = new Date(utcTime);
-    return localTime;
-  };
-
   useEffect(() => {
     const fetchData = async () => {
       try {
         const auctionDetailApi = new AuctionApi();
         const response = await auctionDetailApi.apiAuctionsIdGet(auctionId!);
+        console.log(response)
         const fetchedProduct = response.data.auctionItem;
+        console.log(fetchedProduct)
 
         const productData: AuctionItemDetailResponse = {
-          initialPrice: fetchedProduct?.initialPrice,
+          initialPrice: fetchedProduct?.sellingPrice,
           images: fetchedProduct?.images,
           category: fetchedProduct?.category,
           condition: fetchedProduct?.condition,
@@ -58,19 +56,15 @@ const Auction: React.FC = () => {
 
         const serverTimeApi = new AuctionApi();
         const responseServerTime = await serverTimeApi.apiAuctionsCurrentTimeGet();
-        const currentTimeUTC = responseServerTime.data;
-        const startTimeUTC = response.data.startDate;
-        const endTimeUTC = response.data.endDate;
+        const currentTime = new Date(responseServerTime.data!);
+        const startTime = new Date(response.data.startDate!);
+        const endTime = new Date(response.data.endDate!);
 
-        const currentTime = formatUTCToLocalTime(currentTimeUTC!)
-        const startTime = formatUTCToLocalTime(startTimeUTC!)
-        const endTime = formatUTCToLocalTime(endTimeUTC!)
-        console.log(currentTime)
         if (currentTime < startTime) {
-          setRemainingTime(Math.floor((startTime.getMilliseconds() - currentTime.getMilliseconds()) / 1000));
+          setRemainingTime(Math.floor((startTime.getTime() - currentTime.getTime()) / 1000));
           setAuctionStarted(false);
         } else {
-          setRemainingTime(Math.floor((endTime.getMilliseconds() - currentTime.getMilliseconds()) / 1000));
+          setRemainingTime(Math.floor((endTime.getTime() - currentTime.getTime()) / 1000));
           setAuctionStarted(true);
         }
 
@@ -135,6 +129,9 @@ const Auction: React.FC = () => {
       </div>
     );
   };
+  const formatBalance = (balance: number) => {
+    return new Intl.NumberFormat('de-DE').format(balance);
+  };
 
   if (!product) {
     return <div>Loading...</div>;
@@ -164,24 +161,52 @@ const Auction: React.FC = () => {
           </Row>
         </Col>
         <Col span={12}>
-          <img src={selectedImage} alt={product.name!} style={{ width: "90%", height: '750px' }} />
+          <div className="zoom-container">
+            <img
+              src={selectedImage}
+              alt={product.name!}
+              className="zoom-image"
+              style={{ width: "90%", height: '750px' }}
+            />
+          </div>
         </Col>
         <Col span={8}>
           <Card title="Product Details">
             <Title level={3}>{product.name}</Title>
             <Row gutter={[16, 16]}>
-              <Col span={12}>
+              <Col span={14}>
                 <Paragraph>
                   <strong>Category:</strong> {product.category?.categoryName}
                 </Paragraph>
+                <Paragraph>
+                  <strong>Condition:</strong> {product.condition}%
+                </Paragraph>
+                <Paragraph>
+                <strong>Size:</strong> {product.initialPrice}
+              </Paragraph>
               </Col>
-              <Col span={12}></Col>
+              <Col span={10}>
               <Paragraph>
+                <strong>Brand:</strong> {product.initialPrice}
+              </Paragraph>
+              <Paragraph>
+                <strong>Color:</strong> {product.initialPrice}
+              </Paragraph>
+              <Paragraph>
+                <strong>Gender:</strong> {product.initialPrice}
+              </Paragraph>
+              
+              </Col>
+              <Paragraph>
+                <strong style={{fontSize:'18px', color:'ThreeDLightShadow'}}>Initial Price: {formatBalance(product.initialPrice!)} VND</strong> 
+              </Paragraph>
+              
+            </Row>
+            <Paragraph>
                 <strong>Description:</strong> {product.note}
               </Paragraph>
-            </Row>
             <Paragraph style={{ color: '#32b94b', fontSize: '20px' }}>
-              <strong>Current Bid:</strong> VND {nextBidAmount}
+              <strong>Current Bid: {nextBidAmount} VND </strong> 
             </Paragraph>
           </Card>
           <Card title="Bids History" style={{ marginTop: '10px' }}>
@@ -198,7 +223,7 @@ const Auction: React.FC = () => {
               )}
             />
             <div style={{ marginTop: '10px' }}>
-              <p><strong>Next Bid Amount:</strong>  {nextBidAmount} VND</p>
+              <p><strong>Next Bid Amount:  {nextBidAmount} VND </strong> </p>
               <Button
                 type="primary"
                 style={{ marginTop: '10px', backgroundColor: 'black', width: '100%' }}
