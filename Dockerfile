@@ -3,7 +3,6 @@ FROM node:18-alpine as build
 
 # Install pnpm
 RUN npm install -g pnpm
-RUN apt-get update && apt-get install -y tzdata
 WORKDIR /app
 
 # Copy pnpm-lock.yaml in addition to package.json
@@ -17,9 +16,11 @@ RUN pnpm run build
 
 # Production stage
 FROM nginx:alpine
-
+RUN apk add --no-cache tzdata
 COPY --from=build /app/dist /usr/share/nginx/html
+ENV TZ=Asia/Saigon
 
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 EXPOSE 80 
 
 CMD ["nginx", "-g", "daemon off;"]
