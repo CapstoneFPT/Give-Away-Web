@@ -230,7 +230,16 @@ const Auction: React.FC = () => {
               renderItem={(bid) => (
                 <List.Item>
                   <List.Item.Meta
-                    title={` ${bid.amount} VND`}
+                    title={
+                      <span
+                        style={{
+                          color: bid.memberId === userId ? 
+                          "#ff5151" : "inherit",
+                        }}
+                      >
+                        {bid.amount} VND
+                      </span>
+                    }
                     description={new Date().toLocaleString()}
                   />
                 </List.Item>
@@ -241,10 +250,11 @@ const Auction: React.FC = () => {
                 <strong>Next Bid Amount: {nextBidAmount} VND </strong>{" "}
               </p>
               <Button
+              disabled={bids[0]?.memberId === userId}
                 type="primary"
                 style={{
                   marginTop: "10px",
-                  backgroundColor: "black",
+                  backgroundColor:bids[0]?.memberId === userId ? "gray" : "#000000",
                   width: "100%",
                 }}
                 onClick={handleBid}
