@@ -5,6 +5,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import {
   AuctionApi,
   AuctionItemDetailResponse,
+  BidDetailResponse,
   CreateBidRequest,
 } from "../api";
 import Countdown from "react-countdown";
@@ -22,7 +23,7 @@ const Auction: React.FC = () => {
     null
   );
   const [selectedImage, setSelectedImage] = useState<string>("");
-  const [bids, setBids] = useState<CreateBidRequest[]>([]);
+  const [bids, setBids] = useState<BidDetailResponse[]>([]);
   const [nextBidAmount, setNextBidAmount] = useState<number | undefined>(
     undefined
   );
@@ -240,7 +241,7 @@ const Auction: React.FC = () => {
                         {bid.amount} VND
                       </span>
                     }
-                    description={new Date().toLocaleString()}
+                    description={bid.createdDate}
                   />
                 </List.Item>
               )}
