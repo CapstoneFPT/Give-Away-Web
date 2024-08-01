@@ -12,6 +12,7 @@ import {
   Input,
   notification,
   Spin,
+  Typography
 } from "antd";
 import NavProfile from "../components/NavProfile/NavProfile";
 import { useNavigate } from "react-router-dom";
@@ -23,9 +24,7 @@ const OrderList: React.FC = () => {
   const [data, setData] = useState<OrderResponse[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedOrder, setSelectedOrder] = useState<OrderResponse | null>(
-    null
-  );
+  const [selectedOrder, setSelectedOrder] = useState<OrderResponse | null>(null);
   const [orderDetails, setOrderDetails] = useState<any[]>([]);
   const [detailsLoading, setDetailsLoading] = useState<boolean>(false);
   const navigate = useNavigate();
@@ -80,6 +79,7 @@ const OrderList: React.FC = () => {
       const orderApi = new OrderApi();
       const response = await orderApi.apiOrdersOrderIdOrderdetailsGet(orderId);
       setOrderDetails(response.data?.data?.items || []);
+      console.log(response);
     } catch (error) {
       console.error("Failed to fetch order details:", error);
       notification.error({
@@ -110,7 +110,7 @@ const OrderList: React.FC = () => {
       const orderApi = new OrderApi();
 
       switch (selectedOrder.paymentMethod) {
-        case PaymentMethod.Points: {
+        case PaymentMethod.Point: {
           await orderApi.apiOrdersOrderIdPayPointsPost(selectedOrder.orderId!, {
             memberId: userId,
           });
@@ -157,6 +157,17 @@ const OrderList: React.FC = () => {
   const handleCloseModal = () => {
     setSelectedOrder(null);
     setOrderDetails([]);
+  };
+
+  const handleDetail = (record: OrderResponse) => {
+    navigate(`/order-detail/${record.orderId}`, {
+      state: {
+        paymentMethod: record.paymentMethod,
+        recipientName: record.recipientName,
+        address: record.address,
+        contactNumber: record.contactNumber,
+      },
+    });
   };
 
   const columns = [
@@ -221,7 +232,7 @@ const OrderList: React.FC = () => {
                 width: "100px",
                 height: "35px",
               }}
-              onClick={() => navigate(`/order-detail/${record.orderId}`)}
+              onClick={() => handleDetail(record)}
             >
               Detail
             </Button>
@@ -297,12 +308,12 @@ const OrderList: React.FC = () => {
                           >
                             <Row>
                               <Col span={12}>
-                                <p>
+                                <Typography>
                                   Product Name:{" "}
                                   <strong>
                                     {product.fashionItemDetail?.name || "N/A"}
                                   </strong>
-                                </p>
+                                </Typography>
                                 <p>
                                   Price:{" "}
                                   <strong>
