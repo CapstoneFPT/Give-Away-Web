@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Card, Row, Col, Button, Typography, List } from "antd";
+import { Card, Row, Col, Button, Typography, List, Image } from "antd";
 import Footer from "../components/Footer/Footer";
 import { useParams, useNavigate } from "react-router-dom";
 import {
@@ -175,7 +175,7 @@ const Auction: React.FC = () => {
         </Col>
         <Col span={12}>
           <div className="zoom-container">
-            <img
+            <Image
               src={selectedImage}
               alt={product.name!}
               className="zoom-image"

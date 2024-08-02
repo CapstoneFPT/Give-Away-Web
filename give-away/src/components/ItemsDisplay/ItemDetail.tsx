@@ -7,6 +7,7 @@ import {
   Typography,
   message,
   notification,
+  Image,
 } from "antd";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import { useCart } from "../../pages/CartContext";
@@ -126,7 +127,7 @@ const ItemDetail: React.FC = () => {
             </Row>
           </Col>
           <Col span={11}>
-            <img
+            <Image
               src={selectedImage}
               alt={product.name ? product.name : "N/A"}
               style={{ width: "90%", height: "750px" }}

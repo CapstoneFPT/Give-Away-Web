@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Card, Row, Col, Form, Input, Upload, message, Table, UploadFile, TableColumnsType } from 'antd';
+import { Button, Card, Row, Col, Form, Input, Upload, message, Table, UploadFile, TableColumnsType, Image } from 'antd';
 import { UploadOutlined, SendOutlined } from '@ant-design/icons';
 import { useLocation, useNavigate } from 'react-router-dom';
 import NavProfile from '../components/NavProfile/NavProfile';
@@ -92,7 +92,7 @@ const Refunds = () => {
       title: 'Product',
       dataIndex: 'itemImage',
       key: 'images',
-      render: (text: string) => <img src={text} alt="item" style={{ width: '180px', height: '180px' }} />,
+      render: (text: string) => <Image src={text} alt="item" style={{ width: '180px', height: '180px' }} />,
     },
     {
       title: 'Name',

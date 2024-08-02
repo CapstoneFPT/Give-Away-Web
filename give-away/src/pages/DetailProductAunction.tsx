@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Card, Row, Col, Button, Typography } from "antd";
+import { Card, Row, Col, Button, Typography, Image } from "antd";
 import Footer from "../components/Footer/Footer";
 import { useParams } from "react-router-dom";
 import axios from "axios";
@@ -94,7 +94,7 @@ const DetailProductAunction: React.FC = () => {
               </Row>
             </Col>
             <Col span={12}>
-              <img
+              <Image
                 src={selectedImage}
                 alt={product.name!}
                 style={{ width: "90%", height: "750px" }}

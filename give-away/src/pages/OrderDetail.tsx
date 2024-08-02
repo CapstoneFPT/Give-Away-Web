@@ -1,14 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Card, Row, Col, Button, Spin, Tag, Image, Typography, Divider, Descriptions } from "antd";
+import { Card, Row, Col, Button, Spin, Tag, Image, Typography, Divider, Descriptions, Table } from "antd";
 import { useParams, useNavigate, useLocation, Link } from "react-router-dom";
 import NavProfile from "../components/NavProfile/NavProfile";
-import {
-  FashionItem,
-  FashionItemOrderDetailResponse,
-  FashionItemStatus,
-  OrderApi,
-  OrderDetailsResponse,
-} from "../api";
+import { FashionItemStatus, OrderApi, OrderDetailsResponse } from "../api";
 
 const { Title } = Typography;
 
@@ -58,107 +52,86 @@ const OrderDetail = () => {
     navigate("/refunds", { state: { items: [orderDetail], orderDetailId } });
   };
 
+  const columns = [
+    {
+      title: 'Image',
+      dataIndex: 'itemImage',
+      key: 'itemImage',
+      render: (images: string[]) => (
+        <Image.PreviewGroup>
+          <Image src={images[0]} alt="Product Image" style={{ width: '100px', height: 'auto', borderRadius: '10px' }} />
+        </Image.PreviewGroup>
+      ),
+    },
+    {
+      title: 'Item Name',
+      dataIndex: 'itemName',
+      key: 'itemName',
+      render: (text: string, record: OrderDetailsResponse) => (
+        <>
+          {text}
+          <Tag color={record.itemStatus === FashionItemStatus.Sold ? 'green' : 'blue'} style={{ marginLeft: '10px' }}>
+            {record.itemStatus}
+          </Tag>
+        </>
+      ),
+    },
+    { title: 'Price', dataIndex: 'unitPrice', key: 'unitPrice', render: (price: number) => `$${price}` },
+    { title: 'Color', dataIndex: 'itemColor', key: 'itemColor' },
+    { title: 'Size', dataIndex: 'itemSize', key: 'itemSize' },
+    { title: 'Gender', dataIndex: 'itemGender', key: 'itemGender' },
+    { title: 'Brand', dataIndex: 'itemBrand', key: 'itemBrand' },
+    { title: 'Condition', dataIndex: 'condition', key: 'condition' },
+    {
+      title: 'Action',
+      key: 'action',
+      render: (text: any, record: OrderDetailsResponse) => (
+        isRefundEligible(record.refundExpirationDate!) && record.itemStatus === FashionItemStatus.Refundable && (
+          <Button
+            type="primary"
+            style={{ backgroundColor: 'black', borderColor: 'black', width: '100px', height: '35px' }}
+            onClick={() => handleRefundClick(record, record.orderDetailId!)}
+          >
+            Refund
+          </Button>
+        )
+      ),
+    },
+  ];
+
   return (
-    <Card style={{ borderRadius: "10px", boxShadow: "2px 2px 10px rgba(0,0,0,0.1)", padding: "20px" }}>
+    <Card style={{ borderRadius: '10px', boxShadow: '2px 2px 10px rgba(0,0,0,0.1)', padding: '20px' }}>
       <Row gutter={[24, 24]}>
         <Col span={6}>
           <NavProfile />
         </Col>
         <Col span={18}>
-          <Card bordered={false} style={{ borderRadius: "10px" }}>
-            <Title level={2} style={{ textAlign: "center", marginBottom: "20px" }}>Order Detail</Title>
-            {orderDetails.map((detail) => (
-              <Row gutter={[16, 16]} key={detail.orderDetailId} style={{ marginBottom: "20px" }}>
-                <Col span={12}>
-                  <Card style={{ borderRadius: "10px" }}>
-                    <Image.PreviewGroup>
-                      {/* {detail.itemImage?.map((image, index) => (
-                        image ? (
-                          <Image
-                            key={index}
-                            src={image}
-                            alt={`Fashion item ${index}`}
-                            style={{ width: "100%", height: "auto", borderRadius: "10px" }}
-                          />
-                        ) : null
-                      ))} */}
-                      <Image src={detail.itemImage![0]!} alt="Product Image" style={{ width: "200px", height: "auto", borderRadius: "10px" }} />
-                    </Image.PreviewGroup>
-                    <Descriptions column={1} bordered size="small" style={{ marginTop: "10px" }}>
-                      <Descriptions.Item label="Item Name">
-                        {detail.itemName}
-                        <Tag
-                          color={
-                            detail.itemStatus === FashionItemStatus.Sold
-                              ? "green"
-                              : "blue"
-                          }
-                          style={{ marginLeft: "10px" }}
-                        >
-                          {detail.itemStatus}
-                        </Tag>
-                      </Descriptions.Item>
-                      <Descriptions.Item label="Price">
-                        ${detail.unitPrice}
-                      </Descriptions.Item>
-                      <Descriptions.Item label="Color">
-                        {detail.itemColor}
-                      </Descriptions.Item>
-                      <Descriptions.Item label="Size">
-                        {detail.itemSize}
-                      </Descriptions.Item>
-                      <Descriptions.Item label="Gender">
-                        {detail.itemGender}
-                      </Descriptions.Item>
-                      <Descriptions.Item label="Brand">
-                        {detail.itemBrand}
-                      </Descriptions.Item>
-                      <Descriptions.Item label="Condition">
-                        {detail.condition}
-                      </Descriptions.Item>
-                    </Descriptions>
-                  </Card>
-                </Col>
-                <Col span={12}>
-                  <Divider>
-                    <Card title="Recipient Information" bordered={false} style={{ borderRadius: "10px" }}>
-                      <Descriptions column={1} bordered size="small">
-                        <Descriptions.Item label="Payment Method">{paymentMethod}</Descriptions.Item>
-                        <Descriptions.Item label="Recipient Name">{recipientName}</Descriptions.Item>
-                        <Descriptions.Item label="Address">{address}</Descriptions.Item>
-                        <Descriptions.Item label="Phone Number">{contactNumber}</Descriptions.Item>
-                      </Descriptions>
-                      {isRefundEligible(detail.refundExpirationDate!) &&
-                        detail.itemStatus === FashionItemStatus.Refundable && (
-                          <Button
-                            type="primary"
-                            style={{
-                              marginTop: "10px",
-                              backgroundColor: "black",
-                              borderColor: "black",
-                              width: "100px",
-                              height: "35px",
-                            }}
-                            onClick={() => handleRefundClick(detail, detail.orderDetailId!)}
-                          >
-                            Refund
-                          </Button>
-                        )}
-                    </Card>
-                  </Divider>
-                </Col>
-              </Row>
-            ))}
+          <Card bordered={false} style={{ borderRadius: '10px' }}>
+            <Title level={2} style={{ textAlign: 'center', marginBottom: '20px' }}>Order Detail</Title>
+            <Card title="Recipient Information" bordered={false} style={{ borderRadius: '10px', marginBottom: '20px' }}>
+              <Descriptions column={1} bordered size="small">
+                <Descriptions.Item label="Payment Method">{paymentMethod}</Descriptions.Item>
+                <Descriptions.Item label="Recipient Name">{recipientName}</Descriptions.Item>
+                <Descriptions.Item label="Address">{address}</Descriptions.Item>
+                <Descriptions.Item label="Phone Number">{contactNumber}</Descriptions.Item>
+              </Descriptions>
+            </Card>
+            <Table
+              columns={columns}
+              dataSource={orderDetails}
+              rowKey="orderDetailId"
+              pagination={false}
+            />
             <Divider />
             <Link to="/order-list">
               <Button
                 type="primary"
                 style={{
-                  backgroundColor: "black",
-                  borderColor: "black",
-                  width: "100px",
-                  height: "35px",
-                  marginTop: "20px",
+                  backgroundColor: 'black',
+                  borderColor: 'black',
+                  width: '100px',
+                  height: '35px',
+                  marginTop: '20px',
                 }}
               >
                 Back
