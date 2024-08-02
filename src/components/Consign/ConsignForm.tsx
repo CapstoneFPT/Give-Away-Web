@@ -73,7 +73,7 @@ const ConsignForm = () => {
           );
           return {
             name: item.productName,
-            note: item.description,
+            note: item.note,
             dealPrice: item.dealPrice,
             condition: item.conditionPercentage,
             size: item.size,
@@ -134,8 +134,9 @@ const ConsignForm = () => {
               </Select>
             </Form.Item>
             <Form.Item name={["userInfo", "type"]}>
-              <Select style={{ width: "20%" }} defaultValue="ConsignedForSale" disabled>
+              <Select style={{ width: "21%" }} defaultValue="ConsignedForSale" >
                 <Select.Option value="ConsignedForSale">Consigned For Sale</Select.Option>
+                <Select.Option value="ConsignedForAuction">Consigned For Auction</Select.Option>
               </Select>
             </Form.Item>
           </div>

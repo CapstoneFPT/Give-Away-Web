@@ -16,7 +16,13 @@ import { Content } from "antd/es/layout/layout";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../CartContext";
-import { FashionItemApi, FashionItemDetailResponse } from "../../api";
+import {
+  CategoryApi,
+  CategoryTreeNode,
+  CategoryTreeResult,
+  FashionItemApi,
+  FashionItemDetailResponse,
+} from "../../api";
 import backgroundImageUrl from "../../components/Assets/shutterstock_455310238.jpg";
 import ProductCard from "../../components/commons/ProductCard";
 
@@ -26,22 +32,62 @@ const Men: React.FC = () => {
   const [totalCount, setTotalCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
-
+  const [categories, setCategories] = useState<CategoryTreeNode[]>([]); // State to hold categories
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null); // State to hold selected category ID
   const pageSize = 12;
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchProducts(currentPage);
+    fetchCategories(); // Fetch categories on component mount
   }, [currentPage]);
+
+  const fetchCategories = async () => {
+    try {
+        const categoryApi = new CategoryApi();
+        const rootCategoryId = 'c7c0ba52-8406-47c1-9be5-497cbeea5933'; // Category ID for "Nam"
+        const responseCategory = await categoryApi.apiCategoriesTreeGet('', rootCategoryId); // Ensure this method accepts the parameter
+        console.log(responseCategory.data.categories);
+        
+        // Check if the response structure is as expected
+        if (responseCategory.data && responseCategory.data.categories) {
+            setCategories(responseCategory.data.categories); // Set categories if they exist
+        } else {
+            console.error("No categories found in the response:", responseCategory);
+        }
+    } catch (error) {
+        console.error("There was an error fetching the categories!", error);
+    }
+};
+const handleCategoryClick = (categoryId: string) => {
+  setSelectedCategoryId(categoryId); // Set the selected category ID
+  setCurrentPage(1); // Reset to the first page
+  fetchProducts(1); // Fetch products for the selected category
+};
+
+const renderMenuItems = (categories: CategoryTreeNode[]) => {
+  return categories.map((category) => (
+      <Menu.SubMenu key={category.categoryId} title={category.name}>
+          {category.children && category.children.length > 0 ? (
+              renderMenuItems(category.children) // Recursively render children
+          ) : (
+              <Menu.Item key={category.categoryId} onClick={() => handleCategoryClick(category.categoryId!)}>
+                {category.name}
+              </Menu.Item>
+          )}
+      </Menu.SubMenu>
+  ));
+};
 
   const fetchProducts = async (page: number) => {
     setIsLoading(true);
     try {
       const userId = JSON.parse(localStorage.getItem("userId") || "null");
+      console.log(userId)
+      const fashionItemApi = new CategoryApi;
 
-      const fashionItemApi = new FashionItemApi();
-
-      const response = await fashionItemApi.apiFashionitemsGet(
+      const response = await fashionItemApi.apiCategoriesCategoryIdFahsionitemsGet(
+        selectedCategoryId!,
         null!,
         page,
         pageSize,
@@ -51,6 +97,7 @@ const Men: React.FC = () => {
         null!,
         "Male"
       );
+      console.log(response.data.data)
 
       console.debug(response);
       const data = response.data;
@@ -87,6 +134,7 @@ const Men: React.FC = () => {
       console.log("Adding item to cart with itemId:", product.itemId);
     }
   };
+
   const formatBalance = (sellingPrice: any) => {
     return new Intl.NumberFormat("de-DE").format(sellingPrice);
   };
@@ -126,9 +174,7 @@ const Men: React.FC = () => {
               defaultSelectedKeys={["1"]}
               style={{ height: "100%", borderRight: 0 }}
             >
-              <Menu.Item key="1">Category 1</Menu.Item>
-              <Menu.Item key="2">Category 2</Menu.Item>
-              <Menu.Item key="3">Category 3</Menu.Item>
+              {renderMenuItems(categories)} {/* Render categories */}
             </Menu>
           </Sider>
         </Col>
