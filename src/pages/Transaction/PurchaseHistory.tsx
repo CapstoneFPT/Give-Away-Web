@@ -16,7 +16,7 @@ const PurchaseHistory = () => {
     }, [userId]);
     const fetchData = async (page = 1, size = 10) => {
         const accountApi = new AccountApi();
-        const response = await accountApi.apiAccountsAccountIdTransactionsGet(userId!, page, size, TransactionType.Purchase);
+        const response = await accountApi.apiAccountsAccountIdTransactionsGet(userId!, page, size, [TransactionType.Purchase]);
         console.log(response.data.items)
         setData(response.data.items || []);
         setTotal(response.data.totalCount || 0);

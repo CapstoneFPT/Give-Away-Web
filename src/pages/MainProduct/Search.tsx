@@ -34,7 +34,11 @@ const Search: React.FC = () => {
     fetchProducts(currentPage, searchParams.get("q"));
   }, [currentPage, searchParams]);
 
-  const fetchProducts = async (page: number, searchParam: string | null) => {
+  const fetchProducts = async (
+    page: number,
+    searchParam: string | null,
+    categoryId?: string
+  ) => {
     setIsLoading(true);
     try {
       const userId = JSON.parse(localStorage.getItem("userId") || "null");
@@ -44,6 +48,7 @@ const Search: React.FC = () => {
         page,
         pageSize,
         userId,
+        categoryId,
         ["Available"],
         ["ConsignedForSale", "ItemBase"]
       );

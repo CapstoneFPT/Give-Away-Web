@@ -15,7 +15,7 @@ const DepositHistory = () => {
           userId,
           null!,
           null!,
-         "AuctionDeposit"
+         ["AuctionDeposit"]
         );
         setData(response.data.items!); // Lưu dữ liệu vào trạng thái
       } catch (error) {
