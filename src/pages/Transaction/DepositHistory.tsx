@@ -1,5 +1,5 @@
 import React, {  useEffect, useState } from "react";
-import {  Card, Row, Col, Table } from "antd";
+import {  Card, Row, Col, Table, Button } from "antd";
 import NavProfile from "../../components/NavProfile/NavProfile";
 import { AccountApi } from "../../api";
 
@@ -43,8 +43,11 @@ const DepositHistory = () => {
           dataIndex: 'type',
           key: 'type',
         },
+        
       
       ];
+     
+      
     
       return (
         <Card>

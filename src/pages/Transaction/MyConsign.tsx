@@ -1,11 +1,13 @@
-import React, {  useEffect, useState } from "react";
-import {  Card, Row, Col, Table } from "antd";
+import React, { useEffect, useState } from "react";
+import { Card, Row, Col, Table, Button } from "antd";
 import NavProfile from "../../components/NavProfile/NavProfile";
 import { AccountApi } from "../../api";
+import { useNavigate } from "react-router-dom"; // Thêm import useNavigate
+
 const MyConsign = () => {
- 
+  const navigate = useNavigate(); // Khởi tạo navigate
   const userId = JSON.parse(localStorage.getItem("userId") || "null");
-  console.log(userId)
+  console.log(userId);
   const [data, setData] = useState<any[]>([]); // Thêm trạng thái để lưu dữ liệu
 
   useEffect(() => {
@@ -15,9 +17,7 @@ const MyConsign = () => {
         const response = await DepositListApi.apiAccountsAccountIdConsignsalesGet(
           userId,
           null!,
-          null!,
-
-         
+          null!
         );
         setData(response.data.data?.items!); // Lưu dữ liệu vào trạng thái
       } catch (error) {
@@ -27,78 +27,91 @@ const MyConsign = () => {
 
     fetchDepositHistory();
   }, [userId]);
+
   const columns = [
     {
-      title: 'Product name',
-      dataIndex: 'itemName',
-      key: 'itemName',
+      title: 'consignSaleCode',
+      dataIndex: 'consignSaleCode',
+      key: 'consignSaleCode',
     },
     {
-      title: 'Image',
-      dataIndex: 'image',
-      key: 'image',
-      render: (image: string) => (
-        <img src={image} alt="Product Image" style={{ width: '100px', height: '100px' }} />
-      ),
+      title: 'type',
+      dataIndex: 'type',
+      key: 'type',
     },
     {
-      title: 'Auction date',
-      dataIndex: 'auctionDate',
-      key: 'auctionDate',
+      title: 'createdDate',
+      dataIndex: 'createdDate',
+      key: 'createdDate',
     },
     {
-      title: 'Successful bid price',
-      dataIndex: 'bidPrice',
-      key: 'bidPrice',
+      title: 'consignSaleMethod',
+      dataIndex: 'consignSaleMethod',
+      key: 'consignSaleMethod',
     },
     {
-      title: 'Shop',
-      dataIndex: 'seller',
-      key: 'seller',
+      title: 'totalPrice',
+      dataIndex: 'totalPrice',
+      key: 'totalPrice',
+    },
+    {
+      title: 'consginer',
+      dataIndex: 'consginer',
+      key: 'consginer',
     },
     {
       title: 'Status',
       dataIndex: 'status',
       key: 'status',
     },
+    {
+      title: 'Action', // Thêm cột cho button
+      key: 'action',
+      render: (text: any, record: any) => (
+        <Button onClick={() => handleDetail(record.consignSaleId)}>Detail</Button>
+      ),
+    },
   ];
+
+  const handleDetail = (consignSaleId: string) => {
+    navigate(`/ConsignDetail?consignSaleId=${consignSaleId}`); 
+  };
 
   return (
     <Card>
-    <Row gutter={[16, 16]}>
-      <Col span={5}>
-        <NavProfile/>
-      </Col>
-      <Col span={19}>
-        <Card
-          style={{
-            borderRadius: "10px",
-            boxShadow: "2px 2px 7px #cbc1c1",
-          }}
-        >
-          <h3
+      <Row gutter={[16, 16]}>
+        <Col span={5}>
+          <NavProfile />
+        </Col>
+        <Col span={19}>
+          <Card
             style={{
-              fontSize: "40px",
-              fontWeight: "bold",
-              textAlign: "center",
-              marginBottom: "10px",
+              borderRadius: "10px",
+              boxShadow: "2px 2px 7px #cbc1c1",
             }}
           >
-            Consign history
-          </h3>
-          <Table
-           
-            dataSource={data}
-            columns={columns}
-            rowKey="id"
-            pagination={{ pageSize: 4 }}
-            style={{ marginTop: '20px' }}
-          />
-        </Card>
-      </Col>
-    </Row>
-  </Card>
+            <h3
+              style={{
+                fontSize: "40px",
+                fontWeight: "bold",
+                textAlign: "center",
+                marginBottom: "10px",
+              }}
+            >
+              Consign history
+            </h3>
+            <Table
+              dataSource={data}
+              columns={columns}
+              rowKey="id"
+              pagination={{ pageSize: 4 }}
+              style={{ marginTop: '20px' }}
+            />
+          </Card>
+        </Col>
+      </Row>
+    </Card>
   )
 }
 
-export default MyConsign
+export default MyConsign;

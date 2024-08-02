@@ -98,8 +98,8 @@ const NavProfile: React.FC = () => {
                         textAlign: "center",
                     }}
                 >
-                    {formatBalance(balance)} UP
-                    <DollarOutlined spin/>
+                    {formatBalance(balance)} VND
+                   
                 </div>
             </Card>
             <Card

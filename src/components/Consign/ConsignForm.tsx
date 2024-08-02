@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Form, Input, Button, Checkbox, Card, Upload, Select, message } from "antd";
+import { Form, Input, Button, Checkbox, Card, Upload, Select, message, notification } from "antd";
 import type { FormListFieldData, FormListOperation } from "antd/lib/form/FormList";
 import { DeleteOutlined } from "@ant-design/icons";
 import { storage } from "../../pages/Firebase/firebase-config";
@@ -22,11 +22,12 @@ const normFile = (e: any) => {
 };
 
 const ConsignForm = () => {
-  const [fileList, setFileList] = useState<any[]>([]);
+  const [fileLists, setFileLists] = useState<{ [key: number]: any[] }>({});
   const [uploading, setUploading] = useState<boolean>(false);
   const [branches, setBranches] = useState<any[]>([]);
   const shopApi = new ShopApi();
   const userId = JSON.parse(localStorage.getItem("userId") || "null");
+  const [form] = Form.useForm(); // Form instance for resetting fields
 
   useEffect(() => {
     const fetchBranches = async () => {
@@ -44,8 +45,11 @@ const ConsignForm = () => {
     fetchBranches();
   }, [shopApi]);
 
-  const handleFileChange = (info: any) => {
-    setFileList(info.fileList);
+  const handleFileChange = (key: number, info: any) => {
+    setFileLists((prev) => ({
+      ...prev,
+      [key]: info.fileList,
+    }));
   };
 
   const onFinish = async (values: any) => {
@@ -54,9 +58,9 @@ const ConsignForm = () => {
 
     try {
       const itemsWithUrls = await Promise.all(
-        values.items.map(async (item: any) => {
+        values.items.map(async (item: any, index: number) => {
           const fileUrls = await Promise.all(
-            fileList.map(async (file: any) => {
+            (fileLists[index] || []).map(async (file: any) => {
               if (file.originFileObj) {
                 const storageRef = ref(storage, `images/${file.name}`);
                 const metadata = { contentType: file.type };
@@ -101,13 +105,15 @@ const ConsignForm = () => {
       );
 
       if (response.data.resultStatus === ResultStatus.Success) {
-        message.success({ content: "Upload successful!", key: "upload", duration: 2 });
+        notification.success({ message: "Success", description: "Upload successful!", duration: 2 });
+        form.resetFields(); // Reset form fields
+        setFileLists({}); // Clear file lists
       } else {
-        message.error({ content: "Upload failed!", key: "upload", duration: 2 });
+        notification.error({ message: "Error", description: "Upload failed!", duration: 2 });
       }
     } catch (error) {
       console.error("Backend error:", error);
-      message.error({ content: "An error occurred during the upload.", key: "upload", duration: 2 });
+      notification.error({ message: "Error", description: "An error occurred during the upload.", duration: 2 });
     }
 
     setUploading(false);
@@ -115,7 +121,7 @@ const ConsignForm = () => {
 
   return (
     <Card className="consign-form-container" style={{ justifyContent: "center", display: "flex" }}>
-      <Form className="consign-form" name="dynamic_form" onFinish={onFinish} autoComplete="off" size="large">
+      <Form form={form} className="consign-form" name="dynamic_form" onFinish={onFinish} autoComplete="off" size="large">
         <Card className="user-info-card" style={{ justifyContent: "center", alignItems: "center", display: "flex" }}>
           <div style={{ width: "1000px" }}>
             <h1>Consign Form</h1>
@@ -155,7 +161,7 @@ const ConsignForm = () => {
                       <Input placeholder="Product Name" />
                     </Form.Item>
                     <Form.Item {...restField} name={[name, "picture"]} valuePropName="fileList" getValueFromEvent={normFile} rules={[{ required: true, message: "Please upload at least one picture" }]}>
-                      <Upload className="upload-box" name="pictures" multiple={true} listType="picture-card" onChange={handleFileChange}>
+                      <Upload className="upload-box" name="pictures" multiple={true} listType="picture-card" onChange={(info) => handleFileChange(key, info)}>
                         <div>
                           <div style={{ marginTop: 8 }}>Upload</div>
                         </div>
