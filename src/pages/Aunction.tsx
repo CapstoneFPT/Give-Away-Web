@@ -39,10 +39,15 @@ const Auction: React.FC = () => {
   const fetchData = async () => {
     try {
       const auctionDetailApi = new AuctionApi();
-      const response = await auctionDetailApi.apiAuctionsIdGet(auctionId!);
-      console.log(response);
-      const fetchedProduct = response.data.auctionItem;
+      const auctionDetailResponse = await auctionDetailApi.apiAuctionsIdGet(
+        auctionId!
+      );
+      console.log(auctionDetailResponse);
+      const fetchedProduct = auctionDetailResponse.data.auctionItem;
       console.log(fetchedProduct);
+
+      const latestBidResponse =
+        await auctionDetailApi.apiAuctionsIdBidsLatestGet(auctionId!);
 
       const productData: AuctionItemDetailResponse = {
         initialPrice: fetchedProduct?.initialPrice,
@@ -70,14 +75,18 @@ const Auction: React.FC = () => {
 
       const initialBidAmount = fetchedProduct?.initialPrice || 0;
       console.log(initialBidAmount);
-      setNextBidAmount(initialBidAmount);
+      if (latestBidResponse.data == null) {
+        setNextBidAmount(initialBidAmount);
+      } else {
+        addBid(latestBidResponse.data);
+      }
 
       const serverTimeApi = new AuctionApi();
       const responseServerTime =
         await serverTimeApi.apiAuctionsCurrentTimeGet();
       const currentTime = new Date(responseServerTime.data!);
-      const startTime = new Date(response.data.startDate!);
-      const endTime = new Date(response.data.endDate!);
+      const startTime = new Date(auctionDetailResponse.data.startDate!);
+      const endTime = new Date(auctionDetailResponse.data.endDate!);
 
       if (currentTime < startTime) {
         setRemainingTime(
@@ -244,8 +253,8 @@ const Auction: React.FC = () => {
                     title={
                       <span
                         style={{
-                          color: bid.memberId === userId ? 
-                          "#ff5151" : "inherit",
+                          color:
+                            bid.memberId === userId ? "#ff5151" : "inherit",
                         }}
                       >
                         {bid.amount} VND
@@ -261,11 +270,12 @@ const Auction: React.FC = () => {
                 <strong>Next Bid Amount: {nextBidAmount} VND </strong>{" "}
               </p>
               <Button
-              disabled={bids[0]?.memberId === userId}
+                disabled={bids[0]?.memberId === userId}
                 type="primary"
                 style={{
                   marginTop: "10px",
-                  backgroundColor:bids[0]?.memberId === userId ? "gray" : "#000000",
+                  backgroundColor:
+                    bids[0]?.memberId === userId ? "gray" : "#000000",
                   width: "100%",
                 }}
                 onClick={handleBid}
