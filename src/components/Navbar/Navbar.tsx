@@ -105,7 +105,7 @@ const Navbar = () => {
                 textShadow: "1px 1px 2px rgba(0, 0, 0, 0.1)",
                 padding: "0.2em 0.4em",
                 borderRadius: "5px",
-                backgroundColor: "rgba(255, 255, 255, 0.573)"}}>{formatBalance(balance)} UP</div>
+                backgroundColor: "rgba(255, 255, 255, 0.573)"}}>{formatBalance(balance)} VND</div>
         </div>
       </div>
     </div>

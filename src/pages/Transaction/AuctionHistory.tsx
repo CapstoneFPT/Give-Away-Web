@@ -1,65 +1,30 @@
-import React, {  useState } from "react";
+import React, {  useEffect, useState } from "react";
 import {  Card, Row, Col, Table } from "antd";
 import NavProfile from "../../components/NavProfile/NavProfile";
+import { AccountApi } from "../../api";
 
 const AuctionHistory = () => {
+  const userId = JSON.parse(localStorage.getItem("userId") || "null");
+  const [data, setData] = useState<any[]>([]); // Thêm trạng thái để lưu dữ liệu
+  useEffect(() => {
+    const fetchDepositHistory = async () => {
+      const DepositListApi = new AccountApi();
+      try {
+        const response = await DepositListApi.apiAccountsAccountIdTransactionsGet(
+          userId,
+          null!,
+          null!,
+         
+        );
+        setData(response.data.items!); // Lưu dữ liệu vào trạng thái
+      } catch (error) {
+        console.error("Error fetching deposit history:", error);
+      }
+    };
 
-  const [data] = useState([
-    {
-      id: '1',
-      itemName: 'Áo da lộn',
-      auctionDate: '2024-06-01',
-      bidPrice: '200 USD',
-      seller: 'Nguyễn Văn A',
-      image: 'https://img.freepik.com/free-psd-premium/3d-illustration-concept-with-background-pattern_24877-7475.jpg?size=338&ext=jpg&ga=GA1.1&semt=sph',
-      status: 'Won'
-    },
-    {
-      id: '2',
-      itemName: 'Giày tây',
-      auctionDate: '2024-05-15',
-      bidPrice: '1500 USD',
-      seller: 'Trần Thị B',
-      image: 'https://img.freepik.com/free-psd-premium/3d-illustration-concept-with-background-pattern_24877-7475.jpg?size=338&ext=jpg&ga=GA1.1&semt=sph',
-      status: 'Won'
-    },
-    {
-      id: '3',
-      itemName: 'Áo lông cừu',
-      auctionDate: '2024-04-22',
-      bidPrice: '300 USD',
-      seller: 'Lê Văn C',
-      image: 'https://img.freepik.com/free-psd-premium/3d-illustration-concept-with-background-pattern_24877-7475.jpg?size=338&ext=jpg&ga=GA1.1&semt=sph',
-      status: 'Won'
-    },
-    {
-      id: '4',
-      itemName: 'Giày da cá sấu',
-      auctionDate: '2024-03-30',
-      bidPrice: '500 USD',
-      seller: 'Phạm Thị D',
-      image: 'https://img.freepik.com/free-psd-premium/3d-illustration-concept-with-background-pattern_24877-7475.jpg?size=338&ext=jpg&ga=GA1.1&semt=sph',
-      status: 'Won'
-    },
-    {
-      id: '5',
-      itemName: 'Quần lông gấu',
-      auctionDate: '2024-02-18',
-      bidPrice: '700 USD',
-      seller: 'Nguyễn Văn E',
-      image: 'https://img.freepik.com/free-psd-premium/3d-illustration-concept-with-background-pattern_24877-7475.jpg?size=338&ext=jpg&ga=GA1.1&semt=sph',
-      status: 'Won'
-    },
-    {
-      id: '6',
-      itemName: 'Áo khoác lông ngỗng',
-      auctionDate: '2024-01-25',
-      bidPrice: '450 USD',
-      seller: 'Trần Thị F',
-      image: 'https://img.freepik.com/free-psd-premium/3d-illustration-concept-with-background-pattern_24877-7475.jpg?size=338&ext=jpg&ga=GA1.1&semt=sph',
-      status: 'Won'
-    },
-  ]);
+    fetchDepositHistory();
+  }, [userId]);
+
   const columns = [
     {
       title: 'Product name',

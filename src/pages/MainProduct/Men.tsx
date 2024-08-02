@@ -5,21 +5,18 @@ import {
   Button,
   Row,
   Col,
-  Card,
   Pagination,
   Spin,
   notification,
 } from "antd";
 import Sider from "antd/es/layout/Sider";
-import { ShoppingCartOutlined } from "@ant-design/icons";
+import { AppstoreOutlined } from "@ant-design/icons";
 import { Content } from "antd/es/layout/layout";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../CartContext";
 import {
   CategoryApi,
   CategoryTreeNode,
-  CategoryTreeResult,
   FashionItemApi,
   FashionItemDetailResponse,
 } from "../../api";
@@ -32,72 +29,86 @@ const Men: React.FC = () => {
   const [totalCount, setTotalCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
-  const [categories, setCategories] = useState<CategoryTreeNode[]>([]); // State to hold categories
-  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null); // State to hold selected category ID
+  const [categories, setCategories] = useState<CategoryTreeNode[]>([]);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
   const pageSize = 12;
   const navigate = useNavigate();
 
   useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  useEffect(() => {
     fetchProducts(currentPage);
-    fetchCategories(); // Fetch categories on component mount
-  }, [currentPage]);
+  }, [currentPage, selectedCategoryId]);
 
   const fetchCategories = async () => {
     try {
-        const categoryApi = new CategoryApi();
-        const rootCategoryId = 'c7c0ba52-8406-47c1-9be5-497cbeea5933'; // Category ID for "Nam"
-        const responseCategory = await categoryApi.apiCategoriesTreeGet('', rootCategoryId); // Ensure this method accepts the parameter
-        console.log(responseCategory.data.categories);
-        
-        // Check if the response structure is as expected
-        if (responseCategory.data && responseCategory.data.categories) {
-            setCategories(responseCategory.data.categories); // Set categories if they exist
-        } else {
-            console.error("No categories found in the response:", responseCategory);
-        }
+      const categoryApi = new CategoryApi();
+      const rootCategoryId = 'c7c0ba52-8406-47c1-9be5-497cbeea5933';
+      const responseCategory = await categoryApi.apiCategoriesTreeGet('', rootCategoryId);
+      console.log(responseCategory.data.categories);
+
+      if (responseCategory.data && responseCategory.data.categories) {
+        setCategories(responseCategory.data.categories);
+      } else {
+        console.error("No categories found in the response:", responseCategory);
+      }
     } catch (error) {
-        console.error("There was an error fetching the categories!", error);
+      console.error("There was an error fetching the categories!", error);
     }
-};
-const handleCategoryClick = (categoryId: string) => {
-  setSelectedCategoryId(categoryId); // Set the selected category ID
-  setCurrentPage(1); // Reset to the first page
-  fetchProducts(1); // Fetch products for the selected category
-};
+  };
 
-const renderMenuItems = (categories: CategoryTreeNode[]) => {
-  return categories.map((category) => (
-      <Menu.SubMenu key={category.categoryId} title={category.name}>
-          {category.children && category.children.length > 0 ? (
-              renderMenuItems(category.children) // Recursively render children
-          ) : (
-              <Menu.Item key={category.categoryId} onClick={() => handleCategoryClick(category.categoryId!)}>
-                {category.name}
-              </Menu.Item>
-          )}
-      </Menu.SubMenu>
-  ));
-};
+  const handleCategoryClick = (categoryId: string) => {
+    setSelectedCategoryId(categoryId);
+    setCurrentPage(1);
+    fetchProducts(1, categoryId); // Fetch products immediately with the new category
+  };
 
-  const fetchProducts = async (page: number) => {
+  const renderMenuItems = (categories: CategoryTreeNode[]) => {
+    return categories.flatMap((category) => {
+      const categoryItem = (
+        <Menu.Item key={category.categoryId} icon={<AppstoreOutlined />}>
+          <Button type="link" onClick={() => handleCategoryClick(category.categoryId!)}>
+            {category.name}
+          </Button>
+        </Menu.Item>
+      );
+
+      if (category.children && category.children.length > 0) {
+        const subCategoryItems = category .children.map((subCategory) => (
+          <Menu.Item key={subCategory.categoryId} icon={<AppstoreOutlined />}>
+            <Button type="link" onClick={() => handleCategoryClick(subCategory.categoryId!)}>
+              {subCategory.name}
+            </Button>
+          </Menu.Item>
+        ));
+        return [categoryItem, ...subCategoryItems];
+      }
+
+      return categoryItem;
+    });
+  };
+
+  const fetchProducts = async (page: number, categoryId?: string) => {
     setIsLoading(true);
     try {
       const userId = JSON.parse(localStorage.getItem("userId") || "null");
-      console.log(userId)
-      const fashionItemApi = new CategoryApi;
+      console.log(userId);
+      const fashionItemApi = new FashionItemApi();
 
-      const response = await fashionItemApi.apiCategoriesCategoryIdFahsionitemsGet(
-        selectedCategoryId!,
+      const response = await fashionItemApi.apiFashionitemsGet(
         null!,
         page,
         pageSize,
         userId,
+        categoryId || selectedCategoryId!,
         ["Available"],
         ["ItemBase", "ConsignedForSale"],
         null!,
         "Male"
       );
-      console.log(response.data.data)
+      console.log(response.data.data?.items);
 
       console.debug(response);
       const data = response.data;
@@ -169,12 +180,8 @@ const renderMenuItems = (categories: CategoryTreeNode[]) => {
             >
               Filter
             </Button>
-            <Menu
-              mode="inline"
-              defaultSelectedKeys={["1"]}
-              style={{ height: "100%", borderRight: 0 }}
-            >
-              {renderMenuItems(categories)} {/* Render categories */}
+            <Menu mode="inline" defaultSelectedKeys={["1"]} style={{ height: "100%", borderRight: 0 }}>
+              {renderMenuItems(categories)}
             </Menu>
           </Sider>
         </Col>

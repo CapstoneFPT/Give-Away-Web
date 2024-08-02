@@ -7,6 +7,7 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import "./ConsignForm.css";
 import {
   AccountApi,
+  ConsignSaleType,
   CreateConsignSaleRequest,
   ResultStatus,
   ShopApi,
@@ -87,7 +88,7 @@ const ConsignForm = () => {
 
       const consignData: CreateConsignSaleRequest = {
         shopId: values.userInfo.clothBranches,
-        type: "ConsignedForSale",
+        type: values.userInfo.type as ConsignSaleType, // Updated to use the new type
         consignorName: values.userInfo.fullName,
         phone: values.userInfo.phone,
         fashionItemForConsigns: itemsWithUrls,
@@ -133,10 +134,13 @@ const ConsignForm = () => {
                 ))}
               </Select>
             </Form.Item>
-            <Form.Item name={["userInfo", "type"]}>
-              <Select style={{ width: "21%" }} defaultValue="ConsignedForSale" >
-                <Select.Option value="ConsignedForSale">Consigned For Sale</Select.Option>
-                <Select.Option value="ConsignedForAuction">Consigned For Auction</Select.Option>
+            <Form.Item name={["userInfo", "type"]} rules={[{ required: true, message: "Missing type" }]}>
+              <Select style={{ width: "21%" }}>
+                {Object.values(ConsignSaleType).map((type) => ( // Render options from the type
+                  <Select.Option key={type} value={type}>
+                    {type}
+                  </Select.Option>
+                ))}
               </Select>
             </Form.Item>
           </div>

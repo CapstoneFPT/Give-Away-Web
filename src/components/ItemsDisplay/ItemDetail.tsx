@@ -19,12 +19,13 @@ const { Title, Paragraph } = Typography;
 
 const styles = {
   para: {
+    margin: '10px',
     fontSize: "18px",
     color: "black",
   },
   price: {
     color: "#d1d124",
-    fontSize: "30px",
+    fontSize: "23px",
   },
 };
 
@@ -106,31 +107,31 @@ const ItemDetail: React.FC = () => {
           Product Detail
         </h1>
         <Row gutter={[16, 16]} style={{ margin: "10px" }}>
-          <Col span={4}>
-            <Row gutter={[10, 8]}>
-              {product.images?.map((image, index) => (
-                <Col span={24} key={index}>
-                  <img
-                    src={image}
-                    alt={`Thumbnail ${index}`}
-                    style={{
-                      width: "90%",
-                      height: "230px",
-                      cursor: "pointer",
-                      border:
-                        selectedImage === image ? "2px solid #1890ff" : "none",
-                    }}
-                    onClick={() => setSelectedImage(image)}
-                  />
-                </Col>
-              ))}
+        <Col span={4}>
+  <Row gutter={[10, 8]} style={{ maxHeight: "690px", overflowY: "auto" }}>
+    {product.images?.map((image, index) => (
+      <Col span={24} key={index}>
+        <img
+          src={image}
+          alt={`Thumbnail ${index}`}
+          style={{
+            width: "95%",
+            height: "230px",
+            cursor: "pointer",
+            border:
+              selectedImage === image ? "2px solid #1890ff" : "none",
+          }}
+          onClick={() => setSelectedImage(image)}
+        />
+      </Col>
+    ))}
             </Row>
           </Col>
           <Col span={11}>
             <Image
               src={selectedImage}
               alt={product.name ? product.name : "N/A"}
-              style={{ width: "90%", height: "750px" }}
+              style={{ width: "100%", height: "750px" }}
             />
           </Col>
           <Col span={9}>
