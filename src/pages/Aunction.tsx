@@ -45,10 +45,20 @@ const Auction: React.FC = () => {
       console.log(fetchedProduct);
 
       const productData: AuctionItemDetailResponse = {
-        initialPrice: fetchedProduct?.sellingPrice,
+        initialPrice: fetchedProduct?.initialPrice,
         images: fetchedProduct?.images,
         category: fetchedProduct?.category,
         condition: fetchedProduct?.condition,
+        brand: fetchedProduct?.brand,
+        color: fetchedProduct?.color,
+        description: fetchedProduct?.description,
+        fashionItemType: fetchedProduct?.fashionItemType,
+        gender: fetchedProduct?.gender,
+        itemId: fetchedProduct?.itemId,
+        note: fetchedProduct?.note,
+        sellingPrice: fetchedProduct?.sellingPrice,
+        size: fetchedProduct?.size,
+        status: fetchedProduct?.status,
         name: fetchedProduct?.name,
         shop: {
           address: fetchedProduct?.shop?.address,
@@ -195,18 +205,18 @@ const Auction: React.FC = () => {
                   <strong>Condition:</strong> {product.condition}%
                 </Paragraph>
                 <Paragraph>
-                  <strong>Size:</strong> {product.initialPrice}
+                  <strong>Size:</strong> {product.size}
                 </Paragraph>
               </Col>
               <Col span={10}>
                 <Paragraph>
-                  <strong>Brand:</strong> {product.initialPrice}
+                  <strong>Brand:</strong> {product.brand}
                 </Paragraph>
                 <Paragraph>
-                  <strong>Color:</strong> {product.initialPrice}
+                  <strong>Color:</strong> {product.color}
                 </Paragraph>
                 <Paragraph>
-                  <strong>Gender:</strong> {product.initialPrice}
+                  <strong>Gender:</strong> {product.gender}
                 </Paragraph>
               </Col>
               <Paragraph>
@@ -218,7 +228,7 @@ const Auction: React.FC = () => {
               </Paragraph>
             </Row>
             <Paragraph>
-              <strong>Description:</strong> {product.note}
+              <strong>Description:</strong> {product.description}
             </Paragraph>
             <Paragraph style={{ color: "#32b94b", fontSize: "20px" }}>
               <strong>Current Bid: {nextBidAmount} VND </strong>
