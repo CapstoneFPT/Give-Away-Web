@@ -2412,12 +2412,6 @@ export interface CreateAuctionRequest {
      * @type {string}
      * @memberof CreateAuctionRequest
      */
-    'scheduleDate'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof CreateAuctionRequest
-     */
     'startTime'?: string;
     /**
      * 
@@ -7155,11 +7149,12 @@ export const AccountApiAxiosParamCreator = function (configuration?: Configurati
          * @param {number} [pageSize] 
          * @param {string} [shopId] 
          * @param {OrderStatus} [status] 
+         * @param {PaymentMethod} [paymentMethod] 
          * @param {string} [orderCode] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAccountsAccountIdOrdersGet: async (accountId: string, pageNumber?: number, pageSize?: number, shopId?: string, status?: OrderStatus, orderCode?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        apiAccountsAccountIdOrdersGet: async (accountId: string, pageNumber?: number, pageSize?: number, shopId?: string, status?: OrderStatus, paymentMethod?: PaymentMethod, orderCode?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'accountId' is not null or undefined
             assertParamExists('apiAccountsAccountIdOrdersGet', 'accountId', accountId)
             const localVarPath = `/api/accounts/{accountId}/orders`
@@ -7193,6 +7188,10 @@ export const AccountApiAxiosParamCreator = function (configuration?: Configurati
 
             if (status !== undefined) {
                 localVarQueryParameter['Status'] = status;
+            }
+
+            if (paymentMethod !== undefined) {
+                localVarQueryParameter['PaymentMethod'] = paymentMethod;
             }
 
             if (orderCode !== undefined) {
@@ -7686,12 +7685,13 @@ export const AccountApiFp = function(configuration?: Configuration) {
          * @param {number} [pageSize] 
          * @param {string} [shopId] 
          * @param {OrderStatus} [status] 
+         * @param {PaymentMethod} [paymentMethod] 
          * @param {string} [orderCode] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiAccountsAccountIdOrdersGet(accountId: string, pageNumber?: number, pageSize?: number, shopId?: string, status?: OrderStatus, orderCode?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<OrderResponsePaginationResponseResult>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAccountsAccountIdOrdersGet(accountId, pageNumber, pageSize, shopId, status, orderCode, options);
+        async apiAccountsAccountIdOrdersGet(accountId: string, pageNumber?: number, pageSize?: number, shopId?: string, status?: OrderStatus, paymentMethod?: PaymentMethod, orderCode?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<OrderResponsePaginationResponseResult>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAccountsAccountIdOrdersGet(accountId, pageNumber, pageSize, shopId, status, paymentMethod, orderCode, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AccountApi.apiAccountsAccountIdOrdersGet']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -7897,12 +7897,13 @@ export const AccountApiFactory = function (configuration?: Configuration, basePa
          * @param {number} [pageSize] 
          * @param {string} [shopId] 
          * @param {OrderStatus} [status] 
+         * @param {PaymentMethod} [paymentMethod] 
          * @param {string} [orderCode] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAccountsAccountIdOrdersGet(accountId: string, pageNumber?: number, pageSize?: number, shopId?: string, status?: OrderStatus, orderCode?: string, options?: any): AxiosPromise<OrderResponsePaginationResponseResult> {
-            return localVarFp.apiAccountsAccountIdOrdersGet(accountId, pageNumber, pageSize, shopId, status, orderCode, options).then((request) => request(axios, basePath));
+        apiAccountsAccountIdOrdersGet(accountId: string, pageNumber?: number, pageSize?: number, shopId?: string, status?: OrderStatus, paymentMethod?: PaymentMethod, orderCode?: string, options?: any): AxiosPromise<OrderResponsePaginationResponseResult> {
+            return localVarFp.apiAccountsAccountIdOrdersGet(accountId, pageNumber, pageSize, shopId, status, paymentMethod, orderCode, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -8095,13 +8096,14 @@ export class AccountApi extends BaseAPI {
      * @param {number} [pageSize] 
      * @param {string} [shopId] 
      * @param {OrderStatus} [status] 
+     * @param {PaymentMethod} [paymentMethod] 
      * @param {string} [orderCode] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AccountApi
      */
-    public apiAccountsAccountIdOrdersGet(accountId: string, pageNumber?: number, pageSize?: number, shopId?: string, status?: OrderStatus, orderCode?: string, options?: RawAxiosRequestConfig) {
-        return AccountApiFp(this.configuration).apiAccountsAccountIdOrdersGet(accountId, pageNumber, pageSize, shopId, status, orderCode, options).then((request) => request(this.axios, this.basePath));
+    public apiAccountsAccountIdOrdersGet(accountId: string, pageNumber?: number, pageSize?: number, shopId?: string, status?: OrderStatus, paymentMethod?: PaymentMethod, orderCode?: string, options?: RawAxiosRequestConfig) {
+        return AccountApiFp(this.configuration).apiAccountsAccountIdOrdersGet(accountId, pageNumber, pageSize, shopId, status, paymentMethod, orderCode, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -12520,11 +12522,12 @@ export const OrderApiAxiosParamCreator = function (configuration?: Configuration
          * @param {number} [pageSize] 
          * @param {string} [shopId] 
          * @param {OrderStatus} [status] 
+         * @param {PaymentMethod} [paymentMethod] 
          * @param {string} [orderCode] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiOrdersGet: async (pageNumber?: number, pageSize?: number, shopId?: string, status?: OrderStatus, orderCode?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        apiOrdersGet: async (pageNumber?: number, pageSize?: number, shopId?: string, status?: OrderStatus, paymentMethod?: PaymentMethod, orderCode?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/orders`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -12555,6 +12558,10 @@ export const OrderApiAxiosParamCreator = function (configuration?: Configuration
 
             if (status !== undefined) {
                 localVarQueryParameter['Status'] = status;
+            }
+
+            if (paymentMethod !== undefined) {
+                localVarQueryParameter['PaymentMethod'] = paymentMethod;
             }
 
             if (orderCode !== undefined) {
@@ -12903,12 +12910,13 @@ export const OrderApiFp = function(configuration?: Configuration) {
          * @param {number} [pageSize] 
          * @param {string} [shopId] 
          * @param {OrderStatus} [status] 
+         * @param {PaymentMethod} [paymentMethod] 
          * @param {string} [orderCode] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiOrdersGet(pageNumber?: number, pageSize?: number, shopId?: string, status?: OrderStatus, orderCode?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<OrderResponsePaginationResponseResult>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiOrdersGet(pageNumber, pageSize, shopId, status, orderCode, options);
+        async apiOrdersGet(pageNumber?: number, pageSize?: number, shopId?: string, status?: OrderStatus, paymentMethod?: PaymentMethod, orderCode?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<OrderResponsePaginationResponseResult>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiOrdersGet(pageNumber, pageSize, shopId, status, paymentMethod, orderCode, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['OrderApi.apiOrdersGet']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -13029,12 +13037,13 @@ export const OrderApiFactory = function (configuration?: Configuration, basePath
          * @param {number} [pageSize] 
          * @param {string} [shopId] 
          * @param {OrderStatus} [status] 
+         * @param {PaymentMethod} [paymentMethod] 
          * @param {string} [orderCode] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiOrdersGet(pageNumber?: number, pageSize?: number, shopId?: string, status?: OrderStatus, orderCode?: string, options?: any): AxiosPromise<OrderResponsePaginationResponseResult> {
-            return localVarFp.apiOrdersGet(pageNumber, pageSize, shopId, status, orderCode, options).then((request) => request(axios, basePath));
+        apiOrdersGet(pageNumber?: number, pageSize?: number, shopId?: string, status?: OrderStatus, paymentMethod?: PaymentMethod, orderCode?: string, options?: any): AxiosPromise<OrderResponsePaginationResponseResult> {
+            return localVarFp.apiOrdersGet(pageNumber, pageSize, shopId, status, paymentMethod, orderCode, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -13128,13 +13137,14 @@ export class OrderApi extends BaseAPI {
      * @param {number} [pageSize] 
      * @param {string} [shopId] 
      * @param {OrderStatus} [status] 
+     * @param {PaymentMethod} [paymentMethod] 
      * @param {string} [orderCode] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof OrderApi
      */
-    public apiOrdersGet(pageNumber?: number, pageSize?: number, shopId?: string, status?: OrderStatus, orderCode?: string, options?: RawAxiosRequestConfig) {
-        return OrderApiFp(this.configuration).apiOrdersGet(pageNumber, pageSize, shopId, status, orderCode, options).then((request) => request(this.axios, this.basePath));
+    public apiOrdersGet(pageNumber?: number, pageSize?: number, shopId?: string, status?: OrderStatus, paymentMethod?: PaymentMethod, orderCode?: string, options?: RawAxiosRequestConfig) {
+        return OrderApiFp(this.configuration).apiOrdersGet(pageNumber, pageSize, shopId, status, paymentMethod, orderCode, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -14035,11 +14045,13 @@ export const ShopApiAxiosParamCreator = function (configuration?: Configuration)
          * @param {ConsignSaleStatus} [status] 
          * @param {number} [pageNumber] 
          * @param {number} [pageSize] 
+         * @param {string} [startDate] 
+         * @param {string} [endDate] 
          * @param {string} [consignSaleCode] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiShopsShopIdConsignsalesGet: async (shopId: string, status?: ConsignSaleStatus, pageNumber?: number, pageSize?: number, consignSaleCode?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        apiShopsShopIdConsignsalesGet: async (shopId: string, status?: ConsignSaleStatus, pageNumber?: number, pageSize?: number, startDate?: string, endDate?: string, consignSaleCode?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'shopId' is not null or undefined
             assertParamExists('apiShopsShopIdConsignsalesGet', 'shopId', shopId)
             const localVarPath = `/api/shops/{shopId}/consignsales`
@@ -14069,6 +14081,18 @@ export const ShopApiAxiosParamCreator = function (configuration?: Configuration)
 
             if (pageSize !== undefined) {
                 localVarQueryParameter['PageSize'] = pageSize;
+            }
+
+            if (startDate !== undefined) {
+                localVarQueryParameter['StartDate'] = (startDate as any instanceof Date) ?
+                    (startDate as any).toISOString() :
+                    startDate;
+            }
+
+            if (endDate !== undefined) {
+                localVarQueryParameter['EndDate'] = (endDate as any instanceof Date) ?
+                    (endDate as any).toISOString() :
+                    endDate;
             }
 
             if (consignSaleCode !== undefined) {
@@ -14400,12 +14424,14 @@ export const ShopApiFp = function(configuration?: Configuration) {
          * @param {ConsignSaleStatus} [status] 
          * @param {number} [pageNumber] 
          * @param {number} [pageSize] 
+         * @param {string} [startDate] 
+         * @param {string} [endDate] 
          * @param {string} [consignSaleCode] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiShopsShopIdConsignsalesGet(shopId: string, status?: ConsignSaleStatus, pageNumber?: number, pageSize?: number, consignSaleCode?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ConsignSaleResponsePaginationResponseResult>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiShopsShopIdConsignsalesGet(shopId, status, pageNumber, pageSize, consignSaleCode, options);
+        async apiShopsShopIdConsignsalesGet(shopId: string, status?: ConsignSaleStatus, pageNumber?: number, pageSize?: number, startDate?: string, endDate?: string, consignSaleCode?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ConsignSaleResponsePaginationResponseResult>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiShopsShopIdConsignsalesGet(shopId, status, pageNumber, pageSize, startDate, endDate, consignSaleCode, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['ShopApi.apiShopsShopIdConsignsalesGet']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -14525,12 +14551,14 @@ export const ShopApiFactory = function (configuration?: Configuration, basePath?
          * @param {ConsignSaleStatus} [status] 
          * @param {number} [pageNumber] 
          * @param {number} [pageSize] 
+         * @param {string} [startDate] 
+         * @param {string} [endDate] 
          * @param {string} [consignSaleCode] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiShopsShopIdConsignsalesGet(shopId: string, status?: ConsignSaleStatus, pageNumber?: number, pageSize?: number, consignSaleCode?: string, options?: any): AxiosPromise<ConsignSaleResponsePaginationResponseResult> {
-            return localVarFp.apiShopsShopIdConsignsalesGet(shopId, status, pageNumber, pageSize, consignSaleCode, options).then((request) => request(axios, basePath));
+        apiShopsShopIdConsignsalesGet(shopId: string, status?: ConsignSaleStatus, pageNumber?: number, pageSize?: number, startDate?: string, endDate?: string, consignSaleCode?: string, options?: any): AxiosPromise<ConsignSaleResponsePaginationResponseResult> {
+            return localVarFp.apiShopsShopIdConsignsalesGet(shopId, status, pageNumber, pageSize, startDate, endDate, consignSaleCode, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -14628,13 +14656,15 @@ export class ShopApi extends BaseAPI {
      * @param {ConsignSaleStatus} [status] 
      * @param {number} [pageNumber] 
      * @param {number} [pageSize] 
+     * @param {string} [startDate] 
+     * @param {string} [endDate] 
      * @param {string} [consignSaleCode] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ShopApi
      */
-    public apiShopsShopIdConsignsalesGet(shopId: string, status?: ConsignSaleStatus, pageNumber?: number, pageSize?: number, consignSaleCode?: string, options?: RawAxiosRequestConfig) {
-        return ShopApiFp(this.configuration).apiShopsShopIdConsignsalesGet(shopId, status, pageNumber, pageSize, consignSaleCode, options).then((request) => request(this.axios, this.basePath));
+    public apiShopsShopIdConsignsalesGet(shopId: string, status?: ConsignSaleStatus, pageNumber?: number, pageSize?: number, startDate?: string, endDate?: string, consignSaleCode?: string, options?: RawAxiosRequestConfig) {
+        return ShopApiFp(this.configuration).apiShopsShopIdConsignsalesGet(shopId, status, pageNumber, pageSize, startDate, endDate, consignSaleCode, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
