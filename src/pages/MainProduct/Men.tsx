@@ -22,6 +22,7 @@ import {
 } from "../../api";
 import backgroundImageUrl from "../../components/Assets/shutterstock_455310238.jpg";
 import ProductCard from "../../components/commons/ProductCard";
+import SubMenu from "antd/es/menu/SubMenu";
 
 const Men: React.FC = () => {
   const { dispatch, isItemInCart } = useCart();
@@ -30,23 +31,26 @@ const Men: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [categories, setCategories] = useState<CategoryTreeNode[]>([]);
-  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(
+    null
+  );
   const pageSize = 12;
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchCategories();
-  }, []);
 
-  useEffect(() => {
+    fetchCategories();
     fetchProducts(currentPage);
   }, [currentPage, selectedCategoryId]);
 
   const fetchCategories = async () => {
     try {
       const categoryApi = new CategoryApi();
-      const rootCategoryId = 'c7c0ba52-8406-47c1-9be5-497cbeea5933';
-      const responseCategory = await categoryApi.apiCategoriesTreeGet('', rootCategoryId);
+      const rootCategoryId = "c7c0ba52-8406-47c1-9be5-497cbeea5933";
+      const responseCategory = await categoryApi.apiCategoriesTreeGet(
+        "",
+        rootCategoryId
+      );
       console.log(responseCategory.data.categories);
 
       if (responseCategory.data && responseCategory.data.categories) {
@@ -59,34 +63,27 @@ const Men: React.FC = () => {
     }
   };
 
-  const handleCategoryClick = (categoryId: string) => {
-    setSelectedCategoryId(categoryId);
-    setCurrentPage(1);
-    fetchProducts(1, categoryId); // Fetch products immediately with the new category
-  };
 
-  const renderMenuItems = (categories: CategoryTreeNode[]) => {
-    return categories.flatMap((category) => {
-      const categoryItem = (
+  const renderMenuItems = (categories: CategoryTreeNode[]): React.ReactNode => {
+    return categories.map((category) => {
+      if (category.children && category.children.length > 0) {
+        return (
+          <SubMenu
+            key={category.categoryId}
+            icon={<AppstoreOutlined />}
+            title={category.name}
+            onTitleClick={({ key }) => handleMenuSelect({ key })}
+          >
+            <Menu.Item key={category.categoryId}>All {category.name}</Menu.Item>
+            {renderMenuItems(category.children)}
+          </SubMenu>
+        );
+      }
+      return (
         <Menu.Item key={category.categoryId} icon={<AppstoreOutlined />}>
-          <Button type="link" onClick={() => handleCategoryClick(category.categoryId!)}>
-            {category.name}
-          </Button>
+          {category.name}
         </Menu.Item>
       );
-
-      if (category.children && category.children.length > 0) {
-        const subCategoryItems = category .children.map((subCategory) => (
-          <Menu.Item key={subCategory.categoryId} icon={<AppstoreOutlined />}>
-            <Button type="link" onClick={() => handleCategoryClick(subCategory.categoryId!)}>
-              {subCategory.name}
-            </Button>
-          </Menu.Item>
-        ));
-        return [categoryItem, ...subCategoryItems];
-      }
-
-      return categoryItem;
     });
   };
 
@@ -102,7 +99,7 @@ const Men: React.FC = () => {
         page,
         pageSize,
         userId,
-        categoryId || selectedCategoryId!,
+        selectedCategoryId || "c7c0ba52-8406-47c1-9be5-497cbeea5933",
         ["Available"],
         ["ItemBase", "ConsignedForSale"],
         null!,
@@ -124,7 +121,11 @@ const Men: React.FC = () => {
       setIsLoading(false);
     }
   };
-
+  const handleMenuSelect = ({ key }: { key: string }) => {
+    setSelectedCategoryId(key);
+    setCurrentPage(1);
+    fetchProducts(1, key);
+  };
   const handleAddToCart = (product: FashionItemDetailResponse) => {
     if (product.isOrderedYet) {
       notification.error({
@@ -180,7 +181,13 @@ const Men: React.FC = () => {
             >
               Filter
             </Button>
-            <Menu mode="inline" defaultSelectedKeys={["1"]} style={{ height: "100%", borderRight: 0 }}>
+            <Menu
+              mode="inline"
+              selectedKeys={[selectedCategoryId || '']}
+              defaultOpenKeys={categories.map(cat => cat.categoryId!)}
+              style={{ height: "100%", borderRight: 0 }}
+              onSelect={handleMenuSelect}
+            >
               {renderMenuItems(categories)}
             </Menu>
           </Sider>

@@ -2396,8 +2396,7 @@ export type ConsignSaleStatus = typeof ConsignSaleStatus[keyof typeof ConsignSal
 
 export const ConsignSaleType = {
     ConsignedForSale: 'ConsignedForSale',
-    ConsignedForAuction: 'ConsignedForAuction',
-    ForSale: 'ForSale'
+    ConsignedForAuction: 'ConsignedForAuction'
 } as const;
 
 export type ConsignSaleType = typeof ConsignSaleType[keyof typeof ConsignSaleType];
@@ -3601,9 +3600,9 @@ export const FashionItemStatus = {
     PendingForOrder: 'PendingForOrder',
     AwaitingAuction: 'AwaitingAuction',
     Bidding: 'Bidding',
-    Won: 'Won',
     Rejected: 'Rejected',
-    Returned: 'Returned'
+    Returned: 'Returned',
+    Won: 'Won'
 } as const;
 
 export type FashionItemStatus = typeof FashionItemStatus[keyof typeof FashionItemStatus];
@@ -3687,6 +3686,12 @@ export interface GetTransactionsResponse {
      * @memberof GetTransactionsResponse
      */
     'transactionId'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof GetTransactionsResponse
+     */
+    'orderCode'?: string | null;
     /**
      * 
      * @type {number}
@@ -7359,11 +7364,11 @@ export const AccountApiAxiosParamCreator = function (configuration?: Configurati
          * @param {string} accountId 
          * @param {number} [page] 
          * @param {number} [pageSize] 
-         * @param {TransactionType} [type] 
+         * @param {Array<TransactionType>} [types] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAccountsAccountIdTransactionsGet: async (accountId: string, page?: number, pageSize?: number, type?: TransactionType, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        apiAccountsAccountIdTransactionsGet: async (accountId: string, page?: number, pageSize?: number, types?: Array<TransactionType>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'accountId' is not null or undefined
             assertParamExists('apiAccountsAccountIdTransactionsGet', 'accountId', accountId)
             const localVarPath = `/api/accounts/{accountId}/transactions`
@@ -7391,8 +7396,8 @@ export const AccountApiAxiosParamCreator = function (configuration?: Configurati
                 localVarQueryParameter['PageSize'] = pageSize;
             }
 
-            if (type !== undefined) {
-                localVarQueryParameter['Type'] = type;
+            if (types) {
+                localVarQueryParameter['Types'] = types;
             }
 
 
@@ -7790,12 +7795,12 @@ export const AccountApiFp = function(configuration?: Configuration) {
          * @param {string} accountId 
          * @param {number} [page] 
          * @param {number} [pageSize] 
-         * @param {TransactionType} [type] 
+         * @param {Array<TransactionType>} [types] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiAccountsAccountIdTransactionsGet(accountId: string, page?: number, pageSize?: number, type?: TransactionType, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetTransactionsResponsePaginationResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAccountsAccountIdTransactionsGet(accountId, page, pageSize, type, options);
+        async apiAccountsAccountIdTransactionsGet(accountId: string, page?: number, pageSize?: number, types?: Array<TransactionType>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetTransactionsResponsePaginationResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAccountsAccountIdTransactionsGet(accountId, page, pageSize, types, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AccountApi.apiAccountsAccountIdTransactionsGet']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -7993,12 +7998,12 @@ export const AccountApiFactory = function (configuration?: Configuration, basePa
          * @param {string} accountId 
          * @param {number} [page] 
          * @param {number} [pageSize] 
-         * @param {TransactionType} [type] 
+         * @param {Array<TransactionType>} [types] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAccountsAccountIdTransactionsGet(accountId: string, page?: number, pageSize?: number, type?: TransactionType, options?: any): AxiosPromise<GetTransactionsResponsePaginationResponse> {
-            return localVarFp.apiAccountsAccountIdTransactionsGet(accountId, page, pageSize, type, options).then((request) => request(axios, basePath));
+        apiAccountsAccountIdTransactionsGet(accountId: string, page?: number, pageSize?: number, types?: Array<TransactionType>, options?: any): AxiosPromise<GetTransactionsResponsePaginationResponse> {
+            return localVarFp.apiAccountsAccountIdTransactionsGet(accountId, page, pageSize, types, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -8198,13 +8203,13 @@ export class AccountApi extends BaseAPI {
      * @param {string} accountId 
      * @param {number} [page] 
      * @param {number} [pageSize] 
-     * @param {TransactionType} [type] 
+     * @param {Array<TransactionType>} [types] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AccountApi
      */
-    public apiAccountsAccountIdTransactionsGet(accountId: string, page?: number, pageSize?: number, type?: TransactionType, options?: RawAxiosRequestConfig) {
-        return AccountApiFp(this.configuration).apiAccountsAccountIdTransactionsGet(accountId, page, pageSize, type, options).then((request) => request(this.axios, this.basePath));
+    public apiAccountsAccountIdTransactionsGet(accountId: string, page?: number, pageSize?: number, types?: Array<TransactionType>, options?: RawAxiosRequestConfig) {
+        return AccountApiFp(this.configuration).apiAccountsAccountIdTransactionsGet(accountId, page, pageSize, types, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

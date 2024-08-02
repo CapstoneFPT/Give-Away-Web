@@ -15,7 +15,12 @@ import { ShoppingCartOutlined } from "@ant-design/icons";
 import { Content } from "antd/es/layout/layout";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../CartContext";
-import { CategoryApi, CategoryTreeNode, FashionItemApi, FashionItemDetailResponse } from "../../api";
+import {
+  CategoryApi,
+  CategoryTreeNode,
+  FashionItemApi,
+  FashionItemDetailResponse,
+} from "../../api";
 import backgroundImageUrl from "../../components/Assets/freepik_5229782.jpg";
 import ProductCard from "../../components/commons/ProductCard";
 
@@ -25,8 +30,10 @@ const Women: React.FC = () => {
   const [totalCount, setTotalCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
-  const [categories, setCategories] =  useState<CategoryTreeNode[]>([]); 
-  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
+  const [categories, setCategories] = useState<CategoryTreeNode[]>([]);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(
+    null
+  );
   const pageSize = 12;
   const navigate = useNavigate();
 
@@ -37,41 +44,47 @@ const Women: React.FC = () => {
 
   const fetchCategories = async () => {
     try {
-        const categoryApi = new CategoryApi();
-        const rootCategoryId = '8c3fe1f7-0082-4382-85de-6c70fcd76761'; // Category ID for "Nam"
-        const responseCategory = await categoryApi.apiCategoriesTreeGet('', rootCategoryId); // Ensure this method accepts the parameter
-        console.log(responseCategory.data.categories);
-        
-        // Check if the response structure is as expected
-        if (responseCategory.data && responseCategory.data.categories) {
-            setCategories(responseCategory.data.categories); // Set categories if they exist
-        } else {
-            console.error("No categories found in the response:", responseCategory);
-        }
-    } catch (error) {
-        console.error("There was an error fetching the categories!", error);
-    }
-};
-const handleCategoryClick = (categoryId: string) => {
-  setSelectedCategoryId(categoryId); // Set the selected category ID
-  setCurrentPage(1); // Reset to the first page
-  fetchProducts(1); // Fetch products for the selected category
-};
-const renderMenuItems = (categories: CategoryTreeNode[]) => {
-  return categories.map((category) => (
-      <Menu.SubMenu key={category.categoryId} title={category.name}>
-          {category.children && category.children.length > 0 ? (
-              renderMenuItems(category.children) // Recursively render children
-          ) : (
-              <Menu.Item key={category.categoryId} onClick={() => handleCategoryClick(category.categoryId!)}>
-                {category.name}
-              </Menu.Item>
-          )}
-      </Menu.SubMenu>
-  ));
-};
+      const categoryApi = new CategoryApi();
+      const rootCategoryId = "8c3fe1f7-0082-4382-85de-6c70fcd76761"; // Category ID for "Nam"
+      const responseCategory = await categoryApi.apiCategoriesTreeGet(
+        "",
+        rootCategoryId
+      ); // Ensure this method accepts the parameter
+      console.log(responseCategory.data.categories);
 
-  const fetchProducts = async (page: number) => {
+      // Check if the response structure is as expected
+      if (responseCategory.data && responseCategory.data.categories) {
+        setCategories(responseCategory.data.categories); // Set categories if they exist
+      } else {
+        console.error("No categories found in the response:", responseCategory);
+      }
+    } catch (error) {
+      console.error("There was an error fetching the categories!", error);
+    }
+  };
+  const handleCategoryClick = (categoryId: string) => {
+    setSelectedCategoryId(categoryId); // Set the selected category ID
+    setCurrentPage(1); // Reset to the first page
+    fetchProducts(1,categoryId); // Fetch products for the selected category
+  };
+  const renderMenuItems = (categories: CategoryTreeNode[]) => {
+    return categories.map((category) => (
+      <Menu.SubMenu key={category.categoryId} title={category.name}>
+        {category.children && category.children.length > 0 ? (
+          renderMenuItems(category.children) // Recursively render children
+        ) : (
+          <Menu.Item
+            key={category.categoryId}
+            onClick={() => handleCategoryClick(category.categoryId!)}
+          >
+            {category.name}
+          </Menu.Item>
+        )}
+      </Menu.SubMenu>
+    ));
+  };
+
+  const fetchProducts = async (page: number, categoryId?: string) => {
     setIsLoading(true);
     try {
       const userId = JSON.parse(localStorage.getItem("userId") || "null");
@@ -81,6 +94,7 @@ const renderMenuItems = (categories: CategoryTreeNode[]) => {
         page,
         pageSize,
         userId,
+        categoryId,
         ["Available"],
         ["ItemBase", "ConsignedForSale"],
         null!,

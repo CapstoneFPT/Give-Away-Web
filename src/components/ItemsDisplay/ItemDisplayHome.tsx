@@ -54,8 +54,9 @@ const ItemDisplayHome: React.FC = () => {
         page,
         pageSize,
         userId,
+        null!,
         ["Available"],
-        ["ConsignedForSale", "ItemBase"]
+        ["ItemBase", "ConsignedForSale"],
       );
 
       console.debug(response);
