@@ -48,6 +48,7 @@ const Auction: React.FC = () => {
 
       const latestBidResponse =
         await auctionDetailApi.apiAuctionsIdBidsLatestGet(auctionId!);
+      console.log(latestBidResponse.data);
 
       const productData: AuctionItemDetailResponse = {
         initialPrice: fetchedProduct?.initialPrice,
@@ -75,10 +76,10 @@ const Auction: React.FC = () => {
 
       const initialBidAmount = fetchedProduct?.initialPrice || 0;
       console.log(initialBidAmount);
-      if (latestBidResponse.data == null) {
-        setNextBidAmount(initialBidAmount);
-      } else {
+      if (latestBidResponse.data) {
         addBid(latestBidResponse.data);
+      } else {
+        setNextBidAmount(initialBidAmount);
       }
 
       const serverTimeApi = new AuctionApi();
