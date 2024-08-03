@@ -32,15 +32,14 @@ const Men: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [categories, setCategories] = useState<CategoryTreeNode[]>([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(
-    null
+    "c7c0ba52-8406-47c1-9be5-497cbeea5933"
   );
   const pageSize = 12;
   const navigate = useNavigate();
 
   useEffect(() => {
-
     fetchCategories();
-    fetchProducts(currentPage);
+    fetchProducts(currentPage, selectedCategoryId!);
   }, [currentPage, selectedCategoryId]);
 
   const fetchCategories = async () => {
@@ -48,7 +47,7 @@ const Men: React.FC = () => {
       const categoryApi = new CategoryApi();
       const rootCategoryId = "c7c0ba52-8406-47c1-9be5-497cbeea5933";
       const responseCategory = await categoryApi.apiCategoriesTreeGet(
-        "",
+        null!,
         rootCategoryId
       );
       console.log(responseCategory.data.categories);
@@ -63,7 +62,6 @@ const Men: React.FC = () => {
     }
   };
 
-
   const renderMenuItems = (categories: CategoryTreeNode[]): React.ReactNode => {
     return categories.map((category) => {
       if (category.children && category.children.length > 0) {
@@ -72,7 +70,7 @@ const Men: React.FC = () => {
             key={category.categoryId}
             icon={<AppstoreOutlined />}
             title={category.name}
-            onTitleClick={({ key }) => handleMenuSelect({ key })}
+            onTitleClick={({ key }) => handleMenuSelect({ key:key as string })}
           >
             <Menu.Item key={category.categoryId}>All {category.name}</Menu.Item>
             {renderMenuItems(category.children)}
@@ -91,7 +89,8 @@ const Men: React.FC = () => {
     setIsLoading(true);
     try {
       const userId = JSON.parse(localStorage.getItem("userId") || "null");
-      console.log(userId);
+      // console.log(userId);
+      console.log("Selected cateogry id: ", categoryId);
       const fashionItemApi = new FashionItemApi();
 
       const response = await fashionItemApi.apiFashionitemsGet(
@@ -105,9 +104,9 @@ const Men: React.FC = () => {
         null!,
         "Male"
       );
-      console.log(response.data.data?.items);
+      // console.log(response.data.data?.items);
 
-      console.debug(response);
+      // console.debug(response);
       const data = response.data;
       if (data && data.data?.items && Array.isArray(data.data.items)) {
         setProducts(data.data.items);
@@ -122,9 +121,10 @@ const Men: React.FC = () => {
     }
   };
   const handleMenuSelect = ({ key }: { key: string }) => {
-    setSelectedCategoryId(key);
-    setCurrentPage(1);
-    fetchProducts(1, key);
+    if (key) {
+      setSelectedCategoryId(key);
+      setCurrentPage(1);
+    }
   };
   const handleAddToCart = (product: FashionItemDetailResponse) => {
     if (product.isOrderedYet) {
@@ -183,8 +183,8 @@ const Men: React.FC = () => {
             </Button>
             <Menu
               mode="inline"
-              selectedKeys={[selectedCategoryId || '']}
-              defaultOpenKeys={categories.map(cat => cat.categoryId!)}
+              selectedKeys={[selectedCategoryId || ""]}
+              defaultOpenKeys={categories.map((cat) => cat.categoryId!)}
               style={{ height: "100%", borderRight: 0 }}
               onSelect={handleMenuSelect}
             >
