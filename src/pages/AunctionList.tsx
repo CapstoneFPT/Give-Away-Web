@@ -56,9 +56,11 @@ const AuctionList = () => {
         userId!
       );
       if (depositStatus.data.hasDeposit) {
+        // Redirect to the specific auction detail page
         window.location.href = `/auction/${auctionId}?item=${auctionItemId}`;
       } else {
-        window.location.href = `/deposit`;
+        // Redirect to the deposit page with auctionId as a query parameter
+        window.location.href = `/deposit?auctionId=${auctionId}`;
       }
     } catch (error) {
       console.error("Error checking deposit status:", error);
@@ -86,15 +88,15 @@ const AuctionList = () => {
         {data.map((auction) => (
           <Col xs={24} sm={12} md={8} lg={6} key={auction.auctionId}>
             <Card
-            cover
-              
-              style={{ borderRadius: "10px", overflow: "hidden", boxShadow: "0 10px 15px rgba(0,0,0,0.1)" }}
-            >
-               <img
+              cover={
+                <img
                   alt="Product"
                   src={auction.imageUrl!}
-                  style={{ height: "300px",width:'300px', objectFit: "cover", borderTopLeftRadius: "10px", borderTopRightRadius: "10px", textAlign:'center' }}
+                  style={{ height: "300px", width: '100%', objectFit: "cover", textAlign: 'center' }}
                 />
+              }
+              style={{ borderRadius: "10px", overflow: "hidden", boxShadow: "0 10px 15px rgba(0,0,0,0.1)" }}
+            >
               <Title level={4}>{auction.title}</Title>
               <Text strong>Start: </Text><Text>{auction.startDate}</Text><br />
               <Text strong>End: </Text><Text>{auction.endDate}</Text><br />

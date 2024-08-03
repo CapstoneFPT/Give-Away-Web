@@ -76,10 +76,17 @@ const ConsignDetail = () => {
               style={{ borderRadius: "10px", marginBottom: "20px" }}
             >
               <Descriptions column={1} bordered size="small">
-                <Descriptions.Item label="Payment Method">ádf</Descriptions.Item>
-                <Descriptions.Item label="Recipient Name">ádf</Descriptions.Item>
+                <Descriptions.Item label="Consign Code">ádf</Descriptions.Item>
+                <Descriptions.Item label="Deal Price">ádf</Descriptions.Item>
                 <Descriptions.Item label="Address">sdf</Descriptions.Item>
-                <Descriptions.Item label="Phone Number">adf</Descriptions.Item>
+                <Descriptions.Item label="Confirmed Price">adf</Descriptions.Item>
+                <Descriptions.Item label="Created Date">adf</Descriptions.Item>
+                <Descriptions.Item label="Start Date">adf</Descriptions.Item>
+                <Descriptions.Item label="Consingor">adf</Descriptions.Item>
+                <Descriptions.Item label="Consign Sale Method">adf</Descriptions.Item>
+                <Descriptions.Item label="Phone">adf</Descriptions.Item>
+                <Descriptions.Item label="Email">adf</Descriptions.Item>
+               
               </Descriptions>
             </Card>
 
@@ -148,7 +155,7 @@ const ConsignDetail = () => {
             ))}
 
             <Divider />
-            <Link to="/order-list">
+            <Link to="/transaction/My-consign">
               <Button
                 type="primary"
                 style={{
