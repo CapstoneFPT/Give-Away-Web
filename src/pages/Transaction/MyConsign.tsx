@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Card, Row, Col, Table, Button } from "antd";
+import { Card, Row, Col, Table, Button, Tag } from "antd";
 import NavProfile from "../../components/NavProfile/NavProfile";
 import { AccountApi } from "../../api";
 import { useNavigate } from "react-router-dom"; // Thêm import useNavigate
@@ -30,35 +30,35 @@ const MyConsign = () => {
 
   const columns = [
     {
-      title: 'consignSaleCode',
+      title: 'ConsignSale Code',
       dataIndex: 'consignSaleCode',
       key: 'consignSaleCode',
     },
     {
-      title: 'consginer',
+      title: 'Consginer',
       dataIndex: 'consginer',
       key: 'consginer',
     },
     {
-      title: 'totalPrice',
+      title: 'Total Price',
       dataIndex: 'totalPrice',
       key: 'totalPrice',
       render: (totalPrice: number) => <strong>{formatBalance(totalPrice)} VND</strong> ,
     },
     {
-      title: 'createdDate',
+      title: 'Created Date',
       dataIndex: 'createdDate',
       key: 'createdDate',
       render: (createdDate: string) => new Date(createdDate).toLocaleDateString(),
     },
     
     {
-      title: 'type',
+      title: 'Type',
       dataIndex: 'type',
       key: 'type',
     },
     {
-      title: 'consignSaleMethod',
+      title: 'ConsignSale Method',
       dataIndex: 'consignSaleMethod',
       key: 'consignSaleMethod',
     },
@@ -68,12 +68,32 @@ const MyConsign = () => {
       title: 'Status',
       dataIndex: 'status',
       key: 'status',
+      render: (status: string) => (
+        <Tag
+          color={
+                status === "Completed"
+              ? "green"
+              : status === "AwaitingDelivery"
+              ? "yellow"
+              : status === "Pending"
+              ? "pink"
+              : status === "Received"
+              ? "orange"
+              : status === "OnSale"
+              ? "blue"
+              : "red"
+          }
+        >
+          {status.toUpperCase()}
+        </Tag>
+      ),
     },
     {
       title: 'Action', // Thêm cột cho button
       key: 'action',
       render: (text: any, record: any) => (
-        <Button onClick={() => handleDetail(record.consignSaleId)}>Detail</Button>
+        <Button style={{ backgroundColor: 'black', borderColor: 'black', width: '100px', height: '35px', color: 'white' }} 
+        onClick={() => handleDetail(record.consignSaleId)}>Detail</Button>
       ),
     },
   ];

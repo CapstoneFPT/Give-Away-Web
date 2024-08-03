@@ -63,7 +63,9 @@ const ConsignDetail = () => {
   if (loading) {
     return <Spin size="large" style={{ display: "block", margin: "auto" }} />;
   }
-
+  const formatBalance = (sellingPrice: number): string => {
+    return new Intl.NumberFormat("de-DE").format(sellingPrice);
+  };
   return (
     <Card
       style={{
@@ -94,9 +96,9 @@ const ConsignDetail = () => {
                     </Tag>
                   </Descriptions.Item>
                   <Descriptions.Item label="Consignor">{consignInformation.consginer}</Descriptions.Item>
-                  <Descriptions.Item label="Created Date">{consignInformation.createdDate}</Descriptions.Item>
-                  <Descriptions.Item label="Start Date">{consignInformation.startDate}</Descriptions.Item>
-                  <Descriptions.Item label="Confirmed Price">{consignInformation.endDate}</Descriptions.Item>
+                  <Descriptions.Item label="Created Date">{new Date(consignInformation.createdDate).toLocaleString()}</Descriptions.Item>
+                  <Descriptions.Item label="Start Date">{new Date(consignInformation.startDate).toLocaleString()}</Descriptions.Item>
+                  <Descriptions.Item label="End Date">{new Date(consignInformation.endDate!).toLocaleString()}</Descriptions.Item>
                   <Descriptions.Item label="Consign Sale Method">{consignInformation.consignSaleMethod}</Descriptions.Item>
                   <Descriptions.Item label="Phone">{consignInformation.phone}</Descriptions.Item>
                   <Descriptions.Item label="Email">{consignInformation.email}</Descriptions.Item>
@@ -138,10 +140,14 @@ const ConsignDetail = () => {
                     </Tag>
                   </Descriptions.Item>
                   <Descriptions.Item label="Deal Price">
-                    ${item.dealPrice}
+                    <strong>
+                      {formatBalance(item.dealPrice || 0)} VND
+                    </strong>
                   </Descriptions.Item>
                   <Descriptions.Item label="Confirmed Price">
-                    ${item.confirmedPrice}
+                  <strong>
+                      {formatBalance(item.confirmedPrice || 0)} VND
+                    </strong>
                   </Descriptions.Item>
                   <Descriptions.Item label="Gender">
                     {item.fashionItem!.gender}
