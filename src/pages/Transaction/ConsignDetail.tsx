@@ -11,7 +11,7 @@ import {
   Divider,
   Descriptions,
 } from "antd";
-import { Link, useLocation } from "react-router-dom"; // Thêm useLocation
+import { Link, useLocation } from "react-router-dom"; 
 import NavProfile from "../../components/NavProfile/NavProfile";
 import {
   ConsignSaleApi,
@@ -20,23 +20,19 @@ import {
 } from "../../api";
 
 const ConsignDetail = () => {
-  const [consignDetail, setConsignDetail] = useState<
-    ConsignSaleDetailResponse[]
-  >([]);
+  const [consignDetail, setConsignDetail] = useState<ConsignSaleDetailResponse[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const location = useLocation(); // Khởi tạo useLocation
-  const queryParams = new URLSearchParams(location.search); // Lấy query params
-  const consignSaleId = queryParams.get("consignSaleId"); // Lấy consignSaleId từ query params
+  const [consignInformation, setConsignInformation] = useState<any>(null); // State to store consign information
+  const location = useLocation(); 
+  const queryParams = new URLSearchParams(location.search); 
+  const consignSaleId = queryParams.get("consignSaleId");
 
   useEffect(() => {
     const fetchConsignDetails = async () => {
       setLoading(true);
       try {
         const consignApi = new ConsignSaleApi();
-        const response =
-          await consignApi.apiConsginsalesConsignsaleIdConsignsaledetailsGet(
-            consignSaleId!
-          ); // Gọi API với consignSaleId
+        const response = await consignApi.apiConsginsalesConsignsaleIdConsignsaledetailsGet(consignSaleId!);
         setConsignDetail(response.data.data!);
         console.log(response);
       } catch (error) {
@@ -47,7 +43,19 @@ const ConsignDetail = () => {
       }
     };
 
+    const fetchConsignInformation = async () => {
+      try {
+        const consignInfomationApi = new ConsignSaleApi();
+        const responseInfoamtionConsign = await consignInfomationApi.apiConsginsalesConsignsaleIdGet(consignSaleId!);
+        setConsignInformation(responseInfoamtionConsign.data.data); // Update state with consign information
+        console.log(responseInfoamtionConsign.data.data);
+      } catch (error) {
+        console.error("Failed to fetch consign information", error);
+      }
+    };
+
     if (consignSaleId) {
+      fetchConsignInformation();
       fetchConsignDetails();
     }
   }, [consignSaleId]);
@@ -71,23 +79,29 @@ const ConsignDetail = () => {
         <Col span={18}>
           <Card bordered={false} style={{ borderRadius: "10px" }}>
             <Card
-              title="Recipient Information"
+              title="Consign Information"
               bordered={false}
               style={{ borderRadius: "10px", marginBottom: "20px" }}
             >
-              <Descriptions column={1} bordered size="small">
-                <Descriptions.Item label="Consign Code">ádf</Descriptions.Item>
-                <Descriptions.Item label="Deal Price">ádf</Descriptions.Item>
-                <Descriptions.Item label="Address">sdf</Descriptions.Item>
-                <Descriptions.Item label="Confirmed Price">adf</Descriptions.Item>
-                <Descriptions.Item label="Created Date">adf</Descriptions.Item>
-                <Descriptions.Item label="Start Date">adf</Descriptions.Item>
-                <Descriptions.Item label="Consingor">adf</Descriptions.Item>
-                <Descriptions.Item label="Consign Sale Method">adf</Descriptions.Item>
-                <Descriptions.Item label="Phone">adf</Descriptions.Item>
-                <Descriptions.Item label="Email">adf</Descriptions.Item>
-               
-              </Descriptions>
+              {consignInformation && (
+                <Descriptions column={1} bordered size="small">
+                  <Descriptions.Item label="Consign Code">{consignInformation.consignSaleCode}
+                  <Tag
+                      color={consignInformation.status === "Sold" ? "green" : "blue"}
+                      style={{ marginLeft: "10px" }}
+                    >
+                      {consignInformation.status}
+                    </Tag>
+                  </Descriptions.Item>
+                  <Descriptions.Item label="Consignor">{consignInformation.consginer}</Descriptions.Item>
+                  <Descriptions.Item label="Created Date">{consignInformation.createdDate}</Descriptions.Item>
+                  <Descriptions.Item label="Start Date">{consignInformation.startDate}</Descriptions.Item>
+                  <Descriptions.Item label="Confirmed Price">{consignInformation.endDate}</Descriptions.Item>
+                  <Descriptions.Item label="Consign Sale Method">{consignInformation.consignSaleMethod}</Descriptions.Item>
+                  <Descriptions.Item label="Phone">{consignInformation.phone}</Descriptions.Item>
+                  <Descriptions.Item label="Email">{consignInformation.email}</Descriptions.Item>
+                </Descriptions>
+              )}
             </Card>
 
             {consignDetail.map((item, index) => (
@@ -123,15 +137,12 @@ const ConsignDetail = () => {
                       {item.fashionItem!.status}
                     </Tag>
                   </Descriptions.Item>
-                  {/* <Descriptions.Item label="Consign Sale Code">
-                    {item.fashionItem!.}
-                  </Descriptions.Item>
                   <Descriptions.Item label="Deal Price">
-                    ${item.fashionItem!.}
+                    ${item.dealPrice}
                   </Descriptions.Item>
                   <Descriptions.Item label="Confirmed Price">
-                    ${item.fashionItem!.confirmedPrice}
-                  </Descriptions.Item> */}
+                    ${item.confirmedPrice}
+                  </Descriptions.Item>
                   <Descriptions.Item label="Gender">
                     {item.fashionItem!.gender}
                   </Descriptions.Item>

@@ -124,7 +124,7 @@ const ConsignForm = () => {
       <Form form={form} className="consign-form" name="dynamic_form" onFinish={onFinish} autoComplete="off" size="large">
         <Card className="user-info-card" style={{ justifyContent: "center", alignItems: "center", display: "flex" }}>
           <div style={{ width: "1000px" }}>
-            <h1>Consign Form</h1>
+            <h1>Consign/Sale Form</h1>
             <Form.Item name={["userInfo", "fullName"]} rules={[{ required: true, message: "Missing full name" }]}>
               <Input placeholder="Full Name" />
             </Form.Item>
@@ -132,7 +132,7 @@ const ConsignForm = () => {
               <Input placeholder="Phone" />
             </Form.Item>
             <Form.Item name={["userInfo", "clothBranches"]} rules={[{ required: true, message: "Missing cloth branches" }]}>
-              <Select placeholder="Cloth Branches">
+              <Select placeholder=" Branches">
                 {branches.map((data: any) => (
                   <Select.Option key={data.shopId} value={data.shopId}>
                     {data.address}
@@ -141,7 +141,7 @@ const ConsignForm = () => {
               </Select>
             </Form.Item>
             <Form.Item name={["userInfo", "type"]} rules={[{ required: true, message: "Missing type" }]}>
-              <Select style={{ width: "21%" }}>
+              <Select placeholder="Type Consign/Sale" style={{ width: "21%" }}>
                 {Object.values(ConsignSaleType).map((type) => ( // Render options from the type
                   <Select.Option key={type} value={type}>
                     {type}
@@ -168,7 +168,7 @@ const ConsignForm = () => {
                       </Upload>
                     </Form.Item>
                     <Form.Item {...restField} name={[name, "gender"]} rules={[{ required: true, message: "Missing gender" }]}>
-                      <Select style={{ width: "50%" }}>
+                      <Select placeholder="Gender" style={{ width: "50%" }}>
                         <Select.Option value="male">Male</Select.Option>
                         <Select.Option value="female">Female</Select.Option>
                       </Select>
@@ -180,7 +180,7 @@ const ConsignForm = () => {
                       <Input placeholder="Deal Price" />
                     </Form.Item>
                     <Form.Item {...restField} name={[name, "size"]} rules={[{ required: true, message: "Missing size" }]}>
-                      <Select style={{ width: "50%" }}>
+                      <Select placeholder="Size" style={{ width: "50%" }}>
                         {Object.values(SizeType).map((size) => (
                           <Select.Option key={size} value={size}>
                             {size}
@@ -232,7 +232,7 @@ const ConsignForm = () => {
           </Checkbox>
         </Form.Item>
         <Form.Item>
-          <Button type="primary" htmlType="submit" loading={uploading} style={{ width: "100%" }}>
+          <Button type="primary" htmlType="submit" loading={uploading} style={{ width: "15%", backgroundColor:'black',color:'white' }}>
             {uploading ? "Uploading..." : "Submit"}
           </Button>
         </Form.Item>

@@ -4,7 +4,9 @@ import {
     KeyOutlined,
     DollarOutlined,
     UserOutlined,
-    OrderedListOutlined
+    OrderedListOutlined,
+    InboxOutlined,
+    MoneyCollectOutlined 
 } from "@ant-design/icons";
 import {Button, Menu, Card} from "antd";
 import {useNavigate} from "react-router-dom";
@@ -60,6 +62,7 @@ const NavProfile: React.FC = () => {
         {key: "2", icon: <KeyOutlined/>, label: "Change Password", to: "/change-password"},
         {key: "3", icon: <OrderedListOutlined/>, label: "Order list", to: "/order-list"},
         {key: "4", icon: <DollarOutlined/>, label: "Withdraw", to: "/transaction/withdraw"},
+        {key: "5", icon: <InboxOutlined />,label: "Consign History", to: "/transaction/My-consign"},
         // { key: "sub1", icon: <RetweetOutlined />, label: "Refunds", to: "/refunds" },
         {
             key: "sub2",
@@ -68,7 +71,6 @@ const NavProfile: React.FC = () => {
             children: [
                 {key: "9", label: "Withdraw History", to: "/transaction/withdraw-history"},
                 {key: "10", label: "Deposit History", to: "/transaction/deposit-history"},
-                {key: "11", label: "Consign History", to: "/transaction/My-consign"},
                 {key: "12", label: "Auction History", to: "/transaction/Auction-history"},
                 {key: "13", label: "Purchase History", to: "/transaction/purchase-history"},
                 {key: "14", label: "Recharge History", to: "/transaction/recharge-history"},

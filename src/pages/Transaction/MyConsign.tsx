@@ -35,30 +35,35 @@ const MyConsign = () => {
       key: 'consignSaleCode',
     },
     {
-      title: 'type',
-      dataIndex: 'type',
-      key: 'type',
+      title: 'consginer',
+      dataIndex: 'consginer',
+      key: 'consginer',
+    },
+    {
+      title: 'totalPrice',
+      dataIndex: 'totalPrice',
+      key: 'totalPrice',
+      render: (totalPrice: number) => <strong>{formatBalance(totalPrice)} VND</strong> ,
     },
     {
       title: 'createdDate',
       dataIndex: 'createdDate',
       key: 'createdDate',
+      render: (createdDate: string) => new Date(createdDate).toLocaleDateString(),
+    },
+    
+    {
+      title: 'type',
+      dataIndex: 'type',
+      key: 'type',
     },
     {
       title: 'consignSaleMethod',
       dataIndex: 'consignSaleMethod',
       key: 'consignSaleMethod',
     },
-    {
-      title: 'totalPrice',
-      dataIndex: 'totalPrice',
-      key: 'totalPrice',
-    },
-    {
-      title: 'consginer',
-      dataIndex: 'consginer',
-      key: 'consginer',
-    },
+   
+   
     {
       title: 'Status',
       dataIndex: 'status',
@@ -75,6 +80,9 @@ const MyConsign = () => {
 
   const handleDetail = (consignSaleId: string) => {
     navigate(`/ConsignDetail?consignSaleId=${consignSaleId}`); 
+  };
+  const formatBalance = (balance:any) => {
+    return new Intl.NumberFormat('de-DE').format(balance);
   };
 
   return (

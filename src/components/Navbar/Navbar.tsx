@@ -87,7 +87,7 @@ const Navbar = () => {
               }}
             >
               <Link to="/consign" className="no-underline">
-                Consign
+                Consign/Sale
               </Link>
               {menu === "branches" ? <hr /> : <></>}
             </li>

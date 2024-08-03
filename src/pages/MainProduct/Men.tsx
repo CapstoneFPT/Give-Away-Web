@@ -8,6 +8,7 @@ import {
   Pagination,
   Spin,
   notification,
+  Card,
 } from "antd";
 import Sider from "antd/es/layout/Sider";
 import { AppstoreOutlined } from "@ant-design/icons";
@@ -168,21 +169,10 @@ const Men: React.FC = () => {
     >
       <Row gutter={[16, 16]}>
         <Col span={4}>
-          <Sider width={200} style={{ background: "#fff", marginTop: "20px" }}>
-            <Button
-              style={{
-                width: "100px",
-                color: "white",
-                backgroundColor: "black",
-                marginBottom: "20px",
-                marginTop: "10px",
-                marginLeft: "10px",
-              }}
-            >
-              Filter
-            </Button>
+          <Card title='Category'  style={{ background: "#fff", marginTop: "20px" }}>
+           
             <Menu
-              mode="inline"
+              mode="horizontal"
               selectedKeys={[selectedCategoryId || ""]}
               defaultOpenKeys={categories.map((cat) => cat.categoryId!)}
               style={{ height: "100%", borderRight: 0 }}
@@ -190,7 +180,7 @@ const Men: React.FC = () => {
             >
               {renderMenuItems(categories)}
             </Menu>
-          </Sider>
+          </Card>
         </Col>
         <Col span={20}>
           <Layout style={{ backgroundColor: "rgba(255, 255, 255, 0)" }}>

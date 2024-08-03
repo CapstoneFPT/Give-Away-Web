@@ -75,7 +75,7 @@ const Login = () => {
       } else {
         notification.error({
           message: 'Login Failed',
-          description: response.data.resultStatus ,
+          description: response.data.resultStatus || 'NotFound' || 'Duplicated' || 'Error', // Use response message or fallback options
         });
       }
     } catch (error) {

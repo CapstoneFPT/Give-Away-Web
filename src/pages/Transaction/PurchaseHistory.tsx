@@ -22,6 +22,9 @@ const PurchaseHistory = () => {
         setTotal(response.data.totalCount || 0);
         setLoading(false);
     }
+    const formatBalance = (balance:any) => {
+        return new Intl.NumberFormat('de-DE').format(balance);
+      };
 
     const columns: TableColumnsType<GetTransactionsResponse> = [
         {
@@ -30,21 +33,25 @@ const PurchaseHistory = () => {
             key: 'transactionId',
         },
         {
-            title: 'Type',
-            dataIndex: 'type',
-            key: 'type',
+            title: 'Amount',
+            dataIndex: 'amount',
+            key: 'amount',
+            render: (amount: number) => <strong>{formatBalance(amount)} VND</strong> ,
+
         },
         {
             title: 'Date',
             dataIndex: 'createdDate',
             key: 'createdDate',
+            render: (createdDate: string) => new Date(createdDate).toLocaleDateString(),
         },
         {
-            title: 'Amount',
-            dataIndex: 'amount',
-            key: 'amount',
+            title: 'Type',
+            dataIndex: 'type',
+            key: 'type',
         },
-
+       
+        
     ]
 
     return (

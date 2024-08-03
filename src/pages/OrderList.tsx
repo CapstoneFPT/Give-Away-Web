@@ -73,6 +73,11 @@ const OrderList: React.FC = () => {
       const response = await accountApi.apiAccountsAccountIdOrdersGet(userId);
       const orders = response.data.data?.items || [];
       setData(orders);
+      const formattedOrders = orders.map(order => ({
+        ...order,
+        createdDate: new Date(order.createdDate!).toLocaleString(), // Format date here
+    }));
+    setData(formattedOrders);
       console.log(response)
     } catch (err) {
       console.error("Failed to fetch orders:", err);
@@ -91,11 +96,8 @@ const OrderList: React.FC = () => {
       console.log(response);
     } catch (error) {
       console.error("Failed to fetch order details:", error);
-      notification.error({
-        message: "Error",
-        description: "Failed to fetch order details. Please try again.",
-      });
-      setOrderDetails([]);
+      // Removed notification error display
+      setOrderDetails([]); // Clear order details on error
     } finally {
       setDetailsLoading(false);
     }
@@ -103,6 +105,7 @@ const OrderList: React.FC = () => {
 
   const openCheckoutModal = async (order: OrderResponse) => {
     setSelectedOrder(order);
+    setOrderDetails([]);
     await fetchOrderDetails(order.orderId!);
   };
 
@@ -158,6 +161,35 @@ const OrderList: React.FC = () => {
       });
     }
   };
+  const handleCancel = async () => {
+    if (!selectedOrder) return; // Ensure selectedOrder is available
+
+    // Show confirmation modal
+    Modal.confirm({
+        title: "Confirm Cancellation",
+        content: "Are you sure you want to cancel this order?",
+        okText: "Yes",
+        cancelText: "No",
+        onOk: async () => {
+            const cancelOrderApi = new OrderApi();
+            try {
+                await cancelOrderApi.apiOrdersOrderIdCancelPut(selectedOrder.orderId!);
+                notification.success({
+                    message: "Order Canceled",
+                    description: "Your order has been successfully canceled.",
+                });
+                // Optionally, refresh the order list after cancellation
+                fetchOrders();
+            } catch (error) {
+                console.error("Failed to cancel order:", error);
+                notification.error({
+                    message: "Cancellation Error",
+                    description: "Failed to cancel the order. Please try again later.",
+                });
+            }
+        },
+    });
+}
 
   const formatBalance = (sellingPrice: number): string => {
     return new Intl.NumberFormat("de-DE").format(sellingPrice);
@@ -394,9 +426,14 @@ const OrderList: React.FC = () => {
                     Total Price: {formatBalance(selectedOrder.totalPrice || 0)}{" "}
                     VND
                   </p>
-                  <Button type="primary" onClick={handleCheckout}>
+                 <div style={{marginTop:'10px'}}>
+                 <Button style={{color:'white', backgroundColor:'black'}} type="primary" onClick={handleCheckout}>
                     Checkout
                   </Button>
+                  <Button type="primary" style={{color:'white', backgroundColor:'red', marginLeft:'135px'}} onClick={handleCancel}>
+                    Cancel
+                  </Button>
+                 </div>
                 </Card>
               </Col>
             </Row>

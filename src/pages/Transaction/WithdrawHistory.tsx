@@ -26,29 +26,34 @@ const WithdrawHistory = () => {
 
     fetchData();
   }, [userId]);
-
+  const formatBalance = (balance:any) => {
+    return new Intl.NumberFormat('de-DE').format(balance);
+  };
   const columns = [
+    {
+      title: 'Bank Name ',
+      dataIndex: 'bankAccountName',
+      key: 'bankAccountName',
+    },
     {
       title: 'Amount ',
       dataIndex: 'amount',
       key: 'amount',
+      render: (amount: number) => <strong>{formatBalance(amount)} VND</strong> ,
     },
     
     {
       title: 'Created Date ',
       dataIndex: 'createdDate',
       key: 'createdDate',
+      render: (createdDate: string) => new Date(createdDate).toLocaleDateString(),
     },
     {
       title: 'Bank Account ',
       dataIndex: 'bankAccountNumber',
       key: 'bankAccountNumber',
     },
-    {
-      title: 'Bank Name ',
-      dataIndex: 'bankAccountName',
-      key: 'bankAccountName',
-    },
+   
     {
       title: 'Bank ',
       dataIndex: 'bank',

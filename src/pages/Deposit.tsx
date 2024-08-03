@@ -84,13 +84,10 @@ const Deposit = () => {
               </Space>
             )}
           />
-          <Column title="Auction ID" dataIndex="auctionId" key="auctionId" />
           <Column title="Title" dataIndex="title" key="title" />
           <Column title="Start Date" dataIndex="startDate" key="startDate" />
           <Column title="End Date" dataIndex="endDate" key="endDate" />
           <Column title="Deposit Fee" dataIndex="depositFee" key="depositFee" />
-          <Column title="Shop ID" dataIndex="shopId" key="shopId" />
-          <Column title="Auction Item ID" dataIndex="auctionItemId" key="auctionItemId" />
           <Column title="Status" dataIndex="status" key="status" />
           <Column title="Step Increment" dataIndex="stepIncrement" key="stepIncrement" />
           <Column

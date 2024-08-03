@@ -51,6 +51,9 @@ const OrderDetail = () => {
   const handleRefundClick = (orderDetail: OrderDetailsResponse, orderDetailId: string) => {
     navigate("/refunds", { state: { items: [orderDetail], orderDetailId } });
   };
+  const formatBalance = (balance:any) => {
+    return new Intl.NumberFormat('de-DE').format(balance);
+  };
 
   const columns = [
     {
@@ -76,7 +79,7 @@ const OrderDetail = () => {
         </>
       ),
     },
-    { title: 'Price', dataIndex: 'unitPrice', key: 'unitPrice', render: (price: number) => `$${price}` },
+    { title: 'Price', dataIndex: 'unitPrice', key: 'unitPrice', render: (price: number) => <strong>{formatBalance(price)} VND</strong> },
     { title: 'Color', dataIndex: 'itemColor', key: 'itemColor' },
     { title: 'Size', dataIndex: 'itemSize', key: 'itemSize' },
     { title: 'Gender', dataIndex: 'itemGender', key: 'itemGender' },
