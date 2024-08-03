@@ -1,5 +1,14 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Card, Row, Col, Button, Typography, List, Image } from "antd";
+import {
+  Card,
+  Row,
+  Col,
+  Button,
+  Typography,
+  List,
+  Image,
+  Statistic,
+} from "antd";
 import Footer from "../components/Footer/Footer";
 import { useParams, useNavigate } from "react-router-dom";
 import {
@@ -8,7 +17,6 @@ import {
   BidDetailResponse,
   CreateBidRequest,
 } from "../api";
-import Countdown from "react-countdown";
 import signalRService from "../pages/service/signalrService";
 import "../pages/Auction.css";
 import signalrService from "../pages/service/signalrService";
@@ -27,15 +35,17 @@ const Auction: React.FC = () => {
   const [nextBidAmount, setNextBidAmount] = useState<number | undefined>(
     undefined
   );
-  const [remainingTime, setRemainingTime] = useState<number>(0);
-  const [timerKey, setTimerKey] = useState<number>(0);
-  const [auctionStarted, setAuctionStarted] = useState<boolean>(false);
+  const [deadline, setDeadline] = useState<number>(0);
 
   const addBid = useCallback((newBid: BidDetailResponse) => {
     setBids((prevBids) => [newBid, ...prevBids]);
     setNextBidAmount(newBid.nextAmount);
   }, []);
-
+  const onFinish = () => {
+    console.log("Auction ended!");
+    alert("Auction has ended");
+    navigate("/");
+  };
   const fetchData = async () => {
     try {
       const auctionDetailApi = new AuctionApi();
@@ -90,17 +100,12 @@ const Auction: React.FC = () => {
       const endTime = new Date(auctionDetailResponse.data.endDate!);
 
       if (currentTime < startTime) {
-        setRemainingTime(
-          Math.floor((startTime.getTime() - currentTime.getTime()) / 1000)
-        );
-        setAuctionStarted(false);
+        setDeadline(startTime.getTime());
       } else {
-        setRemainingTime(
-          Math.floor((endTime.getTime() - currentTime.getTime()) / 1000)
-        );
-        setAuctionStarted(true);
+        setDeadline(endTime.getTime());
       }
 
+      setAuctionStarted(true);
       setTimerKey((prev) => prev + 1);
     } catch (error) {
       console.error("Error fetching auction details:", error);
@@ -147,18 +152,7 @@ const Auction: React.FC = () => {
     }
   };
 
-  const renderTime = ({ total }: { total: number }) => {
-    if (total <= 0) return <div>Auction Ended</div>;
-    const hours = Math.floor(total / (1000 * 60 * 60));
-    const minutes = Math.floor((total % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((total % (1000 * 60)) / 1000);
-    return (
-      <div>
-        {hours}:{minutes.toString().padStart(2, "0")}:
-        {seconds.toString().padStart(2, "0")}
-      </div>
-    );
-  };
+ 
   const formatBalance = (balance: number) => {
     return new Intl.NumberFormat("de-DE").format(balance);
   };
@@ -243,6 +237,12 @@ const Auction: React.FC = () => {
             <Paragraph style={{ color: "#32b94b", fontSize: "20px" }}>
               <strong>Current Bid: {nextBidAmount} VND </strong>
             </Paragraph>
+            <Statistic.Countdown
+              title="Auction Ends In"
+              value={deadline}
+              onFinish={onFinish}
+              format="D [days] HH:mm:ss"
+            />
           </Card>
           <Card title="Bids History" style={{ marginTop: "10px" }}>
             <List
@@ -285,13 +285,6 @@ const Auction: React.FC = () => {
               </Button>
             </div>
           </Card>
-          <div className="mb-4">
-            <Countdown
-              key={timerKey}
-              date={Date.now() + remainingTime * 1000}
-              renderer={renderTime}
-            />
-          </div>
         </Col>
       </Row>
       <Footer />
