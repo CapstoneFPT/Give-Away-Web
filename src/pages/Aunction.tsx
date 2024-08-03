@@ -105,8 +105,6 @@ const Auction: React.FC = () => {
         setDeadline(endTime.getTime());
       }
 
-      setAuctionStarted(true);
-      setTimerKey((prev) => prev + 1);
     } catch (error) {
       console.error("Error fetching auction details:", error);
     }
