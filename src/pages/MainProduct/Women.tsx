@@ -11,7 +11,7 @@ import {
   notification,
 } from "antd";
 import Sider from "antd/es/layout/Sider";
-import { ShoppingCartOutlined } from "@ant-design/icons";
+import { AppstoreOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import { Content } from "antd/es/layout/layout";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../CartContext";
@@ -23,6 +23,7 @@ import {
 } from "../../api";
 import backgroundImageUrl from "../../components/Assets/freepik_5229782.jpg";
 import ProductCard from "../../components/commons/ProductCard";
+import SubMenu from "antd/es/menu/SubMenu";
 
 const Women: React.FC = () => {
   const { dispatch, isItemInCart } = useCart();
@@ -37,10 +38,10 @@ const Women: React.FC = () => {
   const pageSize = 12;
   const navigate = useNavigate();
 
-  useEffect(() => {
-    fetchProducts(currentPage);
+ useEffect(() => {
     fetchCategories();
-  }, [currentPage]);
+    fetchProducts(currentPage, selectedCategoryId!);
+  }, [currentPage, selectedCategoryId]);
 
   const fetchCategories = async () => {
     try {
@@ -62,26 +63,33 @@ const Women: React.FC = () => {
       console.error("There was an error fetching the categories!", error);
     }
   };
-  const handleCategoryClick = (categoryId: string) => {
-    setSelectedCategoryId(categoryId); // Set the selected category ID
-    setCurrentPage(1); // Reset to the first page
-    fetchProducts(1,categoryId); // Fetch products for the selected category
+  const handleMenuSelect = ({ key }: { key: string }) => {
+    if (key) {
+      setSelectedCategoryId(key);
+      setCurrentPage(1);
+    }
   };
-  const renderMenuItems = (categories: CategoryTreeNode[]) => {
-    return categories.map((category) => (
-      <Menu.SubMenu key={category.categoryId} title={category.name}>
-        {category.children && category.children.length > 0 ? (
-          renderMenuItems(category.children) // Recursively render children
-        ) : (
-          <Menu.Item
+  const renderMenuItems = (categories: CategoryTreeNode[]): React.ReactNode => {
+    return categories.map((category) => {
+      if (category.children && category.children.length > 0) {
+        return (
+          <SubMenu
             key={category.categoryId}
-            onClick={() => handleCategoryClick(category.categoryId!)}
+            icon={<AppstoreOutlined />}
+            title={category.name}
+            onTitleClick={({ key }) => handleMenuSelect({ key:key as string })}
           >
-            {category.name}
-          </Menu.Item>
-        )}
-      </Menu.SubMenu>
-    ));
+            <Menu.Item key={category.categoryId}>All {category.name}</Menu.Item>
+            {renderMenuItems(category.children)}
+          </SubMenu>
+        );
+      }
+      return (
+        <Menu.Item key={category.categoryId} icon={<AppstoreOutlined />}>
+          {category.name}
+        </Menu.Item>
+      );
+    });
   };
 
   const fetchProducts = async (page: number, categoryId?: string) => {
