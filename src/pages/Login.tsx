@@ -5,6 +5,9 @@ import {
   EyeOutlined,
   EyeInvisibleOutlined,
   GoogleOutlined,
+  LogoutOutlined ,
+  MoneyCollectOutlined
+  
 } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
 import type { MenuProps } from "antd";
@@ -99,12 +102,13 @@ const Login = () => {
   };
 
   const dropDownItems: MenuProps["items"] = [
-    { key: "2", label: <Link to="/add-fund">Add Fund</Link> },
-    { key: "3", label: <Link to="/profile">Profile</Link> },
+    { key: "2",icon:<MoneyCollectOutlined style={{fontSize:'23px'}}/>, label: <Link to="/add-fund">Add Fund</Link> },
+    { key: "3",icon: <UserOutlined style={{fontSize:'20px'}}/> , label: <Link to="/profile">Profile</Link> },
     {
       key: "4",
       label: (
         <Link to="/" onClick={handleLogout}>
+          <LogoutOutlined style={{fontSize:'20px', marginLeft:'9px'}}/>
           Logout
         </Link>
       ),

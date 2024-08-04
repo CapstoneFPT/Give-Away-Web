@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { Card, Button, Row, Col, Modal, Spin, message } from "antd";
 import { SmileOutlined as Icon } from "@ant-design/icons";
 import {
   PointPackageApi,
   PointPackageListResponse,
-
-
 } from "../../api";
 
 type Package = {
@@ -23,18 +20,13 @@ const PointPackageShop = () => {
 
   useEffect(() => {
     const userId = JSON.parse(localStorage.getItem("userId") || "null");
-    console.log(userId);
     async function fetchPointPackages() {
       const pointPackageApi = new PointPackageApi();
-     
-      const response = await pointPackageApi.apiPointpackagesGet(null!,null!,["Active"]);
-
-     
+      const response = await pointPackageApi.apiPointpackagesGet(null!, null!, ["Active"]);
       setPackages(response.data.items || []);
       setIsLoading(false);
     }
-
-    fetchPointPackages()
+    fetchPointPackages();
   }, []);
 
   const handleBuy = async (pkg: PointPackageListResponse) => {
@@ -43,23 +35,12 @@ const PointPackageShop = () => {
       message.error("User ID not found. Please log in again.");
       return;
     }
-
-    
-
     const pointPackageApi = new PointPackageApi();
     try {
-      console.log(pkg.pointPackageId);
-      console.log(userId)
-      const response =
-       
-        await pointPackageApi.apiPointpackagesPointPackageIdPurchasePost(
-          pkg.pointPackageId!,
-           {
-            memberId: userId,
-          },
-        );
-        
-
+      const response = await pointPackageApi.apiPointpackagesPointPackageIdPurchasePost(
+        pkg.pointPackageId!,
+        { memberId: userId },
+      );
       if (response.data.paymentUrl) {
         window.location.href = response.data.paymentUrl;
       } else {
@@ -74,13 +55,33 @@ const PointPackageShop = () => {
   const handleIconClick = (pkg: PointPackageListResponse) => {
     setIsModalVisible(true);
     setSelectedPackage(pkg);
-    console.log(pkg.pointPackageId);
   };
 
   const handleCancel = () => {
     setIsModalVisible(false);
   };
 
+  const getPackageColor = (points: number) => {
+    switch (points) {
+      case 50000:
+        return "rgb(255, 228, 225)"; // Light Pink
+      case 100000:
+        return "rgb(255, 218, 185)"; // Peach Puff
+      case 200000:
+        return "rgb(255, 239, 213)"; // Papaya Whip
+      case 500000:
+        return "rgb(240, 255, 240)"; // Honeydew
+      case 1000000:
+        return "rgb(224, 255, 255)"; // Light Cyan
+      case 2000000:
+        return "rgb(230, 230, 250)"; // Lavender
+      default:
+        return "rgb(255, 255, 255)"; // White
+    }
+  };
+  const formatBalance = (balance:any) => {
+    return new Intl.NumberFormat('de-DE').format(balance);
+  };
   return (
     <div className="fund-container">
       <Card>
@@ -94,11 +95,11 @@ const PointPackageShop = () => {
                 packages.map((pkg) => (
                   <Col span={12} key={pkg.pointPackageId}>
                     <Card
-                      style={{ width: "100%" }}
-                      title={`${pkg.points} Points`}
+                      style={{ width: "100%", backgroundColor: getPackageColor(pkg.points!) }}
+                      title={`${formatBalance(pkg.price)} Points`}
                       extra={<Icon onClick={() => handleIconClick(pkg)} />}
                     >
-                      <p>Price: {pkg.price}</p>
+                      <strong>Price: {formatBalance(pkg.price)} VND</strong>
                     </Card>
                   </Col>
                 ))
@@ -111,8 +112,8 @@ const PointPackageShop = () => {
             <Card title="Total">
               {selectedPackage && (
                 <div>
-                  <p>Points: {selectedPackage.points}</p>
-                  <p>Price: {selectedPackage.price}</p>
+                  <p>Points: {formatBalance(selectedPackage.points)}</p>
+                  <p>Price: {formatBalance(selectedPackage.price)}</p>
                 </div>
               )}
               <Button
@@ -127,7 +128,7 @@ const PointPackageShop = () => {
 
       <Modal
         title="Package Details"
-        open={isModalVisible}
+        visible={isModalVisible}
         onCancel={handleCancel}
         footer={[
           <Button key="back" onClick={handleCancel}>
