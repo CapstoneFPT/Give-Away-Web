@@ -193,7 +193,7 @@ const ItemDetail: React.FC = () => {
             </Card>
             <Card style={{ marginTop: "20px" }}>
               <Paragraph style={styles.para}>
-                <strong>Description:</strong> {product.note}
+                <strong>Description:</strong> {product.description}
               </Paragraph>
             </Card>
           </Col>

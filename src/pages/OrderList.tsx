@@ -235,6 +235,7 @@ const OrderList: React.FC = () => {
       dataIndex: "paymentMethod",
       key: "paymentMethod",
     },
+    
     {
       title: "Status",
       dataIndex: "status",

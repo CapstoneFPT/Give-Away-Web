@@ -76,6 +76,10 @@ const Cart: React.FC = () => {
       return updatedSelectedItems;
     });
   };
+  // const inforProfile = new AccountApi();
+  // const responseProfile = inforProfile.apiAccountsIdGet(userId!);
+  // console.log(responseProfile)
+
 
   const handleCheckOut = async () => {
     try {
@@ -92,6 +96,8 @@ const Cart: React.FC = () => {
         message.error("Please select at least one item.");
         return;
       }
+     
+
 
       const orderData: CartRequest = {
         paymentMethod: validateResult.paymentMethod,

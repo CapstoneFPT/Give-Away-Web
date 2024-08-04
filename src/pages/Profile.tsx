@@ -55,32 +55,7 @@ const Profile: React.FC = () => {
       onOk: async () => {
         const userId = JSON.parse(localStorage.getItem("userId") || "null");
         if (userId) {
-          // form.validateFields().then((values) => {
-          //   axios
-          //     .put(`${BASE_URL}/accounts/${userId}`, values, {
-          //       headers: {
-          //         "ngrok-skip-browser-warning": "6942",
-          //       },
-          //     })
-          //     .then((response) => {
-          //       notification.success({
-          //         message: "Success",
-          //         description: "User data updated successfully!",
-          //       });
-          //       setIsFormChanged(false);
-          //     })
-          //     .catch((error) => {
-          //       console.error(
-          //         "There was an error updating the user data!",
-          //         error
-          //       );
-          //       notification.error({
-          //         message: "Error",
-          //         description:
-          //           "Failed to update user data. Please try again later.",
-          //       });
-          //     });
-          // });
+        
 
           const result = await form.validateFields();
           const accountApi = new AccountApi();
@@ -190,6 +165,20 @@ const Profile: React.FC = () => {
                         <Input
                           readOnly
                           value={userData?.email}
+                          prefix={<MailOutlined />}
+                        />
+                      </Form.Item>
+                      <Form.Item
+                        hasFeedback
+                        label="Address"
+                        name="address"
+                        validateFirst
+                        // initialValue={userData?.email}
+                       
+                      >
+                        <Input
+                          
+                          // value={}
                           prefix={<MailOutlined />}
                         />
                       </Form.Item>

@@ -55,9 +55,10 @@ const OrderDetail = () => {
     return new Intl.NumberFormat('de-DE').format(balance);
   };
 
+
   const columns = [
     {
-      title: 'Image',
+      title: 'Product',
       dataIndex: 'itemImage',
       key: 'itemImage',
       render: (images: string[]) => (
@@ -67,7 +68,7 @@ const OrderDetail = () => {
       ),
     },
     {
-      title: 'Item Name',
+      title: 'Product Name',
       dataIndex: 'itemName',
       key: 'itemName',
       render: (text: string, record: OrderDetailsResponse) => (
@@ -85,6 +86,8 @@ const OrderDetail = () => {
     { title: 'Gender', dataIndex: 'itemGender', key: 'itemGender' },
     { title: 'Brand', dataIndex: 'itemBrand', key: 'itemBrand' },
     { title: 'Condition', dataIndex: 'condition', key: 'condition' },
+    { title: 'Shop', dataIndex: 'shopAddress', key: 'shopId' },
+
     {
       title: 'Action',
       key: 'action',

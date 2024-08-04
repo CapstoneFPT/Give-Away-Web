@@ -104,9 +104,10 @@ const AuctionList = () => {
               <Text strong>Status: </Text><Text>{auction.status}</Text><br />
               <Space style={{ marginTop: "10px" }}>
                 <Link to={`/detailProductAuction/${auction.auctionItemId}`}>
-                  <Button type="primary">Detail</Button>
+                  <Button style={{backgroundColor:'black', color:'white'}} type="primary">Detail</Button>
                 </Link>
                 <Button
+                style={{backgroundColor:'black', color:'white'}}
                   type="default"
                   onClick={() => handleAuctionButtonClick(auction.auctionId!, auction.auctionItemId!)}
                 >
