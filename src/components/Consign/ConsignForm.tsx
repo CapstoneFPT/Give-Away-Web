@@ -106,8 +106,6 @@ const ConsignForm = () => {
       const consignData: CreateConsignSaleRequest = {
         shopId: values.userInfo.clothBranches,
         type: values.userInfo.type as ConsignSaleType, // Updated to use the new type
-        consignorName: values.userInfo.fullName,
-        phone: values.userInfo.phone,
         fashionItemForConsigns: itemsWithUrls,
       };
 

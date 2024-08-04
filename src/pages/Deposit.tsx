@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Button, message, Table, Space } from 'antd';
-import axios from 'axios';
+import { Button, message, Card, Col, Row, Descriptions, Image, Modal } from 'antd'; // Thêm Modal vào import
 import { AuctionApi, AuctionListResponse } from '../api';
 import moment from 'moment';
-import Column from 'antd/es/table/Column';
 
 const Deposit = () => {
   const query = new URLSearchParams(useLocation().search);
@@ -42,64 +40,79 @@ const Deposit = () => {
 
     fetchData();
   }, [auctionId]);
+  const formatBalance = (balance: number) => {
+    return new Intl.NumberFormat('de-DE').format(balance);
+  };
 
   const handleDeposit = async (auctionId: string) => {
-    try {
-      const depositApi = new AuctionApi();
-      const deposit = await depositApi.apiAuctionsAuctionIdDepositsPlaceDepositPost(auctionId, {
-        memberId: userId!
-      });
+    Modal.confirm({
+      title: 'Confirm Deposit',
+      content: 'Are you sure you want to deposit for this auction?',
+      okText: 'Confirm',
+      okType: 'primary',
+      cancelText: 'Cancel',
+      okButtonProps: {
+        style: { backgroundColor: 'black', color: 'white' },
+      },
+      onOk: async () => {
+        try {
+          const depositApi = new AuctionApi();
+          const deposit = await depositApi.apiAuctionsAuctionIdDepositsPlaceDepositPost(auctionId, {
+            memberId: userId!
+          });
 
-      if (deposit.status) {
-        message.success('Deposit successful!');
-        // navigate(`/auction/${auctionId}`);
-      }
-    } catch (error) {
-      message.error('Deposit failed. Please try again.',);
-      console.error('Error making deposit:', error);
-    }
+          if (deposit.status) {
+            message.success('Deposit successful!');
+             navigate(`/aunctionList`);
+          }
+        } catch (error) {
+          message.error('Deposit failed. Please try again.');
+          console.error('Error making deposit:', error);
+        }
+      },
+    });
   };
 
   return (
     <div style={{ width: '100%', margin: '0 auto', paddingTop: '50px' }}>
-      <h1 style={{ textAlign: 'center' }}>Deposit for Auction Item</h1>
+      <h1 style={{ textAlign: 'center' }}>Deposit for Auction Product</h1>
       {data ? (
-        <Table 
-          style={{ backgroundColor: 'rgba(255, 255, 255, 0)' }} 
-          pagination={false} 
-          dataSource={[data]} 
-          rowKey="auctionId"
-        >
-          <Column
-            title="Product"
-            dataIndex="imageUrl"
-            key="imageUrl"
-            render={(_, record: { imageUrl: string }) => (
-              <Space size="middle">
-                <img
-                  src={record.imageUrl}
-                  alt="Product"
-                  style={{ width: "150px", height: "150px" }}
-                />
-              </Space>
-            )}
-          />
-          <Column title="Title" dataIndex="title" key="title" />
-          <Column title="Start Date" dataIndex="startDate" key="startDate" />
-          <Column title="End Date" dataIndex="endDate" key="endDate" />
-          <Column title="Deposit Fee" dataIndex="depositFee" key="depositFee" />
-          <Column title="Status" dataIndex="status" key="status" />
-          <Column title="Step Increment" dataIndex="stepIncrement" key="stepIncrement" />
-          <Column
-            title="Action"
-            key="action"
-            render={(_, record: AuctionListResponse) => (
-              <Button type="primary" onClick={() => handleDeposit(record.auctionId!)}>
-                Submit Deposit
-              </Button>
-            )}
-          />
-        </Table>
+        <Card>
+          <Row gutter={16}>
+            <Col span={4}>
+              <Image
+              
+                src={data.imageUrl!}
+                alt="Product"
+                style={{  width: "200px", height: "auto" }}
+              />
+            </Col>
+            <Col  span={20}>
+              <Descriptions title="Auction Product Details" bordered>
+                <Descriptions.Item label="Title">
+                  <strong>{data.title}</strong>
+                </Descriptions.Item>
+                <Descriptions.Item label="Start Date">
+                  <strong>{data.startDate}</strong>
+                </Descriptions.Item>
+                <Descriptions.Item label="End Date">
+                  <strong>{data.endDate}</strong>
+                </Descriptions.Item>
+                <Descriptions.Item label="Deposit Fee">
+                  <strong>{formatBalance(data.depositFee!)} VND</strong>
+                </Descriptions.Item>
+                <Descriptions.Item label="Status">
+                  <strong>{data.status}</strong>
+                </Descriptions.Item>
+                <Descriptions.Item label="Action">
+                  <Button style={{backgroundColor:'black', color:'white'}} type="primary" onClick={() => handleDeposit(data.auctionId!)}>
+                    Submit Deposit
+                  </Button>
+                </Descriptions.Item>
+              </Descriptions>
+            </Col>
+          </Row>
+        </Card>
       ) : (
         <p>No auction data found for the specified auction ID.</p>
       )}

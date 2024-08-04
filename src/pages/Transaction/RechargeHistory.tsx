@@ -23,20 +23,29 @@ const RechargeHistory = () => {
       }
     };
 
+
     fetchDepositHistory();
   }, [userId]);
+  const formatBalance = (balance: number) => {
+    return new Intl.NumberFormat('de-DE').format(balance);
+  };
+
     
       const columns = [
         {
           title: 'Amount',
           dataIndex: 'amount',
           key: 'amount',
+          render: (amount: number) => <strong>{formatBalance(amount)} VND</strong> ,
+
         },
       
         {
           title: 'Created Date',
           dataIndex: 'createdDate',
           key: 'createdDate',
+          render: (createdDate: string) => new Date(createdDate).toLocaleDateString(),
+
         },
         {
           title: 'Type',

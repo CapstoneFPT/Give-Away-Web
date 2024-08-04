@@ -122,7 +122,7 @@ const DetailProductAunction: React.FC = () => {
                   <strong>Shop Address:</strong> {product.shopAddress}
                 </Paragraph>
                 <Paragraph>
-                  <strong>Description:</strong> {product.note}
+                  <strong>Description:</strong> {product.description}
                 </Paragraph>
               </Card>
             </Col>
