@@ -78,10 +78,11 @@ const Login = () => {
           description: response.data.resultStatus || 'NotFound' || 'Duplicated' || 'Error', // Use response message or fallback options
         });
       }
-    } catch (error) {
+    } catch (error:any) {
+      console.log(error)
       notification.error({
         message: 'Login Failed',
-        description: 'An error occurred while trying to login. Please try again later.',
+        description: error.response.data.messages,
       });
       console.error("An error occurred while trying to login:", error);
     }

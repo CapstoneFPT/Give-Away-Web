@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import { Button, Card, message, notification } from "antd"; // Import message from antd
+import { Button, Card, InputNumber, message, notification } from "antd"; // Import message from antd
 import {
   UserOutlined,
   EyeOutlined,
@@ -51,8 +51,9 @@ const Register = () => {
       } else {
         message.error("Registration failed!");
       }
-    } catch (error) {
-      message.error("An error occurred!");
+    } catch (error:any) {
+      console.log(error)
+      message.error(error.response.data.messages);
     }
   };
 
@@ -124,6 +125,7 @@ const Register = () => {
             <Input
               prefix={<PhoneOutlined />}
               placeholder="phone"
+              
               name="phone"
               value={formData.phone}
               onChange={handleInputChange}
