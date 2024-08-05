@@ -32,7 +32,7 @@ const Men: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [categories, setCategories] = useState<CategoryTreeNode[]>([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(
-  "c7c0ba52-8406-47c1-9be5-497cbeea5933");
+  "535d3b90-dc58-41e3-ad32-055e261bd6a7");
   const pageSize = 12;
   const navigate = useNavigate();
 
@@ -44,7 +44,7 @@ const Men: React.FC = () => {
   const fetchCategories = async () => {
     try {
       const categoryApi = new CategoryApi();
-      const rootCategoryId = "c7c0ba52-8406-47c1-9be5-497cbeea5933";
+      const rootCategoryId = "535d3b90-dc58-41e3-ad32-055e261bd6a7";
       const responseCategory = await categoryApi.apiCategoriesTreeGet(
         null!,
         rootCategoryId
@@ -97,7 +97,7 @@ const Men: React.FC = () => {
         page,
         pageSize,
         userId,
-        selectedCategoryId || "c7c0ba52-8406-47c1-9be5-497cbeea5933",
+        selectedCategoryId || "535d3b90-dc58-41e3-ad32-055e261bd6a7",
         ["Available"],
         ["ItemBase", "ConsignedForSale"],
         null!,

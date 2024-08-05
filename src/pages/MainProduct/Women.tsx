@@ -32,7 +32,7 @@ const Women: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [categories, setCategories] = useState<CategoryTreeNode[]>([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(
-    "8c3fe1f7-0082-4382-85de-6c70fcd76761"
+    "3e4c6370-a72b-44e3-a5eb-8f459764158f"
   );
   const pageSize = 12;
   const navigate = useNavigate();
@@ -45,7 +45,7 @@ const Women: React.FC = () => {
   const fetchCategories = async () => {
     try {
       const categoryApi = new CategoryApi();
-      const rootCategoryId = "8c3fe1f7-0082-4382-85de-6c70fcd76761"; // Category ID for "Nam"
+      const rootCategoryId = "3e4c6370-a72b-44e3-a5eb-8f459764158f"; // Category ID for "Nam"
       const responseCategory = await categoryApi.apiCategoriesTreeGet(
         null!,
         rootCategoryId
@@ -101,7 +101,7 @@ const Women: React.FC = () => {
         page,
         pageSize,
         userId,
-        selectedCategoryId||"8c3fe1f7-0082-4382-85de-6c70fcd76761",
+        selectedCategoryId||"3e4c6370-a72b-44e3-a5eb-8f459764158f",
         ["Available"],
         ["ItemBase", "ConsignedForSale"],
         null!,
