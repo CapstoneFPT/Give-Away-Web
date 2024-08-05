@@ -10,7 +10,6 @@ import {
   notification,
   Card,
 } from "antd";
-import Sider from "antd/es/layout/Sider";
 import { AppstoreOutlined } from "@ant-design/icons";
 import { Content } from "antd/es/layout/layout";
 import { useNavigate } from "react-router-dom";
@@ -33,8 +32,7 @@ const Men: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [categories, setCategories] = useState<CategoryTreeNode[]>([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(
-    "c7c0ba52-8406-47c1-9be5-497cbeea5933"
-  );
+  "c7c0ba52-8406-47c1-9be5-497cbeea5933");
   const pageSize = 12;
   const navigate = useNavigate();
 

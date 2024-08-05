@@ -10,8 +10,7 @@ import {
   Spin,
   notification,
 } from "antd";
-import Sider from "antd/es/layout/Sider";
-import { AppstoreOutlined, ShoppingCartOutlined } from "@ant-design/icons";
+import { AppstoreOutlined } from "@ant-design/icons";
 import { Content } from "antd/es/layout/layout";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../CartContext";
@@ -33,7 +32,7 @@ const Women: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [categories, setCategories] = useState<CategoryTreeNode[]>([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(
-    null
+    "8c3fe1f7-0082-4382-85de-6c70fcd76761"
   );
   const pageSize = 12;
   const navigate = useNavigate();
@@ -48,7 +47,7 @@ const Women: React.FC = () => {
       const categoryApi = new CategoryApi();
       const rootCategoryId = "8c3fe1f7-0082-4382-85de-6c70fcd76761"; // Category ID for "Nam"
       const responseCategory = await categoryApi.apiCategoriesTreeGet(
-        "",
+        null!,
         rootCategoryId
       ); // Ensure this method accepts the parameter
       console.log(responseCategory.data.categories);
@@ -102,7 +101,7 @@ const Women: React.FC = () => {
         page,
         pageSize,
         userId,
-        categoryId,
+        selectedCategoryId||"8c3fe1f7-0082-4382-85de-6c70fcd76761",
         ["Available"],
         ["ItemBase", "ConsignedForSale"],
         null!,

@@ -1,12 +1,25 @@
 import React, { useEffect, useState } from "react";
-import { MailOutlined, PhoneOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, Card, Row, Col, Form, Input, notification, Modal } from "antd";
-import axios from "axios";
+import {
+  MailOutlined,
+  PhoneOutlined,
+  UserOutlined,
+  PlusOutlined,
+} from "@ant-design/icons";
+import {
+  Button,
+  Card,
+  Row,
+  Col,
+  Form,
+  Input,
+  notification,
+  Modal,
+  Select,
+} from "antd";
 import img from "../components/Assets/nam2.png";
 import NavProfile from "../components/NavProfile/NavProfile";
 import "./CSS/Profile.css";
-
-import { AccountApi, UpdateAccountRequest } from "../api";
+import { AccountApi } from "../api";
 
 const handlePhoneInput = (e: React.ChangeEvent<HTMLInputElement>) => {
   e.target.value = e.target.value.replace(/[^0-9]/g, "");
@@ -17,10 +30,11 @@ const Profile: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [form] = Form.useForm();
   const [isFormChanged, setIsFormChanged] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [newAddress, setNewAddress] = useState("");
 
   useEffect(() => {
     const userId = JSON.parse(localStorage.getItem("userId") || "null");
-    console.log(userId);
     if (userId) {
       async function fetchUserData() {
         try {
@@ -31,7 +45,7 @@ const Profile: React.FC = () => {
           form.setFieldsValue({
             fullname: response.data?.data?.fullname!,
             phone: response.data?.data?.phone!,
-           email: response.data.data?.email
+            email: response.data.data?.email,
           });
         } catch (error) {
           console.error("Error fetching user data:", error);
@@ -55,18 +69,14 @@ const Profile: React.FC = () => {
       onOk: async () => {
         const userId = JSON.parse(localStorage.getItem("userId") || "null");
         if (userId) {
-        
-
           const result = await form.validateFields();
           const accountApi = new AccountApi();
 
           try {
-            await accountApi.apiAccountsAccountIdPut(
-              userId,{
-                fullname: result.fullname,
-                phone : result.phone
-              }
-            );
+            await accountApi.apiAccountsAccountIdPut(userId, {
+              fullname: result.fullname,
+              phone: result.phone,
+            });
 
             notification.success({
               message: "Success",
@@ -84,6 +94,21 @@ const Profile: React.FC = () => {
         }
       },
     });
+  };
+
+  const handleAddAddress = () => {
+    setIsModalVisible(true); // Show modal when clicking add address
+  };
+
+  const handleOk = () => {
+    // Logic to save the new address
+    console.log("New Address:", newAddress);
+    setIsModalVisible(false);
+    setNewAddress(""); // Reset new address
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
   };
 
   return (
@@ -168,27 +193,46 @@ const Profile: React.FC = () => {
                           prefix={<MailOutlined />}
                         />
                       </Form.Item>
+
                       <Form.Item
                         hasFeedback
                         label="Address"
                         name="address"
                         validateFirst
-                        // initialValue={userData?.email}
-                       
                       >
-                        <Input
-                          
-                          // value={}
-                          prefix={<MailOutlined />}
-                        />
+                        
+                        <Select
+                          style={{width:'75%'}}
+                          placeholder="Select an address"
+                          onChange={(value) => console.log(value)} // Handle address change
+                        >
+                          <Select.Option value="address1">
+                            Address 1
+                          </Select.Option>
+                          <Select.Option value="address2">
+                            Address 2
+                          </Select.Option>
+                         
+                        </Select>
+                        <Button
+                          type="link" // Thay đổi type thành "dashed" cho nút thêm địa chỉ
+                          onClick={handleAddAddress}
+                          style={{ marginLeft: "10px", color:'black' }}
+                          icon={<PlusOutlined />} // Sử dụng icon cho nút
+                        >
+                          Add Address
+                        </Button>
+                        
                       </Form.Item>
+
                       <Button
                         style={{
                           backgroundColor: "black",
                           width: "120px",
                           height: "40px",
                           color: "white",
-                          marginLeft: "480px",
+                          marginTop: "25px",
+                          // marginLeft:'480px'
                         }}
                         onClick={handleSave}
                         disabled={!isFormChanged}
@@ -203,6 +247,21 @@ const Profile: React.FC = () => {
           </Card>
         </Col>
       </Row>
+
+      <Modal
+        title="Add New Address"
+        visible={isModalVisible}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        okButtonProps={{ style: { backgroundColor: "black", color: "white" } }} // Đổi màu nút OK thành đen
+
+      >
+        <Input
+          placeholder="Enter new address"
+          value={newAddress}
+          onChange={(e) => setNewAddress(e.target.value)} // Update new address
+        />
+      </Modal>
     </Card>
   );
 };
