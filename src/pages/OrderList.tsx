@@ -207,6 +207,8 @@ const OrderList: React.FC = () => {
         recipientName: record.recipientName,
         address: record.address,
         contactNumber: record.contactNumber,
+        totalPrice: record.totalPrice,
+        statusOder: record.status,
       },
     });
   };

@@ -62,12 +62,7 @@ const Women: React.FC = () => {
       console.error("There was an error fetching the categories!", error);
     }
   };
-  const handleMenuSelect = ({ key }: { key: string }) => {
-    if (key) {
-      setSelectedCategoryId(key);
-      setCurrentPage(1);
-    }
-  };
+ 
   const renderMenuItems = (categories: CategoryTreeNode[]): React.ReactNode => {
     return categories.map((category) => {
       if (category.children && category.children.length > 0) {
@@ -120,6 +115,12 @@ const Women: React.FC = () => {
       setIsLoading(false);
     }
   };
+  const handleMenuSelect = ({ key }: { key: string }) => {
+    if (key) {
+      setSelectedCategoryId(key);
+      setCurrentPage(1);
+    }
+  };
 
   const handleAddToCart = (product: FashionItemDetailResponse) => {
     if (product.isOrderedYet) {
@@ -166,8 +167,10 @@ const Women: React.FC = () => {
             <Menu
            
               mode="horizontal"
-              defaultSelectedKeys={["1"]}
+              selectedKeys={[selectedCategoryId || ""]}
+              defaultOpenKeys={categories.map((cat) => cat.categoryId!)}
               style={{ height: "100%", borderRight: 0 }}
+              onSelect={handleMenuSelect}
             >
               {renderMenuItems(categories)} {/* Render categories */}
             </Menu>

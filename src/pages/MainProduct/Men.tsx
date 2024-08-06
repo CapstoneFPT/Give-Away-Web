@@ -89,7 +89,7 @@ const Men: React.FC = () => {
     try {
       const userId = JSON.parse(localStorage.getItem("userId") || "null");
       // console.log(userId);
-      console.log("Selected cateogry id: ", categoryId);
+      
       const fashionItemApi = new FashionItemApi();
 
       const response = await fashionItemApi.apiFashionitemsGet(

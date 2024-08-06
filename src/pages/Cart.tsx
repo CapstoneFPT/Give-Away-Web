@@ -222,7 +222,7 @@ const Cart: React.FC = () => {
               <Row>
                 <Col span={8}>
                   <img
-                    style={{ height: "250px", objectFit: "cover" }}
+                    style={{ height: "220px", width:'220px' }}
                     src={item.images && Array.isArray(item.images) ? item.images[0] : "N/A"}
                     alt={item.name || "Product image"}
                   />

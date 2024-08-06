@@ -150,6 +150,8 @@ const ItemDetail: React.FC = () => {
                   <Paragraph style={styles.para}>
                     <strong>Shop Address:</strong> {product.shopAddress}
                   </Paragraph>
+                  
+
                 </Col>
 
                 <Col span={12}>
@@ -164,6 +166,9 @@ const ItemDetail: React.FC = () => {
                     {product.color}
                   </Paragraph>
                 </Col>
+                <Paragraph style={styles.para}>
+                    <strong>Condition Percentage: {product.condition} %</strong> 
+                  </Paragraph>
               </Row>
               <Paragraph style={styles.para}>
                 <strong style={styles.price}>

@@ -40,6 +40,7 @@ import DepositHistory from "./pages/Transaction/DepositHistory";
 import PurchaseHistory from "./pages/Transaction/PurchaseHistory.tsx";
 import RechargeHistory from "./pages/Transaction/RechargeHistory.tsx";
 import ConsignDetail from "./pages/Transaction/ConsignDetail.tsx";
+import RefundHistory from "./pages/Transaction/RefundHistory.tsx";
 
 function App() {
   return (
@@ -265,11 +266,20 @@ function App() {
               }
             />
             <Route
-              path="transaction/recharge-history"
+              path="/transaction/recharge-history"
               element={
                 <>
                   <Navbar />
                   <RechargeHistory />
+                </>
+              }
+            />
+            <Route
+              path="transaction/refund-history"
+              element={
+                <>
+                  <Navbar />
+                  <RefundHistory />
                 </>
               }
             />

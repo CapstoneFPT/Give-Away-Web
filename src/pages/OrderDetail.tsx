@@ -12,7 +12,7 @@ const OrderDetail = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
   const location = useLocation();
-  const { paymentMethod, recipientName, address, contactNumber } = location.state || {};
+  const { paymentMethod, recipientName, address, contactNumber, totalPrice, statusOder } = location.state || {};
 
   useEffect(() => {
     const fetchOrderDetails = async () => {
@@ -112,14 +112,35 @@ const OrderDetail = () => {
           <NavProfile />
         </Col>
         <Col span={18}>
-          <Card bordered={false} style={{ borderRadius: '10px' }}>
+        <Card title={
+          <>
+            Order Detail
+            <Tag
+          color={
+            statusOder === "Completed"
+              ? "green"
+              : statusOder === "AwaitingPayment"
+              ? "yellow"
+              : statusOder === "OnDelivery"
+              ? "blue"
+              : "red"
+          }
+        >
+          {statusOder.toUpperCase()}
+        </Tag>
+          </>
+        }>
+        <Card bordered={false} style={{ borderRadius: '10px' }}>
             <Title level={2} style={{ textAlign: 'center', marginBottom: '20px' }}>Order Detail</Title>
-            <Card title="Recipient Information" bordered={false} style={{ borderRadius: '10px', marginBottom: '20px' }}>
+            <Card title="Recipient Information"  bordered={false} style={{ borderRadius: '10px', marginBottom: '20px' }}>
               <Descriptions column={1} bordered size="small">
+                
                 <Descriptions.Item label="Payment Method">{paymentMethod}</Descriptions.Item>
                 <Descriptions.Item label="Recipient Name">{recipientName}</Descriptions.Item>
                 <Descriptions.Item label="Address">{address}</Descriptions.Item>
                 <Descriptions.Item label="Phone Number">{contactNumber}</Descriptions.Item>
+                <Descriptions.Item label="Toltal Price"><strong>{formatBalance(totalPrice)} VND </strong></Descriptions.Item>
+
               </Descriptions>
             </Card>
             <Table
@@ -144,6 +165,7 @@ const OrderDetail = () => {
               </Button>
             </Link>
           </Card>
+        </Card>
         </Col>
       </Row>
     </Card>

@@ -74,6 +74,7 @@ const NavProfile: React.FC = () => {
                 {key: "12", label: "Auction History", to: "/transaction/Auction-history"},
                 {key: "13", label: "Purchase History", to: "/transaction/purchase-history"},
                 {key: "14", label: "Recharge History", to: "/transaction/recharge-history"},
+                {key: "15", label: "Refund History", to: "/transaction/refund-history"},
             ],
         },
         // { key: "3", icon: <LogoutOutlined />, label: "Logout", to: "/logout" },
