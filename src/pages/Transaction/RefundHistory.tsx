@@ -14,14 +14,16 @@ const RefundHistory = () => {
           userId,
           null!,
           null!,
-          ["Payout"]
+          ["Refund"]
+          
         );
+console.log(response.data.items)
+
         setData(response.data.items!); // Lưu dữ liệu vào trạng thái
       } catch (error) {
         console.error("Error fetching deposit history:", error);
       }
     };
-
 
     fetchDepositHistory();
   }, [userId]);

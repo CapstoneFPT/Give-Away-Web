@@ -8,6 +8,7 @@ import SearchBar from "../SearchBar/SearchBar";
 import axios from "axios";
 import { AccountApi } from "../../api";
 import { useCart } from "../../pages/CartContext";
+import BranchNavbar from "./BranchNavbar";
 
 const Navbar = () => {
   const [menu, setMenu] = useState("shop");
@@ -91,6 +92,11 @@ const Navbar = () => {
               </Link>
               {menu === "branches" ? <hr /> : <></>}
             </li>
+         
+              <BranchNavbar  onBranchSelect={handleSearch} />
+            
+           
+            
           </ul>
         </div>
         <div className="nav-right">

@@ -36,7 +36,6 @@ const NavProfile: React.FC = () => {
         const fetchBalance = async () => {
             const userId = JSON.parse(localStorage.getItem("userId") || "null");
             try {
-                // const response = await axios.get(`${BASE_URL}/accounts/${userId}`);
                 const accountApi = new AccountApi();
                 const response = await accountApi.apiAccountsIdGet(userId);
                 setBalance(response.data?.data?.balance || 0);
@@ -75,6 +74,7 @@ const NavProfile: React.FC = () => {
                 {key: "13", label: "Purchase History", to: "/transaction/purchase-history"},
                 {key: "14", label: "Recharge History", to: "/transaction/recharge-history"},
                 {key: "15", label: "Refund History", to: "/transaction/refund-history"},
+                {key: "16", label: "Payout History", to: "/transaction/payout-history"},
             ],
         },
         // { key: "3", icon: <LogoutOutlined />, label: "Logout", to: "/logout" },

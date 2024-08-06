@@ -22,13 +22,13 @@ const navigate = useNavigate();
   return (
     <div className="searchBar">
       <form onSubmit={handleSearchSubmit}>
-        <input
+        <input style={{width:'300px', height:'25px'}}
           type="text"
           placeholder="Search..."
           value={searchTerm}
           onChange={handleSearchChange}
         />
-        <button type="submit">Search</button>
+        <button style={{width:'70px', height:'35px'}} type="submit">Search</button>
       </form>
     </div>
   );

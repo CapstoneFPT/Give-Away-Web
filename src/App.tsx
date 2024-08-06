@@ -41,6 +41,9 @@ import PurchaseHistory from "./pages/Transaction/PurchaseHistory.tsx";
 import RechargeHistory from "./pages/Transaction/RechargeHistory.tsx";
 import ConsignDetail from "./pages/Transaction/ConsignDetail.tsx";
 import RefundHistory from "./pages/Transaction/RefundHistory.tsx";
+import PayoutHistory from "./pages/Transaction/PayoutHistory.tsx";
+import BranchNavbar from "./components/Navbar/BranchNavbar.tsx";
+import BranchItems from "./pages/MainProduct/BranchItems.tsx";
 
 function App() {
   return (
@@ -309,6 +312,14 @@ function App() {
                 </>
               }
             />
+             <Route
+              path="/transaction/payout-history"
+              element={
+                <>
+                  <PayoutHistory />
+                </>
+              }
+            />
             <Route
               path="/men"
               element={
@@ -343,6 +354,30 @@ function App() {
                 </>
               }
             />
+            <Route
+              path="/shopBranch/:id"
+              element={
+                <>
+                  {" "}
+                  <Navbar />
+                  <BranchItems />
+                  <Footer />
+                </>
+              }
+            />
+
+            <Route
+              path="/branch"
+              element={
+                <>
+                  <Navbar />
+                  <Breadcrumb />
+                  <BranchNavbar/>
+                  <Footer />
+                </>
+              }
+            />
+
             <Route
               path="/itemDetail/:itemId"
               element={
