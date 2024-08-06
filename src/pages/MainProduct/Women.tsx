@@ -85,8 +85,7 @@ const Women: React.FC = () => {
       );
     });
   };
-
-  const fetchProducts = async (page: number, categoryId?: string) => {
+const fetchProducts = async (page: number, categoryId?: string) => {
     setIsLoading(true);
     try {
       const userId = JSON.parse(localStorage.getItem("userId") || "null");
@@ -180,7 +179,7 @@ const Women: React.FC = () => {
           <Layout
             style={{
               padding: "0 24px 24px",
-              backgroundColor: "rgba(255, 255, 255, 0)",
+backgroundColor: "rgba(255, 255, 255, 0)",
               overflow: "hidden",
             }}
           >
