@@ -56,7 +56,7 @@ const ConsignForm = () => {
       }
     };
     fetchBranches();
-  }, [shopApi]);
+  }, []);
 
   const handleFileChange = (key: number, info: any) => {
     setFileLists((prev) => ({

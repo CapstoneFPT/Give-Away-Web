@@ -62,12 +62,7 @@ const Women: React.FC = () => {
       console.error("There was an error fetching the categories!", error);
     }
   };
-  const handleMenuSelect = ({ key }: { key: string }) => {
-    if (key) {
-      setSelectedCategoryId(key);
-      setCurrentPage(1);
-    }
-  };
+ 
   const renderMenuItems = (categories: CategoryTreeNode[]): React.ReactNode => {
     return categories.map((category) => {
       if (category.children && category.children.length > 0) {
@@ -90,8 +85,7 @@ const Women: React.FC = () => {
       );
     });
   };
-
-  const fetchProducts = async (page: number, categoryId?: string) => {
+const fetchProducts = async (page: number, categoryId?: string) => {
     setIsLoading(true);
     try {
       const userId = JSON.parse(localStorage.getItem("userId") || "null");
@@ -118,6 +112,12 @@ const Women: React.FC = () => {
       console.error("There was an error fetching the products!", error);
     } finally {
       setIsLoading(false);
+    }
+  };
+  const handleMenuSelect = ({ key }: { key: string }) => {
+    if (key) {
+      setSelectedCategoryId(key);
+      setCurrentPage(1);
     }
   };
 
@@ -166,8 +166,10 @@ const Women: React.FC = () => {
             <Menu
            
               mode="horizontal"
-              defaultSelectedKeys={["1"]}
+              selectedKeys={[selectedCategoryId || ""]}
+              defaultOpenKeys={categories.map((cat) => cat.categoryId!)}
               style={{ height: "100%", borderRight: 0 }}
+              onSelect={handleMenuSelect}
             >
               {renderMenuItems(categories)} {/* Render categories */}
             </Menu>
@@ -177,7 +179,7 @@ const Women: React.FC = () => {
           <Layout
             style={{
               padding: "0 24px 24px",
-              backgroundColor: "rgba(255, 255, 255, 0)",
+backgroundColor: "rgba(255, 255, 255, 0)",
               overflow: "hidden",
             }}
           >
