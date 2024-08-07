@@ -316,7 +316,9 @@ function App() {
               path="/transaction/payout-history"
               element={
                 <>
+                <Navbar />
                   <PayoutHistory />
+                  <Footer />
                 </>
               }
             />
@@ -355,7 +357,7 @@ function App() {
               }
             />
             <Route
-              path="/shopBranch/:id"
+              path="/shopBranch/:shopId"
               element={
                 <>
                   {" "}

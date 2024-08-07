@@ -26,18 +26,23 @@ const BranchItems = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [isLoading, setIsLoading] = useState(false);
     const [searchParams] = useSearchParams();
+    const { shopId } = useParams<{ shopId: string }>(); 
+
     const navigate = useNavigate();
-  
+    
     const pageSize = 12;
   
     useParams();
     useEffect(() => {
+      console.log(shopId)
       fetchProducts(currentPage, searchParams.get("q"));
-    }, [currentPage, searchParams]);
+    }, [currentPage, searchParams,shopId]);
+    console.log(shopId)
     const fetchProducts = async (
         page: number,
         searchParam: string | null,
-        categoryId?: string
+        categoryId?: string,
+        
       ) => {
         setIsLoading(true);
         try {
@@ -49,11 +54,14 @@ const BranchItems = () => {
             pageSize,
             userId,
             categoryId,
+
             ["Available"],
-            ["ConsignedForSale", "ItemBase"]
+            ["ConsignedForSale", "ItemBase"],
+            shopId,
+
           );
     
-          console.debug(response);
+          console.log(response);
           const data = response.data;
           if (data && data.data?.items && Array.isArray(data.data.items)) {
             setProducts(data.data.items);
@@ -122,7 +130,7 @@ const BranchItems = () => {
                   backgroundColor: "rgba(255, 255, 255, 0)",
                 }}
               >
-                <h1>Search Results for "{searchParams.get("q")}"</h1>
+                {/* <h1>Search Results for "{searchParams.get("q")}"</h1> */}
                 {isLoading && (
                   <Spin style={{ textAlign: "center" }} size="large" />
                 )}
