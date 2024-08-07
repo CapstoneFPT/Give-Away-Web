@@ -4,7 +4,11 @@ import { DownOutlined } from '@ant-design/icons';
 import { useNavigate, useParams } from "react-router-dom";
 import { ShopApi, ResultStatus } from '../../api';
 
-const BranchNavbar: React.FC = () => {
+interface navBranchProps {
+  navBranch: (searchTerm: string) => void;
+}
+
+const BranchNavbar: React.FC<navBranchProps> = ({navBranch}) => {
   const [branches, setBranches] = useState<any[]>([]);
   const navigate = useNavigate();
   const shopApi = new ShopApi();

@@ -93,7 +93,7 @@ const Navbar = () => {
               {menu === "branches" ? <hr /> : <></>}
             </li>
          
-              <BranchNavbar  onBranchSelect={handleSearch} />
+              <BranchNavbar navBranch={handleSearch} />
             
            
             

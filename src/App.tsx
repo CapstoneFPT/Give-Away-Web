@@ -374,7 +374,7 @@ function App() {
                 <>
                   <Navbar />
                   <Breadcrumb />
-                  <BranchNavbar/>
+                  <Branches/>
                   <Footer />
                 </>
               }
