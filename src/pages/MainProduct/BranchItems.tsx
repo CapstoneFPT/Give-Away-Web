@@ -1,108 +1,98 @@
 import React, { useEffect, useState } from "react";
 import { FashionItemApi, FashionItemDetailResponse } from "../../api";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useCart } from "../CartContext";
-import {
-  Layout,
-  Menu,
-  Button,
-  Row,
-  Col,
-  Card,
-  Pagination,
-  Spin,
-  notification,
-} from "antd";
-import { ShoppingCartOutlined } from "@ant-design/icons";
+import { Layout, Row, Col, Pagination, Spin, notification } from "antd";
 import { Content } from "antd/es/layout/layout";
-import Sider from "antd/es/layout/Sider";
-import backgroundImageUrl from "../../components/Assets/719789-apparel-hanger-top-shirt-t-shirt-fashion-rack.jpg";
+import backgroundImageUrl from "../../components/Assets/—Pngtree—brightly lit interior showcasing empty_4846407.jpg";
 import ProductCard from "../../components/commons/ProductCard";
 
 const BranchItems = () => {
-    const { dispatch, isItemInCart } = useCart();
-    const [products, setProducts] = useState<FashionItemDetailResponse[]>([]);
-    const [totalCount, setTotalCount] = useState(0);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [isLoading, setIsLoading] = useState(false);
-    const [searchParams] = useSearchParams();
-    const { shopId } = useParams<{ shopId: string }>(); 
+  const { dispatch, isItemInCart } = useCart();
+  const [products, setProducts] = useState<FashionItemDetailResponse[]>([]);
+  const [totalCount, setTotalCount] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const [searchParams] = useSearchParams();
+  const { shopId } = useParams<{ shopId: string }>();
+  const location = useLocation();
+  const { state } = location as any;
+  const address = state?.address || "Address not available";
 
-    const navigate = useNavigate();
-    
-    const pageSize = 12;
-  
-    useParams();
-    useEffect(() => {
-      console.log(shopId)
+  const navigate = useNavigate();
+
+  const pageSize = 12;
+
+  useEffect(() => {
+    if (shopId) {
+      console.log("Fetched shopId:", shopId);
       fetchProducts(currentPage, searchParams.get("q"));
-    }, [currentPage, searchParams,shopId]);
-    console.log(shopId)
-    const fetchProducts = async (
-        page: number,
-        searchParam: string | null,
-        categoryId?: string,
-        
-      ) => {
-        setIsLoading(true);
-        try {
-          const userId = JSON.parse(localStorage.getItem("userId") || "null");
-          const fashionItemApi = new FashionItemApi();
-          const response = await fashionItemApi.apiFashionitemsGet(
-            searchParam!,
-            page,
-            pageSize,
-            userId,
-            categoryId,
+    } else {
+      console.error("shopId is undefined");
+    }
+  }, [currentPage, searchParams, shopId]);
 
-            ["Available"],
-            ["ConsignedForSale", "ItemBase"],
-            shopId,
+  const fetchProducts = async (page: number, searchParam: string | null, categoryId?: string) => {
+    setIsLoading(true);
+    try {
+      const userId = JSON.parse(localStorage.getItem("userId") || "null");
+      const fashionItemApi = new FashionItemApi();
+      const response = await fashionItemApi.apiFashionitemsGet(
+        searchParam!,
+        page,
+        pageSize,
+        userId,
+        categoryId,
+        ["Available"],
+        ["ConsignedForSale", "ItemBase"],
+        shopId
+      );
 
-          );
-    
-          console.log(response);
-          const data = response.data;
-          if (data && data.data?.items && Array.isArray(data.data.items)) {
-            setProducts(data.data.items);
-            setTotalCount(data.data.totalCount!);
-          } else {
-            console.error("Data is not in expected format:", data);
-          }
-        } catch (error) {
-          console.error("There was an error fetching the products!", error);
-        } finally {
-          setIsLoading(false);
-        }
-      };
-      const formatBalance = (sellingPrice: any) => {
-        return new Intl.NumberFormat("de-DE").format(sellingPrice);
-      };
-      const handleAddToCart = (product: FashionItemDetailResponse) => {
-        if (product.isOrderedYet) {
-          notification.error({
-            message: "Already Ordered",
-            description: `The item "${product.name}" has already been ordered.`,
-          });
-        } else if (isItemInCart(product.itemId)) {
-          notification.warning({
-            message: "Already in Cart",
-            description: `The item "${product.name}" is already in your cart.`,
-          });
-        } else {
-          dispatch({ type: "ADD_TO_CART", payload: { ...product } });
-          notification.success({
-            message: "Added to Cart",
-            description: `The item "${product.name}" has been added to your cart.`,
-          });
-          console.log("Adding item to cart with itemId:", product.itemId);
-        }
-      };
-    
-      const goToDetailPage = (itemId: any) => {
-        console.log("Navigating to itemDetail with itemId:", itemId);
-        navigate(`/itemDetail/${itemId}`);
-      };
+      console.log(response);
+      const data = response.data;
+      if (data && data.data?.items && Array.isArray(data.data.items)) {
+        setProducts(data.data.items);
+        setTotalCount(data.data.totalCount!);
+      } else {
+        console.error("Data is not in expected format:", data);
+      }
+    } catch (error) {
+      console.error("There was an error fetching the products!", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const formatBalance = (sellingPrice: any) => {
+    return new Intl.NumberFormat("de-DE").format(sellingPrice);
+  };
+
+  const handleAddToCart = (product: FashionItemDetailResponse) => {
+    if (product.isOrderedYet) {
+      notification.error({
+        message: "Already Ordered",
+        description: `The item "${product.name}" has already been ordered.`,
+      });
+    } else if (isItemInCart(product.itemId)) {
+      notification.warning({
+        message: "Already in Cart",
+        description: `The item "${product.name}" is already in your cart.`,
+      });
+    } else {
+      dispatch({ type: "ADD_TO_CART", payload: { ...product } });
+      notification.success({
+        message: "Added to Cart",
+        description: `The item "${product.name}" has been added to your cart.`,
+      });
+      console.log("Adding item to cart with itemId:", product.itemId);
+    }
+  };
+
+  const goToDetailPage = (itemId: any) => {
+    console.log("Navigating to itemDetail with itemId:", itemId);
+    navigate(`/itemDetail/${itemId}`);
+  };
+
   return (
     <div
       style={{
@@ -130,10 +120,8 @@ const BranchItems = () => {
                   backgroundColor: "rgba(255, 255, 255, 0)",
                 }}
               >
-                {/* <h1>Search Results for "{searchParams.get("q")}"</h1> */}
-                {isLoading && (
-                  <Spin style={{ textAlign: "center" }} size="large" />
-                )}
+                <h1 style={{margin:'20px'}}>Branch: {address}</h1>
+                {isLoading && <Spin style={{ textAlign: "center" }} size="large" />}
               </div>
               <Row gutter={[16, 16]}>
                 {products.map((product: FashionItemDetailResponse) => (
@@ -167,7 +155,7 @@ const BranchItems = () => {
         </Col>
       </Row>
     </div>
-  )
-}
+  );
+};
 
-export default BranchItems
+export default BranchItems;
