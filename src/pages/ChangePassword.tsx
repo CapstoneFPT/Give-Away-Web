@@ -1,23 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { EyeOutlined, EyeInvisibleOutlined } from "@ant-design/icons";
 import { Button, Card, Row, Col, Form, Input, message, Modal } from "antd";
-import axios from "axios";
 import NavProfile from "../components/NavProfile/NavProfile";
 import "./CSS/ChangePassword.css";
-import { BASE_URL } from "../api/config";
-
-interface ChangePasswordFormValues {
-  currentPassword: string;
-  newPassword: string;
-  confirmPassword: string;
-}
+import { AuthApi, ChangePasswordRequest } from "../api";
 
 const ChangePassword: React.FC = () => {
   const [currentPasswordVisible, setCurrentPasswordVisible] = useState(false);
   const [newPasswordVisible, setNewPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
   const [isFormChanged, setIsFormChanged] = useState(false);
-  const [form] = Form.useForm<ChangePasswordFormValues>();
+  const [form] = Form.useForm<ChangePasswordRequest>();
   const [userId, setUserId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -26,7 +19,7 @@ const ChangePassword: React.FC = () => {
     console.log(storedUserId);
   }, []);
 
-  const onFinish = (values: ChangePasswordFormValues) => {
+  const onFinish = (values: ChangePasswordRequest) => {
     if (!userId) {
       message.error("User ID not found. Please log in again.");
       return;
@@ -38,28 +31,24 @@ const ChangePassword: React.FC = () => {
       okText: "Confirm",
       okButtonProps: { className: "custom-confirm-button" },
       cancelButtonProps: { className: "custom-cancel-button" },
-      onOk: () => {
+      onOk: async () => {
         console.log("userId", userId);
+
+        const changePasswordApi = new AuthApi();
         console.log(values);
-        axios
-          .put(`${BASE_URL}/auth/${userId}/change-password`, {
-            currentPassword: values.currentPassword,
+
+        try {
+          const responseChangePassword = await changePasswordApi.apiAuthAccountIdChangePasswordPut(userId, {
+            currentPassword: values.currentPassword!,
             newPassword: values.newPassword,
-            confirmNewPassword: values.confirmPassword,
-          },{
-            headers :{
-              "ngrok-skip-browser-warning": "6942"
-            }
-          })
-          .then((response) => {
-            message.success("Password changed successfully!");
-            setIsFormChanged(false);
-            console.log("Success:", response.data);
-          })
-          .catch((error) => {
-            console.error("There was an error changing the password!", error);
-            message.error("Failed to change password. Please try again later.");
+            confirmNewPassword: values.confirmNewPassword!, // Ensure the field name matches here
           });
+          console.log(responseChangePassword);
+          message.success("Password changed successfully!");
+        } catch (error) {
+          message.error("Failed to change password. Please try again.");
+          console.log(error); // Notify error
+        }
       },
     });
   };
@@ -156,8 +145,8 @@ const ChangePassword: React.FC = () => {
               <Form.Item
                 hasFeedback
                 label="Confirm New Password"
-                name="confirmPassword"
-                dependencies={["newPassword"]}
+                name="confirmNewPassword"
+                dependencies={["confirmNewPassword"]}
                 rules={[
                   {
                     required: true,
@@ -165,7 +154,7 @@ const ChangePassword: React.FC = () => {
                   },
                   ({ getFieldValue }) => ({
                     validator(_, value) {
-                      if (!value || getFieldValue("newPassword") === value) {
+                      if (!value || getFieldValue("confirmNewPassword") === value) {
                         return Promise.resolve();
                       }
                       return Promise.reject(
@@ -176,7 +165,7 @@ const ChangePassword: React.FC = () => {
                 ]}
               >
                 <Input
-                  type={confirmPasswordVisible ? "text" : "password"}
+                  type={confirmPasswordVisible ? "text" : "confirmNewPassword"}
                   prefix={
                     confirmPasswordVisible ? (
                       <EyeInvisibleOutlined
