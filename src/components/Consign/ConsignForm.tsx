@@ -109,7 +109,10 @@ const ConsignForm = () => {
       const consignData: CreateConsignSaleRequest = {
         shopId: values.userInfo.clothBranches,
         type: values.userInfo.type as ConsignSaleType, // Updated to use the new type
-        fashionItemForConsigns: itemsWithUrls,
+        consignDetailRequests: itemsWithUrls,
+        address: values.userInfo.address,
+        consignorName: values.userInfo.name,
+        phone: values.userInfo.phone,
       };
 
       const consignApi = new AccountApi();

@@ -45,9 +45,7 @@ const DetailProductAunction: React.FC = () => {
     const fetchProduct = async () => {
       try {
         const fashionItemAuction = new FashionItemApi();
-        const response = await fashionItemAuction.apiFashionitemsIdGet(
-          auctionItemID!
-        );
+        const response = await fashionItemAuction.apiFashionitemsItemIdGet(auctionItemID!)
         setProduct(response.data.data!);
         setSelectedImage(response.data.data?.images![0]);
         console.log(response);

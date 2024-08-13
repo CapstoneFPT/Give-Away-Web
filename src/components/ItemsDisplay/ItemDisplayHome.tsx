@@ -82,9 +82,9 @@ const ItemDisplayHome: React.FC = () => {
     return new Intl.NumberFormat("de-DE").format(sellingPrice);
   };
 
-  const goToListProducts = (masterItemsId: string) => {
-    console.log("Navigating to ListItem with itemId:", masterItemsId);
-    navigate(`/listItems/${masterItemsId}`);
+  const goToListProducts = (masterItemId: string) => {
+    console.log("Navigating to ListItem with itemId:", masterItemId);
+    navigate(`/listItems/${masterItemId}`);
   };
 
   return (

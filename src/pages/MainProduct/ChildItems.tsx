@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Spin, notification, Card, Row, Col, Input, Select, Button, Modal, TableColumnsType } from 'antd'; // Thêm Button và Modal
 import { FashionItemApi, FashionItemList } from '../../api';
+import { useParams } from 'react-router-dom';
 
 interface ChildItemsProps {
   masterItemId: string;
@@ -17,18 +18,20 @@ const columns : TableColumnsType<FashionItemList> = [
 
 const { Option } = Select; // Khai báo Option từ Select
 
-const ChildItems: React.FC<ChildItemsProps> = ({ masterItemId }) => {
+const ChildItems: React.FC = () => {
   const [dataSource, setDataSource] = useState<FashionItemList[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [filterSize, setFilterSize] = useState<string | undefined>(undefined); // State cho filter size
   const [filterColor, setFilterColor] = useState<string | undefined>(undefined); // State cho filter color
   const [isModalVisible, setIsModalVisible] = useState(false); // State cho Modal
+  const {masterItemId} = useParams<{masterItemId: string}>();
 
   useEffect(() => {
     const fetchItemVariants = async () => {
       setIsLoading(true);
       try {
         const fashionItemApi = new FashionItemApi();
+        console.log(masterItemId);
         const response = await fashionItemApi.apiFashionitemsGet(
           null!,
           null!,
@@ -48,8 +51,6 @@ const ChildItems: React.FC<ChildItemsProps> = ({ masterItemId }) => {
           null!,
           null!,
           masterItemId,
-
-          
         );
         setDataSource(response.data.items!);
         console.log(response);

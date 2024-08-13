@@ -10,6 +10,7 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, formatBalance, onAddToCart, onCardClick }) => {
+  console.log(product.masterItemId)
   return (
     <Card
       style={{ width: "300px", boxShadow: '-moz-initial', textAlign: 'center' }}
@@ -27,7 +28,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, formatBalance, onAdd
         style={{ height: "60px", fontWeight: 'bold', color: 'black', fontSize: '18px' }}
         title={product.name}
       />
-      <div style={{ marginTop: "15px", textAlign: 'center' }}>
+      {/* <div style={{ marginTop: "15px", textAlign: 'center' }}>
         <Button
           type="primary"
           style={{
@@ -46,7 +47,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, formatBalance, onAdd
         >
           Add to Cart
         </Button>
-      </div>
+      </div> */}
     </Card>
   );
 };

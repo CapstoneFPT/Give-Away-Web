@@ -56,7 +56,7 @@ const ItemDetail: React.FC = () => {
       async function fetchFashionItemDetails() {
         try {
           const fashionItemApi = new FashionItemApi();
-          const response = await fashionItemApi.apiFashionitemsIdGet(itemId!);
+          const response = await fashionItemApi.apiFashionitemsItemIdGet(itemId!);
           console.debug(itemId, response.data);
           setProduct(response.data.data!);
           setSelectedImage(response.data.data?.images![0] || "");

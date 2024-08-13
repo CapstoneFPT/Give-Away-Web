@@ -1,11 +1,11 @@
 import React, {  useEffect, useState } from "react";
 import {  Card, Row, Col, Table, Button } from "antd";
 import NavProfile from "../../components/NavProfile/NavProfile";
-import { AccountApi } from "../../api";
+import { AccountApi, GetTransactionsResponse } from "../../api";
 
 const DepositHistory = () => {
   const userId = JSON.parse(localStorage.getItem("userId") || "null");
-  const [data, setData] = useState<any[]>([]); // Thêm trạng thái để lưu dữ liệu
+  const [data, setData] = useState<GetTransactionsResponse[]>([]); // Thêm trạng thái để lưu dữ liệu
 
   useEffect(() => {
     const fetchDepositHistory = async () => {
@@ -17,7 +17,7 @@ const DepositHistory = () => {
           null!,
          ["AuctionDeposit"]
         );
-        setData(response.data.items!); // Lưu dữ liệu vào trạng thái
+        setData(response.data.data?.items || []); // Lưu dữ liệu vào trạng thái
       } catch (error) {
         console.error("Error fetching deposit history:", error);
       }

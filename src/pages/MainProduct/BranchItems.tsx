@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { FashionItemApi, FashionItemDetailResponse } from "../../api";
-import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { FashionItemApi, FashionItemDetailResponse, MasterItemListResponse } from "../../api";
+import {
+  useLocation,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
 import { useCart } from "../CartContext";
 import { Layout, Row, Col, Pagination, Spin, notification } from "antd";
 import { Content } from "antd/es/layout/layout";
@@ -9,7 +14,7 @@ import ProductCard from "../../components/commons/ProductCard";
 
 const BranchItems = () => {
   const { dispatch, isItemInCart } = useCart();
-  const [products, setProducts] = useState<FashionItemDetailResponse[]>([]);
+  const [products, setProducts] = useState<MasterItemListResponse[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
@@ -32,27 +37,22 @@ const BranchItems = () => {
     }
   }, [currentPage, searchParams, shopId]);
 
-  const fetchProducts = async (page: number, searchParam: string | null, categoryId?: string) => {
+  const fetchProducts = async (
+    page: number,
+    searchParam: string | null,
+    categoryId?: string
+  ) => {
     setIsLoading(true);
     try {
       const userId = JSON.parse(localStorage.getItem("userId") || "null");
       const fashionItemApi = new FashionItemApi();
-      const response = await fashionItemApi.apiFashionitemsGet(
-        searchParam!,
-        page,
-        pageSize,
-        userId,
-        categoryId,
-        ["Available"],
-        ["ConsignedForSale", "ItemBase"],
-        shopId
-      );
+      const response = await fashionItemApi.apiFashionitemsMasterItemsGet(null!,null!,page,12,categoryId,shopId)
 
       console.log(response);
       const data = response.data;
-      if (data && data.data?.items && Array.isArray(data.data.items)) {
-        setProducts(data.data.items);
-        setTotalCount(data.data.totalCount!);
+      if (data && data?.items && Array.isArray(data.items)) {
+        setProducts(data.items);
+        setTotalCount(data.totalCount!);
       } else {
         console.error("Data is not in expected format:", data);
       }
@@ -120,8 +120,10 @@ const BranchItems = () => {
                   backgroundColor: "rgba(255, 255, 255, 0)",
                 }}
               >
-                <h1 style={{margin:'20px'}}>Branch: {address}</h1>
-                {isLoading && <Spin style={{ textAlign: "center" }} size="large" />}
+                <h1 style={{ margin: "20px" }}>Branch: {address}</h1>
+                {isLoading && (
+                  <Spin style={{ textAlign: "center" }} size="large" />
+                )}
               </div>
               <Row gutter={[16, 16]}>
                 {products.map((product: FashionItemDetailResponse) => (

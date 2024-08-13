@@ -395,7 +395,7 @@ function App() {
               element={
                 <>
                   <Navbar />
-                  <ChildItems masterItemId="" />
+                  <ChildItems/>
                   <Footer />
                 </>
               }

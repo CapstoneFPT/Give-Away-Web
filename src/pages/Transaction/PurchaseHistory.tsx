@@ -17,9 +17,9 @@ const PurchaseHistory = () => {
     const fetchData = async (page = 1, size = 10) => {
         const accountApi = new AccountApi();
         const response = await accountApi.apiAccountsAccountIdTransactionsGet(userId!, page, size, [TransactionType.Purchase]);
-        console.log(response.data.items)
-        setData(response.data.items || []);
-        setTotal(response.data.totalCount || 0);
+        console.log(response.data.data?.items)
+        setData(response.data.data?.items || []);
+        setTotal(response.data.data?.totalCount || 0);
         setLoading(false);
     }
     const formatBalance = (balance:any) => {

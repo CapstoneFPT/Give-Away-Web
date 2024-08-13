@@ -5850,6 +5850,12 @@ export interface ItemVariationResponse {
      * @memberof ItemVariationResponse
      */
     'createdDate'?: string;
+    /**
+     * 
+     * @type {Array<IndividualItemListResponse>}
+     * @memberof ItemVariationResponse
+     */
+    'individualItems'?: Array<IndividualItemListResponse> | null;
 }
 
 
@@ -8494,6 +8500,56 @@ export const Roles = {
 export type Roles = typeof Roles[keyof typeof Roles];
 
 
+/**
+ * 
+ * @export
+ * @interface ShippingFeeResult
+ */
+export interface ShippingFeeResult {
+    /**
+     * 
+     * @type {number}
+     * @memberof ShippingFeeResult
+     */
+    'shippingFee'?: number;
+    /**
+     * 
+     * @type {Array<ShippingLocation>}
+     * @memberof ShippingFeeResult
+     */
+    'shopLocation'?: Array<ShippingLocation> | null;
+    /**
+     * 
+     * @type {ShippingLocation}
+     * @memberof ShippingFeeResult
+     */
+    'shippingDestination'?: ShippingLocation;
+}
+/**
+ * 
+ * @export
+ * @interface ShippingLocation
+ */
+export interface ShippingLocation {
+    /**
+     * 
+     * @type {string}
+     * @memberof ShippingLocation
+     */
+    'address'?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof ShippingLocation
+     */
+    'districtId'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ShippingLocation
+     */
+    'wardCode'?: number;
+}
 /**
  * 
  * @export
@@ -16278,6 +16334,49 @@ export const OrderApiAxiosParamCreator = function (configuration?: Configuration
     return {
         /**
          * 
+         * @param {Array<string>} [itemIds] 
+         * @param {number} [destinationDistrictId] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiOrdersCalculateShippingFeeGet: async (itemIds?: Array<string>, destinationDistrictId?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/orders/calculate-shipping-fee`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            if (itemIds) {
+                localVarQueryParameter['itemIds'] = itemIds;
+            }
+
+            if (destinationDistrictId !== undefined) {
+                localVarQueryParameter['destinationDistrictId'] = destinationDistrictId;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {number} [pageNumber] 
          * @param {number} [pageSize] 
          * @param {string} [shopId] 
@@ -16717,6 +16816,19 @@ export const OrderApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
+         * @param {Array<string>} [itemIds] 
+         * @param {number} [destinationDistrictId] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiOrdersCalculateShippingFeeGet(itemIds?: Array<string>, destinationDistrictId?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ShippingFeeResult>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiOrdersCalculateShippingFeeGet(itemIds, destinationDistrictId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['OrderApi.apiOrdersCalculateShippingFeeGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @param {number} [pageNumber] 
          * @param {number} [pageSize] 
          * @param {string} [shopId] 
@@ -16859,6 +16971,16 @@ export const OrderApiFactory = function (configuration?: Configuration, basePath
     return {
         /**
          * 
+         * @param {Array<string>} [itemIds] 
+         * @param {number} [destinationDistrictId] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiOrdersCalculateShippingFeeGet(itemIds?: Array<string>, destinationDistrictId?: number, options?: any): AxiosPromise<ShippingFeeResult> {
+            return localVarFp.apiOrdersCalculateShippingFeeGet(itemIds, destinationDistrictId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @param {number} [pageNumber] 
          * @param {number} [pageSize] 
          * @param {string} [shopId] 
@@ -16969,6 +17091,18 @@ export const OrderApiFactory = function (configuration?: Configuration, basePath
  * @extends {BaseAPI}
  */
 export class OrderApi extends BaseAPI {
+    /**
+     * 
+     * @param {Array<string>} [itemIds] 
+     * @param {number} [destinationDistrictId] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof OrderApi
+     */
+    public apiOrdersCalculateShippingFeeGet(itemIds?: Array<string>, destinationDistrictId?: number, options?: RawAxiosRequestConfig) {
+        return OrderApiFp(this.configuration).apiOrdersCalculateShippingFeeGet(itemIds, destinationDistrictId, options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * 
      * @param {number} [pageNumber] 

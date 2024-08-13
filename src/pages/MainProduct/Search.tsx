@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FashionItemApi, FashionItemDetailResponse } from "../../api";
+import { FashionItemApi, FashionItemDetailResponse, MasterItemListResponse } from "../../api";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useCart } from "../CartContext";
 import {
@@ -20,7 +20,7 @@ import backgroundImageUrl from "../../components/Assets/719789-apparel-hanger-to
 import ProductCard from "../../components/commons/ProductCard";
 const Search: React.FC = () => {
   const { dispatch, isItemInCart } = useCart();
-  const [products, setProducts] = useState<FashionItemDetailResponse[]>([]);
+  const [products, setProducts] = useState<MasterItemListResponse[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
@@ -43,21 +43,20 @@ const Search: React.FC = () => {
     try {
       const userId = JSON.parse(localStorage.getItem("userId") || "null");
       const fashionItemApi = new FashionItemApi();
-      const response = await fashionItemApi.apiFashionitemsGet(
+      const response = await fashionItemApi.apiFashionitemsMasterItemsGet(
         searchParam!,
+        null!,
         page,
         pageSize,
-        userId,
         categoryId,
-        ["Available"],
-        ["ConsignedForSale", "ItemBase"]
+        userId
       );
 
       console.debug(response);
       const data = response.data;
-      if (data && data.data?.items && Array.isArray(data.data.items)) {
-        setProducts(data.data.items);
-        setTotalCount(data.data.totalCount!);
+      if (data && data.items && Array.isArray(data.items)) {
+        setProducts(data.items);
+        setTotalCount(data.totalCount!);
       } else {
         console.error("Data is not in expected format:", data);
       }

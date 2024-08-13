@@ -19,6 +19,7 @@ import {
   CategoryTreeNode,
   FashionItemApi,
   FashionItemDetailResponse,
+  MasterItemListResponse,
 } from "../../api";
 import backgroundImageUrl from "../../components/Assets/shutterstock_455310238.jpg";
 import ProductCard from "../../components/commons/ProductCard";
@@ -26,7 +27,7 @@ import SubMenu from "antd/es/menu/SubMenu";
 
 const Men: React.FC = () => {
   const { dispatch, isItemInCart } = useCart();
-  const [products, setProducts] = useState<FashionItemDetailResponse[]>([]);
+  const [products, setProducts] = useState<MasterItemListResponse[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
@@ -92,24 +93,14 @@ const Men: React.FC = () => {
       
       const fashionItemApi = new FashionItemApi();
 
-      const response = await fashionItemApi.apiFashionitemsGet(
-        null!,
-        page,
-        pageSize,
-        userId,
-        selectedCategoryId || "535d3b90-dc58-41e3-ad32-055e261bd6a7",
-        ["Available"],
-        ["ItemBase", "ConsignedForSale"],
-        null!,
-        "Male"
-      );
+      const response = await fashionItemApi.apiFashionitemsMasterItemsGet();
       // console.log(response.data.data?.items);
 
       // console.debug(response);
       const data = response.data;
-      if (data && data.data?.items && Array.isArray(data.data.items)) {
-        setProducts(data.data.items);
-        setTotalCount(data.data.totalCount || 0);
+      if (data && data.items && Array.isArray(data.items)) {
+        setProducts(data.items);
+        setTotalCount(data.totalCount || 0);
       } else {
         console.error("Data is not in expected format:", data);
       }
