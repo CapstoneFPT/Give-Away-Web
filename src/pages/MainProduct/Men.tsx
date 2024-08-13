@@ -141,9 +141,9 @@ const Men: React.FC = () => {
     return new Intl.NumberFormat("de-DE").format(sellingPrice);
   };
 
-  const goToDetailPage = (itemId: any) => {
-    console.log("Navigating to itemDetail with itemId:", itemId);
-    navigate(`/itemDetail/${itemId}`);
+  const goToListProducts = (masterItemId: any) => {
+    console.log("Navigating to itemDetail with itemId:", masterItemId);
+    navigate(`/listItems/${masterItemId}`);
   };
 
   return (
@@ -193,7 +193,7 @@ const Men: React.FC = () => {
                       product={product}
                       onAddToCart={handleAddToCart}
                       formatBalance={formatBalance}
-                      onCardClick={goToDetailPage}
+                      onCardClick={goToListProducts}
                     />
                   </Col>
                 ))}
