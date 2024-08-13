@@ -6,7 +6,7 @@ interface ProductCardProps {
   product: MasterItemListResponse;
   formatBalance: (price: number) => string;
   onAddToCart: (product: FashionItemDetailResponse) => void;
-  onCardClick: (masterItemsId: string) => void;
+  onCardClick: (masterItemId: string) => void;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, formatBalance, onAddToCart, onCardClick }) => {

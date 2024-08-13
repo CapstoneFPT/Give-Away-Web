@@ -391,11 +391,11 @@ function App() {
               }
             />
             <Route
-              path="/listItems/:masterItemsId"
+              path="/listItems/:masterItemId"
               element={
                 <>
                   <Navbar />
-                  <ChildItems masterItemsId="" />
+                  <ChildItems masterItemId="" />
                   <Footer />
                 </>
               }

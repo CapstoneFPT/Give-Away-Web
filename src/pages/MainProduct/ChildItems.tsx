@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Spin, notification, Card, Row, Col, Input, Select, Button, Modal, TableColumnsType } from 'antd'; // Thêm Button và Modal
-import { FashionItemApi, FashionItemList, ItemVariationResponse } from '../../api';
+import { FashionItemApi, FashionItemList } from '../../api';
 
 interface ChildItemsProps {
-  masterItemsId: string;
+  masterItemId: string;
 }
 
 const columns : TableColumnsType<FashionItemList> = [
@@ -17,7 +17,7 @@ const columns : TableColumnsType<FashionItemList> = [
 
 const { Option } = Select; // Khai báo Option từ Select
 
-const ChildItems: React.FC<ChildItemsProps> = ({ masterItemsId }) => {
+const ChildItems: React.FC<ChildItemsProps> = ({ masterItemId }) => {
   const [dataSource, setDataSource] = useState<FashionItemList[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [filterSize, setFilterSize] = useState<string | undefined>(undefined); // State cho filter size
@@ -47,8 +47,9 @@ const ChildItems: React.FC<ChildItemsProps> = ({ masterItemsId }) => {
           null!,
           null!,
           null!,
-          masterItemsId,
-          null!
+          masterItemId,
+
+          
         );
         setDataSource(response.data.items!);
         console.log(response);
@@ -62,7 +63,7 @@ const ChildItems: React.FC<ChildItemsProps> = ({ masterItemsId }) => {
     };
 
     fetchItemVariants();
-  }, [masterItemsId]);
+  }, [masterItemId]);
 
   // Hàm lọc dữ liệu
   const filteredData = dataSource.filter(item => {

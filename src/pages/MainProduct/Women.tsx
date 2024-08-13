@@ -90,21 +90,22 @@ const fetchProducts = async (page: number, categoryId?: string) => {
     try {
       const userId = JSON.parse(localStorage.getItem("userId") || "null");
       const fashionItemApi = new FashionItemApi();
-      const response = await fashionItemApi.apiFashionitemsGet(
+      const response = await fashionItemApi.apiFashionitemsMasterItemsGet(
+        null!,
         null!,
         page,
         pageSize,
-        userId,
         selectedCategoryId||"3e4c6370-a72b-44e3-a5eb-8f459764158f",
-        ["Available"],
-        ["ItemBase", "ConsignedForSale"],
         null!,
-        "Female"
+         "Female",
+         
+        
+        
       );
       const data = response.data;
-      if (data && data.data?.items && Array.isArray(data.data.items)) {
-        setProducts(data.data.items);
-        setTotalCount(data.data.totalCount || 0);
+      if (data && data.items && Array.isArray(data.items)) {
+        setProducts(data.items);
+        setTotalCount(data.totalCount || 0);
       } else {
         console.error("Data is not in expected format:", data);
       }

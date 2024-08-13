@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
   Layout,
-  Button,
   Row,
   Col,
   Card,
@@ -9,30 +8,19 @@ import {
   Spin,
   notification,
 } from "antd";
-import { ShoppingCartOutlined } from "@ant-design/icons";
 import { Content } from "antd/es/layout/layout";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../../pages/CartContext";
-
-import { FashionItemApi, FashionItemDetailResponse, MasterItemListResponse, MasterItemResponse } from "../../api";
+import {
+  FashionItemApi,
+  FashionItemDetailResponse,
+  MasterItemListResponse,
+} from "../../api";
 import backgroundImageUrl from "../Assets/freepik_5229782.jpg";
 import ProductCard from "../commons/ProductCard";
 
-interface Product {
-  itemId: any;
-  images: string;
-  name: string;
-  size: string;
-  color: string;
-  gender: string;
-  brand: string;
-  sellingPrice: number;
-  shopAddress: string;
-}
-
 const ItemDisplayHome: React.FC = () => {
-  const { state, dispatch, isItemInCart } = useCart();
+  const { dispatch, isItemInCart } = useCart();
   const [products, setProducts] = useState<MasterItemListResponse[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
@@ -43,8 +31,7 @@ const ItemDisplayHome: React.FC = () => {
   useEffect(() => {
     fetchProducts(currentPage);
   }, [currentPage]);
-  const userId = JSON.parse(localStorage.getItem("userId") || "null");
-  console.log(userId);
+
   const fetchProducts = async (page: number) => {
     setIsLoading(true);
     try {
@@ -54,18 +41,19 @@ const ItemDisplayHome: React.FC = () => {
         null!,
         page,
         pageSize,
-        null!,
-       
-       
+        null!
       );
 
       console.log(response);
+
+      // Access the items array correctly
       const data = response.data;
+      console.log(data)
       if (data && data.items && Array.isArray(data.items)) {
-        setProducts(data.items!);
+        setProducts(data.items);
         setTotalCount(data.totalCount || 0);
       } else {
-        console.error("Data is not in expected format:", data);
+        console.error("Data is not in the expected format:", data);
       }
     } catch (error) {
       console.error("There was an error fetching the products!", error);
@@ -89,7 +77,8 @@ const ItemDisplayHome: React.FC = () => {
       console.log("Adding item to cart with itemId:", product.itemId);
     }
   };
-  const formatBalance = (sellingPrice: any) => {
+
+  const formatBalance = (sellingPrice: number) => {
     return new Intl.NumberFormat("de-DE").format(sellingPrice);
   };
 
@@ -110,7 +99,7 @@ const ItemDisplayHome: React.FC = () => {
       <Layout
         style={{
           padding: "0 24px 24px",
-          backgroundColor: "rgb(225, 225, 225, 0.1)",
+          backgroundColor: "rgba(225, 225, 225, 0.1)",
         }}
       >
         <Content>
@@ -125,7 +114,7 @@ const ItemDisplayHome: React.FC = () => {
                   product={product}
                   formatBalance={formatBalance}
                   onAddToCart={handleAddToCart}
-                  onCardClick={()=>goToListProducts(product.masterItemId!)}
+                  onCardClick={() => goToListProducts(product.masterItemId!)}
                 />
               </Col>
             ))}
