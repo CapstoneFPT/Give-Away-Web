@@ -15,7 +15,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../../pages/CartContext";
 
-import { FashionItemApi, FashionItemDetailResponse } from "../../api";
+import { FashionItemApi, FashionItemDetailResponse, MasterItemListResponse, MasterItemResponse } from "../../api";
 import backgroundImageUrl from "../Assets/freepik_5229782.jpg";
 import ProductCard from "../commons/ProductCard";
 
@@ -33,7 +33,7 @@ interface Product {
 
 const ItemDisplayHome: React.FC = () => {
   const { state, dispatch, isItemInCart } = useCart();
-  const [products, setProducts] = useState<FashionItemDetailResponse[]>([]);
+  const [products, setProducts] = useState<MasterItemListResponse[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
@@ -49,21 +49,21 @@ const ItemDisplayHome: React.FC = () => {
     setIsLoading(true);
     try {
       const fashionItemApi = new FashionItemApi();
-      const response = await fashionItemApi.apiFashionitemsGet(
+      const response = await fashionItemApi.apiFashionitemsMasterItemsGet(
+        null!,
         null!,
         page,
         pageSize,
-        userId,
         null!,
-        ["Available"],
-        ["ItemBase", "ConsignedForSale"],
+       
+       
       );
 
-      console.debug(response);
+      console.log(response);
       const data = response.data;
-      if (data && data.data?.items && Array.isArray(data.data.items)) {
-        setProducts(data.data.items);
-        setTotalCount(data.data.totalCount || 0);
+      if (data && data.items && Array.isArray(data.items)) {
+        setProducts(data.items!);
+        setTotalCount(data.totalCount || 0);
       } else {
         console.error("Data is not in expected format:", data);
       }
@@ -93,9 +93,9 @@ const ItemDisplayHome: React.FC = () => {
     return new Intl.NumberFormat("de-DE").format(sellingPrice);
   };
 
-  const goToDetailPage = (itemId: any) => {
-    console.log("Navigating to itemDetail with itemId:", itemId);
-    navigate(`/itemDetail/${itemId}`);
+  const goToListProducts = (masterItemsId: string) => {
+    console.log("Navigating to ListItem with itemId:", masterItemsId);
+    navigate(`/listItems/${masterItemsId}`);
   };
 
   return (
@@ -119,13 +119,13 @@ const ItemDisplayHome: React.FC = () => {
             {isLoading && <Spin style={{ textAlign: "center" }} size="large" />}
           </div>
           <Row gutter={[20, 10]} justify="center">
-            {products.map((product: FashionItemDetailResponse) => (
-              <Col key={product.itemId} xs={24} sm={12} md={8} lg={6}>
+            {products.map((product) => (
+              <Col key={product.masterItemId} xs={24} sm={12} md={8} lg={6}>
                 <ProductCard
                   product={product}
                   formatBalance={formatBalance}
                   onAddToCart={handleAddToCart}
-                  onCardClick={goToDetailPage}
+                  onCardClick={()=>goToListProducts(product.masterItemId!)}
                 />
               </Col>
             ))}

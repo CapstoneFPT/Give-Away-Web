@@ -348,69 +348,6 @@ export interface AddFashionItemForConsignByShop {
 /**
  * 
  * @export
- * @interface AddFashionItemForConsignRequest
- */
-export interface AddFashionItemForConsignRequest {
-    /**
-     * 
-     * @type {string}
-     * @memberof AddFashionItemForConsignRequest
-     */
-    'name': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof AddFashionItemForConsignRequest
-     */
-    'note'?: string | null;
-    /**
-     * 
-     * @type {number}
-     * @memberof AddFashionItemForConsignRequest
-     */
-    'dealPrice': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof AddFashionItemForConsignRequest
-     */
-    'condition'?: number;
-    /**
-     * 
-     * @type {SizeType}
-     * @memberof AddFashionItemForConsignRequest
-     */
-    'size'?: SizeType;
-    /**
-     * 
-     * @type {string}
-     * @memberof AddFashionItemForConsignRequest
-     */
-    'color'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof AddFashionItemForConsignRequest
-     */
-    'brand'?: string | null;
-    /**
-     * 
-     * @type {GenderType}
-     * @memberof AddFashionItemForConsignRequest
-     */
-    'gender'?: GenderType;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof AddFashionItemForConsignRequest
-     */
-    'images'?: Array<string> | null;
-}
-
-
-/**
- * 
- * @export
  * @interface ApprovalRefundRequest
  */
 export interface ApprovalRefundRequest {
@@ -506,16 +443,16 @@ export interface Auction {
     'stepIncrement'?: number;
     /**
      * 
-     * @type {AuctionFashionItem}
+     * @type {IndividualAuctionFashionItem}
      * @memberof Auction
      */
-    'auctionFashionItem'?: AuctionFashionItem;
+    'individualAuctionFashionItem'?: IndividualAuctionFashionItem;
     /**
      * 
      * @type {string}
      * @memberof Auction
      */
-    'auctionFashionItemId'?: string;
+    'individualAuctionFashionItemId'?: string;
     /**
      * 
      * @type {AuctionStatus}
@@ -805,141 +742,6 @@ export interface AuctionDetailResponse {
 /**
  * 
  * @export
- * @interface AuctionFashionItem
- */
-export interface AuctionFashionItem {
-    /**
-     * 
-     * @type {string}
-     * @memberof AuctionFashionItem
-     */
-    'itemId'?: string;
-    /**
-     * 
-     * @type {FashionItemType}
-     * @memberof AuctionFashionItem
-     */
-    'type'?: FashionItemType;
-    /**
-     * 
-     * @type {number}
-     * @memberof AuctionFashionItem
-     */
-    'sellingPrice'?: number | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof AuctionFashionItem
-     */
-    'name'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof AuctionFashionItem
-     */
-    'note'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof AuctionFashionItem
-     */
-    'description'?: string | null;
-    /**
-     * 
-     * @type {number}
-     * @memberof AuctionFashionItem
-     */
-    'condition'?: number;
-    /**
-     * 
-     * @type {ConsignSaleDetail}
-     * @memberof AuctionFashionItem
-     */
-    'consignSaleDetail'?: ConsignSaleDetail;
-    /**
-     * 
-     * @type {Shop}
-     * @memberof AuctionFashionItem
-     */
-    'shop'?: Shop;
-    /**
-     * 
-     * @type {string}
-     * @memberof AuctionFashionItem
-     */
-    'shopId'?: string;
-    /**
-     * 
-     * @type {Category}
-     * @memberof AuctionFashionItem
-     */
-    'category'?: Category;
-    /**
-     * 
-     * @type {string}
-     * @memberof AuctionFashionItem
-     */
-    'categoryId'?: string | null;
-    /**
-     * 
-     * @type {FashionItemStatus}
-     * @memberof AuctionFashionItem
-     */
-    'status'?: FashionItemStatus;
-    /**
-     * 
-     * @type {SizeType}
-     * @memberof AuctionFashionItem
-     */
-    'size'?: SizeType;
-    /**
-     * 
-     * @type {string}
-     * @memberof AuctionFashionItem
-     */
-    'color'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof AuctionFashionItem
-     */
-    'brand'?: string | null;
-    /**
-     * 
-     * @type {GenderType}
-     * @memberof AuctionFashionItem
-     */
-    'gender'?: GenderType;
-    /**
-     * 
-     * @type {Array<Image>}
-     * @memberof AuctionFashionItem
-     */
-    'images'?: Array<Image> | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof AuctionFashionItem
-     */
-    'createdDate'?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof AuctionFashionItem
-     */
-    'duration'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof AuctionFashionItem
-     */
-    'initialPrice'?: number;
-}
-
-
-/**
- * 
- * @export
  * @interface AuctionItemCategory
  */
 export interface AuctionItemCategory {
@@ -1006,10 +808,10 @@ export interface AuctionItemDetailResponse {
     'status'?: FashionItemStatus;
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof AuctionItemDetailResponse
      */
-    'condition'?: number;
+    'condition'?: string | null;
     /**
      * 
      * @type {string}
@@ -1045,7 +847,7 @@ export interface AuctionItemDetailResponse {
      * @type {number}
      * @memberof AuctionItemDetailResponse
      */
-    'initialPrice'?: number;
+    'initialPrice'?: number | null;
     /**
      * 
      * @type {ShopAuctionDetailResponse}
@@ -1054,10 +856,10 @@ export interface AuctionItemDetailResponse {
     'shop'?: ShopAuctionDetailResponse;
     /**
      * 
-     * @type {Array<AuctionItemImage>}
+     * @type {Array<FashionItemImage>}
      * @memberof AuctionItemDetailResponse
      */
-    'images'?: Array<AuctionItemImage> | null;
+    'images'?: Array<FashionItemImage> | null;
     /**
      * 
      * @type {AuctionItemCategory}
@@ -1067,25 +869,6 @@ export interface AuctionItemDetailResponse {
 }
 
 
-/**
- * 
- * @export
- * @interface AuctionItemImage
- */
-export interface AuctionItemImage {
-    /**
-     * 
-     * @type {string}
-     * @memberof AuctionItemImage
-     */
-    'imageId'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof AuctionItemImage
-     */
-    'imageUrl'?: string | null;
-}
 /**
  * 
  * @export
@@ -1530,10 +1313,10 @@ export interface Category {
     'parent'?: Category;
     /**
      * 
-     * @type {Array<FashionItem>}
+     * @type {Array<MasterFashionItem>}
      * @memberof Category
      */
-    'fashionItems'?: Array<FashionItem> | null;
+    'masterFashionItems'?: Array<MasterFashionItem> | null;
     /**
      * 
      * @type {CategoryStatus}
@@ -1760,31 +1543,6 @@ export interface CompleteWithdrawResponse {
 /**
  * 
  * @export
- * @interface ConfirmReceivedConsignRequest
- */
-export interface ConfirmReceivedConsignRequest {
-    /**
-     * 
-     * @type {number}
-     * @memberof ConfirmReceivedConsignRequest
-     */
-    'sellingPrice'?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ConfirmReceivedConsignRequest
-     */
-    'categoryId'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ConfirmReceivedConsignRequest
-     */
-    'description'?: string | null;
-}
-/**
- * 
- * @export
  * @interface ConsignSale
  */
 export interface ConsignSale {
@@ -1943,22 +1701,22 @@ export interface ConsignSaleDetail {
     'consignSaleId'?: string;
     /**
      * 
-     * @type {string}
-     * @memberof ConsignSaleDetail
-     */
-    'fashionItemId'?: string;
-    /**
-     * 
      * @type {number}
      * @memberof ConsignSaleDetail
      */
     'dealPrice'?: number;
     /**
      * 
+     * @type {string}
+     * @memberof ConsignSaleDetail
+     */
+    'note'?: string | null;
+    /**
+     * 
      * @type {number}
      * @memberof ConsignSaleDetail
      */
-    'confirmedPrice'?: number;
+    'confirmedPrice'?: number | null;
     /**
      * 
      * @type {ConsignSale}
@@ -1967,16 +1725,22 @@ export interface ConsignSaleDetail {
     'consignSale'?: ConsignSale;
     /**
      * 
-     * @type {FashionItem}
-     * @memberof ConsignSaleDetail
-     */
-    'fashionItem'?: FashionItem;
-    /**
-     * 
      * @type {string}
      * @memberof ConsignSaleDetail
      */
     'createdDate'?: string;
+    /**
+     * 
+     * @type {IndividualFashionItem}
+     * @memberof ConsignSaleDetail
+     */
+    'individualFashionItem'?: IndividualFashionItem;
+    /**
+     * 
+     * @type {Array<Image>}
+     * @memberof ConsignSaleDetail
+     */
+    'images'?: Array<Image> | null;
 }
 /**
  * 
@@ -2038,7 +1802,7 @@ export interface ConsignSaleDetailResponse2 {
      * @type {string}
      * @memberof ConsignSaleDetailResponse2
      */
-    'fashionItemId'?: string;
+    'consignSaleId'?: string;
     /**
      * 
      * @type {number}
@@ -2056,7 +1820,7 @@ export interface ConsignSaleDetailResponse2 {
      * @type {string}
      * @memberof ConsignSaleDetailResponse2
      */
-    'itemName'?: string | null;
+    'note'?: string | null;
 }
 /**
  * 
@@ -2407,6 +2171,139 @@ export type ConsignSaleType = typeof ConsignSaleType[keyof typeof ConsignSaleTyp
 /**
  * 
  * @export
+ * @interface Coordinate
+ */
+export interface Coordinate {
+    /**
+     * 
+     * @type {number}
+     * @memberof Coordinate
+     */
+    'x'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof Coordinate
+     */
+    'y'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof Coordinate
+     */
+    'z'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof Coordinate
+     */
+    'm'?: number;
+    /**
+     * 
+     * @type {Coordinate}
+     * @memberof Coordinate
+     */
+    'coordinateValue'?: Coordinate;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Coordinate
+     */
+    'isValid'?: boolean;
+}
+/**
+ * 
+ * @export
+ * @interface CoordinateSequence
+ */
+export interface CoordinateSequence {
+    /**
+     * 
+     * @type {number}
+     * @memberof CoordinateSequence
+     */
+    'dimension'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof CoordinateSequence
+     */
+    'measures'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof CoordinateSequence
+     */
+    'spatial'?: number;
+    /**
+     * 
+     * @type {Ordinates}
+     * @memberof CoordinateSequence
+     */
+    'ordinates'?: Ordinates;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof CoordinateSequence
+     */
+    'hasZ'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof CoordinateSequence
+     */
+    'hasM'?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof CoordinateSequence
+     */
+    'zOrdinateIndex'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof CoordinateSequence
+     */
+    'mOrdinateIndex'?: number;
+    /**
+     * 
+     * @type {Coordinate}
+     * @memberof CoordinateSequence
+     */
+    'first'?: Coordinate;
+    /**
+     * 
+     * @type {Coordinate}
+     * @memberof CoordinateSequence
+     */
+    'last'?: Coordinate;
+    /**
+     * 
+     * @type {number}
+     * @memberof CoordinateSequence
+     */
+    'count'?: number;
+}
+
+
+/**
+ * 
+ * @export
+ * @interface CoordinateSequenceFactory
+ */
+export interface CoordinateSequenceFactory {
+    /**
+     * 
+     * @type {Ordinates}
+     * @memberof CoordinateSequenceFactory
+     */
+    'ordinates'?: Ordinates;
+}
+
+
+/**
+ * 
+ * @export
  * @interface CreateAuctionDepositRequest
  */
 export interface CreateAuctionDepositRequest {
@@ -2501,6 +2398,25 @@ export interface CreateCategoryRequest {
 /**
  * 
  * @export
+ * @interface CreateConsignDetailRequest
+ */
+export interface CreateConsignDetailRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateConsignDetailRequest
+     */
+    'note'?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof CreateConsignDetailRequest
+     */
+    'dealPrice'?: number;
+}
+/**
+ * 
+ * @export
  * @interface CreateConsignSaleByShopRequest
  */
 export interface CreateConsignSaleByShopRequest {
@@ -2551,6 +2467,24 @@ export interface CreateConsignSaleByShopRequest {
 export interface CreateConsignSaleRequest {
     /**
      * 
+     * @type {string}
+     * @memberof CreateConsignSaleRequest
+     */
+    'consignorName': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateConsignSaleRequest
+     */
+    'phone': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateConsignSaleRequest
+     */
+    'address': string;
+    /**
+     * 
      * @type {ConsignSaleType}
      * @memberof CreateConsignSaleRequest
      */
@@ -2563,10 +2497,10 @@ export interface CreateConsignSaleRequest {
     'shopId': string;
     /**
      * 
-     * @type {Array<AddFashionItemForConsignRequest>}
+     * @type {Array<CreateConsignDetailRequest>}
      * @memberof CreateConsignSaleRequest
      */
-    'fashionItemForConsigns': Array<AddFashionItemForConsignRequest>;
+    'consignDetailRequests': Array<CreateConsignDetailRequest>;
 }
 
 
@@ -2588,6 +2522,31 @@ export interface CreateFeedbackRequest {
      * @memberof CreateFeedbackRequest
      */
     'content': string;
+}
+/**
+ * 
+ * @export
+ * @interface CreateIndividualItemRequest
+ */
+export interface CreateIndividualItemRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateIndividualItemRequest
+     */
+    'note'?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof CreateIndividualItemRequest
+     */
+    'sellingPrice'?: number;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof CreateIndividualItemRequest
+     */
+    'images'?: Array<string> | null;
 }
 /**
  * 
@@ -2662,6 +2621,129 @@ export interface CreateInquiryResponse {
 /**
  * 
  * @export
+ * @interface CreateInquiryResponseResult
+ */
+export interface CreateInquiryResponseResult {
+    /**
+     * 
+     * @type {CreateInquiryResponse}
+     * @memberof CreateInquiryResponseResult
+     */
+    'data'?: CreateInquiryResponse;
+    /**
+     * 
+     * @type {ResultStatus}
+     * @memberof CreateInquiryResponseResult
+     */
+    'resultStatus'?: ResultStatus;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof CreateInquiryResponseResult
+     */
+    'messages'?: Array<string> | null;
+}
+
+
+/**
+ * 
+ * @export
+ * @interface CreateItemVariationRequest
+ */
+export interface CreateItemVariationRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateItemVariationRequest
+     */
+    'condition'?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof CreateItemVariationRequest
+     */
+    'price'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateItemVariationRequest
+     */
+    'color'?: string | null;
+    /**
+     * 
+     * @type {SizeType}
+     * @memberof CreateItemVariationRequest
+     */
+    'size'?: SizeType;
+    /**
+     * 
+     * @type {Array<CreateIndividualItemRequest>}
+     * @memberof CreateItemVariationRequest
+     */
+    'individualItems'?: Array<CreateIndividualItemRequest> | null;
+}
+
+
+/**
+ * 
+ * @export
+ * @interface CreateMasterItemRequest
+ */
+export interface CreateMasterItemRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateMasterItemRequest
+     */
+    'masterItemCode'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateMasterItemRequest
+     */
+    'name'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateMasterItemRequest
+     */
+    'brand'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateMasterItemRequest
+     */
+    'description'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateMasterItemRequest
+     */
+    'categoryId'?: string;
+    /**
+     * 
+     * @type {GenderType}
+     * @memberof CreateMasterItemRequest
+     */
+    'gender'?: GenderType;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof CreateMasterItemRequest
+     */
+    'images'?: Array<string> | null;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof CreateMasterItemRequest
+     */
+    'shopId'?: Array<string> | null;
+}
+
+
+/**
+ * 
+ * @export
  * @interface CreateOrderRequest
  */
 export interface CreateOrderRequest {
@@ -2726,6 +2808,92 @@ export interface CreateRefundRequest {
      * @memberof CreateRefundRequest
      */
     'refundPercentage'?: number;
+}
+/**
+ * 
+ * @export
+ * @interface CreateShopRequest
+ */
+export interface CreateShopRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateShopRequest
+     */
+    'phone': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateShopRequest
+     */
+    'address': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateShopRequest
+     */
+    'wardCode': string;
+    /**
+     * 
+     * @type {number}
+     * @memberof CreateShopRequest
+     */
+    'districtId': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof CreateShopRequest
+     */
+    'provinceId': number;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateShopRequest
+     */
+    'staffId': string;
+}
+/**
+ * 
+ * @export
+ * @interface CreateShopResponse
+ */
+export interface CreateShopResponse {
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateShopResponse
+     */
+    'shopId'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateShopResponse
+     */
+    'shopCode'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateShopResponse
+     */
+    'address'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateShopResponse
+     */
+    'phone'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateShopResponse
+     */
+    'name'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateShopResponse
+     */
+    'staffId'?: string;
 }
 /**
  * 
@@ -2867,6 +3035,33 @@ export interface CreateWithdrawResponse {
      * @memberof CreateWithdrawResponse
      */
     'amountLeft'?: number;
+}
+
+
+/**
+ * 
+ * @export
+ * @interface CreateWithdrawResponseResult
+ */
+export interface CreateWithdrawResponseResult {
+    /**
+     * 
+     * @type {CreateWithdrawResponse}
+     * @memberof CreateWithdrawResponseResult
+     */
+    'data'?: CreateWithdrawResponse;
+    /**
+     * 
+     * @type {ResultStatus}
+     * @memberof CreateWithdrawResponseResult
+     */
+    'resultStatus'?: ResultStatus;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof CreateWithdrawResponseResult
+     */
+    'messages'?: Array<string> | null;
 }
 
 
@@ -3044,124 +3239,186 @@ export interface DeliveryResponseResult {
 /**
  * 
  * @export
- * @interface FashionItem
+ * @enum {string}
  */
-export interface FashionItem {
+
+export const Dimension = {
+    Point: 'Point',
+    Curve: 'Curve',
+    Surface: 'Surface',
+    Collapse: 'Collapse',
+    Dontcare: 'Dontcare',
+    True: 'True',
+    False: 'False'
+} as const;
+
+export type Dimension = typeof Dimension[keyof typeof Dimension];
+
+
+/**
+ * 
+ * @export
+ * @interface Envelope
+ */
+export interface Envelope {
     /**
      * 
-     * @type {string}
-     * @memberof FashionItem
+     * @type {boolean}
+     * @memberof Envelope
      */
-    'itemId'?: string;
-    /**
-     * 
-     * @type {FashionItemType}
-     * @memberof FashionItem
-     */
-    'type'?: FashionItemType;
-    /**
-     * 
-     * @type {number}
-     * @memberof FashionItem
-     */
-    'sellingPrice'?: number | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof FashionItem
-     */
-    'name'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof FashionItem
-     */
-    'note'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof FashionItem
-     */
-    'description'?: string | null;
+    'isNull'?: boolean;
     /**
      * 
      * @type {number}
-     * @memberof FashionItem
+     * @memberof Envelope
      */
-    'condition'?: number;
+    'width'?: number;
     /**
      * 
-     * @type {ConsignSaleDetail}
-     * @memberof FashionItem
+     * @type {number}
+     * @memberof Envelope
      */
-    'consignSaleDetail'?: ConsignSaleDetail;
+    'height'?: number;
     /**
      * 
-     * @type {Shop}
-     * @memberof FashionItem
+     * @type {number}
+     * @memberof Envelope
      */
-    'shop'?: Shop;
+    'diameter'?: number;
     /**
      * 
-     * @type {string}
-     * @memberof FashionItem
+     * @type {number}
+     * @memberof Envelope
      */
-    'shopId'?: string;
+    'minX'?: number;
     /**
      * 
-     * @type {Category}
-     * @memberof FashionItem
+     * @type {number}
+     * @memberof Envelope
      */
-    'category'?: Category;
+    'maxX'?: number;
     /**
      * 
-     * @type {string}
-     * @memberof FashionItem
+     * @type {number}
+     * @memberof Envelope
      */
-    'categoryId'?: string | null;
+    'minY'?: number;
     /**
      * 
-     * @type {FashionItemStatus}
-     * @memberof FashionItem
+     * @type {number}
+     * @memberof Envelope
      */
-    'status'?: FashionItemStatus;
+    'maxY'?: number;
     /**
      * 
-     * @type {SizeType}
-     * @memberof FashionItem
+     * @type {number}
+     * @memberof Envelope
      */
-    'size'?: SizeType;
+    'area'?: number;
     /**
      * 
-     * @type {string}
-     * @memberof FashionItem
+     * @type {number}
+     * @memberof Envelope
      */
-    'color'?: string | null;
+    'minExtent'?: number;
     /**
      * 
-     * @type {string}
-     * @memberof FashionItem
+     * @type {number}
+     * @memberof Envelope
      */
-    'brand'?: string | null;
+    'maxExtent'?: number;
     /**
      * 
-     * @type {GenderType}
-     * @memberof FashionItem
+     * @type {Coordinate}
+     * @memberof Envelope
      */
-    'gender'?: GenderType;
-    /**
-     * 
-     * @type {Array<Image>}
-     * @memberof FashionItem
-     */
-    'images'?: Array<Image> | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof FashionItem
-     */
-    'createdDate'?: string;
+    'centre'?: Coordinate;
 }
+/**
+ * 
+ * @export
+ * @enum {string}
+ */
+
+export const ErrorCode = {
+    UnverifiedAccount: 'UnverifiedAccount',
+    AuctionClosed: 'AuctionClosed',
+    BankAccountNotSet: 'BankAccountNotSet',
+    ScheduledTimeOverlapped: 'ScheduledTimeOverlapped',
+    AuctionNotPending: 'AuctionNotPending',
+    WithdrawNotFound: 'WithdrawNotFound',
+    DuplicateEmail: 'DuplicateEmail',
+    DuplicatePhoneNumber: 'DuplicatePhoneNumber',
+    UnauthorizedPayment: 'UnauthorizedPayment',
+    MismatchPaymentMethod: 'MismatchPaymentMethod',
+    PointPackageNotFound: 'PointPackageNotFound',
+    ExternalServiceError: 'ExternalServiceError',
+    Unauthorized: 'Unauthorized',
+    DeserializationError: 'DeserializationError',
+    UnknownError: 'UnknownError',
+    NetworkError: 'NetworkError',
+    ServerError: 'ServerError',
+    InvalidInput: 'InvalidInput',
+    NotFound: 'NotFound'
+} as const;
+
+export type ErrorCode = typeof ErrorCode[keyof typeof ErrorCode];
+
+
+/**
+ * 
+ * @export
+ * @interface ErrorResponse
+ */
+export interface ErrorResponse {
+    /**
+     * 
+     * @type {ErrorType}
+     * @memberof ErrorResponse
+     */
+    'type'?: ErrorType;
+    /**
+     * 
+     * @type {string}
+     * @memberof ErrorResponse
+     */
+    'message'?: string | null;
+    /**
+     * 
+     * @type {HttpStatusCode}
+     * @memberof ErrorResponse
+     */
+    'statusCode'?: HttpStatusCode;
+    /**
+     * 
+     * @type {ErrorCode}
+     * @memberof ErrorResponse
+     */
+    'errorCode'?: ErrorCode;
+}
+
+
+/**
+ * 
+ * @export
+ * @enum {string}
+ */
+
+export const ErrorType = {
+    ApiError: 'ApiError',
+    InvalidRequestError: 'InvalidRequestError',
+    AuctionError: 'AuctionError',
+    ConsignError: 'ConsignError',
+    FashionItemError: 'FashionItemError',
+    WithdrawError: 'WithdrawError',
+    PointPackageError: 'PointPackageError',
+    TransactionError: 'TransactionError',
+    OrderError: 'OrderError',
+    PaymentError: 'PaymentError',
+    AccountError: 'AccountError'
+} as const;
+
+export type ErrorType = typeof ErrorType[keyof typeof ErrorType];
 
 
 /**
@@ -3259,6 +3516,12 @@ export interface FashionItemDetailResponse {
     'type'?: FashionItemType;
     /**
      * 
+     * @type {string}
+     * @memberof FashionItemDetailResponse
+     */
+    'itemCode'?: string | null;
+    /**
+     * 
      * @type {number}
      * @memberof FashionItemDetailResponse
      */
@@ -3283,10 +3546,10 @@ export interface FashionItemDetailResponse {
     'description'?: string | null;
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof FashionItemDetailResponse
      */
-    'condition'?: number;
+    'condition'?: string | null;
     /**
      * 
      * @type {FashionItemStatus}
@@ -3517,67 +3780,206 @@ export interface FashionItemDetailResponseResult {
 /**
  * 
  * @export
- * @interface FashionItemOrderDetailResponse
+ * @interface FashionItemImage
  */
-export interface FashionItemOrderDetailResponse {
+export interface FashionItemImage {
     /**
      * 
      * @type {string}
-     * @memberof FashionItemOrderDetailResponse
+     * @memberof FashionItemImage
      */
-    'orderDetailId'?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof FashionItemOrderDetailResponse
-     */
-    'unitPrice'?: number;
+    'imageId'?: string;
     /**
      * 
      * @type {string}
-     * @memberof FashionItemOrderDetailResponse
+     * @memberof FashionItemImage
      */
-    'orderId'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof FashionItemOrderDetailResponse
-     */
-    'refundExpirationDate'?: string | null;
-    /**
-     * 
-     * @type {FashionItem}
-     * @memberof FashionItemOrderDetailResponse
-     */
-    'fashionItemDetail'?: FashionItem;
+    'imageUrl'?: string | null;
 }
 /**
  * 
  * @export
- * @interface FashionItemOrderDetailResponseResult
+ * @interface FashionItemList
  */
-export interface FashionItemOrderDetailResponseResult {
+export interface FashionItemList {
     /**
      * 
-     * @type {FashionItemOrderDetailResponse}
-     * @memberof FashionItemOrderDetailResponseResult
+     * @type {string}
+     * @memberof FashionItemList
      */
-    'data'?: FashionItemOrderDetailResponse;
+    'itemId'?: string;
     /**
      * 
-     * @type {ResultStatus}
-     * @memberof FashionItemOrderDetailResponseResult
+     * @type {string}
+     * @memberof FashionItemList
      */
-    'resultStatus'?: ResultStatus;
+    'masterItemId'?: string;
     /**
      * 
-     * @type {Array<string>}
-     * @memberof FashionItemOrderDetailResponseResult
+     * @type {string}
+     * @memberof FashionItemList
      */
-    'messages'?: Array<string> | null;
+    'variationId'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof FashionItemList
+     */
+    'shopId'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof FashionItemList
+     */
+    'brand'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof FashionItemList
+     */
+    'name'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof FashionItemList
+     */
+    'itemCode'?: string | null;
+    /**
+     * 
+     * @type {GenderType}
+     * @memberof FashionItemList
+     */
+    'gender'?: GenderType;
+    /**
+     * 
+     * @type {string}
+     * @memberof FashionItemList
+     */
+    'color'?: string | null;
+    /**
+     * 
+     * @type {SizeType}
+     * @memberof FashionItemList
+     */
+    'size'?: SizeType;
+    /**
+     * 
+     * @type {string}
+     * @memberof FashionItemList
+     */
+    'condition'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof FashionItemList
+     */
+    'note'?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof FashionItemList
+     */
+    'sellingPrice'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof FashionItemList
+     */
+    'image'?: string | null;
+    /**
+     * 
+     * @type {FashionItemStatus}
+     * @memberof FashionItemList
+     */
+    'status'?: FashionItemStatus;
+    /**
+     * 
+     * @type {FashionItemType}
+     * @memberof FashionItemList
+     */
+    'type'?: FashionItemType;
+    /**
+     * 
+     * @type {string}
+     * @memberof FashionItemList
+     */
+    'categoryId'?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof FashionItemList
+     */
+    'isOrderedYet'?: boolean;
 }
 
 
+/**
+ * 
+ * @export
+ * @interface FashionItemListPaginationResponse
+ */
+export interface FashionItemListPaginationResponse {
+    /**
+     * 
+     * @type {number}
+     * @memberof FashionItemListPaginationResponse
+     */
+    'pageNumber'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof FashionItemListPaginationResponse
+     */
+    'pageSize'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof FashionItemListPaginationResponse
+     */
+    'searchTerm'?: string | null;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof FashionItemListPaginationResponse
+     */
+    'filters'?: Array<string> | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof FashionItemListPaginationResponse
+     */
+    'orderBy'?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof FashionItemListPaginationResponse
+     */
+    'totalCount'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof FashionItemListPaginationResponse
+     */
+    'totalPages'?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof FashionItemListPaginationResponse
+     */
+    'hasNext'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof FashionItemListPaginationResponse
+     */
+    'hasPrevious'?: boolean;
+    /**
+     * 
+     * @type {Array<FashionItemList>}
+     * @memberof FashionItemListPaginationResponse
+     */
+    'items'?: Array<FashionItemList> | null;
+}
 /**
  * 
  * @export
@@ -3623,6 +4025,75 @@ export type FashionItemType = typeof FashionItemType[keyof typeof FashionItemTyp
 /**
  * 
  * @export
+ * @interface FashionItemVariation
+ */
+export interface FashionItemVariation {
+    /**
+     * 
+     * @type {string}
+     * @memberof FashionItemVariation
+     */
+    'variationId'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof FashionItemVariation
+     */
+    'masterItemId'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof FashionItemVariation
+     */
+    'condition'?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof FashionItemVariation
+     */
+    'price'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof FashionItemVariation
+     */
+    'color'?: string | null;
+    /**
+     * 
+     * @type {SizeType}
+     * @memberof FashionItemVariation
+     */
+    'size'?: SizeType;
+    /**
+     * 
+     * @type {number}
+     * @memberof FashionItemVariation
+     */
+    'stockCount'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof FashionItemVariation
+     */
+    'createdDate'?: string;
+    /**
+     * 
+     * @type {MasterFashionItem}
+     * @memberof FashionItemVariation
+     */
+    'masterItem'?: MasterFashionItem;
+    /**
+     * 
+     * @type {Array<IndividualFashionItem>}
+     * @memberof FashionItemVariation
+     */
+    'individualItems'?: Array<IndividualFashionItem> | null;
+}
+
+
+/**
+ * 
+ * @export
  * @interface Feedback
  */
 export interface Feedback {
@@ -3660,6 +4131,359 @@ export interface Feedback {
 /**
  * 
  * @export
+ * @interface GHNDistrictResponse
+ */
+export interface GHNDistrictResponse {
+    /**
+     * 
+     * @type {number}
+     * @memberof GHNDistrictResponse
+     */
+    'districtId'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof GHNDistrictResponse
+     */
+    'provinceId'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof GHNDistrictResponse
+     */
+    'districtName'?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof GHNDistrictResponse
+     */
+    'supportType'?: number;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof GHNDistrictResponse
+     */
+    'nameExtension'?: Array<string> | null;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof GHNDistrictResponse
+     */
+    'canUpdateCOD'?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof GHNDistrictResponse
+     */
+    'status'?: number;
+}
+/**
+ * 
+ * @export
+ * @interface GHNDistrictResponseListGHNApiResponse
+ */
+export interface GHNDistrictResponseListGHNApiResponse {
+    /**
+     * 
+     * @type {string}
+     * @memberof GHNDistrictResponseListGHNApiResponse
+     */
+    'message'?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof GHNDistrictResponseListGHNApiResponse
+     */
+    'code'?: number;
+    /**
+     * 
+     * @type {Array<GHNDistrictResponse>}
+     * @memberof GHNDistrictResponseListGHNApiResponse
+     */
+    'data'?: Array<GHNDistrictResponse> | null;
+}
+/**
+ * 
+ * @export
+ * @interface GHNProvinceResponse
+ */
+export interface GHNProvinceResponse {
+    /**
+     * 
+     * @type {number}
+     * @memberof GHNProvinceResponse
+     */
+    'provinceId'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof GHNProvinceResponse
+     */
+    'provinceName'?: string | null;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof GHNProvinceResponse
+     */
+    'nameExtension'?: Array<string> | null;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof GHNProvinceResponse
+     */
+    'canUpdateCod'?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof GHNProvinceResponse
+     */
+    'status'?: number;
+}
+/**
+ * 
+ * @export
+ * @interface GHNProvinceResponseListGHNApiResponse
+ */
+export interface GHNProvinceResponseListGHNApiResponse {
+    /**
+     * 
+     * @type {string}
+     * @memberof GHNProvinceResponseListGHNApiResponse
+     */
+    'message'?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof GHNProvinceResponseListGHNApiResponse
+     */
+    'code'?: number;
+    /**
+     * 
+     * @type {Array<GHNProvinceResponse>}
+     * @memberof GHNProvinceResponseListGHNApiResponse
+     */
+    'data'?: Array<GHNProvinceResponse> | null;
+}
+/**
+ * 
+ * @export
+ * @interface GHNShop
+ */
+export interface GHNShop {
+    /**
+     * 
+     * @type {number}
+     * @memberof GHNShop
+     */
+    '_id'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof GHNShop
+     */
+    'name'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof GHNShop
+     */
+    'phone'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof GHNShop
+     */
+    'address'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof GHNShop
+     */
+    'ward_code'?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof GHNShop
+     */
+    'district_id'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof GHNShop
+     */
+    'status'?: number;
+}
+/**
+ * 
+ * @export
+ * @interface GHNShopCreateRequest
+ */
+export interface GHNShopCreateRequest {
+    /**
+     * 
+     * @type {number}
+     * @memberof GHNShopCreateRequest
+     */
+    'district_id': number;
+    /**
+     * 
+     * @type {string}
+     * @memberof GHNShopCreateRequest
+     */
+    'ward_code': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof GHNShopCreateRequest
+     */
+    'phone': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof GHNShopCreateRequest
+     */
+    'address': string;
+}
+/**
+ * 
+ * @export
+ * @interface GHNShopCreateResponse
+ */
+export interface GHNShopCreateResponse {
+    /**
+     * 
+     * @type {number}
+     * @memberof GHNShopCreateResponse
+     */
+    'shop_id'?: number;
+}
+/**
+ * 
+ * @export
+ * @interface GHNShopCreateResponseGHNApiResponse
+ */
+export interface GHNShopCreateResponseGHNApiResponse {
+    /**
+     * 
+     * @type {string}
+     * @memberof GHNShopCreateResponseGHNApiResponse
+     */
+    'message'?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof GHNShopCreateResponseGHNApiResponse
+     */
+    'code'?: number;
+    /**
+     * 
+     * @type {GHNShopCreateResponse}
+     * @memberof GHNShopCreateResponseGHNApiResponse
+     */
+    'data'?: GHNShopCreateResponse;
+}
+/**
+ * 
+ * @export
+ * @interface GHNShopListGHNApiResponse
+ */
+export interface GHNShopListGHNApiResponse {
+    /**
+     * 
+     * @type {string}
+     * @memberof GHNShopListGHNApiResponse
+     */
+    'message'?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof GHNShopListGHNApiResponse
+     */
+    'code'?: number;
+    /**
+     * 
+     * @type {Array<GHNShop>}
+     * @memberof GHNShopListGHNApiResponse
+     */
+    'data'?: Array<GHNShop> | null;
+}
+/**
+ * 
+ * @export
+ * @interface GHNWardResponse
+ */
+export interface GHNWardResponse {
+    /**
+     * 
+     * @type {number}
+     * @memberof GHNWardResponse
+     */
+    'districtId'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof GHNWardResponse
+     */
+    'wardCode'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof GHNWardResponse
+     */
+    'wardName'?: string | null;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof GHNWardResponse
+     */
+    'nameExtension'?: Array<string> | null;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof GHNWardResponse
+     */
+    'canUpdateCod'?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof GHNWardResponse
+     */
+    'supportType'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof GHNWardResponse
+     */
+    'status'?: number;
+}
+/**
+ * 
+ * @export
+ * @interface GHNWardResponseListGHNApiResponse
+ */
+export interface GHNWardResponseListGHNApiResponse {
+    /**
+     * 
+     * @type {string}
+     * @memberof GHNWardResponseListGHNApiResponse
+     */
+    'message'?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof GHNWardResponseListGHNApiResponse
+     */
+    'code'?: number;
+    /**
+     * 
+     * @type {Array<GHNWardResponse>}
+     * @memberof GHNWardResponseListGHNApiResponse
+     */
+    'data'?: Array<GHNWardResponse> | null;
+}
+/**
+ * 
+ * @export
  * @enum {string}
  */
 
@@ -3671,6 +4495,190 @@ export const GenderType = {
 export type GenderType = typeof GenderType[keyof typeof GenderType];
 
 
+/**
+ * 
+ * @export
+ * @interface Geometry
+ */
+export interface Geometry {
+    /**
+     * 
+     * @type {GeometryFactory}
+     * @memberof Geometry
+     */
+    'factory'?: GeometryFactory;
+    /**
+     * 
+     * @type {any}
+     * @memberof Geometry
+     */
+    'userData'?: any | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof Geometry
+     */
+    'srid'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof Geometry
+     */
+    'geometryType'?: string | null;
+    /**
+     * 
+     * @type {OgcGeometryType}
+     * @memberof Geometry
+     */
+    'ogcGeometryType'?: OgcGeometryType;
+    /**
+     * 
+     * @type {PrecisionModel}
+     * @memberof Geometry
+     */
+    'precisionModel'?: PrecisionModel;
+    /**
+     * 
+     * @type {Coordinate}
+     * @memberof Geometry
+     */
+    'coordinate'?: Coordinate;
+    /**
+     * 
+     * @type {Array<Coordinate>}
+     * @memberof Geometry
+     */
+    'coordinates'?: Array<Coordinate> | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof Geometry
+     */
+    'numPoints'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof Geometry
+     */
+    'numGeometries'?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Geometry
+     */
+    'isSimple'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Geometry
+     */
+    'isValid'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Geometry
+     */
+    'isEmpty'?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof Geometry
+     */
+    'area'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof Geometry
+     */
+    'length'?: number;
+    /**
+     * 
+     * @type {Point}
+     * @memberof Geometry
+     */
+    'centroid'?: Point;
+    /**
+     * 
+     * @type {Point}
+     * @memberof Geometry
+     */
+    'interiorPoint'?: Point;
+    /**
+     * 
+     * @type {Point}
+     * @memberof Geometry
+     */
+    'pointOnSurface'?: Point;
+    /**
+     * 
+     * @type {Dimension}
+     * @memberof Geometry
+     */
+    'dimension'?: Dimension;
+    /**
+     * 
+     * @type {Geometry}
+     * @memberof Geometry
+     */
+    'boundary'?: Geometry;
+    /**
+     * 
+     * @type {Dimension}
+     * @memberof Geometry
+     */
+    'boundaryDimension'?: Dimension;
+    /**
+     * 
+     * @type {Geometry}
+     * @memberof Geometry
+     */
+    'envelope'?: Geometry;
+    /**
+     * 
+     * @type {Envelope}
+     * @memberof Geometry
+     */
+    'envelopeInternal'?: Envelope;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Geometry
+     */
+    'isRectangle'?: boolean;
+}
+
+
+/**
+ * 
+ * @export
+ * @interface GeometryFactory
+ */
+export interface GeometryFactory {
+    /**
+     * 
+     * @type {PrecisionModel}
+     * @memberof GeometryFactory
+     */
+    'precisionModel'?: PrecisionModel;
+    /**
+     * 
+     * @type {CoordinateSequenceFactory}
+     * @memberof GeometryFactory
+     */
+    'coordinateSequenceFactory'?: CoordinateSequenceFactory;
+    /**
+     * 
+     * @type {number}
+     * @memberof GeometryFactory
+     */
+    'srid'?: number;
+    /**
+     * 
+     * @type {NtsGeometryServices}
+     * @memberof GeometryFactory
+     */
+    'geometryServices'?: NtsGeometryServices;
+}
 /**
  * 
  * @export
@@ -3789,6 +4797,33 @@ export interface GetTransactionsResponsePaginationResponse {
      */
     'items'?: Array<GetTransactionsResponse> | null;
 }
+/**
+ * 
+ * @export
+ * @interface GetTransactionsResponsePaginationResponseResult
+ */
+export interface GetTransactionsResponsePaginationResponseResult {
+    /**
+     * 
+     * @type {GetTransactionsResponsePaginationResponse}
+     * @memberof GetTransactionsResponsePaginationResponseResult
+     */
+    'data'?: GetTransactionsResponsePaginationResponse;
+    /**
+     * 
+     * @type {ResultStatus}
+     * @memberof GetTransactionsResponsePaginationResponseResult
+     */
+    'resultStatus'?: ResultStatus;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof GetTransactionsResponsePaginationResponseResult
+     */
+    'messages'?: Array<string> | null;
+}
+
+
 /**
  * 
  * @export
@@ -3916,6 +4951,33 @@ export interface GetWithdrawsResponsePaginationResponse {
 /**
  * 
  * @export
+ * @interface GetWithdrawsResponsePaginationResponseResult
+ */
+export interface GetWithdrawsResponsePaginationResponseResult {
+    /**
+     * 
+     * @type {GetWithdrawsResponsePaginationResponse}
+     * @memberof GetWithdrawsResponsePaginationResponseResult
+     */
+    'data'?: GetWithdrawsResponsePaginationResponse;
+    /**
+     * 
+     * @type {ResultStatus}
+     * @memberof GetWithdrawsResponsePaginationResponseResult
+     */
+    'resultStatus'?: ResultStatus;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof GetWithdrawsResponsePaginationResponseResult
+     */
+    'messages'?: Array<string> | null;
+}
+
+
+/**
+ * 
+ * @export
  * @interface HasMemberPlacedDepositResult
  */
 export interface HasMemberPlacedDepositResult {
@@ -3941,6 +5003,79 @@ export interface HasMemberPlacedDepositResult {
 /**
  * 
  * @export
+ * @enum {string}
+ */
+
+export const HttpStatusCode = {
+    Continue: 'Continue',
+    SwitchingProtocols: 'SwitchingProtocols',
+    Processing: 'Processing',
+    EarlyHints: 'EarlyHints',
+    Ok: 'OK',
+    Created: 'Created',
+    Accepted: 'Accepted',
+    NonAuthoritativeInformation: 'NonAuthoritativeInformation',
+    NoContent: 'NoContent',
+    ResetContent: 'ResetContent',
+    PartialContent: 'PartialContent',
+    MultiStatus: 'MultiStatus',
+    AlreadyReported: 'AlreadyReported',
+    ImUsed: 'IMUsed',
+    MultipleChoices: 'MultipleChoices',
+    MovedPermanently: 'MovedPermanently',
+    Found: 'Found',
+    SeeOther: 'SeeOther',
+    NotModified: 'NotModified',
+    UseProxy: 'UseProxy',
+    Unused: 'Unused',
+    TemporaryRedirect: 'TemporaryRedirect',
+    PermanentRedirect: 'PermanentRedirect',
+    BadRequest: 'BadRequest',
+    Unauthorized: 'Unauthorized',
+    PaymentRequired: 'PaymentRequired',
+    Forbidden: 'Forbidden',
+    NotFound: 'NotFound',
+    MethodNotAllowed: 'MethodNotAllowed',
+    NotAcceptable: 'NotAcceptable',
+    ProxyAuthenticationRequired: 'ProxyAuthenticationRequired',
+    RequestTimeout: 'RequestTimeout',
+    Conflict: 'Conflict',
+    Gone: 'Gone',
+    LengthRequired: 'LengthRequired',
+    PreconditionFailed: 'PreconditionFailed',
+    RequestEntityTooLarge: 'RequestEntityTooLarge',
+    RequestUriTooLong: 'RequestUriTooLong',
+    UnsupportedMediaType: 'UnsupportedMediaType',
+    RequestedRangeNotSatisfiable: 'RequestedRangeNotSatisfiable',
+    ExpectationFailed: 'ExpectationFailed',
+    MisdirectedRequest: 'MisdirectedRequest',
+    UnprocessableEntity: 'UnprocessableEntity',
+    Locked: 'Locked',
+    FailedDependency: 'FailedDependency',
+    UpgradeRequired: 'UpgradeRequired',
+    PreconditionRequired: 'PreconditionRequired',
+    TooManyRequests: 'TooManyRequests',
+    RequestHeaderFieldsTooLarge: 'RequestHeaderFieldsTooLarge',
+    UnavailableForLegalReasons: 'UnavailableForLegalReasons',
+    InternalServerError: 'InternalServerError',
+    NotImplemented: 'NotImplemented',
+    BadGateway: 'BadGateway',
+    ServiceUnavailable: 'ServiceUnavailable',
+    GatewayTimeout: 'GatewayTimeout',
+    HttpVersionNotSupported: 'HttpVersionNotSupported',
+    VariantAlsoNegotiates: 'VariantAlsoNegotiates',
+    InsufficientStorage: 'InsufficientStorage',
+    LoopDetected: 'LoopDetected',
+    NotExtended: 'NotExtended',
+    NetworkAuthenticationRequired: 'NetworkAuthenticationRequired'
+} as const;
+
+export type HttpStatusCode = typeof HttpStatusCode[keyof typeof HttpStatusCode];
+
+
+/**
+ * 
+ * @export
  * @interface Image
  */
 export interface Image {
@@ -3958,16 +5093,28 @@ export interface Image {
     'url'?: string | null;
     /**
      * 
-     * @type {FashionItem}
+     * @type {IndividualFashionItem}
      * @memberof Image
      */
-    'fashionItem'?: FashionItem;
+    'individualFashionItem'?: IndividualFashionItem;
     /**
      * 
      * @type {string}
      * @memberof Image
      */
-    'fashionItemId'?: string;
+    'individualFashionItemId'?: string | null;
+    /**
+     * 
+     * @type {MasterFashionItem}
+     * @memberof Image
+     */
+    'masterFashionItem'?: MasterFashionItem;
+    /**
+     * 
+     * @type {string}
+     * @memberof Image
+     */
+    'masterFashionItemId'?: string | null;
     /**
      * 
      * @type {Refund}
@@ -3986,6 +5133,419 @@ export interface Image {
      * @memberof Image
      */
     'createdDate'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface IndividualAuctionFashionItem
+ */
+export interface IndividualAuctionFashionItem {
+    /**
+     * 
+     * @type {string}
+     * @memberof IndividualAuctionFashionItem
+     */
+    'itemId'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof IndividualAuctionFashionItem
+     */
+    'itemCode'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof IndividualAuctionFashionItem
+     */
+    'variationId'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof IndividualAuctionFashionItem
+     */
+    'note'?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof IndividualAuctionFashionItem
+     */
+    'sellingPrice'?: number | null;
+    /**
+     * 
+     * @type {FashionItemStatus}
+     * @memberof IndividualAuctionFashionItem
+     */
+    'status'?: FashionItemStatus;
+    /**
+     * 
+     * @type {FashionItemType}
+     * @memberof IndividualAuctionFashionItem
+     */
+    'type'?: FashionItemType;
+    /**
+     * 
+     * @type {FashionItemVariation}
+     * @memberof IndividualAuctionFashionItem
+     */
+    'variation'?: FashionItemVariation;
+    /**
+     * 
+     * @type {ConsignSaleDetail}
+     * @memberof IndividualAuctionFashionItem
+     */
+    'consignSaleDetail'?: ConsignSaleDetail;
+    /**
+     * 
+     * @type {string}
+     * @memberof IndividualAuctionFashionItem
+     */
+    'consignSaleDetailId'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof IndividualAuctionFashionItem
+     */
+    'createdDate'?: string;
+    /**
+     * 
+     * @type {Array<Image>}
+     * @memberof IndividualAuctionFashionItem
+     */
+    'images'?: Array<Image> | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof IndividualAuctionFashionItem
+     */
+    'initialPrice'?: number | null;
+    /**
+     * 
+     * @type {Array<Auction>}
+     * @memberof IndividualAuctionFashionItem
+     */
+    'auctions'?: Array<Auction> | null;
+}
+
+
+/**
+ * 
+ * @export
+ * @interface IndividualFashionItem
+ */
+export interface IndividualFashionItem {
+    /**
+     * 
+     * @type {string}
+     * @memberof IndividualFashionItem
+     */
+    'itemId'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof IndividualFashionItem
+     */
+    'itemCode'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof IndividualFashionItem
+     */
+    'variationId'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof IndividualFashionItem
+     */
+    'note'?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof IndividualFashionItem
+     */
+    'sellingPrice'?: number | null;
+    /**
+     * 
+     * @type {FashionItemStatus}
+     * @memberof IndividualFashionItem
+     */
+    'status'?: FashionItemStatus;
+    /**
+     * 
+     * @type {FashionItemType}
+     * @memberof IndividualFashionItem
+     */
+    'type'?: FashionItemType;
+    /**
+     * 
+     * @type {FashionItemVariation}
+     * @memberof IndividualFashionItem
+     */
+    'variation'?: FashionItemVariation;
+    /**
+     * 
+     * @type {ConsignSaleDetail}
+     * @memberof IndividualFashionItem
+     */
+    'consignSaleDetail'?: ConsignSaleDetail;
+    /**
+     * 
+     * @type {string}
+     * @memberof IndividualFashionItem
+     */
+    'consignSaleDetailId'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof IndividualFashionItem
+     */
+    'createdDate'?: string;
+    /**
+     * 
+     * @type {Array<Image>}
+     * @memberof IndividualFashionItem
+     */
+    'images'?: Array<Image> | null;
+}
+
+
+/**
+ * 
+ * @export
+ * @interface IndividualFashionItemOrderDetailResponse
+ */
+export interface IndividualFashionItemOrderDetailResponse {
+    /**
+     * 
+     * @type {string}
+     * @memberof IndividualFashionItemOrderDetailResponse
+     */
+    'orderDetailId'?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof IndividualFashionItemOrderDetailResponse
+     */
+    'unitPrice'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof IndividualFashionItemOrderDetailResponse
+     */
+    'orderId'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof IndividualFashionItemOrderDetailResponse
+     */
+    'refundExpirationDate'?: string | null;
+    /**
+     * 
+     * @type {IndividualFashionItem}
+     * @memberof IndividualFashionItemOrderDetailResponse
+     */
+    'fashionItemDetail'?: IndividualFashionItem;
+}
+/**
+ * 
+ * @export
+ * @interface IndividualFashionItemOrderDetailResponseResult
+ */
+export interface IndividualFashionItemOrderDetailResponseResult {
+    /**
+     * 
+     * @type {IndividualFashionItemOrderDetailResponse}
+     * @memberof IndividualFashionItemOrderDetailResponseResult
+     */
+    'data'?: IndividualFashionItemOrderDetailResponse;
+    /**
+     * 
+     * @type {ResultStatus}
+     * @memberof IndividualFashionItemOrderDetailResponseResult
+     */
+    'resultStatus'?: ResultStatus;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof IndividualFashionItemOrderDetailResponseResult
+     */
+    'messages'?: Array<string> | null;
+}
+
+
+/**
+ * 
+ * @export
+ * @interface IndividualItemListResponse
+ */
+export interface IndividualItemListResponse {
+    /**
+     * 
+     * @type {string}
+     * @memberof IndividualItemListResponse
+     */
+    'itemId'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof IndividualItemListResponse
+     */
+    'itemCode'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof IndividualItemListResponse
+     */
+    'variationId'?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof IndividualItemListResponse
+     */
+    'sellingPrice'?: number;
+    /**
+     * 
+     * @type {FashionItemStatus}
+     * @memberof IndividualItemListResponse
+     */
+    'status'?: FashionItemStatus;
+    /**
+     * 
+     * @type {FashionItemType}
+     * @memberof IndividualItemListResponse
+     */
+    'type'?: FashionItemType;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof IndividualItemListResponse
+     */
+    'isOrderedYet'?: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof IndividualItemListResponse
+     */
+    'color'?: string | null;
+    /**
+     * 
+     * @type {SizeType}
+     * @memberof IndividualItemListResponse
+     */
+    'size'?: SizeType;
+    /**
+     * 
+     * @type {string}
+     * @memberof IndividualItemListResponse
+     */
+    'condition'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof IndividualItemListResponse
+     */
+    'image'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof IndividualItemListResponse
+     */
+    'createdDate'?: string;
+}
+
+
+/**
+ * 
+ * @export
+ * @interface IndividualItemListResponseListResult
+ */
+export interface IndividualItemListResponseListResult {
+    /**
+     * 
+     * @type {Array<IndividualItemListResponse>}
+     * @memberof IndividualItemListResponseListResult
+     */
+    'data'?: Array<IndividualItemListResponse> | null;
+    /**
+     * 
+     * @type {ResultStatus}
+     * @memberof IndividualItemListResponseListResult
+     */
+    'resultStatus'?: ResultStatus;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof IndividualItemListResponseListResult
+     */
+    'messages'?: Array<string> | null;
+}
+
+
+/**
+ * 
+ * @export
+ * @interface IndividualItemListResponsePaginationResponse
+ */
+export interface IndividualItemListResponsePaginationResponse {
+    /**
+     * 
+     * @type {number}
+     * @memberof IndividualItemListResponsePaginationResponse
+     */
+    'pageNumber'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof IndividualItemListResponsePaginationResponse
+     */
+    'pageSize'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof IndividualItemListResponsePaginationResponse
+     */
+    'searchTerm'?: string | null;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof IndividualItemListResponsePaginationResponse
+     */
+    'filters'?: Array<string> | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof IndividualItemListResponsePaginationResponse
+     */
+    'orderBy'?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof IndividualItemListResponsePaginationResponse
+     */
+    'totalCount'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof IndividualItemListResponsePaginationResponse
+     */
+    'totalPages'?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof IndividualItemListResponsePaginationResponse
+     */
+    'hasNext'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof IndividualItemListResponsePaginationResponse
+     */
+    'hasPrevious'?: boolean;
+    /**
+     * 
+     * @type {Array<IndividualItemListResponse>}
+     * @memberof IndividualItemListResponsePaginationResponse
+     */
+    'items'?: Array<IndividualItemListResponse> | null;
 }
 /**
  * 
@@ -4115,6 +5675,281 @@ export type InquiryStatus = typeof InquiryStatus[keyof typeof InquiryStatus];
 /**
  * 
  * @export
+ * @interface ItemVariationListResponse
+ */
+export interface ItemVariationListResponse {
+    /**
+     * 
+     * @type {string}
+     * @memberof ItemVariationListResponse
+     */
+    'variationId'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ItemVariationListResponse
+     */
+    'masterItemId'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ItemVariationListResponse
+     */
+    'condition'?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof ItemVariationListResponse
+     */
+    'price'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ItemVariationListResponse
+     */
+    'color'?: string | null;
+    /**
+     * 
+     * @type {SizeType}
+     * @memberof ItemVariationListResponse
+     */
+    'size'?: SizeType;
+    /**
+     * 
+     * @type {number}
+     * @memberof ItemVariationListResponse
+     */
+    'stockCount'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ItemVariationListResponse
+     */
+    'createdDate'?: string;
+}
+
+
+/**
+ * 
+ * @export
+ * @interface ItemVariationListResponsePaginationResponse
+ */
+export interface ItemVariationListResponsePaginationResponse {
+    /**
+     * 
+     * @type {number}
+     * @memberof ItemVariationListResponsePaginationResponse
+     */
+    'pageNumber'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ItemVariationListResponsePaginationResponse
+     */
+    'pageSize'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ItemVariationListResponsePaginationResponse
+     */
+    'searchTerm'?: string | null;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof ItemVariationListResponsePaginationResponse
+     */
+    'filters'?: Array<string> | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof ItemVariationListResponsePaginationResponse
+     */
+    'orderBy'?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof ItemVariationListResponsePaginationResponse
+     */
+    'totalCount'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ItemVariationListResponsePaginationResponse
+     */
+    'totalPages'?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ItemVariationListResponsePaginationResponse
+     */
+    'hasNext'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ItemVariationListResponsePaginationResponse
+     */
+    'hasPrevious'?: boolean;
+    /**
+     * 
+     * @type {Array<ItemVariationListResponse>}
+     * @memberof ItemVariationListResponsePaginationResponse
+     */
+    'items'?: Array<ItemVariationListResponse> | null;
+}
+/**
+ * 
+ * @export
+ * @interface ItemVariationResponse
+ */
+export interface ItemVariationResponse {
+    /**
+     * 
+     * @type {string}
+     * @memberof ItemVariationResponse
+     */
+    'variationId'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ItemVariationResponse
+     */
+    'masterItemId'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ItemVariationResponse
+     */
+    'condition'?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof ItemVariationResponse
+     */
+    'price'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ItemVariationResponse
+     */
+    'color'?: string | null;
+    /**
+     * 
+     * @type {SizeType}
+     * @memberof ItemVariationResponse
+     */
+    'size'?: SizeType;
+    /**
+     * 
+     * @type {number}
+     * @memberof ItemVariationResponse
+     */
+    'stockCount'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ItemVariationResponse
+     */
+    'createdDate'?: string;
+}
+
+
+/**
+ * 
+ * @export
+ * @interface ItemVariationResponsePaginationResponse
+ */
+export interface ItemVariationResponsePaginationResponse {
+    /**
+     * 
+     * @type {number}
+     * @memberof ItemVariationResponsePaginationResponse
+     */
+    'pageNumber'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ItemVariationResponsePaginationResponse
+     */
+    'pageSize'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ItemVariationResponsePaginationResponse
+     */
+    'searchTerm'?: string | null;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof ItemVariationResponsePaginationResponse
+     */
+    'filters'?: Array<string> | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof ItemVariationResponsePaginationResponse
+     */
+    'orderBy'?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof ItemVariationResponsePaginationResponse
+     */
+    'totalCount'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ItemVariationResponsePaginationResponse
+     */
+    'totalPages'?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ItemVariationResponsePaginationResponse
+     */
+    'hasNext'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ItemVariationResponsePaginationResponse
+     */
+    'hasPrevious'?: boolean;
+    /**
+     * 
+     * @type {Array<ItemVariationResponse>}
+     * @memberof ItemVariationResponsePaginationResponse
+     */
+    'items'?: Array<ItemVariationResponse> | null;
+}
+/**
+ * 
+ * @export
+ * @interface ItemVariationResponseResult
+ */
+export interface ItemVariationResponseResult {
+    /**
+     * 
+     * @type {ItemVariationResponse}
+     * @memberof ItemVariationResponseResult
+     */
+    'data'?: ItemVariationResponse;
+    /**
+     * 
+     * @type {ResultStatus}
+     * @memberof ItemVariationResponseResult
+     */
+    'resultStatus'?: ResultStatus;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof ItemVariationResponseResult
+     */
+    'messages'?: Array<string> | null;
+}
+
+
+/**
+ * 
+ * @export
  * @interface LoginRequest
  */
 export interface LoginRequest {
@@ -4192,6 +6027,430 @@ export interface LoginResponseResult {
      * 
      * @type {Array<string>}
      * @memberof LoginResponseResult
+     */
+    'messages'?: Array<string> | null;
+}
+
+
+/**
+ * 
+ * @export
+ * @interface MasterFashionItem
+ */
+export interface MasterFashionItem {
+    /**
+     * 
+     * @type {string}
+     * @memberof MasterFashionItem
+     */
+    'masterItemId'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof MasterFashionItem
+     */
+    'masterItemCode'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof MasterFashionItem
+     */
+    'name'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof MasterFashionItem
+     */
+    'brand'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof MasterFashionItem
+     */
+    'description'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof MasterFashionItem
+     */
+    'categoryId'?: string;
+    /**
+     * 
+     * @type {GenderType}
+     * @memberof MasterFashionItem
+     */
+    'gender'?: GenderType;
+    /**
+     * 
+     * @type {Category}
+     * @memberof MasterFashionItem
+     */
+    'category'?: Category;
+    /**
+     * 
+     * @type {string}
+     * @memberof MasterFashionItem
+     */
+    'createdDate'?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof MasterFashionItem
+     */
+    'isConsignment'?: boolean;
+    /**
+     * 
+     * @type {Array<Image>}
+     * @memberof MasterFashionItem
+     */
+    'images'?: Array<Image> | null;
+    /**
+     * 
+     * @type {Shop}
+     * @memberof MasterFashionItem
+     */
+    'shop'?: Shop;
+    /**
+     * 
+     * @type {string}
+     * @memberof MasterFashionItem
+     */
+    'shopId'?: string;
+    /**
+     * 
+     * @type {Array<FashionItemVariation>}
+     * @memberof MasterFashionItem
+     */
+    'variations'?: Array<FashionItemVariation> | null;
+}
+
+
+/**
+ * 
+ * @export
+ * @interface MasterItemDetailResponse
+ */
+export interface MasterItemDetailResponse {
+    /**
+     * 
+     * @type {string}
+     * @memberof MasterItemDetailResponse
+     */
+    'masterItemId'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof MasterItemDetailResponse
+     */
+    'masterItemCode'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof MasterItemDetailResponse
+     */
+    'name'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof MasterItemDetailResponse
+     */
+    'brand'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof MasterItemDetailResponse
+     */
+    'description'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof MasterItemDetailResponse
+     */
+    'categoryId'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof MasterItemDetailResponse
+     */
+    'categoryName'?: string | null;
+    /**
+     * 
+     * @type {GenderType}
+     * @memberof MasterItemDetailResponse
+     */
+    'gender'?: GenderType;
+    /**
+     * 
+     * @type {string}
+     * @memberof MasterItemDetailResponse
+     */
+    'createdDate'?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof MasterItemDetailResponse
+     */
+    'isConsignment'?: boolean;
+    /**
+     * 
+     * @type {Array<FashionItemImage>}
+     * @memberof MasterItemDetailResponse
+     */
+    'images'?: Array<FashionItemImage> | null;
+}
+
+
+/**
+ * 
+ * @export
+ * @interface MasterItemListResponse
+ */
+export interface MasterItemListResponse {
+    /**
+     * 
+     * @type {string}
+     * @memberof MasterItemListResponse
+     */
+    'masterItemId'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof MasterItemListResponse
+     */
+    'name'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof MasterItemListResponse
+     */
+    'description'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof MasterItemListResponse
+     */
+    'itemCode'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof MasterItemListResponse
+     */
+    'createdDate'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof MasterItemListResponse
+     */
+    'brand'?: string | null;
+    /**
+     * 
+     * @type {GenderType}
+     * @memberof MasterItemListResponse
+     */
+    'gender'?: GenderType;
+    /**
+     * 
+     * @type {string}
+     * @memberof MasterItemListResponse
+     */
+    'categoryId'?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof MasterItemListResponse
+     */
+    'isUniversal'?: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof MasterItemListResponse
+     */
+    'shopId'?: string;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof MasterItemListResponse
+     */
+    'images'?: Array<string> | null;
+}
+
+
+/**
+ * 
+ * @export
+ * @interface MasterItemListResponsePaginationResponse
+ */
+export interface MasterItemListResponsePaginationResponse {
+    /**
+     * 
+     * @type {number}
+     * @memberof MasterItemListResponsePaginationResponse
+     */
+    'pageNumber'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof MasterItemListResponsePaginationResponse
+     */
+    'pageSize'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof MasterItemListResponsePaginationResponse
+     */
+    'searchTerm'?: string | null;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof MasterItemListResponsePaginationResponse
+     */
+    'filters'?: Array<string> | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof MasterItemListResponsePaginationResponse
+     */
+    'orderBy'?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof MasterItemListResponsePaginationResponse
+     */
+    'totalCount'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof MasterItemListResponsePaginationResponse
+     */
+    'totalPages'?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof MasterItemListResponsePaginationResponse
+     */
+    'hasNext'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof MasterItemListResponsePaginationResponse
+     */
+    'hasPrevious'?: boolean;
+    /**
+     * 
+     * @type {Array<MasterItemListResponse>}
+     * @memberof MasterItemListResponsePaginationResponse
+     */
+    'items'?: Array<MasterItemListResponse> | null;
+}
+/**
+ * 
+ * @export
+ * @interface MasterItemResponse
+ */
+export interface MasterItemResponse {
+    /**
+     * 
+     * @type {string}
+     * @memberof MasterItemResponse
+     */
+    'masterItemId'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof MasterItemResponse
+     */
+    'itemCode'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof MasterItemResponse
+     */
+    'name'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof MasterItemResponse
+     */
+    'brand'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof MasterItemResponse
+     */
+    'description'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof MasterItemResponse
+     */
+    'categoryId'?: string;
+    /**
+     * 
+     * @type {GenderType}
+     * @memberof MasterItemResponse
+     */
+    'gender'?: GenderType;
+    /**
+     * 
+     * @type {string}
+     * @memberof MasterItemResponse
+     */
+    'createdDate'?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof MasterItemResponse
+     */
+    'isUniversal'?: boolean;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof MasterItemResponse
+     */
+    'images'?: Array<string> | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof MasterItemResponse
+     */
+    'shopId'?: string;
+    /**
+     * 
+     * @type {ItemVariationResponse}
+     * @memberof MasterItemResponse
+     */
+    'itemVariationResponse'?: ItemVariationResponse;
+    /**
+     * 
+     * @type {ItemVariationResponsePaginationResponse}
+     * @memberof MasterItemResponse
+     */
+    'listItemVariationResponses'?: ItemVariationResponsePaginationResponse;
+}
+
+
+/**
+ * 
+ * @export
+ * @interface MasterItemResponseResult
+ */
+export interface MasterItemResponseResult {
+    /**
+     * 
+     * @type {MasterItemResponse}
+     * @memberof MasterItemResponseResult
+     */
+    'data'?: MasterItemResponse;
+    /**
+     * 
+     * @type {ResultStatus}
+     * @memberof MasterItemResponseResult
+     */
+    'resultStatus'?: ResultStatus;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof MasterItemResponseResult
      */
     'messages'?: Array<string> | null;
 }
@@ -4400,6 +6659,71 @@ export interface MonthlyRevenueDto {
 /**
  * 
  * @export
+ * @interface NtsGeometryServices
+ */
+export interface NtsGeometryServices {
+    /**
+     * 
+     * @type {object}
+     * @memberof NtsGeometryServices
+     */
+    'geometryOverlay'?: object;
+    /**
+     * 
+     * @type {object}
+     * @memberof NtsGeometryServices
+     */
+    'coordinateEqualityComparer'?: object;
+    /**
+     * 
+     * @type {number}
+     * @memberof NtsGeometryServices
+     */
+    'defaultSRID'?: number;
+    /**
+     * 
+     * @type {CoordinateSequenceFactory}
+     * @memberof NtsGeometryServices
+     */
+    'defaultCoordinateSequenceFactory'?: CoordinateSequenceFactory;
+    /**
+     * 
+     * @type {PrecisionModel}
+     * @memberof NtsGeometryServices
+     */
+    'defaultPrecisionModel'?: PrecisionModel;
+}
+/**
+ * 
+ * @export
+ * @enum {string}
+ */
+
+export const OgcGeometryType = {
+    Point: 'Point',
+    LineString: 'LineString',
+    Polygon: 'Polygon',
+    MultiPoint: 'MultiPoint',
+    MultiLineString: 'MultiLineString',
+    MultiPolygon: 'MultiPolygon',
+    GeometryCollection: 'GeometryCollection',
+    CircularString: 'CircularString',
+    CompoundCurve: 'CompoundCurve',
+    CurvePolygon: 'CurvePolygon',
+    MultiCurve: 'MultiCurve',
+    MultiSurface: 'MultiSurface',
+    Curve: 'Curve',
+    Surface: 'Surface',
+    PolyhedralSurface: 'PolyhedralSurface',
+    Tin: 'TIN'
+} as const;
+
+export type OgcGeometryType = typeof OgcGeometryType[keyof typeof OgcGeometryType];
+
+
+/**
+ * 
+ * @export
  * @interface Order
  */
 export interface Order {
@@ -4507,6 +6831,18 @@ export interface Order {
     'address'?: string | null;
     /**
      * 
+     * @type {number}
+     * @memberof Order
+     */
+    'ghnDistrictId'?: number | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof Order
+     */
+    'ghnWardCode'?: number | null;
+    /**
+     * 
      * @type {string}
      * @memberof Order
      */
@@ -4558,16 +6894,16 @@ export interface OrderDetail {
     'refundExpirationDate'?: string | null;
     /**
      * 
-     * @type {FashionItem}
+     * @type {IndividualFashionItem}
      * @memberof OrderDetail
      */
-    'fashionItem'?: FashionItem;
+    'individualFashionItem'?: IndividualFashionItem;
     /**
      * 
      * @type {string}
      * @memberof OrderDetail
      */
-    'fashionItemId'?: string | null;
+    'individualFashionItemId'?: string | null;
     /**
      * 
      * @type {PointPackage}
@@ -5129,6 +7465,58 @@ export type OrderStatus = typeof OrderStatus[keyof typeof OrderStatus];
 /**
  * 
  * @export
+ * @enum {string}
+ */
+
+export const Ordinates = {
+    None: 'None',
+    X: 'X',
+    Y: 'Y',
+    Xy: 'XY',
+    Z: 'Z',
+    Xyz: 'XYZ',
+    Spatial4: 'Spatial4',
+    Spatial5: 'Spatial5',
+    Spatial6: 'Spatial6',
+    Spatial7: 'Spatial7',
+    Spatial8: 'Spatial8',
+    Spatial9: 'Spatial9',
+    Spatial10: 'Spatial10',
+    Spatial11: 'Spatial11',
+    Spatial12: 'Spatial12',
+    Spatial13: 'Spatial13',
+    Spatial14: 'Spatial14',
+    Spatial15: 'Spatial15',
+    Spatial16: 'Spatial16',
+    AllSpatialOrdinates: 'AllSpatialOrdinates',
+    M: 'M',
+    Xym: 'XYM',
+    Xyzm: 'XYZM',
+    Measure2: 'Measure2',
+    Measure3: 'Measure3',
+    Measure4: 'Measure4',
+    Measure5: 'Measure5',
+    Measure6: 'Measure6',
+    Measure7: 'Measure7',
+    Measure8: 'Measure8',
+    Measure9: 'Measure9',
+    Measure10: 'Measure10',
+    Measure11: 'Measure11',
+    Measure12: 'Measure12',
+    Measure13: 'Measure13',
+    Measure14: 'Measure14',
+    Measure15: 'Measure15',
+    Measure16: 'Measure16',
+    AllMeasureOrdinates: 'AllMeasureOrdinates',
+    AllOrdinates: 'AllOrdinates'
+} as const;
+
+export type Ordinates = typeof Ordinates[keyof typeof Ordinates];
+
+
+/**
+ * 
+ * @export
  * @interface PayOrderWithCashRequest
  */
 export interface PayOrderWithCashRequest {
@@ -5209,6 +7597,189 @@ export const PaymentMethod = {
 } as const;
 
 export type PaymentMethod = typeof PaymentMethod[keyof typeof PaymentMethod];
+
+
+/**
+ * 
+ * @export
+ * @interface Point
+ */
+export interface Point {
+    /**
+     * 
+     * @type {GeometryFactory}
+     * @memberof Point
+     */
+    'factory'?: GeometryFactory;
+    /**
+     * 
+     * @type {any}
+     * @memberof Point
+     */
+    'userData'?: any | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof Point
+     */
+    'srid'?: number;
+    /**
+     * 
+     * @type {PrecisionModel}
+     * @memberof Point
+     */
+    'precisionModel'?: PrecisionModel;
+    /**
+     * 
+     * @type {number}
+     * @memberof Point
+     */
+    'numGeometries'?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Point
+     */
+    'isSimple'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Point
+     */
+    'isValid'?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof Point
+     */
+    'area'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof Point
+     */
+    'length'?: number;
+    /**
+     * 
+     * @type {Point}
+     * @memberof Point
+     */
+    'centroid'?: Point;
+    /**
+     * 
+     * @type {Point}
+     * @memberof Point
+     */
+    'interiorPoint'?: Point;
+    /**
+     * 
+     * @type {Point}
+     * @memberof Point
+     */
+    'pointOnSurface'?: Point;
+    /**
+     * 
+     * @type {Geometry}
+     * @memberof Point
+     */
+    'envelope'?: Geometry;
+    /**
+     * 
+     * @type {Envelope}
+     * @memberof Point
+     */
+    'envelopeInternal'?: Envelope;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Point
+     */
+    'isRectangle'?: boolean;
+    /**
+     * 
+     * @type {CoordinateSequence}
+     * @memberof Point
+     */
+    'coordinateSequence'?: CoordinateSequence;
+    /**
+     * 
+     * @type {Array<Coordinate>}
+     * @memberof Point
+     */
+    'coordinates'?: Array<Coordinate> | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof Point
+     */
+    'numPoints'?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Point
+     */
+    'isEmpty'?: boolean;
+    /**
+     * 
+     * @type {Dimension}
+     * @memberof Point
+     */
+    'dimension'?: Dimension;
+    /**
+     * 
+     * @type {Dimension}
+     * @memberof Point
+     */
+    'boundaryDimension'?: Dimension;
+    /**
+     * 
+     * @type {number}
+     * @memberof Point
+     */
+    'x'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof Point
+     */
+    'y'?: number;
+    /**
+     * 
+     * @type {Coordinate}
+     * @memberof Point
+     */
+    'coordinate'?: Coordinate;
+    /**
+     * 
+     * @type {string}
+     * @memberof Point
+     */
+    'geometryType'?: string | null;
+    /**
+     * 
+     * @type {OgcGeometryType}
+     * @memberof Point
+     */
+    'ogcGeometryType'?: OgcGeometryType;
+    /**
+     * 
+     * @type {Geometry}
+     * @memberof Point
+     */
+    'boundary'?: Geometry;
+    /**
+     * 
+     * @type {number}
+     * @memberof Point
+     */
+    'z'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof Point
+     */
+    'm'?: number;
+}
 
 
 /**
@@ -5420,6 +7991,60 @@ export const PointPackageStatus = {
 } as const;
 
 export type PointPackageStatus = typeof PointPackageStatus[keyof typeof PointPackageStatus];
+
+
+/**
+ * 
+ * @export
+ * @interface PrecisionModel
+ */
+export interface PrecisionModel {
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PrecisionModel
+     */
+    'isFloating'?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof PrecisionModel
+     */
+    'maximumSignificantDigits'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof PrecisionModel
+     */
+    'scale'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof PrecisionModel
+     */
+    'gridSize'?: number;
+    /**
+     * 
+     * @type {PrecisionModels}
+     * @memberof PrecisionModel
+     */
+    'precisionModelType'?: PrecisionModels;
+}
+
+
+/**
+ * 
+ * @export
+ * @enum {string}
+ */
+
+export const PrecisionModels = {
+    Floating: 'Floating',
+    FloatingSingle: 'FloatingSingle',
+    Fixed: 'Fixed'
+} as const;
+
+export type PrecisionModels = typeof PrecisionModels[keyof typeof PrecisionModels];
 
 
 /**
@@ -5901,6 +8526,24 @@ export interface Shop {
     'staffId'?: string;
     /**
      * 
+     * @type {number}
+     * @memberof Shop
+     */
+    'ghnShopId'?: number | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof Shop
+     */
+    'ghnDistrictId'?: number | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof Shop
+     */
+    'ghnWardCode'?: string | null;
+    /**
+     * 
      * @type {string}
      * @memberof Shop
      */
@@ -5910,7 +8553,25 @@ export interface Shop {
      * @type {string}
      * @memberof Shop
      */
+    'shopCode'?: string | null;
+    /**
+     * 
+     * @type {Point}
+     * @memberof Shop
+     */
+    'location'?: Point;
+    /**
+     * 
+     * @type {string}
+     * @memberof Shop
+     */
     'createdDate'?: string;
+    /**
+     * 
+     * @type {Array<MasterFashionItem>}
+     * @memberof Shop
+     */
+    'masterFashionItems'?: Array<MasterFashionItem> | null;
 }
 /**
  * 
@@ -6705,19 +9366,6 @@ export interface UpdateAuctionRequest {
 }
 
 
-/**
- * 
- * @export
- * @interface UpdateBidRequest
- */
-export interface UpdateBidRequest {
-    /**
-     * 
-     * @type {boolean}
-     * @memberof UpdateBidRequest
-     */
-    'isWinning'?: boolean | null;
-}
 /**
  * 
  * @export
@@ -7827,7 +10475,7 @@ export const AccountApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiAccountsAccountIdInquiriesPost(accountId: string, createInquiryRequest?: CreateInquiryRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CreateInquiryResponse>> {
+        async apiAccountsAccountIdInquiriesPost(accountId: string, createInquiryRequest?: CreateInquiryRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CreateInquiryResponseResult>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.apiAccountsAccountIdInquiriesPost(accountId, createInquiryRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AccountApi.apiAccountsAccountIdInquiriesPost']?.[localVarOperationServerIndex]?.url;
@@ -7888,7 +10536,7 @@ export const AccountApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiAccountsAccountIdTransactionsGet(accountId: string, page?: number, pageSize?: number, types?: Array<TransactionType>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetTransactionsResponsePaginationResponse>> {
+        async apiAccountsAccountIdTransactionsGet(accountId: string, page?: number, pageSize?: number, types?: Array<TransactionType>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetTransactionsResponsePaginationResponseResult>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.apiAccountsAccountIdTransactionsGet(accountId, page, pageSize, types, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AccountApi.apiAccountsAccountIdTransactionsGet']?.[localVarOperationServerIndex]?.url;
@@ -7903,7 +10551,7 @@ export const AccountApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiAccountsAccountIdWithdrawsGet(accountId: string, page?: number, pageSize?: number, status?: WithdrawStatus, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetWithdrawsResponsePaginationResponse>> {
+        async apiAccountsAccountIdWithdrawsGet(accountId: string, page?: number, pageSize?: number, status?: WithdrawStatus, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetWithdrawsResponsePaginationResponseResult>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.apiAccountsAccountIdWithdrawsGet(accountId, page, pageSize, status, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AccountApi.apiAccountsAccountIdWithdrawsGet']?.[localVarOperationServerIndex]?.url;
@@ -7916,7 +10564,7 @@ export const AccountApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiAccountsAccountIdWithdrawsPost(accountId: string, createWithdrawRequest?: CreateWithdrawRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CreateWithdrawResponse>> {
+        async apiAccountsAccountIdWithdrawsPost(accountId: string, createWithdrawRequest?: CreateWithdrawRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CreateWithdrawResponseResult>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.apiAccountsAccountIdWithdrawsPost(accountId, createWithdrawRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AccountApi.apiAccountsAccountIdWithdrawsPost']?.[localVarOperationServerIndex]?.url;
@@ -8044,7 +10692,7 @@ export const AccountApiFactory = function (configuration?: Configuration, basePa
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAccountsAccountIdInquiriesPost(accountId: string, createInquiryRequest?: CreateInquiryRequest, options?: any): AxiosPromise<CreateInquiryResponse> {
+        apiAccountsAccountIdInquiriesPost(accountId: string, createInquiryRequest?: CreateInquiryRequest, options?: any): AxiosPromise<CreateInquiryResponseResult> {
             return localVarFp.apiAccountsAccountIdInquiriesPost(accountId, createInquiryRequest, options).then((request) => request(axios, basePath));
         },
         /**
@@ -8093,7 +10741,7 @@ export const AccountApiFactory = function (configuration?: Configuration, basePa
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAccountsAccountIdTransactionsGet(accountId: string, page?: number, pageSize?: number, types?: Array<TransactionType>, options?: any): AxiosPromise<GetTransactionsResponsePaginationResponse> {
+        apiAccountsAccountIdTransactionsGet(accountId: string, page?: number, pageSize?: number, types?: Array<TransactionType>, options?: any): AxiosPromise<GetTransactionsResponsePaginationResponseResult> {
             return localVarFp.apiAccountsAccountIdTransactionsGet(accountId, page, pageSize, types, options).then((request) => request(axios, basePath));
         },
         /**
@@ -8105,7 +10753,7 @@ export const AccountApiFactory = function (configuration?: Configuration, basePa
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAccountsAccountIdWithdrawsGet(accountId: string, page?: number, pageSize?: number, status?: WithdrawStatus, options?: any): AxiosPromise<GetWithdrawsResponsePaginationResponse> {
+        apiAccountsAccountIdWithdrawsGet(accountId: string, page?: number, pageSize?: number, status?: WithdrawStatus, options?: any): AxiosPromise<GetWithdrawsResponsePaginationResponseResult> {
             return localVarFp.apiAccountsAccountIdWithdrawsGet(accountId, page, pageSize, status, options).then((request) => request(axios, basePath));
         },
         /**
@@ -8115,7 +10763,7 @@ export const AccountApiFactory = function (configuration?: Configuration, basePa
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAccountsAccountIdWithdrawsPost(accountId: string, createWithdrawRequest?: CreateWithdrawRequest, options?: any): AxiosPromise<CreateWithdrawResponse> {
+        apiAccountsAccountIdWithdrawsPost(accountId: string, createWithdrawRequest?: CreateWithdrawRequest, options?: any): AxiosPromise<CreateWithdrawResponseResult> {
             return localVarFp.apiAccountsAccountIdWithdrawsPost(accountId, createWithdrawRequest, options).then((request) => request(axios, basePath));
         },
         /**
@@ -8367,6 +11015,247 @@ export class AccountApi extends BaseAPI {
      */
     public apiAccountsIdGet(id: string, options?: RawAxiosRequestConfig) {
         return AccountApiFp(this.configuration).apiAccountsIdGet(id, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+
+/**
+ * AddressApi - axios parameter creator
+ * @export
+ */
+export const AddressApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @param {number} [provinceId] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiAddressesDistrictsGet: async (provinceId?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/addresses/districts`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            if (provinceId !== undefined) {
+                localVarQueryParameter['provinceId'] = provinceId;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiAddressesProvincesGet: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/addresses/provinces`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} [districtId] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiAddressesWardsGet: async (districtId?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/addresses/wards`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            if (districtId !== undefined) {
+                localVarQueryParameter['districtId'] = districtId;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * AddressApi - functional programming interface
+ * @export
+ */
+export const AddressApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = AddressApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @param {number} [provinceId] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiAddressesDistrictsGet(provinceId?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GHNDistrictResponseListGHNApiResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAddressesDistrictsGet(provinceId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AddressApi.apiAddressesDistrictsGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiAddressesProvincesGet(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GHNProvinceResponseListGHNApiResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAddressesProvincesGet(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AddressApi.apiAddressesProvincesGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {number} [districtId] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiAddressesWardsGet(districtId?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GHNWardResponseListGHNApiResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAddressesWardsGet(districtId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AddressApi.apiAddressesWardsGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * AddressApi - factory interface
+ * @export
+ */
+export const AddressApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = AddressApiFp(configuration)
+    return {
+        /**
+         * 
+         * @param {number} [provinceId] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiAddressesDistrictsGet(provinceId?: number, options?: any): AxiosPromise<GHNDistrictResponseListGHNApiResponse> {
+            return localVarFp.apiAddressesDistrictsGet(provinceId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiAddressesProvincesGet(options?: any): AxiosPromise<GHNProvinceResponseListGHNApiResponse> {
+            return localVarFp.apiAddressesProvincesGet(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} [districtId] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiAddressesWardsGet(districtId?: number, options?: any): AxiosPromise<GHNWardResponseListGHNApiResponse> {
+            return localVarFp.apiAddressesWardsGet(districtId, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * AddressApi - object-oriented interface
+ * @export
+ * @class AddressApi
+ * @extends {BaseAPI}
+ */
+export class AddressApi extends BaseAPI {
+    /**
+     * 
+     * @param {number} [provinceId] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AddressApi
+     */
+    public apiAddressesDistrictsGet(provinceId?: number, options?: RawAxiosRequestConfig) {
+        return AddressApiFp(this.configuration).apiAddressesDistrictsGet(provinceId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AddressApi
+     */
+    public apiAddressesProvincesGet(options?: RawAxiosRequestConfig) {
+        return AddressApiFp(this.configuration).apiAddressesProvincesGet(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {number} [districtId] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AddressApi
+     */
+    public apiAddressesWardsGet(districtId?: number, options?: RawAxiosRequestConfig) {
+        return AddressApiFp(this.configuration).apiAddressesWardsGet(districtId, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -8757,133 +11646,6 @@ export const AuctionApiAxiosParamCreator = function (configuration?: Configurati
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @param {string} id 
-         * @param {string} bidId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        apiAuctionsIdBidsBidIdDelete: async (id: string, bidId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('apiAuctionsIdBidsBidIdDelete', 'id', id)
-            // verify required parameter 'bidId' is not null or undefined
-            assertParamExists('apiAuctionsIdBidsBidIdDelete', 'bidId', bidId)
-            const localVarPath = `/api/auctions/{id}/bids/{bidId}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)))
-                .replace(`{${"bidId"}}`, encodeURIComponent(String(bidId)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication Bearer required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @param {string} id 
-         * @param {string} bidId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        apiAuctionsIdBidsBidIdGet: async (id: string, bidId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('apiAuctionsIdBidsBidIdGet', 'id', id)
-            // verify required parameter 'bidId' is not null or undefined
-            assertParamExists('apiAuctionsIdBidsBidIdGet', 'bidId', bidId)
-            const localVarPath = `/api/auctions/{id}/bids/{bidId}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)))
-                .replace(`{${"bidId"}}`, encodeURIComponent(String(bidId)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication Bearer required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @param {string} id 
-         * @param {string} bidId 
-         * @param {UpdateBidRequest} [updateBidRequest] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        apiAuctionsIdBidsBidIdPut: async (id: string, bidId: string, updateBidRequest?: UpdateBidRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('apiAuctionsIdBidsBidIdPut', 'id', id)
-            // verify required parameter 'bidId' is not null or undefined
-            assertParamExists('apiAuctionsIdBidsBidIdPut', 'bidId', bidId)
-            const localVarPath = `/api/auctions/{id}/bids/{bidId}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)))
-                .replace(`{${"bidId"}}`, encodeURIComponent(String(bidId)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication Bearer required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(updateBidRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -9336,46 +12098,6 @@ export const AuctionApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {string} id 
-         * @param {string} bidId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async apiAuctionsIdBidsBidIdDelete(id: string, bidId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAuctionsIdBidsBidIdDelete(id, bidId, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['AuctionApi.apiAuctionsIdBidsBidIdDelete']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * 
-         * @param {string} id 
-         * @param {string} bidId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async apiAuctionsIdBidsBidIdGet(id: string, bidId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BidDetailResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAuctionsIdBidsBidIdGet(id, bidId, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['AuctionApi.apiAuctionsIdBidsBidIdGet']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * 
-         * @param {string} id 
-         * @param {string} bidId 
-         * @param {UpdateBidRequest} [updateBidRequest] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async apiAuctionsIdBidsBidIdPut(id: string, bidId: string, updateBidRequest?: UpdateBidRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BidDetailResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAuctionsIdBidsBidIdPut(id, bidId, updateBidRequest, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['AuctionApi.apiAuctionsIdBidsBidIdPut']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * 
-         * @param {string} id 
          * @param {number} [pageNumber] 
          * @param {number} [pageSize] 
          * @param {*} [options] Override http request option.
@@ -9578,37 +12300,6 @@ export const AuctionApiFactory = function (configuration?: Configuration, basePa
         /**
          * 
          * @param {string} id 
-         * @param {string} bidId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        apiAuctionsIdBidsBidIdDelete(id: string, bidId: string, options?: any): AxiosPromise<void> {
-            return localVarFp.apiAuctionsIdBidsBidIdDelete(id, bidId, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @param {string} id 
-         * @param {string} bidId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        apiAuctionsIdBidsBidIdGet(id: string, bidId: string, options?: any): AxiosPromise<BidDetailResponse> {
-            return localVarFp.apiAuctionsIdBidsBidIdGet(id, bidId, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @param {string} id 
-         * @param {string} bidId 
-         * @param {UpdateBidRequest} [updateBidRequest] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        apiAuctionsIdBidsBidIdPut(id: string, bidId: string, updateBidRequest?: UpdateBidRequest, options?: any): AxiosPromise<BidDetailResponse> {
-            return localVarFp.apiAuctionsIdBidsBidIdPut(id, bidId, updateBidRequest, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @param {string} id 
          * @param {number} [pageNumber] 
          * @param {number} [pageSize] 
          * @param {*} [options] Override http request option.
@@ -9800,43 +12491,6 @@ export class AuctionApi extends BaseAPI {
      */
     public apiAuctionsIdApprovePut(id: string, options?: RawAxiosRequestConfig) {
         return AuctionApiFp(this.configuration).apiAuctionsIdApprovePut(id, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @param {string} id 
-     * @param {string} bidId 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof AuctionApi
-     */
-    public apiAuctionsIdBidsBidIdDelete(id: string, bidId: string, options?: RawAxiosRequestConfig) {
-        return AuctionApiFp(this.configuration).apiAuctionsIdBidsBidIdDelete(id, bidId, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @param {string} id 
-     * @param {string} bidId 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof AuctionApi
-     */
-    public apiAuctionsIdBidsBidIdGet(id: string, bidId: string, options?: RawAxiosRequestConfig) {
-        return AuctionApiFp(this.configuration).apiAuctionsIdBidsBidIdGet(id, bidId, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @param {string} id 
-     * @param {string} bidId 
-     * @param {UpdateBidRequest} [updateBidRequest] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof AuctionApi
-     */
-    public apiAuctionsIdBidsBidIdPut(id: string, bidId: string, updateBidRequest?: UpdateBidRequest, options?: RawAxiosRequestConfig) {
-        return AuctionApiFp(this.configuration).apiAuctionsIdBidsBidIdPut(id, bidId, updateBidRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -11488,14 +14142,14 @@ export const ConsignSaleApiAxiosParamCreator = function (configuration?: Configu
         /**
          * 
          * @param {string} consignsaledetailId 
-         * @param {ConfirmReceivedConsignRequest} [confirmReceivedConsignRequest] 
+         * @param {CreateMasterItemRequest} [createMasterItemRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiConsginsalesConsignsaledetailsConsignsaledetailIdUpdateForApprovePut: async (consignsaledetailId: string, confirmReceivedConsignRequest?: ConfirmReceivedConsignRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        apiConsginsalesConsignsaledetailsConsignsaledetailIdCreateMasteritemPost: async (consignsaledetailId: string, createMasterItemRequest?: CreateMasterItemRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'consignsaledetailId' is not null or undefined
-            assertParamExists('apiConsginsalesConsignsaledetailsConsignsaledetailIdUpdateForApprovePut', 'consignsaledetailId', consignsaledetailId)
-            const localVarPath = `/api/consginsales/consignsaledetails/{consignsaledetailId}/update-for-approve`
+            assertParamExists('apiConsginsalesConsignsaledetailsConsignsaledetailIdCreateMasteritemPost', 'consignsaledetailId', consignsaledetailId)
+            const localVarPath = `/api/consginsales/consignsaledetails/{consignsaledetailId}/create-masteritem`
                 .replace(`{${"consignsaledetailId"}}`, encodeURIComponent(String(consignsaledetailId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -11504,7 +14158,7 @@ export const ConsignSaleApiAxiosParamCreator = function (configuration?: Configu
                 baseOptions = configuration.baseOptions;
             }
 
-            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -11519,7 +14173,7 @@ export const ConsignSaleApiAxiosParamCreator = function (configuration?: Configu
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(confirmReceivedConsignRequest, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(createMasterItemRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -11660,14 +14314,14 @@ export const ConsignSaleApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {string} consignsaledetailId 
-         * @param {ConfirmReceivedConsignRequest} [confirmReceivedConsignRequest] 
+         * @param {CreateMasterItemRequest} [createMasterItemRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiConsginsalesConsignsaledetailsConsignsaledetailIdUpdateForApprovePut(consignsaledetailId: string, confirmReceivedConsignRequest?: ConfirmReceivedConsignRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ConsignSaleDetailResponseResult>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiConsginsalesConsignsaledetailsConsignsaledetailIdUpdateForApprovePut(consignsaledetailId, confirmReceivedConsignRequest, options);
+        async apiConsginsalesConsignsaledetailsConsignsaledetailIdCreateMasteritemPost(consignsaledetailId: string, createMasterItemRequest?: CreateMasterItemRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ConsignSaleDetailResponseResult>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiConsginsalesConsignsaledetailsConsignsaledetailIdCreateMasteritemPost(consignsaledetailId, createMasterItemRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['ConsignSaleApi.apiConsginsalesConsignsaledetailsConsignsaledetailIdUpdateForApprovePut']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['ConsignSaleApi.apiConsginsalesConsignsaledetailsConsignsaledetailIdCreateMasteritemPost']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -11738,12 +14392,12 @@ export const ConsignSaleApiFactory = function (configuration?: Configuration, ba
         /**
          * 
          * @param {string} consignsaledetailId 
-         * @param {ConfirmReceivedConsignRequest} [confirmReceivedConsignRequest] 
+         * @param {CreateMasterItemRequest} [createMasterItemRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiConsginsalesConsignsaledetailsConsignsaledetailIdUpdateForApprovePut(consignsaledetailId: string, confirmReceivedConsignRequest?: ConfirmReceivedConsignRequest, options?: any): AxiosPromise<ConsignSaleDetailResponseResult> {
-            return localVarFp.apiConsginsalesConsignsaledetailsConsignsaledetailIdUpdateForApprovePut(consignsaledetailId, confirmReceivedConsignRequest, options).then((request) => request(axios, basePath));
+        apiConsginsalesConsignsaledetailsConsignsaledetailIdCreateMasteritemPost(consignsaledetailId: string, createMasterItemRequest?: CreateMasterItemRequest, options?: any): AxiosPromise<ConsignSaleDetailResponseResult> {
+            return localVarFp.apiConsginsalesConsignsaledetailsConsignsaledetailIdCreateMasteritemPost(consignsaledetailId, createMasterItemRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -11818,13 +14472,13 @@ export class ConsignSaleApi extends BaseAPI {
     /**
      * 
      * @param {string} consignsaledetailId 
-     * @param {ConfirmReceivedConsignRequest} [confirmReceivedConsignRequest] 
+     * @param {CreateMasterItemRequest} [createMasterItemRequest] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ConsignSaleApi
      */
-    public apiConsginsalesConsignsaledetailsConsignsaledetailIdUpdateForApprovePut(consignsaledetailId: string, confirmReceivedConsignRequest?: ConfirmReceivedConsignRequest, options?: RawAxiosRequestConfig) {
-        return ConsignSaleApiFp(this.configuration).apiConsginsalesConsignsaledetailsConsignsaledetailIdUpdateForApprovePut(consignsaledetailId, confirmReceivedConsignRequest, options).then((request) => request(this.axios, this.basePath));
+    public apiConsginsalesConsignsaledetailsConsignsaledetailIdCreateMasteritemPost(consignsaledetailId: string, createMasterItemRequest?: CreateMasterItemRequest, options?: RawAxiosRequestConfig) {
+        return ConsignSaleApiFp(this.configuration).apiConsginsalesConsignsaledetailsConsignsaledetailIdCreateMasteritemPost(consignsaledetailId, createMasterItemRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -12290,19 +14944,28 @@ export const FashionItemApiAxiosParamCreator = function (configuration?: Configu
     return {
         /**
          * 
-         * @param {string} [searchTerm] 
-         * @param {number} [pageNumber] 
-         * @param {number} [pageSize] 
+         * @param {string} [itemCode] 
          * @param {string} [memberId] 
-         * @param {string} [categoryId] 
+         * @param {GenderType} [gender] 
+         * @param {string} [color] 
+         * @param {SizeType} [size] 
+         * @param {string} [condition] 
+         * @param {number} [minPrice] 
+         * @param {number} [maxPrice] 
          * @param {Array<FashionItemStatus>} [status] 
          * @param {Array<FashionItemType>} [type] 
+         * @param {string} [sortBy] 
+         * @param {boolean} [sortDescending] 
+         * @param {number} [pageNumber] 
+         * @param {number} [pageSize] 
+         * @param {string} [name] 
+         * @param {string} [categoryId] 
          * @param {string} [shopId] 
-         * @param {GenderType} [genderType] 
+         * @param {string} [masterItemId] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiFashionitemsGet: async (searchTerm?: string, pageNumber?: number, pageSize?: number, memberId?: string, categoryId?: string, status?: Array<FashionItemStatus>, type?: Array<FashionItemType>, shopId?: string, genderType?: GenderType, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        apiFashionitemsGet: async (itemCode?: string, memberId?: string, gender?: GenderType, color?: string, size?: SizeType, condition?: string, minPrice?: number, maxPrice?: number, status?: Array<FashionItemStatus>, type?: Array<FashionItemType>, sortBy?: string, sortDescending?: boolean, pageNumber?: number, pageSize?: number, name?: string, categoryId?: string, shopId?: string, masterItemId?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/fashionitems`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -12319,24 +14982,36 @@ export const FashionItemApiAxiosParamCreator = function (configuration?: Configu
             // http bearer authentication required
             await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
-            if (searchTerm !== undefined) {
-                localVarQueryParameter['SearchTerm'] = searchTerm;
-            }
-
-            if (pageNumber !== undefined) {
-                localVarQueryParameter['PageNumber'] = pageNumber;
-            }
-
-            if (pageSize !== undefined) {
-                localVarQueryParameter['PageSize'] = pageSize;
+            if (itemCode !== undefined) {
+                localVarQueryParameter['ItemCode'] = itemCode;
             }
 
             if (memberId !== undefined) {
                 localVarQueryParameter['MemberId'] = memberId;
             }
 
-            if (categoryId !== undefined) {
-                localVarQueryParameter['CategoryId'] = categoryId;
+            if (gender !== undefined) {
+                localVarQueryParameter['Gender'] = gender;
+            }
+
+            if (color !== undefined) {
+                localVarQueryParameter['Color'] = color;
+            }
+
+            if (size !== undefined) {
+                localVarQueryParameter['Size'] = size;
+            }
+
+            if (condition !== undefined) {
+                localVarQueryParameter['Condition'] = condition;
+            }
+
+            if (minPrice !== undefined) {
+                localVarQueryParameter['MinPrice'] = minPrice;
+            }
+
+            if (maxPrice !== undefined) {
+                localVarQueryParameter['MaxPrice'] = maxPrice;
             }
 
             if (status) {
@@ -12347,12 +15022,36 @@ export const FashionItemApiAxiosParamCreator = function (configuration?: Configu
                 localVarQueryParameter['Type'] = type;
             }
 
+            if (sortBy !== undefined) {
+                localVarQueryParameter['SortBy'] = sortBy;
+            }
+
+            if (sortDescending !== undefined) {
+                localVarQueryParameter['SortDescending'] = sortDescending;
+            }
+
+            if (pageNumber !== undefined) {
+                localVarQueryParameter['PageNumber'] = pageNumber;
+            }
+
+            if (pageSize !== undefined) {
+                localVarQueryParameter['PageSize'] = pageSize;
+            }
+
+            if (name !== undefined) {
+                localVarQueryParameter['Name'] = name;
+            }
+
+            if (categoryId !== undefined) {
+                localVarQueryParameter['CategoryId'] = categoryId;
+            }
+
             if (shopId !== undefined) {
                 localVarQueryParameter['ShopId'] = shopId;
             }
 
-            if (genderType !== undefined) {
-                localVarQueryParameter['GenderType'] = genderType;
+            if (masterItemId !== undefined) {
+                localVarQueryParameter['MasterItemId'] = masterItemId;
             }
 
 
@@ -12368,15 +15067,15 @@ export const FashionItemApiAxiosParamCreator = function (configuration?: Configu
         },
         /**
          * 
-         * @param {string} id 
+         * @param {string} itemId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiFashionitemsIdGet: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('apiFashionitemsIdGet', 'id', id)
-            const localVarPath = `/api/fashionitems/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+        apiFashionitemsItemIdGet: async (itemId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'itemId' is not null or undefined
+            assertParamExists('apiFashionitemsItemIdGet', 'itemId', itemId)
+            const localVarPath = `/api/fashionitems/{itemId}`
+                .replace(`{${"itemId"}}`, encodeURIComponent(String(itemId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -12522,6 +15221,379 @@ export const FashionItemApiAxiosParamCreator = function (configuration?: Configu
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * 
+         * @param {string} [searchTerm] 
+         * @param {string} [searchItemCode] 
+         * @param {number} [pageNumber] 
+         * @param {number} [pageSize] 
+         * @param {string} [categoryId] 
+         * @param {string} [shopId] 
+         * @param {GenderType} [genderType] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiFashionitemsMasterItemsGet: async (searchTerm?: string, searchItemCode?: string, pageNumber?: number, pageSize?: number, categoryId?: string, shopId?: string, genderType?: GenderType, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/fashionitems/master-items`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            if (searchTerm !== undefined) {
+                localVarQueryParameter['SearchTerm'] = searchTerm;
+            }
+
+            if (searchItemCode !== undefined) {
+                localVarQueryParameter['SearchItemCode'] = searchItemCode;
+            }
+
+            if (pageNumber !== undefined) {
+                localVarQueryParameter['PageNumber'] = pageNumber;
+            }
+
+            if (pageSize !== undefined) {
+                localVarQueryParameter['PageSize'] = pageSize;
+            }
+
+            if (categoryId !== undefined) {
+                localVarQueryParameter['CategoryId'] = categoryId;
+            }
+
+            if (shopId !== undefined) {
+                localVarQueryParameter['ShopId'] = shopId;
+            }
+
+            if (genderType !== undefined) {
+                localVarQueryParameter['GenderType'] = genderType;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} masterItemId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiFashionitemsMasterItemsMasterItemIdGet: async (masterItemId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'masterItemId' is not null or undefined
+            assertParamExists('apiFashionitemsMasterItemsMasterItemIdGet', 'masterItemId', masterItemId)
+            const localVarPath = `/api/fashionitems/master-items/{masterItemId}`
+                .replace(`{${"masterItemId"}}`, encodeURIComponent(String(masterItemId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {CreateMasterItemRequest} [createMasterItemRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiFashionitemsMasterItemsPost: async (createMasterItemRequest?: CreateMasterItemRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/fashionitems/master-items`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(createMasterItemRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} masteritemId 
+         * @param {number} [pageNumber] 
+         * @param {number} [pageSize] 
+         * @param {number} [minPrice] 
+         * @param {number} [maxPrice] 
+         * @param {string} [condition] 
+         * @param {string} [color] 
+         * @param {Array<SizeType>} [size] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiFashionitemsMasteritemIdItemVariantsGet: async (masteritemId: string, pageNumber?: number, pageSize?: number, minPrice?: number, maxPrice?: number, condition?: string, color?: string, size?: Array<SizeType>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'masteritemId' is not null or undefined
+            assertParamExists('apiFashionitemsMasteritemIdItemVariantsGet', 'masteritemId', masteritemId)
+            const localVarPath = `/api/fashionitems/{masteritemId}/item-variants`
+                .replace(`{${"masteritemId"}}`, encodeURIComponent(String(masteritemId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            if (pageNumber !== undefined) {
+                localVarQueryParameter['PageNumber'] = pageNumber;
+            }
+
+            if (pageSize !== undefined) {
+                localVarQueryParameter['PageSize'] = pageSize;
+            }
+
+            if (minPrice !== undefined) {
+                localVarQueryParameter['MinPrice'] = minPrice;
+            }
+
+            if (maxPrice !== undefined) {
+                localVarQueryParameter['MaxPrice'] = maxPrice;
+            }
+
+            if (condition !== undefined) {
+                localVarQueryParameter['Condition'] = condition;
+            }
+
+            if (color !== undefined) {
+                localVarQueryParameter['Color'] = color;
+            }
+
+            if (size) {
+                localVarQueryParameter['Size'] = size;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} masteritemId 
+         * @param {CreateItemVariationRequest} [createItemVariationRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiFashionitemsMasteritemIdItemVariantsPost: async (masteritemId: string, createItemVariationRequest?: CreateItemVariationRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'masteritemId' is not null or undefined
+            assertParamExists('apiFashionitemsMasteritemIdItemVariantsPost', 'masteritemId', masteritemId)
+            const localVarPath = `/api/fashionitems/{masteritemId}/item-variants`
+                .replace(`{${"masteritemId"}}`, encodeURIComponent(String(masteritemId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(createItemVariationRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} variationId 
+         * @param {string} [searchItemCode] 
+         * @param {number} [pageNumber] 
+         * @param {number} [pageSize] 
+         * @param {string} [memberId] 
+         * @param {number} [minSellingPrice] 
+         * @param {number} [maxSellingPrice] 
+         * @param {Array<FashionItemStatus>} [status] 
+         * @param {Array<FashionItemType>} [types] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiFashionitemsVariationIdIndividualItemsGet: async (variationId: string, searchItemCode?: string, pageNumber?: number, pageSize?: number, memberId?: string, minSellingPrice?: number, maxSellingPrice?: number, status?: Array<FashionItemStatus>, types?: Array<FashionItemType>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'variationId' is not null or undefined
+            assertParamExists('apiFashionitemsVariationIdIndividualItemsGet', 'variationId', variationId)
+            const localVarPath = `/api/fashionitems/{variationId}/individual-items`
+                .replace(`{${"variationId"}}`, encodeURIComponent(String(variationId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            if (searchItemCode !== undefined) {
+                localVarQueryParameter['SearchItemCode'] = searchItemCode;
+            }
+
+            if (pageNumber !== undefined) {
+                localVarQueryParameter['PageNumber'] = pageNumber;
+            }
+
+            if (pageSize !== undefined) {
+                localVarQueryParameter['PageSize'] = pageSize;
+            }
+
+            if (memberId !== undefined) {
+                localVarQueryParameter['MemberId'] = memberId;
+            }
+
+            if (minSellingPrice !== undefined) {
+                localVarQueryParameter['MinSellingPrice'] = minSellingPrice;
+            }
+
+            if (maxSellingPrice !== undefined) {
+                localVarQueryParameter['MaxSellingPrice'] = maxSellingPrice;
+            }
+
+            if (status) {
+                localVarQueryParameter['Status'] = status;
+            }
+
+            if (types) {
+                localVarQueryParameter['Types'] = types;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} variationId 
+         * @param {Array<CreateIndividualItemRequest>} [createIndividualItemRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiFashionitemsVariationIdIndividualItemsPost: async (variationId: string, createIndividualItemRequest?: Array<CreateIndividualItemRequest>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'variationId' is not null or undefined
+            assertParamExists('apiFashionitemsVariationIdIndividualItemsPost', 'variationId', variationId)
+            const localVarPath = `/api/fashionitems/{variationId}/individual-items`
+                .replace(`{${"variationId"}}`, encodeURIComponent(String(variationId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(createIndividualItemRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -12534,34 +15606,43 @@ export const FashionItemApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
-         * @param {string} [searchTerm] 
-         * @param {number} [pageNumber] 
-         * @param {number} [pageSize] 
+         * @param {string} [itemCode] 
          * @param {string} [memberId] 
-         * @param {string} [categoryId] 
+         * @param {GenderType} [gender] 
+         * @param {string} [color] 
+         * @param {SizeType} [size] 
+         * @param {string} [condition] 
+         * @param {number} [minPrice] 
+         * @param {number} [maxPrice] 
          * @param {Array<FashionItemStatus>} [status] 
          * @param {Array<FashionItemType>} [type] 
+         * @param {string} [sortBy] 
+         * @param {boolean} [sortDescending] 
+         * @param {number} [pageNumber] 
+         * @param {number} [pageSize] 
+         * @param {string} [name] 
+         * @param {string} [categoryId] 
          * @param {string} [shopId] 
-         * @param {GenderType} [genderType] 
+         * @param {string} [masterItemId] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiFashionitemsGet(searchTerm?: string, pageNumber?: number, pageSize?: number, memberId?: string, categoryId?: string, status?: Array<FashionItemStatus>, type?: Array<FashionItemType>, shopId?: string, genderType?: GenderType, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FashionItemDetailResponsePaginationResponseResult>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiFashionitemsGet(searchTerm, pageNumber, pageSize, memberId, categoryId, status, type, shopId, genderType, options);
+        async apiFashionitemsGet(itemCode?: string, memberId?: string, gender?: GenderType, color?: string, size?: SizeType, condition?: string, minPrice?: number, maxPrice?: number, status?: Array<FashionItemStatus>, type?: Array<FashionItemType>, sortBy?: string, sortDescending?: boolean, pageNumber?: number, pageSize?: number, name?: string, categoryId?: string, shopId?: string, masterItemId?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FashionItemListPaginationResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiFashionitemsGet(itemCode, memberId, gender, color, size, condition, minPrice, maxPrice, status, type, sortBy, sortDescending, pageNumber, pageSize, name, categoryId, shopId, masterItemId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['FashionItemApi.apiFashionitemsGet']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
-         * @param {string} id 
+         * @param {string} itemId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiFashionitemsIdGet(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FashionItemDetailResponseResult>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiFashionitemsIdGet(id, options);
+        async apiFashionitemsItemIdGet(itemId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FashionItemDetailResponseResult>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiFashionitemsItemIdGet(itemId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['FashionItemApi.apiFashionitemsIdGet']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['FashionItemApi.apiFashionitemsItemIdGet']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -12602,6 +15683,113 @@ export const FashionItemApiFp = function(configuration?: Configuration) {
             const localVarOperationServerBasePath = operationServerMap['FashionItemApi.apiFashionitemsItemidCheckAvailabilityPut']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
+        /**
+         * 
+         * @param {string} [searchTerm] 
+         * @param {string} [searchItemCode] 
+         * @param {number} [pageNumber] 
+         * @param {number} [pageSize] 
+         * @param {string} [categoryId] 
+         * @param {string} [shopId] 
+         * @param {GenderType} [genderType] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiFashionitemsMasterItemsGet(searchTerm?: string, searchItemCode?: string, pageNumber?: number, pageSize?: number, categoryId?: string, shopId?: string, genderType?: GenderType, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MasterItemListResponsePaginationResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiFashionitemsMasterItemsGet(searchTerm, searchItemCode, pageNumber, pageSize, categoryId, shopId, genderType, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['FashionItemApi.apiFashionitemsMasterItemsGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {string} masterItemId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiFashionitemsMasterItemsMasterItemIdGet(masterItemId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MasterItemDetailResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiFashionitemsMasterItemsMasterItemIdGet(masterItemId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['FashionItemApi.apiFashionitemsMasterItemsMasterItemIdGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {CreateMasterItemRequest} [createMasterItemRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiFashionitemsMasterItemsPost(createMasterItemRequest?: CreateMasterItemRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MasterItemResponseResult>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiFashionitemsMasterItemsPost(createMasterItemRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['FashionItemApi.apiFashionitemsMasterItemsPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {string} masteritemId 
+         * @param {number} [pageNumber] 
+         * @param {number} [pageSize] 
+         * @param {number} [minPrice] 
+         * @param {number} [maxPrice] 
+         * @param {string} [condition] 
+         * @param {string} [color] 
+         * @param {Array<SizeType>} [size] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiFashionitemsMasteritemIdItemVariantsGet(masteritemId: string, pageNumber?: number, pageSize?: number, minPrice?: number, maxPrice?: number, condition?: string, color?: string, size?: Array<SizeType>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ItemVariationListResponsePaginationResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiFashionitemsMasteritemIdItemVariantsGet(masteritemId, pageNumber, pageSize, minPrice, maxPrice, condition, color, size, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['FashionItemApi.apiFashionitemsMasteritemIdItemVariantsGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {string} masteritemId 
+         * @param {CreateItemVariationRequest} [createItemVariationRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiFashionitemsMasteritemIdItemVariantsPost(masteritemId: string, createItemVariationRequest?: CreateItemVariationRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ItemVariationResponseResult>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiFashionitemsMasteritemIdItemVariantsPost(masteritemId, createItemVariationRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['FashionItemApi.apiFashionitemsMasteritemIdItemVariantsPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {string} variationId 
+         * @param {string} [searchItemCode] 
+         * @param {number} [pageNumber] 
+         * @param {number} [pageSize] 
+         * @param {string} [memberId] 
+         * @param {number} [minSellingPrice] 
+         * @param {number} [maxSellingPrice] 
+         * @param {Array<FashionItemStatus>} [status] 
+         * @param {Array<FashionItemType>} [types] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiFashionitemsVariationIdIndividualItemsGet(variationId: string, searchItemCode?: string, pageNumber?: number, pageSize?: number, memberId?: string, minSellingPrice?: number, maxSellingPrice?: number, status?: Array<FashionItemStatus>, types?: Array<FashionItemType>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<IndividualItemListResponsePaginationResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiFashionitemsVariationIdIndividualItemsGet(variationId, searchItemCode, pageNumber, pageSize, memberId, minSellingPrice, maxSellingPrice, status, types, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['FashionItemApi.apiFashionitemsVariationIdIndividualItemsGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {string} variationId 
+         * @param {Array<CreateIndividualItemRequest>} [createIndividualItemRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiFashionitemsVariationIdIndividualItemsPost(variationId: string, createIndividualItemRequest?: Array<CreateIndividualItemRequest>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<IndividualItemListResponseListResult>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiFashionitemsVariationIdIndividualItemsPost(variationId, createIndividualItemRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['FashionItemApi.apiFashionitemsVariationIdIndividualItemsPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
     }
 };
 
@@ -12614,29 +15802,38 @@ export const FashionItemApiFactory = function (configuration?: Configuration, ba
     return {
         /**
          * 
-         * @param {string} [searchTerm] 
-         * @param {number} [pageNumber] 
-         * @param {number} [pageSize] 
+         * @param {string} [itemCode] 
          * @param {string} [memberId] 
-         * @param {string} [categoryId] 
+         * @param {GenderType} [gender] 
+         * @param {string} [color] 
+         * @param {SizeType} [size] 
+         * @param {string} [condition] 
+         * @param {number} [minPrice] 
+         * @param {number} [maxPrice] 
          * @param {Array<FashionItemStatus>} [status] 
          * @param {Array<FashionItemType>} [type] 
+         * @param {string} [sortBy] 
+         * @param {boolean} [sortDescending] 
+         * @param {number} [pageNumber] 
+         * @param {number} [pageSize] 
+         * @param {string} [name] 
+         * @param {string} [categoryId] 
          * @param {string} [shopId] 
-         * @param {GenderType} [genderType] 
+         * @param {string} [masterItemId] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiFashionitemsGet(searchTerm?: string, pageNumber?: number, pageSize?: number, memberId?: string, categoryId?: string, status?: Array<FashionItemStatus>, type?: Array<FashionItemType>, shopId?: string, genderType?: GenderType, options?: any): AxiosPromise<FashionItemDetailResponsePaginationResponseResult> {
-            return localVarFp.apiFashionitemsGet(searchTerm, pageNumber, pageSize, memberId, categoryId, status, type, shopId, genderType, options).then((request) => request(axios, basePath));
+        apiFashionitemsGet(itemCode?: string, memberId?: string, gender?: GenderType, color?: string, size?: SizeType, condition?: string, minPrice?: number, maxPrice?: number, status?: Array<FashionItemStatus>, type?: Array<FashionItemType>, sortBy?: string, sortDescending?: boolean, pageNumber?: number, pageSize?: number, name?: string, categoryId?: string, shopId?: string, masterItemId?: string, options?: any): AxiosPromise<FashionItemListPaginationResponse> {
+            return localVarFp.apiFashionitemsGet(itemCode, memberId, gender, color, size, condition, minPrice, maxPrice, status, type, sortBy, sortDescending, pageNumber, pageSize, name, categoryId, shopId, masterItemId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
-         * @param {string} id 
+         * @param {string} itemId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiFashionitemsIdGet(id: string, options?: any): AxiosPromise<FashionItemDetailResponseResult> {
-            return localVarFp.apiFashionitemsIdGet(id, options).then((request) => request(axios, basePath));
+        apiFashionitemsItemIdGet(itemId: string, options?: any): AxiosPromise<FashionItemDetailResponseResult> {
+            return localVarFp.apiFashionitemsItemIdGet(itemId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -12667,6 +15864,92 @@ export const FashionItemApiFactory = function (configuration?: Configuration, ba
         apiFashionitemsItemidCheckAvailabilityPut(itemid: string, options?: any): AxiosPromise<FashionItemDetailResponseResult> {
             return localVarFp.apiFashionitemsItemidCheckAvailabilityPut(itemid, options).then((request) => request(axios, basePath));
         },
+        /**
+         * 
+         * @param {string} [searchTerm] 
+         * @param {string} [searchItemCode] 
+         * @param {number} [pageNumber] 
+         * @param {number} [pageSize] 
+         * @param {string} [categoryId] 
+         * @param {string} [shopId] 
+         * @param {GenderType} [genderType] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiFashionitemsMasterItemsGet(searchTerm?: string, searchItemCode?: string, pageNumber?: number, pageSize?: number, categoryId?: string, shopId?: string, genderType?: GenderType, options?: any): AxiosPromise<MasterItemListResponsePaginationResponse> {
+            return localVarFp.apiFashionitemsMasterItemsGet(searchTerm, searchItemCode, pageNumber, pageSize, categoryId, shopId, genderType, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} masterItemId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiFashionitemsMasterItemsMasterItemIdGet(masterItemId: string, options?: any): AxiosPromise<MasterItemDetailResponse> {
+            return localVarFp.apiFashionitemsMasterItemsMasterItemIdGet(masterItemId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {CreateMasterItemRequest} [createMasterItemRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiFashionitemsMasterItemsPost(createMasterItemRequest?: CreateMasterItemRequest, options?: any): AxiosPromise<MasterItemResponseResult> {
+            return localVarFp.apiFashionitemsMasterItemsPost(createMasterItemRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} masteritemId 
+         * @param {number} [pageNumber] 
+         * @param {number} [pageSize] 
+         * @param {number} [minPrice] 
+         * @param {number} [maxPrice] 
+         * @param {string} [condition] 
+         * @param {string} [color] 
+         * @param {Array<SizeType>} [size] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiFashionitemsMasteritemIdItemVariantsGet(masteritemId: string, pageNumber?: number, pageSize?: number, minPrice?: number, maxPrice?: number, condition?: string, color?: string, size?: Array<SizeType>, options?: any): AxiosPromise<ItemVariationListResponsePaginationResponse> {
+            return localVarFp.apiFashionitemsMasteritemIdItemVariantsGet(masteritemId, pageNumber, pageSize, minPrice, maxPrice, condition, color, size, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} masteritemId 
+         * @param {CreateItemVariationRequest} [createItemVariationRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiFashionitemsMasteritemIdItemVariantsPost(masteritemId: string, createItemVariationRequest?: CreateItemVariationRequest, options?: any): AxiosPromise<ItemVariationResponseResult> {
+            return localVarFp.apiFashionitemsMasteritemIdItemVariantsPost(masteritemId, createItemVariationRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} variationId 
+         * @param {string} [searchItemCode] 
+         * @param {number} [pageNumber] 
+         * @param {number} [pageSize] 
+         * @param {string} [memberId] 
+         * @param {number} [minSellingPrice] 
+         * @param {number} [maxSellingPrice] 
+         * @param {Array<FashionItemStatus>} [status] 
+         * @param {Array<FashionItemType>} [types] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiFashionitemsVariationIdIndividualItemsGet(variationId: string, searchItemCode?: string, pageNumber?: number, pageSize?: number, memberId?: string, minSellingPrice?: number, maxSellingPrice?: number, status?: Array<FashionItemStatus>, types?: Array<FashionItemType>, options?: any): AxiosPromise<IndividualItemListResponsePaginationResponse> {
+            return localVarFp.apiFashionitemsVariationIdIndividualItemsGet(variationId, searchItemCode, pageNumber, pageSize, memberId, minSellingPrice, maxSellingPrice, status, types, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} variationId 
+         * @param {Array<CreateIndividualItemRequest>} [createIndividualItemRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiFashionitemsVariationIdIndividualItemsPost(variationId: string, createIndividualItemRequest?: Array<CreateIndividualItemRequest>, options?: any): AxiosPromise<IndividualItemListResponseListResult> {
+            return localVarFp.apiFashionitemsVariationIdIndividualItemsPost(variationId, createIndividualItemRequest, options).then((request) => request(axios, basePath));
+        },
     };
 };
 
@@ -12679,32 +15962,41 @@ export const FashionItemApiFactory = function (configuration?: Configuration, ba
 export class FashionItemApi extends BaseAPI {
     /**
      * 
-     * @param {string} [searchTerm] 
-     * @param {number} [pageNumber] 
-     * @param {number} [pageSize] 
+     * @param {string} [itemCode] 
      * @param {string} [memberId] 
-     * @param {string} [categoryId] 
+     * @param {GenderType} [gender] 
+     * @param {string} [color] 
+     * @param {SizeType} [size] 
+     * @param {string} [condition] 
+     * @param {number} [minPrice] 
+     * @param {number} [maxPrice] 
      * @param {Array<FashionItemStatus>} [status] 
      * @param {Array<FashionItemType>} [type] 
+     * @param {string} [sortBy] 
+     * @param {boolean} [sortDescending] 
+     * @param {number} [pageNumber] 
+     * @param {number} [pageSize] 
+     * @param {string} [name] 
+     * @param {string} [categoryId] 
      * @param {string} [shopId] 
-     * @param {GenderType} [genderType] 
+     * @param {string} [masterItemId] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof FashionItemApi
      */
-    public apiFashionitemsGet(searchTerm?: string, pageNumber?: number, pageSize?: number, memberId?: string, categoryId?: string, status?: Array<FashionItemStatus>, type?: Array<FashionItemType>, shopId?: string, genderType?: GenderType, options?: RawAxiosRequestConfig) {
-        return FashionItemApiFp(this.configuration).apiFashionitemsGet(searchTerm, pageNumber, pageSize, memberId, categoryId, status, type, shopId, genderType, options).then((request) => request(this.axios, this.basePath));
+    public apiFashionitemsGet(itemCode?: string, memberId?: string, gender?: GenderType, color?: string, size?: SizeType, condition?: string, minPrice?: number, maxPrice?: number, status?: Array<FashionItemStatus>, type?: Array<FashionItemType>, sortBy?: string, sortDescending?: boolean, pageNumber?: number, pageSize?: number, name?: string, categoryId?: string, shopId?: string, masterItemId?: string, options?: RawAxiosRequestConfig) {
+        return FashionItemApiFp(this.configuration).apiFashionitemsGet(itemCode, memberId, gender, color, size, condition, minPrice, maxPrice, status, type, sortBy, sortDescending, pageNumber, pageSize, name, categoryId, shopId, masterItemId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
-     * @param {string} id 
+     * @param {string} itemId 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof FashionItemApi
      */
-    public apiFashionitemsIdGet(id: string, options?: RawAxiosRequestConfig) {
-        return FashionItemApiFp(this.configuration).apiFashionitemsIdGet(id, options).then((request) => request(this.axios, this.basePath));
+    public apiFashionitemsItemIdGet(itemId: string, options?: RawAxiosRequestConfig) {
+        return FashionItemApiFp(this.configuration).apiFashionitemsItemIdGet(itemId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -12740,6 +16032,106 @@ export class FashionItemApi extends BaseAPI {
      */
     public apiFashionitemsItemidCheckAvailabilityPut(itemid: string, options?: RawAxiosRequestConfig) {
         return FashionItemApiFp(this.configuration).apiFashionitemsItemidCheckAvailabilityPut(itemid, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} [searchTerm] 
+     * @param {string} [searchItemCode] 
+     * @param {number} [pageNumber] 
+     * @param {number} [pageSize] 
+     * @param {string} [categoryId] 
+     * @param {string} [shopId] 
+     * @param {GenderType} [genderType] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FashionItemApi
+     */
+    public apiFashionitemsMasterItemsGet(searchTerm?: string, searchItemCode?: string, pageNumber?: number, pageSize?: number, categoryId?: string, shopId?: string, genderType?: GenderType, options?: RawAxiosRequestConfig) {
+        return FashionItemApiFp(this.configuration).apiFashionitemsMasterItemsGet(searchTerm, searchItemCode, pageNumber, pageSize, categoryId, shopId, genderType, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} masterItemId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FashionItemApi
+     */
+    public apiFashionitemsMasterItemsMasterItemIdGet(masterItemId: string, options?: RawAxiosRequestConfig) {
+        return FashionItemApiFp(this.configuration).apiFashionitemsMasterItemsMasterItemIdGet(masterItemId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {CreateMasterItemRequest} [createMasterItemRequest] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FashionItemApi
+     */
+    public apiFashionitemsMasterItemsPost(createMasterItemRequest?: CreateMasterItemRequest, options?: RawAxiosRequestConfig) {
+        return FashionItemApiFp(this.configuration).apiFashionitemsMasterItemsPost(createMasterItemRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} masteritemId 
+     * @param {number} [pageNumber] 
+     * @param {number} [pageSize] 
+     * @param {number} [minPrice] 
+     * @param {number} [maxPrice] 
+     * @param {string} [condition] 
+     * @param {string} [color] 
+     * @param {Array<SizeType>} [size] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FashionItemApi
+     */
+    public apiFashionitemsMasteritemIdItemVariantsGet(masteritemId: string, pageNumber?: number, pageSize?: number, minPrice?: number, maxPrice?: number, condition?: string, color?: string, size?: Array<SizeType>, options?: RawAxiosRequestConfig) {
+        return FashionItemApiFp(this.configuration).apiFashionitemsMasteritemIdItemVariantsGet(masteritemId, pageNumber, pageSize, minPrice, maxPrice, condition, color, size, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} masteritemId 
+     * @param {CreateItemVariationRequest} [createItemVariationRequest] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FashionItemApi
+     */
+    public apiFashionitemsMasteritemIdItemVariantsPost(masteritemId: string, createItemVariationRequest?: CreateItemVariationRequest, options?: RawAxiosRequestConfig) {
+        return FashionItemApiFp(this.configuration).apiFashionitemsMasteritemIdItemVariantsPost(masteritemId, createItemVariationRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} variationId 
+     * @param {string} [searchItemCode] 
+     * @param {number} [pageNumber] 
+     * @param {number} [pageSize] 
+     * @param {string} [memberId] 
+     * @param {number} [minSellingPrice] 
+     * @param {number} [maxSellingPrice] 
+     * @param {Array<FashionItemStatus>} [status] 
+     * @param {Array<FashionItemType>} [types] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FashionItemApi
+     */
+    public apiFashionitemsVariationIdIndividualItemsGet(variationId: string, searchItemCode?: string, pageNumber?: number, pageSize?: number, memberId?: string, minSellingPrice?: number, maxSellingPrice?: number, status?: Array<FashionItemStatus>, types?: Array<FashionItemType>, options?: RawAxiosRequestConfig) {
+        return FashionItemApiFp(this.configuration).apiFashionitemsVariationIdIndividualItemsGet(variationId, searchItemCode, pageNumber, pageSize, memberId, minSellingPrice, maxSellingPrice, status, types, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} variationId 
+     * @param {Array<CreateIndividualItemRequest>} [createIndividualItemRequest] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FashionItemApi
+     */
+    public apiFashionitemsVariationIdIndividualItemsPost(variationId: string, createIndividualItemRequest?: Array<CreateIndividualItemRequest>, options?: RawAxiosRequestConfig) {
+        return FashionItemApiFp(this.configuration).apiFashionitemsVariationIdIndividualItemsPost(variationId, createIndividualItemRequest, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -13438,7 +16830,7 @@ export const OrderApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiOrdersOrderdetailsOrderdetailIdGet(orderdetailId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FashionItemOrderDetailResponseResult>> {
+        async apiOrdersOrderdetailsOrderdetailIdGet(orderdetailId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<IndividualFashionItemOrderDetailResponseResult>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.apiOrdersOrderdetailsOrderdetailIdGet(orderdetailId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['OrderApi.apiOrdersOrderdetailsOrderdetailIdGet']?.[localVarOperationServerIndex]?.url;
@@ -13556,7 +16948,7 @@ export const OrderApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiOrdersOrderdetailsOrderdetailIdGet(orderdetailId: string, options?: any): AxiosPromise<FashionItemOrderDetailResponseResult> {
+        apiOrdersOrderdetailsOrderdetailIdGet(orderdetailId: string, options?: any): AxiosPromise<IndividualFashionItemOrderDetailResponseResult> {
             return localVarFp.apiOrdersOrderdetailsOrderdetailIdGet(orderdetailId, options).then((request) => request(axios, basePath));
         },
         /**
@@ -14501,6 +17893,114 @@ export const ShopApiAxiosParamCreator = function (configuration?: Configuration)
         },
         /**
          * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiShopsGhnshopsGet: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/shops/ghnshops`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {GHNShopCreateRequest} [gHNShopCreateRequest] 
+         * @param {*} [options] Override http request option.
+         * @deprecated
+         * @throws {RequiredError}
+         */
+        apiShopsGhnshopsPost: async (gHNShopCreateRequest?: GHNShopCreateRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/shops/ghnshops`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(gHNShopCreateRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {CreateShopRequest} [createShopRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiShopsPost: async (createShopRequest?: CreateShopRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/shops`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(createShopRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {string} shopId 
          * @param {CreateConsignSaleByShopRequest} [createConsignSaleByShopRequest] 
          * @param {*} [options] Override http request option.
@@ -14850,6 +18350,42 @@ export const ShopApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiShopsGhnshopsGet(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GHNShopListGHNApiResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiShopsGhnshopsGet(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ShopApi.apiShopsGhnshopsGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {GHNShopCreateRequest} [gHNShopCreateRequest] 
+         * @param {*} [options] Override http request option.
+         * @deprecated
+         * @throws {RequiredError}
+         */
+        async apiShopsGhnshopsPost(gHNShopCreateRequest?: GHNShopCreateRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GHNShopCreateResponseGHNApiResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiShopsGhnshopsPost(gHNShopCreateRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ShopApi.apiShopsGhnshopsPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {CreateShopRequest} [createShopRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiShopsPost(createShopRequest?: CreateShopRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CreateShopResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiShopsPost(createShopRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ShopApi.apiShopsPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @param {string} shopId 
          * @param {CreateConsignSaleByShopRequest} [createConsignSaleByShopRequest] 
          * @param {*} [options] Override http request option.
@@ -14972,6 +18508,33 @@ export const ShopApiFactory = function (configuration?: Configuration, basePath?
         },
         /**
          * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiShopsGhnshopsGet(options?: any): AxiosPromise<GHNShopListGHNApiResponse> {
+            return localVarFp.apiShopsGhnshopsGet(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {GHNShopCreateRequest} [gHNShopCreateRequest] 
+         * @param {*} [options] Override http request option.
+         * @deprecated
+         * @throws {RequiredError}
+         */
+        apiShopsGhnshopsPost(gHNShopCreateRequest?: GHNShopCreateRequest, options?: any): AxiosPromise<GHNShopCreateResponseGHNApiResponse> {
+            return localVarFp.apiShopsGhnshopsPost(gHNShopCreateRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {CreateShopRequest} [createShopRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiShopsPost(createShopRequest?: CreateShopRequest, options?: any): AxiosPromise<CreateShopResponse> {
+            return localVarFp.apiShopsPost(createShopRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @param {string} shopId 
          * @param {CreateConsignSaleByShopRequest} [createConsignSaleByShopRequest] 
          * @param {*} [options] Override http request option.
@@ -15068,6 +18631,39 @@ export class ShopApi extends BaseAPI {
      */
     public apiShopsGet(options?: RawAxiosRequestConfig) {
         return ShopApiFp(this.configuration).apiShopsGet(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ShopApi
+     */
+    public apiShopsGhnshopsGet(options?: RawAxiosRequestConfig) {
+        return ShopApiFp(this.configuration).apiShopsGhnshopsGet(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {GHNShopCreateRequest} [gHNShopCreateRequest] 
+     * @param {*} [options] Override http request option.
+     * @deprecated
+     * @throws {RequiredError}
+     * @memberof ShopApi
+     */
+    public apiShopsGhnshopsPost(gHNShopCreateRequest?: GHNShopCreateRequest, options?: RawAxiosRequestConfig) {
+        return ShopApiFp(this.configuration).apiShopsGhnshopsPost(gHNShopCreateRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {CreateShopRequest} [createShopRequest] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ShopApi
+     */
+    public apiShopsPost(createShopRequest?: CreateShopRequest, options?: RawAxiosRequestConfig) {
+        return ShopApiFp(this.configuration).apiShopsPost(createShopRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

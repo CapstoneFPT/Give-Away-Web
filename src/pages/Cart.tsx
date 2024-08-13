@@ -16,7 +16,7 @@ import {
 import { useCart } from "./CartContext";
 import { DeleteOutlined } from "@ant-design/icons";
 import Checkbox from "antd/es/checkbox/Checkbox";
-import { AccountApi, CartRequest, OrderApi } from "../api";
+import { AccountApi, AddressApi, CartRequest, GHNDistrictResponse, GHNProvinceResponse, GHNWardResponse, OrderApi } from "../api";
 import { useNavigate } from "react-router-dom";
 
 const { Option } = Select;
@@ -27,32 +27,56 @@ const Cart: React.FC = () => {
   const [itemToRemove, setItemToRemove] = useState<any>(null);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [userId, setUserId] = useState<string | null>(null);
+  const [provinces, setProvinces] = useState<GHNProvinceResponse[]>([]);
+  const [districts, setDistricts] = useState<GHNDistrictResponse[]>([]);
+  const [wards, setWards] = useState<GHNWardResponse[]>([]);
+  const [selectedProvince, setSelectedProvince] = useState<number | null>(null);
+  const [selectedDistricts, setSelectedDistricts] = useState<number | null>(null);
   const navigate = useNavigate();
 
   const [form] = Form.useForm();
 
   useEffect(() => {
-    try {
-      const storedUserId = localStorage.getItem("userId");
-      if (storedUserId) {
-        const parsedUserId = JSON.parse(storedUserId);
-        setUserId(parsedUserId);
-        console.log("User ID:", parsedUserId);
-      } else {
-        console.warn("No user ID found in localStorage");
+    const fetchAddressData = async () => {
+      try {
+        const addressApi = new AddressApi();
+        const provinceResponse = await addressApi.apiAddressesProvincesGet();
+        setProvinces(provinceResponse.data.data!);
+      } catch (error) {
+        console.error("Error fetching provinces:", error);
       }
-    } catch (error) {
-      console.error("Error parsing user ID from localStorage:", error);
-      notification.error({
-        message: "Error",
-        description: "Failed to load user information. Please try logging in again.",
-      });
-    }
+    };
+
+    fetchAddressData();
   }, []);
 
   const handleDeleteItem = (item: any) => {
     setItemToRemove(item);
     setShowConfirm(true);
+  };
+
+  const handleSelectProvince = async (provinceId: number) => {
+    setSelectedProvince(provinceId);
+    console.log(provinceId)
+    try {
+      const addressApi = new AddressApi();
+      const districtResponse = await addressApi.apiAddressesDistrictsGet(provinceId);
+      setDistricts(districtResponse.data.data!);
+    } catch (error) {
+      console.error("Error fetching districts:", error);
+    }
+  };
+
+  const handleSelectDistricts = async ( districtsId: number) => {
+    setSelectedProvince(districtsId);
+    console.log(districtsId)
+    try {
+      const addressApi = new AddressApi();
+      const wardResponse = await addressApi.apiAddressesWardsGet(districtsId);
+      setWards(wardResponse.data.data!);
+    } catch (error) {
+      console.error("Error fetching districts:", error);
+    }
   };
 
   const handleConfirmRemove = () => {
@@ -76,10 +100,6 @@ const Cart: React.FC = () => {
       return updatedSelectedItems;
     });
   };
-  // const inforProfile = new AccountApi();
-  // const responseProfile = inforProfile.apiAccountsIdGet(userId!);
-  // console.log(responseProfile)
-
 
   const handleCheckOut = async () => {
     try {
@@ -96,8 +116,6 @@ const Cart: React.FC = () => {
         message.error("Please select at least one item.");
         return;
       }
-     
-
 
       const orderData: CartRequest = {
         paymentMethod: validateResult.paymentMethod,
@@ -153,18 +171,16 @@ const Cart: React.FC = () => {
             console.error("Error during QR Code payment:", error);
             notification.error({
               message: "Payment Error",
-              description: "An error occurred during QR Code payment. Please try again.",
+              description:
+                "An error occurred during QR Code payment. Please try again.",
             });
           }
           break;
         case "Point":
           try {
-            await orderApi.apiOrdersOrderIdPayPointsPost(
-              orderId,
-              {
-                memberId: userId,
-              }
-            );
+            await orderApi.apiOrdersOrderIdPayPointsPost(orderId, {
+              memberId: userId,
+            });
             notification.success({
               message: "Success",
               description: "Payment with points successful",
@@ -173,7 +189,8 @@ const Cart: React.FC = () => {
             console.error("Error during Point payment:", error);
             notification.error({
               message: "Payment Error",
-              description: "An error occurred during Point payment. Please try again.",
+              description:
+                "An error occurred during Point payment. Please try again.",
             });
           }
           break;
@@ -201,9 +218,9 @@ const Cart: React.FC = () => {
   };
 
   const formatBalance = (balance: number) => {
-    return new Intl.NumberFormat('de-DE').format(balance);
+    return new Intl.NumberFormat("de-DE").format(balance);
   };
-  
+
   const calculateTotalPrice = () => {
     return state.cartItems
       .filter((item) => selectedItems.includes(item.itemId!))
@@ -222,31 +239,38 @@ const Cart: React.FC = () => {
               <Row>
                 <Col span={8}>
                   <img
-                    style={{ height: "220px", width:'220px' }}
-                    src={item.images && Array.isArray(item.images) ? item.images[0] : "N/A"}
+                    style={{ height: "220px", width: "220px" }}
+                    src={
+                      item.images && Array.isArray(item.images)
+                        ? item.images[0]
+                        : "N/A"
+                    }
                     alt={item.name || "Product image"}
                   />
                 </Col>
                 <Col span={12}>
-                  <Typography style={{fontSize:'17px'}}>
+                  <Typography style={{ fontSize: "17px" }}>
                     <strong>Product Name: </strong>
                     {item.name || "N/A"}
                   </Typography>
-                  <Typography style={{fontSize:'18px'}}>
-                    <strong> Price: {formatBalance(item.sellingPrice || 0)} VND</strong>
+                  <Typography style={{ fontSize: "18px" }}>
+                    <strong>
+                      {" "}
+                      Price: {formatBalance(item.sellingPrice || 0)} VND
+                    </strong>
                   </Typography>
-                  <Typography style={{fontSize:'17px'}}>
+                  <Typography style={{ fontSize: "17px" }}>
                     <strong>Size: </strong>
                     {item.size || "N/A"}
                   </Typography>
-                  <Typography style={{fontSize:'17px'}}>
+                  <Typography style={{ fontSize: "17px" }}>
                     <strong>Color: </strong>
                     {item.color || "N/A"}
                   </Typography>
-                  <Typography style={{fontSize:'17px'}}>
+                  <Typography style={{ fontSize: "17px" }}>
                     <strong>Brand:</strong> {item.brand || "N/A"}
                   </Typography>
-                  <Typography style={{fontSize:'17px'}}>
+                  <Typography style={{ fontSize: "17px" }}>
                     <strong>Gender: </strong> {item.gender || "N/A"}
                   </Typography>
                 </Col>
@@ -282,9 +306,7 @@ const Cart: React.FC = () => {
             <Form.Item
               label="Payment Method"
               name="paymentMethod"
-              rules={[
-                { required: true, message: "Please select a payment method" },
-              ]}
+              rules={[{ required: true, message: "Please select a payment method" }]}
               style={{ marginBottom: "10px" }}
             >
               <Select
@@ -295,34 +317,73 @@ const Cart: React.FC = () => {
                 <Option value="COD">COD</Option>
                 <Option value="Point">Point</Option>
               </Select>
-            </Form.Item>
-            <Form.Item
-              label="Recipient Name"
-              name="recipientName"
-              rules={[
-                { required: true, message: "Please enter recipient name" },
-              ]}
-            >
-              <Input placeholder="Recipient Name" />
-            </Form.Item>
-            <Form.Item
-              label="Address"
-              name="address"
-              rules={[{ required: true, message: "Please enter address" }]}
-            >
-              <Input placeholder="Address" />
-            </Form.Item>
-            <Form.Item
+              <Form.Item
               label="Phone"
               name="phone"
-              rules={[{ required: true, message: "Please enter phone number" },
+              rules={[
+                { required: true, message: "Please enter phone number" },
                 {
-                  pattern: /^(0|\+84)(\s?[1-9]\d{8})$/,
+                  pattern: /^(\+84)(\s?[1-9]\d{8})$/,
                   message: "Please enter a valid phone number",
                 },
               ]}
             >
               <Input placeholder="Phone" />
+            </Form.Item>
+            </Form.Item>
+            <Form.Item
+              label="Recipient Name"
+              name="recipientName"
+              rules={[{ required: true, message: "Please enter recipient name" }]}
+            >
+              <Input placeholder="Recipient Name" />
+            </Form.Item>
+            
+            <Form.Item
+              label="Province"
+              name="province"
+              rules={[{ required: true, message: "Please select a province" }]}
+            >
+              <Select
+                placeholder="Select Province"
+                onChange={handleSelectProvince}
+              >
+                {provinces.map((province) => (
+                  <Option key={province.provinceId} value={province.provinceId}>
+                    {province.provinceName}
+                  </Option>
+                ))}
+              </Select>
+            </Form.Item>
+            <Form.Item
+              label="District"
+              name="district"
+
+              rules={[{ required: true, message: "Please select a district" }]}
+
+            >
+              <Select placeholder="Select District"
+                 onChange={handleSelectDistricts}
+              >
+                {districts.map((district) => (
+                  <Option key={district.districtId} value={district.districtId}>
+                    {district.districtName}
+                  </Option>
+                ))}
+              </Select>
+            </Form.Item>
+            <Form.Item
+              label="Wards"
+              name="Wards"
+              rules={[{ required: true, message: "Please select a Wards" }]}
+            >
+              <Select placeholder="Select Wards">
+                {wards.map((wards) => (
+                  <Option key={wards.wardCode} value={wards.wardCode}>
+                    {wards.wardName}
+                  </Option>
+                ))}
+              </Select>
             </Form.Item>
           </Form>
         </Card>
@@ -337,7 +398,10 @@ const Cart: React.FC = () => {
                 }}
               >
                 <Typography style={{ fontSize: "20px" }}>
-                  <strong> Total price: {formatBalance(calculateTotalPrice())} VND</strong>
+                  <strong>
+                    {" "}
+                    Total price: {formatBalance(calculateTotalPrice())} VND
+                  </strong>
                 </Typography>
               </div>
               <div style={{ display: "flex", justifyContent: "space-between" }}>

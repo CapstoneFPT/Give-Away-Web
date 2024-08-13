@@ -1,12 +1,12 @@
 import React from 'react';
 import { Card, Button } from 'antd';
-import { FashionItemDetailResponse } from '../../api';
+import { FashionItemDetailResponse, MasterItemListResponse } from '../../api';
 
 interface ProductCardProps {
-  product: FashionItemDetailResponse;
+  product: MasterItemListResponse;
   formatBalance: (price: number) => string;
   onAddToCart: (product: FashionItemDetailResponse) => void;
-  onCardClick: (itemId: string) => void;
+  onCardClick: (masterItemsId: string) => void;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, formatBalance, onAddToCart, onCardClick }) => {
@@ -14,7 +14,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, formatBalance, onAdd
     <Card
       style={{ width: "300px", boxShadow: '-moz-initial', textAlign: 'center' }}
       hoverable
-      onClick={() => onCardClick(product.itemId!)}
+      onClick={() => onCardClick(product.masterItemId!)}
       cover={
         <img
           alt={product.name ?? "N/A"}
@@ -26,7 +26,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, formatBalance, onAdd
       <Card.Meta
         style={{ height: "60px", fontWeight: 'bold', color: 'black', fontSize: '18px' }}
         title={product.name}
-        description={`${formatBalance(product.sellingPrice!)} VND`}
       />
       <div style={{ marginTop: "15px", textAlign: 'center' }}>
         <Button

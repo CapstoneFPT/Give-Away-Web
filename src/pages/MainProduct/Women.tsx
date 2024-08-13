@@ -20,7 +20,7 @@ import {
   FashionItemApi,
   FashionItemDetailResponse,
 } from "../../api";
-import backgroundImageUrl from "../../components/Assets/freepik_5229782.jpg";
+import backgroundImageUrl from "../../components/Assets/freepik_3858429.jpg";
 import ProductCard from "../../components/commons/ProductCard";
 import SubMenu from "antd/es/menu/SubMenu";
 

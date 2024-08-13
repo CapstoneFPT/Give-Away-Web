@@ -44,6 +44,7 @@ import RefundHistory from "./pages/Transaction/RefundHistory.tsx";
 import PayoutHistory from "./pages/Transaction/PayoutHistory.tsx";
 import BranchNavbar from "./components/Navbar/BranchNavbar.tsx";
 import BranchItems from "./pages/MainProduct/BranchItems.tsx";
+import ChildItems from "./pages/MainProduct/ChildItems.tsx";
 
 function App() {
   return (
@@ -318,7 +319,6 @@ function App() {
                 <>
                 <Navbar />
                   <PayoutHistory />
-                  <Footer />
                 </>
               }
             />
@@ -390,6 +390,17 @@ function App() {
                 </>
               }
             />
+            <Route
+              path="/listItems/:masterItemsId"
+              element={
+                <>
+                  <Navbar />
+                  <ChildItems masterItemsId="" />
+                  <Footer />
+                </>
+              }
+            />
+
             <Route
               path="/ConsignDetail" // Sửa lại đường dẫn
               element={

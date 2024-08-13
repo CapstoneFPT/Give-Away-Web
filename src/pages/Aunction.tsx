@@ -18,7 +18,6 @@ import {
   CreateBidRequest,
 } from "../api";
 import signalRService from "../pages/service/signalrService";
-import "../pages/Auction.css";
 import signalrService from "../pages/service/signalrService";
 
 const { Title, Paragraph } = Typography;
