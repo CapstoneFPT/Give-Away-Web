@@ -22,9 +22,9 @@ const PurchaseHistory = () => {
         setTotal(response.data.data?.totalCount || 0);
         setLoading(false);
     }
-    const formatBalance = (balance:any) => {
-        return new Intl.NumberFormat('de-DE').format(balance);
-      };
+        const formatBalance = (balance:any) => {
+            return new Intl.NumberFormat('de-DE').format(balance);
+        };
 
     const columns: TableColumnsType<GetTransactionsResponse> = [
         {

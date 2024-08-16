@@ -391,7 +391,7 @@ function App() {
               }
             />
             <Route
-              path="/listItems/:masterItemId"
+              path="/listItems/:masterItemCode"
               element={
                 <>
                   <Navbar />

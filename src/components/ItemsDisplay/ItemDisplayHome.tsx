@@ -36,15 +36,16 @@ const ItemDisplayHome: React.FC = () => {
     setIsLoading(true);
     try {
       const fashionItemApi = new FashionItemApi();
-      const response = await fashionItemApi.apiFashionitemsMasterItemsGet(
+      const response = await fashionItemApi.apiFashionitemsMasterItemsFrontpageGet(
+        null!,
         null!,
         null!,
         page,
         pageSize,
-        null!
       );
 
       console.log(response);
+
 
       // Access the items array correctly
       const data = response.data;
@@ -82,9 +83,9 @@ const ItemDisplayHome: React.FC = () => {
     return new Intl.NumberFormat("de-DE").format(sellingPrice);
   };
 
-  const goToListProducts = (masterItemId: string) => {
-    console.log("Navigating to ListItem with itemId:", masterItemId);
-    navigate(`/listItems/${masterItemId}`);
+  const goToListProducts = (masterItemCode: string) => {
+    console.log("Navigating to ListItem with itemId:", masterItemCode);
+    navigate(`/listItems/${masterItemCode}`);
   };
 
   return (
@@ -114,7 +115,7 @@ const ItemDisplayHome: React.FC = () => {
                   product={product}
                   formatBalance={formatBalance}
                   onAddToCart={handleAddToCart}
-                  onCardClick={() => goToListProducts(product.masterItemId!)}
+                  onCardClick={() => goToListProducts(product.itemCode!)}
                 />
               </Col>
             ))}

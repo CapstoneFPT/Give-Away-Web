@@ -93,7 +93,13 @@ const Men: React.FC = () => {
       
       const fashionItemApi = new FashionItemApi();
 
-      const response = await fashionItemApi.apiFashionitemsMasterItemsGet();
+      const response = await fashionItemApi.apiFashionitemsMasterItemsFrontpageGet(
+        null!,
+        null!,
+        'Male',
+        page,
+        pageSize
+      );
       // console.log(response.data.data?.items);
 
       // console.debug(response);
@@ -141,9 +147,9 @@ const Men: React.FC = () => {
     return new Intl.NumberFormat("de-DE").format(sellingPrice);
   };
 
-  const goToListProducts = (masterItemId: any) => {
-    console.log("Navigating to itemDetail with itemId:", masterItemId);
-    navigate(`/listItems/${masterItemId}`);
+  const goToListProducts = (masterItemCode: string) => {
+    console.log("Navigating to ListItem with itemId:", masterItemCode);
+    navigate(`/listItems/${masterItemCode}`);
   };
 
   return (
@@ -187,13 +193,13 @@ const Men: React.FC = () => {
                 )}
               </div>
               <Row gutter={[16, 16]}>
-                {products.map((product: FashionItemDetailResponse) => (
-                  <Col key={product.itemId} xs={22} sm={12} md={6} lg={6}>
+                {products.map((product) => (
+                  <Col key={product.masterItemId} xs={22} sm={12} md={6} lg={6}>
                     <ProductCard
                       product={product}
                       onAddToCart={handleAddToCart}
                       formatBalance={formatBalance}
-                      onCardClick={goToListProducts}
+                      onCardClick={() => goToListProducts(product.itemCode!)} // Updated to use an arrow function
                     />
                   </Col>
                 ))}

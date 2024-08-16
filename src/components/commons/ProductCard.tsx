@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Button } from 'antd';
+import { Card, Button, Typography } from 'antd';
 import { FashionItemDetailResponse, MasterItemListResponse } from '../../api';
 
 interface ProductCardProps {
@@ -28,6 +28,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, formatBalance, onAdd
         style={{ height: "60px", fontWeight: 'bold', color: 'black', fontSize: '18px' }}
         title={product.name}
       />
+      
+      <div style={{textAlign:'left'}}>
+      <Typography> <strong>Brand:</strong> {product.brand}</Typography>
+      <Typography><strong>Gender:</strong> {product. gender}</Typography>
+      <Typography><strong>Code:</strong> {product.itemCode}</Typography>
+      <Typography><strong>Total:</strong> {product.stockCount}</Typography>
+      </div>
       {/* <div style={{ marginTop: "15px", textAlign: 'center' }}>
         <Button
           type="primary"

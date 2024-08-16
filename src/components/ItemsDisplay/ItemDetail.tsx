@@ -19,7 +19,7 @@ const { Title, Paragraph } = Typography;
 
 const styles = {
   para: {
-    margin: '10px',
+    margin: "10px",
     fontSize: "18px",
     color: "black",
   },
@@ -56,7 +56,9 @@ const ItemDetail: React.FC = () => {
       async function fetchFashionItemDetails() {
         try {
           const fashionItemApi = new FashionItemApi();
-          const response = await fashionItemApi.apiFashionitemsItemIdGet(itemId!);
+          const response = await fashionItemApi.apiFashionitemsItemIdGet(
+            itemId!
+          );
           console.debug(itemId, response.data);
           setProduct(response.data.data!);
           setSelectedImage(response.data.data?.images![0] || "");
@@ -107,24 +109,27 @@ const ItemDetail: React.FC = () => {
           Product Detail
         </h1>
         <Row gutter={[16, 16]} style={{ margin: "10px" }}>
-        <Col span={4}>
-  <Row gutter={[10, 8]} style={{ maxHeight: "690px", overflowY: "auto" }}>
-    {product.images?.map((image, index) => (
-      <Col span={24} key={index}>
-        <img
-          src={image}
-          alt={`Thumbnail ${index}`}
-          style={{
-            width: "95%",
-            height: "230px",
-            cursor: "pointer",
-            border:
-              selectedImage === image ? "2px solid #1890ff" : "none",
-          }}
-          onClick={() => setSelectedImage(image)}
-        />
-      </Col>
-    ))}
+          <Col span={4}>
+            <Row
+              gutter={[10, 8]}
+              style={{ maxHeight: "690px", overflowY: "auto" }}
+            >
+              {product.images?.map((image, index) => (
+                <Col span={24} key={index}>
+                  <img
+                    src={image}
+                    alt={`Thumbnail ${index}`}
+                    style={{
+                      width: "95%",
+                      height: "230px",
+                      cursor: "pointer",
+                      border:
+                        selectedImage === image ? "2px solid #1890ff" : "none",
+                    }}
+                    onClick={() => setSelectedImage(image)}
+                  />
+                </Col>
+              ))}
             </Row>
           </Col>
           <Col span={11}>
@@ -148,10 +153,9 @@ const ItemDetail: React.FC = () => {
                     <strong>Category:</strong> {product.categoryName}
                   </Paragraph>
                   <Paragraph style={styles.para}>
-                    <strong>Shop Address:</strong> {product.shopAddress}
-                  </Paragraph>
-                  
-
+                  <strong>Condition: {product.condition} </strong>
+                </Paragraph>
+                 
                 </Col>
 
                 <Col span={12}>
@@ -167,7 +171,10 @@ const ItemDetail: React.FC = () => {
                   </Paragraph>
                 </Col>
                 <Paragraph style={styles.para}>
-                    <strong>Condition Percentage: {product.condition} %</strong> 
+                    <strong>Shop Address:</strong> {product.shopAddress}
+                  </Paragraph>
+                  <Paragraph style={styles.para}>
+                    <strong>Note:</strong> {product.note}
                   </Paragraph>
               </Row>
               <Paragraph style={styles.para}>
