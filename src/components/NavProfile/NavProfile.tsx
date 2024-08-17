@@ -6,7 +6,7 @@ import {
     UserOutlined,
     OrderedListOutlined,
     InboxOutlined,
-    MoneyCollectOutlined 
+    MoneyCollectOutlined, HomeOutlined
 } from "@ant-design/icons";
 import {Button, Menu, Card} from "antd";
 import {useNavigate} from "react-router-dom";
@@ -59,6 +59,7 @@ const NavProfile: React.FC = () => {
     const items = [
         {key: "1", icon: <UserOutlined/>, label: "Profile", to: "/profile"},
         {key: "2", icon: <KeyOutlined/>, label: "Change Password", to: "/change-password"},
+        {key:"address", icon: <HomeOutlined/>, label: "Address", to: "/profile/addresses"},
         {key: "3", icon: <OrderedListOutlined/>, label: "Order list", to: "/order-list"},
         {key: "4", icon: <DollarOutlined/>, label: "Withdraw", to: "/transaction/withdraw"},
         {key: "5", icon: <InboxOutlined />,label: "Consign History", to: "/transaction/My-consign"},

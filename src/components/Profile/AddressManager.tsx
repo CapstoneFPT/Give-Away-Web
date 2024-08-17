@@ -49,7 +49,7 @@ const AddressManager: React.FC = () => {
                 onCancel={() => setIsModalVisible(false)}
                 okButtonProps={{ style: { backgroundColor: 'black', color: 'white' } }}
             >
-                <AddressForm form={addressForm} />
+                {/*<AddressForm form={addressForm} />*/}
             </Modal>
         </Card>
     );

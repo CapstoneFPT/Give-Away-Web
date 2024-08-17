@@ -1,90 +1,97 @@
-import React, { useState, useEffect } from 'react';
-import { Form, Input, Select, FormInstance } from 'antd';
-import {AddressApi, GHNDistrictResponse, GHNProvinceResponse, GHNWardResponse} from '../../api';
+import React, {useEffect, useState} from 'react';
+import {Button, Form, Input, Select} from 'antd';
+import {AddressApi, DeliveryRequest, GHNDistrictResponse, GHNProvinceResponse, GHNWardResponse} from '../../api';
 
 interface AddressFormProps {
-    form: FormInstance;
+    initialValues?: DeliveryRequest;
+    onFinish: (values: DeliveryRequest) => void;
+    onCancel: () => void;
 }
 
-const AddressForm: React.FC<AddressFormProps> = ({ form }) => {
+const AddressForm: React.FC<AddressFormProps> = ({initialValues, onFinish, onCancel}) => {
+    const [form] = Form.useForm();
     const [provinces, setProvinces] = useState<GHNProvinceResponse[]>([]);
-    const [selectedProvince, setSelectedProvince] = useState<number | null>(null);
     const [districts, setDistricts] = useState<GHNDistrictResponse[]>([]);
     const [wards, setWards] = useState<GHNWardResponse[]>([]);
 
     useEffect(() => {
         fetchProvinces();
-    }, []);
+        if (initialValues) {
+            form.setFieldsValue(initialValues);
+        }
+    }, [initialValues, form]);
 
     const fetchProvinces = async () => {
         try {
             const addressApi = new AddressApi();
-            const provincesResponse = await addressApi.apiAddressesProvincesGet();
-            setProvinces(provincesResponse.data.data || []);
+            const response = await addressApi.apiAddressesProvincesGet();
+            setProvinces(response.data.data || []);
         } catch (error) {
             console.error('Error fetching provinces:', error);
         }
     };
 
-    const handleSelectProvince = async (provinceId: number) => {
-        setSelectedProvince(provinceId);
-        console.log(provinceId);
+    const fetchDistricts = async (provinceId: number) => {
         try {
             const addressApi = new AddressApi();
-            const districtResponse = await addressApi.apiAddressesDistrictsGet(
-                provinceId
-            );
-            setDistricts(districtResponse.data.data!);
+            const response = await addressApi.apiAddressesDistrictsGet(provinceId);
+            setDistricts(response.data.data || []);
         } catch (error) {
-            console.error("Error fetching districts:", error);
+            console.error('Error fetching districts:', error);
         }
     };
 
-    const handleSelectDistricts = async (districtsId: number) => {
-        setSelectedProvince(districtsId);
-        console.log(districtsId);
+    const fetchWards = async (districtId: number) => {
         try {
             const addressApi = new AddressApi();
-            const wardResponse = await addressApi.apiAddressesWardsGet(districtsId);
-            setWards(wardResponse.data.data!);
+            const response = await addressApi.apiAddressesWardsGet(districtId);
+            setWards(response.data.data || []);
         } catch (error) {
-            console.error("Error fetching districts:", error);
+            console.error('Error fetching wards:', error);
         }
+    };
+
+    const handleProvinceChange = (value: number) => {
+        form.setFieldsValue({districtId: undefined, wardId: undefined});
+        fetchDistricts(value);
+    };
+
+    const handleDistrictChange = (value: number) => {
+        form.setFieldsValue({wardId: undefined});
+        fetchWards(value);
     };
 
     return (
-        <Form form={form} layout="vertical">
+        <Form
+            form={form}
+            layout="vertical"
+            onFinish={onFinish}
+            initialValues={initialValues}
+        >
             <Form.Item
                 name="recipientName"
                 label="Recipient Name"
-                rules={[{ required: true, message: 'Please input your recipient name!' }]}
+                rules={[{required: true, message: 'Please input recipient name!'}]}
             >
-                <Input placeholder="Recipient Name" />
+                <Input/>
             </Form.Item>
             <Form.Item
                 name="phone"
                 label="Phone"
                 rules={[
-                    { required: true, message: 'Please input your phone!' },
-                    { pattern: /^[0-9]+$/, message: 'Please enter a valid phone number!' },
+                    {required: true, message: 'Please input phone number!'},
+                    {pattern: /^[0-9]+$/, message: 'Please enter a valid phone number!'},
                 ]}
             >
-                <Input placeholder="Phone" />
+                <Input/>
             </Form.Item>
             <Form.Item
-                name="ghnProvinceId"
+                name="provinceId"
                 label="Province"
-                rules={[{ required: true, message: 'Please select your province!' }]}
+                rules={[{required: true, message: 'Please select province!'}]}
             >
-                <Select
-                    showSearch
-                    placeholder="Select a province"
-                    filterOption={(input, option) =>
-                        (option?.children as unknown as string).toLowerCase().includes(input.toLowerCase())
-                    }
-                    onChange={handleSelectProvince}
-                >
-                    {provinces.map((province) => (
+                <Select onChange={handleProvinceChange}>
+                    {provinces.map(province => (
                         <Select.Option key={province.provinceId} value={province.provinceId}>
                             {province.provinceName}
                         </Select.Option>
@@ -92,45 +99,25 @@ const AddressForm: React.FC<AddressFormProps> = ({ form }) => {
                 </Select>
             </Form.Item>
             <Form.Item
-                name="ghnDistrictId"
+                name="districtId"
                 label="District"
-                rules={[{ required: true, message: "Please select a district" }]}
+                rules={[{required: true, message: 'Please select district!'}]}
             >
-                <Select
-                    showSearch
-                    placeholder="Select a district"
-                    onChange={handleSelectDistricts}
-                    filterOption={(input, option) =>
-                        (option?.children as unknown as string)
-                            .toLowerCase()
-                            .includes(input.toLowerCase())
-                    }
-                >
-                    {districts.map((district) => (
-                        <Select.Option
-                            key={district.districtId}
-                            value={district.districtId}
-                        >
+                <Select onChange={handleDistrictChange}>
+                    {districts.map(district => (
+                        <Select.Option key={district.districtId} value={district.districtId}>
                             {district.districtName}
                         </Select.Option>
                     ))}
                 </Select>
             </Form.Item>
             <Form.Item
-                name="ghnWardCode"
+                name="wardId"
                 label="Ward"
-                rules={[{ required: true, message: "Please select a ward" }]}
+                rules={[{required: true, message: 'Please select ward!'}]}
             >
-                <Select
-                    showSearch
-                    placeholder="Select a ward"
-                    filterOption={(input, option) =>
-                        (option?.children as unknown as string)
-                            .toLowerCase()
-                            .includes(input.toLowerCase())
-                    }
-                >
-                    {wards.map((ward) => (
+                <Select>
+                    {wards.map(ward => (
                         <Select.Option key={ward.wardCode} value={ward.wardCode}>
                             {ward.wardName}
                         </Select.Option>
@@ -138,14 +125,29 @@ const AddressForm: React.FC<AddressFormProps> = ({ form }) => {
                 </Select>
             </Form.Item>
             <Form.Item
-                name="residence"
-                label="Address"
-                rules={[
-                    { required: true, message: 'Please input your phone!' },
-                ]}
+                name="addressDetail"
+                label="Address Detail"
+                rules={[{required: true, message: 'Please input address detail!'}]}
             >
-                <Input placeholder="Address" />
+                <Input.TextArea/>
             </Form.Item>
+            <Form.Item
+                name="addressType"
+                valuePropName="addressType">
+                <Select>
+                    <Select.Option value="Home">Home</Select.Option>
+                    <Select.Option value="Business">Business</Select.Option>
+                </Select>
+            </Form.Item>
+            <Form.Item>
+                <Button type="primary" htmlType="submit">
+                    {initialValues ? 'Update' : 'Add'} Address
+                </Button>
+                <Button onClick={onCancel} style={{marginLeft: 8}}>
+                    Cancel
+                </Button>
+            </Form.Item>
+
         </Form>
     );
 };

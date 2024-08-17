@@ -1,7 +1,7 @@
 import React from "react";
 import "./App.css";
 import Navbar from "./components/Navbar/Navbar";
-import {BrowserRouter, Routes, Route} from "react-router-dom";
+import {BrowserRouter, Route, Routes} from "react-router-dom";
 import Shop from "./pages/Shop";
 import Cart from "./pages/Cart";
 import Login from "./pages/Login";
@@ -32,8 +32,6 @@ import ItemDetail from "./components/ItemsDisplay/ItemDetail";
 import {CartProvider} from "./pages/CartContext";
 import Deposit from "./pages/Deposit";
 import ImageUpload from "./pages/Firebase/ImageUpload";
-import ItemDisplayHome from "./components/ItemsDisplay/ItemDisplayHome";
-import CarouselComponent from "./components/Navbar/CarouselComponent";
 import Search from "./pages/MainProduct/Search";
 import Branches from "./components/Branches/Branches";
 import DepositHistory from "./pages/Transaction/DepositHistory";
@@ -42,10 +40,10 @@ import RechargeHistory from "./pages/Transaction/RechargeHistory.tsx";
 import ConsignDetail from "./pages/Transaction/ConsignDetail.tsx";
 import RefundHistory from "./pages/Transaction/RefundHistory.tsx";
 import PayoutHistory from "./pages/Transaction/PayoutHistory.tsx";
-import BranchNavbar from "./components/Navbar/BranchNavbar.tsx";
 import BranchItems from "./pages/MainProduct/BranchItems.tsx";
 import ChildItems from "./pages/MainProduct/ChildItems.tsx";
 import ChildItemShop from "./pages/MainProduct/ChildItemShop.tsx";
+import AddressManagementPage from "./pages/AddressManagementPage.tsx";
 
 function App() {
     return (
@@ -432,6 +430,14 @@ function App() {
                                 </>
                             }
                         />
+                        <Route
+                            path="/profile/addresses"
+                            element={
+                                <>
+                                    <Navbar/>
+                                    <AddressManagementPage/>
+                                </>
+                            }/>
                     </Routes>
                 </CartProvider>
             </div>
