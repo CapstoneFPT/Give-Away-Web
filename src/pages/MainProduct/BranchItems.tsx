@@ -1,13 +1,8 @@
 import React, {useEffect, useState} from "react";
 import {FashionItemApi, FashionItemDetailResponse, MasterItemListResponse} from "../../api";
-import {
-    useLocation,
-    useNavigate,
-    useParams,
-    useSearchParams,
-} from "react-router-dom";
+import {useLocation, useNavigate, useParams, useSearchParams,} from "react-router-dom";
 import {useCart} from "../CartContext";
-import {Layout, Row, Col, Pagination, Spin, notification} from "antd";
+import {Col, Layout, notification, Pagination, Row, Spin} from "antd";
 import {Content} from "antd/es/layout/layout";
 import backgroundImageUrl from "../../components/Assets/—Pngtree—brightly lit interior showcasing empty_4846407.jpg";
 import ProductCard from "../../components/commons/ProductCard";
