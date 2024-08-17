@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Spin, Card, Row, Col, Input, Select, Button, Modal, Typography, Image, TableColumnsType } from 'antd';
+import { Spin, Card, Row, Col, Input, Select, Button, Modal, Typography, Image } from 'antd';
 import { FashionItemApi, FashionItemList, MasterItemDetailResponse, SizeType } from '../../api';
 import { useParams, useNavigate } from 'react-router-dom';
 
@@ -77,48 +77,6 @@ const ChildItems: React.FC = () => {
     </Option>
   ));
 
-  const columns: TableColumnsType<FashionItemList> = [
-    {
-      title: 'Product',
-      key: 'product',
-      render: (text, record) => (
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <Image
-            src={record.image!}
-            alt={record.itemCode!}
-            width={50}
-            height={50}
-            style={{ marginRight: '10px', objectFit: 'cover' }}
-          />
-          <span style={{ margin: '5px' }}>{record.itemCode}</span>
-        </div>
-      ),
-    },
-    { title: 'Brand', dataIndex: 'brand', key: 'brand' },
-    { title: 'Color', dataIndex: 'color', key: 'color' },
-    { title: 'Size', dataIndex: 'size', key: 'size' },
-    {
-      title: 'Price',
-      dataIndex: 'sellingPrice',
-      key: 'sellingPrice',
-      render: (sellingPrice: number) => <strong>{formatBalance(sellingPrice)} VND</strong>,
-    },
-    { title: 'Condition', dataIndex: 'condition', key: 'condition' },
-    {
-      title: 'Action',
-      key: 'action',
-      render: (text, record) => (
-        <Button
-          style={{ backgroundColor: 'black', color: 'white' }}
-          type="primary"
-          onClick={() => navigate(`/itemDetail/${record.itemId}`)}
-        >
-          Detail
-        </Button>
-      ),
-    },
-  ];
-
   return (
     <div>
       <h1 style={{ textAlign: 'center' }}>List Products</h1>
@@ -168,21 +126,47 @@ const ChildItems: React.FC = () => {
       ) : (
         <Card>
           <Row gutter={[16, 16]}>
-            <Col span={18}>
-              <Table dataSource={dataSource} columns={columns} rowKey="variationId" />
-            </Col>
-            <Col span={6}>
+          <Col span={6}>
               {dataMaster && (
-                <Card title="Master Product Details">
-                  <Title level={5}><strong>Item Code:</strong> {dataMaster.masterItemCode}</Title>
-                  <Typography><strong>Name:</strong> {dataMaster.name}</Typography><br />
-                  <Typography><strong>Brand:</strong> {dataMaster.brand}</Typography><br />
-                  <Typography><strong>Category:</strong> {dataMaster.categoryName}</Typography><br />
-                  <Typography><strong>Gender:</strong> {dataMaster.gender}</Typography><br />
-                  <Typography><strong>Description:</strong> {dataMaster.description}</Typography><br />
-                </Card>
+                <Card 
+                title="Master Product Details" 
+                headStyle={{ backgroundColor: 'black', color: 'white' }} // Set background to black and text to white
+              >
+                <Title level={5}><strong>Item Code:</strong> {dataMaster.masterItemCode}</Title>
+                <Typography><strong>Name:</strong> {dataMaster.name}</Typography><br />
+                <Typography><strong>Brand:</strong> {dataMaster.brand}</Typography><br />
+                <Typography><strong>Category:</strong> {dataMaster.categoryName}</Typography><br />
+                <Typography><strong>Gender:</strong> {dataMaster.gender}</Typography><br />
+                <Typography><strong>Description:</strong> {dataMaster.description}</Typography><br />
+              </Card>
               )}
             </Col>
+            {dataSource.map(record => (
+              <Col span={6} key={record.variationId}> {/* Each card takes 6 columns for 4 cards per row */}
+                <Card
+                  style={{ marginBottom: '16px', cursor: 'pointer', overflow: 'hidden' }}
+                  onClick={() => navigate(`/itemDetail/${record.itemId}`)}
+                  cover={
+                    <Image
+                      alt={record.name ?? "N/A"}
+                      src={record.image!}
+                      style={{ height: "300px", objectFit: "cover" }}
+                    />
+                  }
+                >
+                 
+                  <div style={{ padding: '10px' }}>
+                    <Title level={5}>Product Code: {record.itemCode}</Title>
+                    <Typography>Brand: {record.brand}  </Typography>
+                    <Typography>Size: {record.size}</Typography>
+                    <Typography>Color: {record.color}</Typography>
+                    <div><strong>Price: {formatBalance(record.sellingPrice)} VND</strong></div>
+                    <Typography>Condition: {record.condition}</Typography>
+                  </div>
+                </Card>
+              </Col>
+            ))}
+            
           </Row>
         </Card>
       )}

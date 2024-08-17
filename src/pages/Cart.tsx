@@ -12,12 +12,23 @@ import {
   Modal,
   message,
   notification,
+  Table,
+  Image,
 } from "antd";
 import { useCart } from "./CartContext";
 import { DeleteOutlined } from "@ant-design/icons";
 import Checkbox from "antd/es/checkbox/Checkbox";
-import { AccountApi, AddressApi, CartRequest, GHNDistrictResponse, GHNProvinceResponse, GHNWardResponse, OrderApi } from "../api";
+import {
+  AccountApi,
+  AddressApi,
+  CartRequest,
+  GHNDistrictResponse,
+  GHNProvinceResponse,
+  GHNWardResponse,
+  OrderApi,
+} from "../api";
 import { useNavigate } from "react-router-dom";
+import Column from "antd/es/table/Column";
 
 const { Option } = Select;
 
@@ -26,12 +37,16 @@ const Cart: React.FC = () => {
   const [showConfirm, setShowConfirm] = useState(false);
   const [itemToRemove, setItemToRemove] = useState<any>(null);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
-  const [userId, setUserId] = useState<string | null>(null);
+ 
   const [provinces, setProvinces] = useState<GHNProvinceResponse[]>([]);
   const [districts, setDistricts] = useState<GHNDistrictResponse[]>([]);
   const [wards, setWards] = useState<GHNWardResponse[]>([]);
   const [selectedProvince, setSelectedProvince] = useState<number | null>(null);
-  const [selectedDistricts, setSelectedDistricts] = useState<number | null>(null);
+  const [selectedDistricts, setSelectedDistricts] = useState<number | null>(
+    null
+  );
+  const userId = JSON.parse(localStorage.getItem("userId") || "null");
+  console.log(userId)
   const navigate = useNavigate();
 
   const [form] = Form.useForm();
@@ -57,19 +72,21 @@ const Cart: React.FC = () => {
 
   const handleSelectProvince = async (provinceId: number) => {
     setSelectedProvince(provinceId);
-    console.log(provinceId)
+    console.log(provinceId);
     try {
       const addressApi = new AddressApi();
-      const districtResponse = await addressApi.apiAddressesDistrictsGet(provinceId);
+      const districtResponse = await addressApi.apiAddressesDistrictsGet(
+        provinceId
+      );
       setDistricts(districtResponse.data.data!);
     } catch (error) {
       console.error("Error fetching districts:", error);
     }
   };
 
-  const handleSelectDistricts = async ( districtsId: number) => {
+  const handleSelectDistricts = async (districtsId: number) => {
     setSelectedProvince(districtsId);
-    console.log(districtsId)
+    console.log(districtsId);
     try {
       const addressApi = new AddressApi();
       const wardResponse = await addressApi.apiAddressesWardsGet(districtsId);
@@ -235,118 +252,87 @@ const Cart: React.FC = () => {
             SHOPPING BAG
           </h1>
           {state.cartItems.map((item) => (
-            <Card key={item.itemId} style={{ marginBottom: "10px" }}>
-              <Row>
-                <Col span={8}>
-                  <img
-                    style={{ height: "220px", width: "220px" }}
-                    src={
-                      item.images && Array.isArray(item.images)
-                        ? item.images[0]
-                        : "N/A"
-                    }
-                    alt={item.name || "Product image"}
-                  />
-                </Col>
-                <Col span={12}>
-                  <Typography style={{ fontSize: "17px" }}>
-                    <strong>Product Name: </strong>
-                    {item.name || "N/A"}
-                  </Typography>
-                  <Typography style={{ fontSize: "18px" }}>
-                    <strong>
-                      {" "}
-                      Price: {formatBalance(item.sellingPrice || 0)} VND
-                    </strong>
-                  </Typography>
-                  <Typography style={{ fontSize: "17px" }}>
-                    <strong>Size: </strong>
-                    {item.size || "N/A"}
-                  </Typography>
-                  <Typography style={{ fontSize: "17px" }}>
-                    <strong>Color: </strong>
-                    {item.color || "N/A"}
-                  </Typography>
-                  <Typography style={{ fontSize: "17px" }}>
-                    <strong>Brand:</strong> {item.brand || "N/A"}
-                  </Typography>
-                  <Typography style={{ fontSize: "17px" }}>
-                    <strong>Gender: </strong> {item.gender || "N/A"}
-                  </Typography>
-                </Col>
-                <Col
-                  span={4}
-                  style={{ display: "flex", justifyContent: "space-between" }}
-                >
-                  <Checkbox
-                    checked={selectedItems.includes(item.itemId!)}
-                    onChange={() => handleCheckboxChange(item.itemId!)}
-                  />
-                  <Button
-                    type="link"
-                    danger
-                    onClick={() => handleDeleteItem(item)}
-                  >
-                    <DeleteOutlined />
-                  </Button>
-                </Col>
-              </Row>
-            </Card>
+            <Card style={{ maxHeight: "calc(120vh - 100px)", overflowY: "auto" }}>
+            <Table dataSource={state.cartItems} rowKey="itemId" pagination={false}>
+              <Column title="Image" dataIndex="images" render={(images) => (
+                <Image
+                  style={{ height: "150px", width: "150px" }}
+                  src={images && Array.isArray(images) ? images[0] : "N/A"}
+                  alt="Product"
+                />
+              )} />
+              <Column title="Product Name" dataIndex="name" render={(name) => name || "N/A"} />
+              <Column title="Price" dataIndex="sellingPrice" render={(sellingPrice) => formatBalance(sellingPrice || 0) + " VND"} />
+              <Column title="Size" dataIndex="size" render={(size) => size || "N/A"} />
+              <Column title="Color" dataIndex="color" render={(color) => color || "N/A"} />
+              <Column title="Brand" dataIndex="brand" render={(brand) => brand || "N/A"} />
+              <Column title="Gender" dataIndex="gender" render={(gender) => gender || "N/A"} />
+              <Column title="Condition" dataIndex="condition" render={(condition) => condition || "N/A"} />
+              <Column
+                title="Actions"
+                render={(item) => (
+                  <div style={{ display: "flex", justifyContent: "space-between" }}>
+                    <Checkbox
+                      checked={selectedItems.includes(item.itemId!)}
+                      onChange={() => handleCheckboxChange(item.itemId!)}
+                    />
+                    <Button
+                      type="link"
+                      danger
+                      onClick={() => handleDeleteItem(item)}
+                    >
+                      <DeleteOutlined />
+                    </Button>
+                  </div>
+                )}
+              />
+            </Table>
+          </Card>
           ))}
-          <Divider />
+          <Modal
+            title="Confirm Removal"
+            visible={showConfirm}
+            onOk={handleConfirmRemove}
+            onCancel={() => setShowConfirm(false)}
+            okText="Remove"
+            okButtonProps={{ danger: true }}
+          >
+            <p>Are you sure you want to remove this item?</p>
+          </Modal>
         </Card>
       </Col>
       <Col span={8}>
-        <Card title="Receiving Information">
-          <Form
-            layout="vertical"
-            form={form}
-            onValuesChange={() => form.validateFields()}
-          >
+        <Card>
+          <Typography.Title level={4}>Delivery Information</Typography.Title>
+          <Form layout="vertical" form={form}>
             <Form.Item
-              label="Payment Method"
-              name="paymentMethod"
-              rules={[{ required: true, message: "Please select a payment method" }]}
-              style={{ marginBottom: "10px" }}
-            >
-              <Select
-                placeholder="Select payment method"
-                style={{ width: 150 }}
-              >
-                <Option value="QRCode">QRCode</Option>
-                <Option value="COD">COD</Option>
-                <Option value="Point">Point</Option>
-              </Select>
-              <Form.Item
-              label="Phone"
-              name="phone"
-              rules={[
-                { required: true, message: "Please enter phone number" },
-                {
-                  pattern: /^(\+84)(\s?[1-9]\d{8})$/,
-                  message: "Please enter a valid phone number",
-                },
-              ]}
-            >
-              <Input placeholder="Phone" />
-            </Form.Item>
-            </Form.Item>
-            <Form.Item
-              label="Recipient Name"
               name="recipientName"
+              label="Recipient Name"
               rules={[{ required: true, message: "Please enter recipient name" }]}
             >
-              <Input placeholder="Recipient Name" />
+              <Input />
             </Form.Item>
-            
             <Form.Item
-              label="Province"
+              name="phone"
+              label="Phone Number"
+              rules={[{ required: true, message: "Please enter phone number" }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
               name="province"
+              label="Province"
               rules={[{ required: true, message: "Please select a province" }]}
             >
               <Select
-                placeholder="Select Province"
+                showSearch
+                placeholder="Select a province"
                 onChange={handleSelectProvince}
+                filterOption={(input, option) =>
+                  (option?.children as unknown as string)
+                    .toLowerCase()
+                    .includes(input.toLowerCase())
+                }
               >
                 {provinces.map((province) => (
                   <Option key={province.provinceId} value={province.provinceId}>
@@ -356,82 +342,86 @@ const Cart: React.FC = () => {
               </Select>
             </Form.Item>
             <Form.Item
-              label="District"
               name="district"
-
+              label="District"
               rules={[{ required: true, message: "Please select a district" }]}
-
             >
-              <Select placeholder="Select District"
-                 onChange={handleSelectDistricts}
+              <Select
+                showSearch
+                placeholder="Select a district"
+                onChange={handleSelectDistricts}
+                filterOption={(input, option) =>
+                  (option?.children as unknown as string)
+                    .toLowerCase()
+                    .includes(input.toLowerCase())
+                }
               >
                 {districts.map((district) => (
-                  <Option key={district.districtId} value={district.districtId}>
+                  <Option
+                    key={district.districtId}
+                    value={district.districtId}
+                  >
                     {district.districtName}
                   </Option>
                 ))}
               </Select>
             </Form.Item>
             <Form.Item
-              label="Wards"
               name="Wards"
-              rules={[{ required: true, message: "Please select a Wards" }]}
+              label="Ward"
+              rules={[{ required: true, message: "Please select a ward" }]}
             >
-              <Select placeholder="Select Wards">
-                {wards.map((wards) => (
-                  <Option key={wards.wardCode} value={wards.wardCode}>
-                    {wards.wardName}
+              <Select
+                showSearch
+                placeholder="Select a ward"
+                filterOption={(input, option) =>
+                  (option?.children as unknown as string)
+                    .toLowerCase()
+                    .includes(input.toLowerCase())
+                }
+              >
+                {wards.map((ward) => (
+                  <Option key={ward.wardCode} value={ward.wardCode}>
+                    {ward.wardName}
                   </Option>
                 ))}
               </Select>
             </Form.Item>
-          </Form>
-        </Card>
-        <Card title="Order Summary">
-          <div style={{ padding: "20px" }}>
-            <div style={{ marginBottom: "10px" }}>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  marginBottom: "10px",
-                }}
-              >
-                <Typography style={{ fontSize: "20px" }}>
-                  <strong>
-                    {" "}
-                    Total price: {formatBalance(calculateTotalPrice())} VND
-                  </strong>
-                </Typography>
-              </div>
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <p>Estimated Delivery & Handling</p>
-              </div>
-            </div>
-            <Button
-              type="primary"
-              style={{
-                marginTop: "20px",
-                width: "40%",
-                borderRadius: "10px",
-                backgroundColor: "black",
-                color: "white",
-              }}
-              onClick={handleCheckOut}
+            <Form.Item
+              name="address"
+              label="Address"
+              rules={[{ required: true, message: "Please enter address" }]}
             >
-              Check Out
-            </Button>
-          </div>
+              <Input.TextArea rows={4} />
+            </Form.Item>
+            <Form.Item
+              name="paymentMethod"
+              label="Payment Method"
+              rules={[
+                { required: true, message: "Please select a payment method" },
+              ]}
+            >
+              <Select placeholder="Select payment method">
+                <Option value="QRCode">QRCode</Option>
+                <Option value="Point">Point</Option>
+                <Option value="COD">COD</Option>
+              </Select>
+            </Form.Item>
+          </Form>
+          <Divider />
+          <Typography.Title level={4}>
+            Total Price: {formatBalance(calculateTotalPrice())} VND
+          </Typography.Title>
+          <Button
+            type="primary"
+            block
+            onClick={handleCheckOut}
+            disabled={selectedItems.length === 0}
+          >
+            Check Out
+          </Button>
         </Card>
       </Col>
-      <Modal
-        title="Confirm Delete"
-        visible={showConfirm}
-        onOk={handleConfirmRemove}
-        onCancel={() => setShowConfirm(false)}
-      >
-        <p>Are you sure you want to remove this item from the cart?</p>
-      </Modal>
     </Row>
   );
 };
