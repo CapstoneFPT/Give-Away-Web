@@ -39,9 +39,9 @@ const Search: React.FC = () => {
     searchParam: string | null,
     categoryId?: string
   ) => {
+    console.log(searchParam)
     setIsLoading(true);
     try {
-      const userId = JSON.parse(localStorage.getItem("userId") || "null");
       const fashionItemApi = new FashionItemApi();
       const response = await fashionItemApi.apiFashionitemsMasterItemsGet(
         searchParam!,
@@ -49,10 +49,9 @@ const Search: React.FC = () => {
         page,
         pageSize,
         categoryId,
-        userId
       );
 
-      console.debug(response);
+      console.log(response);
       const data = response.data;
       if (data && data.items && Array.isArray(data.items)) {
         setProducts(data.items);
