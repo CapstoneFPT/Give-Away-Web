@@ -42,9 +42,6 @@ const Cart: React.FC = () => {
   const [districts, setDistricts] = useState<GHNDistrictResponse[]>([]);
   const [wards, setWards] = useState<GHNWardResponse[]>([]);
   const [selectedProvince, setSelectedProvince] = useState<number | null>(null);
-  const [selectedDistricts, setSelectedDistricts] = useState<number | null>(
-    null
-  );
   const userId = JSON.parse(localStorage.getItem("userId") || "null");
   console.log(userId)
   const navigate = useNavigate();

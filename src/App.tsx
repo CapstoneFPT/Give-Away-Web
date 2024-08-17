@@ -15,7 +15,7 @@ import RuleDeposit from "./pages/RuleDeposit";
 import AunctionList from "./pages/AunctionList";
 import Aunction from "./pages/Aunction";
 import Consign from "./pages/ConsignForm";
-import Profile from "./pages/Profile";
+import ProfilePage from "./pages/ProfilePage.tsx";
 import Footer from "./components/Footer/Footer";
 import ChangePassword from "./pages/ChangePassword";
 import Refunds from "./pages/Refunds";
@@ -184,7 +184,7 @@ function App() {
                             element={
                                 <>
                                     <Navbar/>
-                                    <Profile/>
+                                    <ProfilePage/>
                                 </>
                             }
                         />
