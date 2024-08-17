@@ -348,6 +348,20 @@ export interface AddFashionItemForConsignByShop {
 /**
  * 
  * @export
+ * @enum {string}
+ */
+
+export const AddressType = {
+    Home: 'Home',
+    Business: 'Business'
+} as const;
+
+export type AddressType = typeof AddressType[keyof typeof AddressType];
+
+
+/**
+ * 
+ * @export
  * @interface ApprovalRefundRequest
  */
 export interface ApprovalRefundRequest {
@@ -1254,6 +1268,18 @@ export interface CartRequest {
      * @memberof CartRequest
      */
     'address': string;
+    /**
+     * 
+     * @type {number}
+     * @memberof CartRequest
+     */
+    'ghnDistrictId'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof CartRequest
+     */
+    'ghnWardCode'?: number;
     /**
      * 
      * @type {string}
@@ -3129,6 +3155,127 @@ export interface DeliveryDetailResponse {
 /**
  * 
  * @export
+ * @interface DeliveryListResponse
+ */
+export interface DeliveryListResponse {
+    /**
+     * 
+     * @type {string}
+     * @memberof DeliveryListResponse
+     */
+    'addressId'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DeliveryListResponse
+     */
+    'recipientName'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof DeliveryListResponse
+     */
+    'phone'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof DeliveryListResponse
+     */
+    'residence'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof DeliveryListResponse
+     */
+    'addressType'?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof DeliveryListResponse
+     */
+    'ghnDistrictId'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof DeliveryListResponse
+     */
+    'ghnWardCode'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof DeliveryListResponse
+     */
+    'accountName'?: string | null;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof DeliveryListResponse
+     */
+    'isDefault'?: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof DeliveryListResponse
+     */
+    'createdDate'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface DeliveryListResponseListResult
+ */
+export interface DeliveryListResponseListResult {
+    /**
+     * 
+     * @type {Array<DeliveryListResponse>}
+     * @memberof DeliveryListResponseListResult
+     */
+    'data'?: Array<DeliveryListResponse> | null;
+    /**
+     * 
+     * @type {ResultStatus}
+     * @memberof DeliveryListResponseListResult
+     */
+    'resultStatus'?: ResultStatus;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof DeliveryListResponseListResult
+     */
+    'messages'?: Array<string> | null;
+}
+
+
+/**
+ * 
+ * @export
+ * @interface DeliveryListResponseResult
+ */
+export interface DeliveryListResponseResult {
+    /**
+     * 
+     * @type {DeliveryListResponse}
+     * @memberof DeliveryListResponseResult
+     */
+    'data'?: DeliveryListResponse;
+    /**
+     * 
+     * @type {ResultStatus}
+     * @memberof DeliveryListResponseResult
+     */
+    'resultStatus'?: ResultStatus;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof DeliveryListResponseResult
+     */
+    'messages'?: Array<string> | null;
+}
+
+
+/**
+ * 
+ * @export
  * @interface DeliveryRequest
  */
 export interface DeliveryRequest {
@@ -3146,123 +3293,34 @@ export interface DeliveryRequest {
     'phone': string;
     /**
      * 
+     * @type {AddressType}
+     * @memberof DeliveryRequest
+     */
+    'addressType': AddressType;
+    /**
+     * 
+     * @type {number}
+     * @memberof DeliveryRequest
+     */
+    'ghnProvinceId': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof DeliveryRequest
+     */
+    'ghnDistrictId': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof DeliveryRequest
+     */
+    'ghnWardCode': number;
+    /**
+     * 
      * @type {string}
      * @memberof DeliveryRequest
      */
     'residence': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof DeliveryRequest
-     */
-    'addressType': string;
-}
-/**
- * 
- * @export
- * @interface DeliveryResponse
- */
-export interface DeliveryResponse {
-    /**
-     * 
-     * @type {string}
-     * @memberof DeliveryResponse
-     */
-    'addressId'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof DeliveryResponse
-     */
-    'recipientName'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof DeliveryResponse
-     */
-    'phone'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof DeliveryResponse
-     */
-    'residence'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof DeliveryResponse
-     */
-    'addressType'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof DeliveryResponse
-     */
-    'buyername'?: string | null;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof DeliveryResponse
-     */
-    'isDefault'?: boolean;
-    /**
-     * 
-     * @type {string}
-     * @memberof DeliveryResponse
-     */
-    'createdDate'?: string;
-}
-/**
- * 
- * @export
- * @interface DeliveryResponseListResult
- */
-export interface DeliveryResponseListResult {
-    /**
-     * 
-     * @type {Array<DeliveryResponse>}
-     * @memberof DeliveryResponseListResult
-     */
-    'data'?: Array<DeliveryResponse> | null;
-    /**
-     * 
-     * @type {ResultStatus}
-     * @memberof DeliveryResponseListResult
-     */
-    'resultStatus'?: ResultStatus;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof DeliveryResponseListResult
-     */
-    'messages'?: Array<string> | null;
-}
-
-
-/**
- * 
- * @export
- * @interface DeliveryResponseResult
- */
-export interface DeliveryResponseResult {
-    /**
-     * 
-     * @type {DeliveryResponse}
-     * @memberof DeliveryResponseResult
-     */
-    'data'?: DeliveryResponse;
-    /**
-     * 
-     * @type {ResultStatus}
-     * @memberof DeliveryResponseResult
-     */
-    'resultStatus'?: ResultStatus;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof DeliveryResponseResult
-     */
-    'messages'?: Array<string> | null;
 }
 
 
@@ -7082,10 +7140,10 @@ export interface OrderDetailsResponse {
     'itemNote'?: string | null;
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof OrderDetailsResponse
      */
-    'condition'?: number | null;
+    'condition'?: string | null;
     /**
      * 
      * @type {string}
@@ -10535,7 +10593,7 @@ export const AccountApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiAccountsAccountIdDeliveriesDeliveryIdPut(deliveryId: string, accountId: string, updateDeliveryRequest?: UpdateDeliveryRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DeliveryResponseResult>> {
+        async apiAccountsAccountIdDeliveriesDeliveryIdPut(deliveryId: string, accountId: string, updateDeliveryRequest?: UpdateDeliveryRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DeliveryListResponseResult>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.apiAccountsAccountIdDeliveriesDeliveryIdPut(deliveryId, accountId, updateDeliveryRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AccountApi.apiAccountsAccountIdDeliveriesDeliveryIdPut']?.[localVarOperationServerIndex]?.url;
@@ -10547,7 +10605,7 @@ export const AccountApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiAccountsAccountIdDeliveriesGet(accountId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DeliveryResponseListResult>> {
+        async apiAccountsAccountIdDeliveriesGet(accountId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DeliveryListResponseListResult>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.apiAccountsAccountIdDeliveriesGet(accountId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AccountApi.apiAccountsAccountIdDeliveriesGet']?.[localVarOperationServerIndex]?.url;
@@ -10560,7 +10618,7 @@ export const AccountApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiAccountsAccountIdDeliveriesPost(accountId: string, deliveryRequest?: DeliveryRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DeliveryResponseResult>> {
+        async apiAccountsAccountIdDeliveriesPost(accountId: string, deliveryRequest?: DeliveryRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DeliveryListResponseResult>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.apiAccountsAccountIdDeliveriesPost(accountId, deliveryRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AccountApi.apiAccountsAccountIdDeliveriesPost']?.[localVarOperationServerIndex]?.url;
@@ -10761,7 +10819,7 @@ export const AccountApiFactory = function (configuration?: Configuration, basePa
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAccountsAccountIdDeliveriesDeliveryIdPut(deliveryId: string, accountId: string, updateDeliveryRequest?: UpdateDeliveryRequest, options?: any): AxiosPromise<DeliveryResponseResult> {
+        apiAccountsAccountIdDeliveriesDeliveryIdPut(deliveryId: string, accountId: string, updateDeliveryRequest?: UpdateDeliveryRequest, options?: any): AxiosPromise<DeliveryListResponseResult> {
             return localVarFp.apiAccountsAccountIdDeliveriesDeliveryIdPut(deliveryId, accountId, updateDeliveryRequest, options).then((request) => request(axios, basePath));
         },
         /**
@@ -10770,7 +10828,7 @@ export const AccountApiFactory = function (configuration?: Configuration, basePa
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAccountsAccountIdDeliveriesGet(accountId: string, options?: any): AxiosPromise<DeliveryResponseListResult> {
+        apiAccountsAccountIdDeliveriesGet(accountId: string, options?: any): AxiosPromise<DeliveryListResponseListResult> {
             return localVarFp.apiAccountsAccountIdDeliveriesGet(accountId, options).then((request) => request(axios, basePath));
         },
         /**
@@ -10780,7 +10838,7 @@ export const AccountApiFactory = function (configuration?: Configuration, basePa
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAccountsAccountIdDeliveriesPost(accountId: string, deliveryRequest?: DeliveryRequest, options?: any): AxiosPromise<DeliveryResponseResult> {
+        apiAccountsAccountIdDeliveriesPost(accountId: string, deliveryRequest?: DeliveryRequest, options?: any): AxiosPromise<DeliveryListResponseResult> {
             return localVarFp.apiAccountsAccountIdDeliveriesPost(accountId, deliveryRequest, options).then((request) => request(axios, basePath));
         },
         /**

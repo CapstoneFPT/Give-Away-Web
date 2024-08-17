@@ -18,9 +18,9 @@ import type { Configuration } from './configuration';
 // @ts-ignore
 import type { AxiosPromise, AxiosInstance, RawAxiosRequestConfig } from 'axios';
 import globalAxios from 'axios';
-import { BASE_URL } from './config';
+import {BASE_URL} from "./config.ts";
 
-export const BASE_PATH =`${BASE_URL}`.replace(/\/+$/, "");
+export const BASE_PATH = `${BASE_URL}`.replace(/\/+$/, "");
 
 /**
  *
