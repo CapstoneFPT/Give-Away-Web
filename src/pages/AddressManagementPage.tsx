@@ -1,20 +1,26 @@
-import {useEffect, useState} from "react";
+import {useCallback, useEffect, useMemo, useState} from "react";
 import {Button, Card, Col, Modal, notification, Row, Space} from "antd";
-import {AccountApi, AddressApi, DeliveryListResponse, DeliveryRequest, UpdateDeliveryRequest} from "../api";
+import {AccountApi, AddressApi, DeliveryListResponse, UpdateDeliveryRequest} from "../api";
 import NavProfile from "../components/NavProfile/NavProfile.tsx";
 import {PlusOutlined} from "@ant-design/icons";
 import AddressCard from "../components/Profile/AddressCard.tsx";
 import AddressForm from "../components/Profile/AddressForm.tsx";
+import {useAddresses} from "../hooks/useAddresses.tsx";
+import {useModal} from "../hooks/useModal.tsx";
 
 const AddressManagementPage = () => {
-    const [addresses, setAddresses] = useState<DeliveryListResponse[]>([]);
-    const [isModalVisible, setIsModalVisible] = useState(false);
-    const [isDeleteAddressModalVisible, setIsDeleteAddressModalVisible] = useState(false);
-    const [confirmLoading, setConfirmLoading] = useState(false);
-    const [isAddingNewAddress, setIsAddingNewAddress] = useState(false);
-    const [selectedAddress, setSelectedAddress] = useState<string | null>(null);
-    const [editingAddress, setEditingAddress] = useState<DeliveryRequest | UpdateDeliveryRequest | null>(null);
-    const userId = JSON.parse(localStorage.getItem('userId') || 'null');
+    const userId = useMemo(() => JSON.parse(localStorage.getItem('userId') || 'null'), []);
+    const {addresses, fetchAddresses} = useAddresses(userId);
+    const {isOpen: isFormModalOpen, showModal: showFormModal, hideModal: hideFormModal} = useModal();
+    const {
+        isOpen: isDeleteAddressModalOpen,
+        showModal: showDeleteAddressModal,
+        hideModal: hideDeleteAddressModal
+    } = useModal();
+
+    const [isLoading, setIsLoading] = useState(false);
+    const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null);
+    const [editingAddress, setEditingAddress] = useState<UpdateDeliveryRequest | null>(null);
 
     useEffect(() => {
         fetchAddresses()
@@ -22,92 +28,56 @@ const AddressManagementPage = () => {
             .catch((error) => console.error('Error fetching addresses:', error));
     }, []);
 
-    const fetchAddresses = async () => {
+
+    const handleAddOrEditAddress = useCallback(async (values: UpdateDeliveryRequest) => {
+        setIsLoading(true);
         try {
             const accountApi = new AccountApi();
-            const response = await accountApi.apiAccountsAccountIdDeliveriesGet(userId);
-            console.log(response.data.data);
-            setAddresses(response.data.data || []);
-        } catch (error) {
-            console.error('Error fetching addresses:', error);
-            notification.error({message: 'Failed to fetch addresses. Please try again later.'});
-        }
-    };
-
-    const handleAddOrEditAddress = async (values: DeliveryRequest | UpdateDeliveryRequest) => {
-        try {
-            setConfirmLoading(true);
-            const accountApi = new AccountApi();
-
             if (editingAddress) {
-                const updatePayload: UpdateDeliveryRequest = {
-                    recipientName: values.recipientName,
-                    phone: values.phone,
-                    addressType: values.addressType,
-                    ghnProvinceId: values.ghnProvinceId,
-                    ghnDistrictId: values.ghnDistrictId,
-                    ghnWardCode: values.ghnWardCode,
-                    residence: values.residence,
-                    isDefault: (values as UpdateDeliveryRequest).isDefault
-                };
-
-                await accountApi.apiAccountsAccountIdDeliveriesDeliveryIdPut(
-                    selectedAddress!,
-                    userId,
-                    updatePayload
-                );
-                notification.success({ message: 'Address updated successfully!' });
+                await accountApi.apiAccountsAccountIdDeliveriesDeliveryIdPut(selectedAddressId!, userId, values);
+                notification.success({message: 'Address updated successfully!'});
             } else {
-                const newAddressPayload: DeliveryRequest = {
+                await accountApi.apiAccountsAccountIdDeliveriesPost(userId, {
                     recipientName: values.recipientName!,
-                    phone: values.phone!,
                     addressType: values.addressType!,
                     ghnProvinceId: values.ghnProvinceId!,
                     ghnDistrictId: values.ghnDistrictId!,
                     ghnWardCode: values.ghnWardCode!,
-                    residence: values.residence!
-                };
-
-                await accountApi.apiAccountsAccountIdDeliveriesPost(userId, newAddressPayload);
-                notification.success({ message: 'Address added successfully!' });
+                    residence: values.residence!,
+                    phone: values.phone!,
+                });
+                notification.success({message: 'Address added successfully!'});
             }
 
-            setConfirmLoading(false);
-            setIsModalVisible(false);
-            setEditingAddress(null!);
-            setIsAddingNewAddress(false);
+            hideFormModal();
             await fetchAddresses();
-        } catch (error) {
-            console.error('Error adding/editing address:', error);
-            setConfirmLoading(false);
-            notification.error({ message: 'Failed to save address. Please try again.' });
+        } catch (e) {
+            console.error('Error saving address:', e);
+            notification.error({message: 'Failed to add or edit address. Please try again.'});
+        } finally {
+            setIsLoading(false);
         }
-    };
+    }, [editingAddress, selectedAddressId, userId, hideFormModal, fetchAddresses])
 
-    const handleDelete = async (addressId: string) => {
+
+    const handleDelete = useCallback(async () => {
+        setIsLoading(true);
         try {
-            console.log("Deleting address ", addressId);
-            setConfirmLoading(true);
             const accountApi = new AccountApi();
-            await accountApi.apiAccountsAccountIdDeliveriesDeliveryIdDelete(addressId, userId);
+            await accountApi.apiAccountsAccountIdDeliveriesDeliveryIdDelete(selectedAddressId!, userId);
             notification.success({message: 'Address deleted successfully!'});
-            setIsDeleteAddressModalVisible(false);
-            setConfirmLoading(false);
+            hideDeleteAddressModal();
             await fetchAddresses();
-        } catch (error) {
-            console.error('Error deleting address:', error);
+        } catch (e) {
+            console.error("Error deleting address:", e);
             notification.error({message: 'Failed to delete address. Please try again.'});
-            setConfirmLoading(false);
+        } finally {
+            setIsLoading(false);
         }
-    };
+    }, [selectedAddressId, userId, hideDeleteAddressModal, fetchAddresses])
 
-    const showDeleteModal = (addressId: string) => {
-        console.log("To be deleted address is ", addressId);
-        setIsDeleteAddressModalVisible(true);
-        setSelectedAddress(addressId);
-    }
 
-    const handleSetDefault = async (addressId: string) => {
+    const handleSetDefault = useCallback(async (addressId: string) => {
         try {
             const accountApi = new AddressApi();
             await accountApi.apiAddressesAddressIdSetDefaultPatch(addressId);
@@ -117,12 +87,11 @@ const AddressManagementPage = () => {
             console.error('Error setting default address:', error);
             notification.error({message: 'Failed to set default address. Please try again.'});
         }
-    };
+    }, [fetchAddresses]);
 
-    const showModal = (address: DeliveryListResponse | null = null) => {
+    const openAddressForm = useCallback((address: DeliveryListResponse | null = null) => {
         if (address) {
-            console.log(address);
-            setSelectedAddress(address.addressId!);
+            setSelectedAddressId(address.addressId!);
             setEditingAddress({
                 recipientName: address.recipientName,
                 phone: address.phone,
@@ -133,13 +102,29 @@ const AddressManagementPage = () => {
                 residence: address.residence,
                 isDefault: address.isDefault,
             });
-            setIsAddingNewAddress(false);
         } else {
+            setSelectedAddressId(null);
             setEditingAddress(null);
-            setIsAddingNewAddress(true);
         }
-        setIsModalVisible(true);
-    };
+        showFormModal();
+    }, [showFormModal]);
+
+
+    const renderAddressCards = useMemo(() => (
+        addresses.map(address => (
+            <AddressCard
+                key={address.addressId}
+                address={address}
+                isDefault={address.isDefault || false}
+                onSetDefault={handleSetDefault}
+                onEdit={() => openAddressForm(address)}
+                onDelete={() => {
+                    setSelectedAddressId(address.addressId!)
+                    showDeleteAddressModal()
+                }}
+            />
+        ))
+    ), [addresses, handleSetDefault, openAddressForm, showDeleteAddressModal])
 
     return (
         <Card>
@@ -150,23 +135,18 @@ const AddressManagementPage = () => {
                 <Col span={19}>
                     <Card style={{borderRadius: '10px', boxShadow: '2px 2px 7px #cbc1c1'}}>
                         <Space direction="vertical" style={{width: '100%'}}>
-                            <Button type="primary" style={
-                                {
-                                    backgroundColor: 'black',
-                                }
-                            } icon={<PlusOutlined/>} onClick={() => showModal()}>
+                            <Button type="primary"
+                                    style=
+                                        {
+                                            {
+                                                backgroundColor: 'black',
+                                            }
+                                        }
+                                    icon={<PlusOutlined/>}
+                                    onClick={() => openAddressForm()}>
                                 Add New Address
                             </Button>
-                            {addresses.map(address => (
-                                <AddressCard
-                                    key={address.addressId}
-                                    address={address}
-                                    isDefault={address.isDefault || false}
-                                    onSetDefault={handleSetDefault}
-                                    onEdit={() => showModal(address)}
-                                    onDelete={() => showDeleteModal(address.addressId!)}
-                                />
-                            ))}
+                            {renderAddressCards}
                         </Space>
                     </Card>
                 </Col>
@@ -174,35 +154,26 @@ const AddressManagementPage = () => {
 
             <Modal
                 title={editingAddress ? "Edit Address" : "Add New Address"}
-                open={isModalVisible}
-                onCancel={() => {
-                    setIsModalVisible(false);
-                    setEditingAddress(null);
-                }}
+                open={isFormModalOpen}
+                onCancel={hideFormModal}
                 footer={null}
             >
                 <AddressForm
-                    key={editingAddress ? selectedAddress : 'new'}
+                    key={editingAddress ? selectedAddressId : 'new'}
                     initialValues={editingAddress!}
                     onFinish={handleAddOrEditAddress}
-                    onCancel={() => setIsModalVisible(false)}
-                    isAddingNew={isAddingNewAddress}
-                    loading={confirmLoading}
+                    onCancel={hideFormModal}
+                    isAddingNew={!editingAddress}
+                    loading={isLoading}
                 />
             </Modal>
 
             <Modal
                 title={"Delete Address"}
-                open={isDeleteAddressModalVisible}
-                onCancel={() => setIsDeleteAddressModalVisible(false)}
-                confirmLoading={
-                    confirmLoading
-                }
-                onOk={
-                    async () => {
-                        await handleDelete(selectedAddress!)
-                    }
-                }
+                open={isDeleteAddressModalOpen}
+                onCancel={hideDeleteAddressModal}
+                confirmLoading={isLoading}
+                onOk={handleDelete}
             >
                 <p>Are you sure you want to delete this address?</p>
             </Modal>
