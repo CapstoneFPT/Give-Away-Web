@@ -12,7 +12,6 @@ interface ProductListProps {
     onPageChange: (page: number) => void;
     onCardClick: (product: string) => void;
     isBranch?: boolean;
-    shopId?: string;
 }
 
 const ProductList: React.FC<ProductListProps> = ({
@@ -23,7 +22,6 @@ const ProductList: React.FC<ProductListProps> = ({
                                                      totalCount,
                                                      onPageChange,
                                                      isBranch,
-                                                     shopId,
                                                      onCardClick
                                                  }) => {
 
