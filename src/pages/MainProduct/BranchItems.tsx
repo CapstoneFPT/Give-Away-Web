@@ -62,7 +62,6 @@ const BranchItems: React.FC = () => {
                                 pageSize={pageSize}
                                 totalCount={totalCount}
                                 onPageChange={setCurrentPage}
-                                shopId={shopId}
                                 isBranch={true}
                                 onCardClick={goToListItemPage}
                             />
