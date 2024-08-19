@@ -1,25 +1,44 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Form, Input, Select} from 'antd';
-import {AddressApi, DeliveryRequest, GHNDistrictResponse, GHNProvinceResponse, GHNWardResponse} from '../../api';
+import {Button, Checkbox, Form, Input, Select} from 'antd';
+import {
+    AddressApi,
+    DeliveryRequest,
+    GHNDistrictResponse,
+    GHNProvinceResponse,
+    GHNWardResponse,
+    UpdateDeliveryRequest
+} from '../../api';
 
 interface AddressFormProps {
-    initialValues?: DeliveryRequest;
-    onFinish: (values: DeliveryRequest) => void;
+    initialValues?: UpdateDeliveryRequest;
+    onFinish: (values: UpdateDeliveryRequest) => void;
     onCancel: () => void;
+    isAddingNew: boolean;
+    loading: boolean;
 }
 
-const AddressForm: React.FC<AddressFormProps> = ({initialValues, onFinish, onCancel}) => {
-    const [form] = Form.useForm();
+const AddressForm: React.FC<AddressFormProps> = ({initialValues, onFinish, onCancel, isAddingNew, loading}) => {
+    const [form] = Form.useForm<UpdateDeliveryRequest>();
     const [provinces, setProvinces] = useState<GHNProvinceResponse[]>([]);
     const [districts, setDistricts] = useState<GHNDistrictResponse[]>([]);
     const [wards, setWards] = useState<GHNWardResponse[]>([]);
 
     useEffect(() => {
+        console.log("Is adding new ", isAddingNew);
+        console.log("Initial values", initialValues);
         fetchProvinces();
-        if (initialValues) {
+        if (isAddingNew) {
+            form.resetFields();
+        } else if (initialValues) {
             form.setFieldsValue(initialValues);
+            if (initialValues.ghnProvinceId) {
+                fetchDistricts(initialValues.ghnProvinceId);
+            }
+            if (initialValues.ghnDistrictId) {
+                fetchWards(initialValues.ghnDistrictId);
+            }
         }
-    }, [initialValues, form]);
+    }, [initialValues, form, isAddingNew]);
 
     const fetchProvinces = async () => {
         try {
@@ -51,14 +70,14 @@ const AddressForm: React.FC<AddressFormProps> = ({initialValues, onFinish, onCan
         }
     };
 
-    const handleProvinceChange = (value: number) => {
-        form.setFieldsValue({districtId: undefined, wardId: undefined});
-        fetchDistricts(value);
+    const handleProvinceChange = async (value: number) => {
+        form.setFieldsValue({ghnDistrictId: undefined, ghnWardCode: undefined});
+        await fetchDistricts(value);
     };
 
-    const handleDistrictChange = (value: number) => {
-        form.setFieldsValue({wardId: undefined});
-        fetchWards(value);
+    const handleDistrictChange = async (value: number) => {
+        form.setFieldsValue({ghnWardCode: undefined});
+        await fetchWards(value);
     };
 
     return (
@@ -66,7 +85,7 @@ const AddressForm: React.FC<AddressFormProps> = ({initialValues, onFinish, onCan
             form={form}
             layout="vertical"
             onFinish={onFinish}
-            initialValues={initialValues}
+            initialValues={initialValues || {}}
         >
             <Form.Item
                 name="recipientName"
@@ -86,11 +105,12 @@ const AddressForm: React.FC<AddressFormProps> = ({initialValues, onFinish, onCan
                 <Input/>
             </Form.Item>
             <Form.Item
-                name="provinceId"
+                name="ghnProvinceId"
                 label="Province"
                 rules={[{required: true, message: 'Please select province!'}]}
             >
-                <Select onChange={handleProvinceChange}>
+                <Select onChange={handleProvinceChange}
+                        value={initialValues?.ghnProvinceId}>
                     {provinces.map(province => (
                         <Select.Option key={province.provinceId} value={province.provinceId}>
                             {province.provinceName}
@@ -99,11 +119,12 @@ const AddressForm: React.FC<AddressFormProps> = ({initialValues, onFinish, onCan
                 </Select>
             </Form.Item>
             <Form.Item
-                name="districtId"
+                name="ghnDistrictId"
                 label="District"
                 rules={[{required: true, message: 'Please select district!'}]}
             >
-                <Select onChange={handleDistrictChange}>
+                <Select onChange={handleDistrictChange}
+                        value={initialValues?.ghnDistrictId}>
                     {districts.map(district => (
                         <Select.Option key={district.districtId} value={district.districtId}>
                             {district.districtName}
@@ -112,11 +133,11 @@ const AddressForm: React.FC<AddressFormProps> = ({initialValues, onFinish, onCan
                 </Select>
             </Form.Item>
             <Form.Item
-                name="wardId"
+                name="ghnWardCode"
                 label="Ward"
                 rules={[{required: true, message: 'Please select ward!'}]}
             >
-                <Select>
+                <Select value={initialValues?.ghnWardCode}>
                     {wards.map(ward => (
                         <Select.Option key={ward.wardCode} value={ward.wardCode}>
                             {ward.wardName}
@@ -125,7 +146,7 @@ const AddressForm: React.FC<AddressFormProps> = ({initialValues, onFinish, onCan
                 </Select>
             </Form.Item>
             <Form.Item
-                name="addressDetail"
+                name="residence"
                 label="Address Detail"
                 rules={[{required: true, message: 'Please input address detail!'}]}
             >
@@ -133,14 +154,33 @@ const AddressForm: React.FC<AddressFormProps> = ({initialValues, onFinish, onCan
             </Form.Item>
             <Form.Item
                 name="addressType"
-                valuePropName="addressType">
-                <Select>
+                valuePropName="addressType"
+                label="Address Type"
+                rules={
+                    [
+                        {
+                            required: true,
+                            message: 'Please select address type!',
+                        }
+                    ]
+                }>
+                <Select value={initialValues?.addressType}>
                     <Select.Option value="Home">Home</Select.Option>
                     <Select.Option value="Business">Business</Select.Option>
                 </Select>
             </Form.Item>
+            {
+                !isAddingNew &&
+                <Form.Item
+                    name="isDefault"
+                    valuePropName="checked"
+                    label="Set as default"
+                >
+                    <Checkbox/>
+                </Form.Item>
+            }
             <Form.Item>
-                <Button type="primary" htmlType="submit">
+                <Button loading={loading} type="primary" htmlType="submit">
                     {initialValues ? 'Update' : 'Add'} Address
                 </Button>
                 <Button onClick={onCancel} style={{marginLeft: 8}}>

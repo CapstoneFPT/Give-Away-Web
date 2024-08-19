@@ -3184,10 +3184,10 @@ export interface DeliveryListResponse {
     'residence'?: string | null;
     /**
      * 
-     * @type {string}
+     * @type {AddressType}
      * @memberof DeliveryListResponse
      */
-    'addressType'?: string | null;
+    'addressType'?: AddressType;
     /**
      * 
      * @type {number}
@@ -3200,6 +3200,12 @@ export interface DeliveryListResponse {
      * @memberof DeliveryListResponse
      */
     'ghnWardCode'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof DeliveryListResponse
+     */
+    'ghnProvinceId'?: number;
     /**
      * 
      * @type {string}
@@ -3219,6 +3225,8 @@ export interface DeliveryListResponse {
      */
     'createdDate'?: string;
 }
+
+
 /**
  * 
  * @export
@@ -9533,32 +9541,52 @@ export interface UpdateDeliveryRequest {
      * @type {string}
      * @memberof UpdateDeliveryRequest
      */
-    'recipientName': string;
+    'recipientName'?: string | null;
     /**
      * 
      * @type {string}
      * @memberof UpdateDeliveryRequest
      */
-    'phone': string;
+    'phone'?: string | null;
+    /**
+     * 
+     * @type {AddressType}
+     * @memberof UpdateDeliveryRequest
+     */
+    'addressType'?: AddressType;
+    /**
+     * 
+     * @type {number}
+     * @memberof UpdateDeliveryRequest
+     */
+    'ghnProvinceId'?: number | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof UpdateDeliveryRequest
+     */
+    'ghnDistrictId'?: number | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof UpdateDeliveryRequest
+     */
+    'ghnWardCode'?: number | null;
     /**
      * 
      * @type {string}
      * @memberof UpdateDeliveryRequest
      */
-    'residence': string;
+    'residence'?: string | null;
     /**
      * 
-     * @type {string}
+     * @type {boolean}
      * @memberof UpdateDeliveryRequest
      */
-    'addressType': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof UpdateDeliveryRequest
-     */
-    'isDefult'?: string | null;
+    'isDefault'?: boolean;
 }
+
+
 /**
  * 
  * @export
@@ -11184,6 +11212,43 @@ export const AddressApiAxiosParamCreator = function (configuration?: Configurati
     return {
         /**
          * 
+         * @param {string} addressId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiAddressesAddressIdSetDefaultPatch: async (addressId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'addressId' is not null or undefined
+            assertParamExists('apiAddressesAddressIdSetDefaultPatch', 'addressId', addressId)
+            const localVarPath = `/api/addresses/{addressId}/set-default`
+                .replace(`{${"addressId"}}`, encodeURIComponent(String(addressId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {number} [provinceId] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -11303,6 +11368,18 @@ export const AddressApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
+         * @param {string} addressId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiAddressesAddressIdSetDefaultPatch(addressId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DeliveryListResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAddressesAddressIdSetDefaultPatch(addressId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AddressApi.apiAddressesAddressIdSetDefaultPatch']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @param {number} [provinceId] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -11348,6 +11425,15 @@ export const AddressApiFactory = function (configuration?: Configuration, basePa
     return {
         /**
          * 
+         * @param {string} addressId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiAddressesAddressIdSetDefaultPatch(addressId: string, options?: any): AxiosPromise<DeliveryListResponse> {
+            return localVarFp.apiAddressesAddressIdSetDefaultPatch(addressId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @param {number} [provinceId] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -11382,6 +11468,17 @@ export const AddressApiFactory = function (configuration?: Configuration, basePa
  * @extends {BaseAPI}
  */
 export class AddressApi extends BaseAPI {
+    /**
+     * 
+     * @param {string} addressId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AddressApi
+     */
+    public apiAddressesAddressIdSetDefaultPatch(addressId: string, options?: RawAxiosRequestConfig) {
+        return AddressApiFp(this.configuration).apiAddressesAddressIdSetDefaultPatch(addressId, options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * 
      * @param {number} [provinceId] 
