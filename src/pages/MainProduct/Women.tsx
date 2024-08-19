@@ -18,6 +18,7 @@ import SubMenu from "antd/es/menu/SubMenu";
 import useProductsFetch from "../../hooks/useProductsFetch.tsx";
 import ProductList from "../../components/commons/ProductList.tsx";
 import useNavigateToListProducts from "../../hooks/useNavigateToListProducts.tsx";
+import useMenuItems from "../../hooks/useMenuItems.tsx";
 
 const Women: React.FC = () => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -48,38 +49,15 @@ const Women: React.FC = () => {
             console.error("Error fetching categories:", error);
         }
     };
-
-    const handleMenuSelect = ({ key }: { key: string }) => {
-        setSelectedCategoryId(key);
-        setCurrentPage(1);
-    };
-
     // const formatBalance = (balance: number) => new Intl.NumberFormat("de-DE").format(balance);
 
 
-    const renderMenuItems = (categories: CategoryTreeNode[]): React.ReactNode => {
-        return categories.map((category) => {
-            if (category.children && category.children.length > 0) {
-                return (
-                    <SubMenu
-                        key={category.categoryId}
-                        icon={<AppstoreOutlined />}
-                        title={category.name}
-                        onTitleClick={({ key }) => handleMenuSelect({ key: key as string })}
-                    >
-                        <Menu.Item key={category.categoryId}>All {category.name}</Menu.Item>
-                        {renderMenuItems(category.children)}
-                    </SubMenu>
-                );
-            }
-            return (
-                <Menu.Item key={category.categoryId} icon={<AppstoreOutlined />}>
-                    {category.name}
-                </Menu.Item>
-            );
-        });
+    const handleCategorySelect = (categoryId: string) => {
+        setSelectedCategoryId(categoryId);
+        setCurrentPage(1);
     };
 
+    const menuItems = useMenuItems(categories, handleCategorySelect);
     return (
         <div style={{
             backgroundImage: `url(${backgroundImageUrl})`,
@@ -97,9 +75,8 @@ const Women: React.FC = () => {
                             selectedKeys={[selectedCategoryId]}
                             defaultOpenKeys={categories.map((cat) => cat.categoryId!)}
                             style={{ height: "100%", borderRight: 0 }}
-                            onSelect={handleMenuSelect}
                         >
-                            {renderMenuItems(categories)}
+                            {menuItems}
                         </Menu>
                     </Card>
                 </Col>

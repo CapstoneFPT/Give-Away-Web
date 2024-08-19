@@ -1,13 +1,12 @@
 import React, {useEffect, useState} from "react";
 import {Card, Col, Layout, Menu, Row} from "antd";
-import {AppstoreOutlined} from "@ant-design/icons";
 import {Content, Header} from "antd/es/layout/layout";
 import {CategoryApi, CategoryTreeNode} from "../../api";
 import backgroundImageUrl from "../../components/Assets/shutterstock_455310238.jpg";
-import SubMenu from "antd/es/menu/SubMenu";
 import useProductsFetch from "../../hooks/useProductsFetch.tsx";
 import ProductList from "../../components/commons/ProductList.tsx";
 import useNavigateToListProducts from "../../hooks/useNavigateToListProducts.tsx";
+import useMenuItems from "../../hooks/useMenuItems.tsx";
 
 const Men: React.FC = () => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -51,36 +50,12 @@ const Men: React.FC = () => {
         }
     };
 
-    const renderMenuItems = (categories: CategoryTreeNode[]): React.ReactNode => {
-        return categories.map((category) => {
-            if (category.children && category.children.length > 0) {
-                return (
-                    <SubMenu
-                        key={category.categoryId}
-                        icon={<AppstoreOutlined/>}
-                        title={category.name}
-                        onTitleClick={({key}) => handleMenuSelect({key: key as string})}
-                    >
-                        <Menu.Item key={category.categoryId}>All {category.name}</Menu.Item>
-                        {renderMenuItems(category.children)}
-                    </SubMenu>
-                );
-            }
-            return (
-                <Menu.Item key={category.categoryId} icon={<AppstoreOutlined/>}>
-                    {category.name}
-                </Menu.Item>
-            );
-        });
+    const handleCategorySelect = (categoryId: string) => {
+        setSelectedCategoryId(categoryId);
+        setCurrentPage(1);
     };
 
-    const handleMenuSelect = ({key}: { key: string }) => {
-        if (key) {
-            setSelectedCategoryId(key);
-            setCurrentPage(1);
-        }
-    };
-
+    const menuItems = useMenuItems(categories, handleCategorySelect);
     // const formatBalance = (sellingPrice: any) => {
     //     return new Intl.NumberFormat("de-DE").format(sellingPrice);
     // };
@@ -104,16 +79,15 @@ const Men: React.FC = () => {
                             selectedKeys={[selectedCategoryId || ""]}
                             defaultOpenKeys={categories.map((cat) => cat.categoryId!)}
                             style={{height: "100%", borderRight: 0}}
-                            onSelect={handleMenuSelect}
                         >
-                            {renderMenuItems(categories)}
+                            {menuItems}
                         </Menu>
                     </Card>
                 </Col>
                 <Col span={20}>
                     <Layout style={{backgroundColor: "rgba(255, 255, 255, 0)"}}>
-                        <Content style={{ padding: "20px", overflow: "hidden" }}>
-                            <Header style={{ textAlign: "center", backgroundColor: "rgba(255, 255, 255, 0)" }}>
+                        <Content style={{padding: "20px", overflow: "hidden"}}>
+                            <Header style={{textAlign: "center", backgroundColor: "rgba(255, 255, 255, 0)"}}>
                                 <h1>Men Collection</h1>
                             </Header>
                             <ProductList
