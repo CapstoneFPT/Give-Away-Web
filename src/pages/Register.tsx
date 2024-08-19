@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import { Button, Card, InputNumber, message, notification } from "antd"; // Import message from antd
+import { Button, Card, message, notification } from "antd"; // Import message from antd
 import {
   UserOutlined,
   EyeOutlined,

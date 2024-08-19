@@ -1,7 +1,6 @@
 import React from "react";
 import "./Footer.css"; // Update styles as needed
 import footer_logo from "../Assets/logo_big.png";
-import secondhand_clothes_image from "../Assets/hero_image.png"; // Add your image here
 import { Col, Row, Typography, Space, Input, Button } from "antd";
 import { FacebookOutlined, InstagramOutlined, TwitterOutlined, PhoneOutlined, MailOutlined } from "@ant-design/icons";
 

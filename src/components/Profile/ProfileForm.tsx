@@ -1,8 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Card, Form, Input, List, Modal, notification} from 'antd';
-import {MailOutlined, PhoneOutlined, PlusOutlined, UserOutlined} from '@ant-design/icons';
+import {Button, Card, Form, Input,  notification} from 'antd';
+import {MailOutlined, PhoneOutlined, UserOutlined} from '@ant-design/icons';
 import {AccountApi, DeliveryListResponse, DeliveryRequest} from '../../api';
-import AddressForm from './AddressForm';
 
 const ProfileForm: React.FC = () => {
     const [form] = Form.useForm();

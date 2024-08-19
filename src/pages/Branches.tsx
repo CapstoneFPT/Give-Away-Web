@@ -3,7 +3,6 @@ import { Button, Card, Dropdown, Pagination, Space, Typography, Layout, Menu, Sp
 import type { MenuProps } from "antd";
 import { CaretDownOutlined } from "@ant-design/icons";
 import DisplayItem from "../components/ItemsDisplay/ItemsDisplay";
-import { icons } from "antd/es/image/PreviewGroup";
 import { BASE_URL } from "../api/config";
 
 interface FashionItem {

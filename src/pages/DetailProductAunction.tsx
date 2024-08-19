@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Card, Row, Col, Button, Typography, Image } from "antd";
 import Footer from "../components/Footer/Footer";
 import { useParams } from "react-router-dom";
-import axios from "axios";
 import { FashionItemApi, FashionItemDetailResponse } from "../api";
 
 const { Title, Paragraph } = Typography;

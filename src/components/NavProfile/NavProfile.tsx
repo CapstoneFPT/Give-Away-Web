@@ -6,7 +6,7 @@ import {
     UserOutlined,
     OrderedListOutlined,
     InboxOutlined,
-    MoneyCollectOutlined, HomeOutlined
+     HomeOutlined
 } from "@ant-design/icons";
 import {Button, Menu, Card} from "antd";
 import {useNavigate} from "react-router-dom";

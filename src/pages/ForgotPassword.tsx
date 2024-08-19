@@ -1,9 +1,7 @@
 import React, { useState, useRef } from "react";
 import { Button, Card, Form, Input, notification, Modal } from "antd";
 import { MailOutlined, LockOutlined } from "@ant-design/icons";
-import { BASE_URL } from "../api/config";
 import { AuthApi } from "../api";
-import Password from "antd/es/input/Password";
 
 interface Styles {
   inputContainer: React.CSSProperties;

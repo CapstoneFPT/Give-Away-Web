@@ -6,15 +6,12 @@ import {
   Col,
   Card,
 } from "antd";
-import { AppstoreOutlined } from "@ant-design/icons";
 import {Content, Header} from "antd/es/layout/layout";
-import { useNavigate } from "react-router-dom";
 import {
   CategoryApi,
   CategoryTreeNode,
 } from "../../api";
 import backgroundImageUrl from "../../components/Assets/freepik_3858429.jpg";
-import SubMenu from "antd/es/menu/SubMenu";
 import useProductsFetch from "../../hooks/useProductsFetch.tsx";
 import ProductList from "../../components/commons/ProductList.tsx";
 import useNavigateToListProducts from "../../hooks/useNavigateToListProducts.tsx";

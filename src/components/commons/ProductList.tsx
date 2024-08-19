@@ -2,7 +2,6 @@ import React from 'react';
 import {Col, Pagination, Row, Spin} from 'antd';
 import {MasterItemListResponse} from '../../api';
 import ProductCard from './ProductCard';
-import {useNavigate} from "react-router-dom";
 
 interface ProductListProps {
     products: MasterItemListResponse[];

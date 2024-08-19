@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {Button, Checkbox, Form, Input, Select} from 'antd';
 import {
     AddressApi,
-    DeliveryRequest,
     GHNDistrictResponse,
     GHNProvinceResponse,
     GHNWardResponse,

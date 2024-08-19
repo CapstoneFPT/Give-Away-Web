@@ -5,7 +5,6 @@
     ReactNode,
     useEffect,
   } from "react";
-  import { Modal } from "antd";
 import { FashionItemDetailResponse } from "../api";
 
   interface Product {

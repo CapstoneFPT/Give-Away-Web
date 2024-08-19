@@ -15,7 +15,7 @@ import { useCart } from "../../pages/CartContext";
 import { useParams } from "react-router-dom";
 import { FashionItemApi, FashionItemDetailResponse } from "../../api";
 
-const { Title, Paragraph } = Typography;
+const {  Paragraph } = Typography;
 
 const styles = {
   para: {

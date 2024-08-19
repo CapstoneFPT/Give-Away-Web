@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Card, Form, Select, Button, Modal, notification } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { DeliveryRequest } from '../../api';
-import AddressForm from './AddressForm';
 
 const AddressManager: React.FC = () => {
     const [isModalVisible, setIsModalVisible] = useState(false);

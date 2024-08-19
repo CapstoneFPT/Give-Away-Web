@@ -1,5 +1,4 @@
 import React, { useState } from "react"; // Thêm useState
-import axios from "axios"; // Thêm import axios
 import {
   Button,
   Card,
@@ -12,9 +11,7 @@ import {
 } from "antd";
 import { SendOutlined } from "@ant-design/icons";
 import NavProfile from "../components/NavProfile/NavProfile";
-import { BASE_URL } from "../api/config";
 import { AccountApi } from "../api";
-// import {VietQR} from 'vietqr';
 
 const { Option } = Select;
 
