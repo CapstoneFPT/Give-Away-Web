@@ -1,12 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Button, Checkbox, Form, Input, Select} from 'antd';
-import {
-    AddressApi,
-    GHNDistrictResponse,
-    GHNProvinceResponse,
-    GHNWardResponse,
-    UpdateDeliveryRequest
-} from '../../api';
+import {AddressApi, GHNDistrictResponse, GHNProvinceResponse, GHNWardResponse, UpdateDeliveryRequest} from '../../api';
+import {Util} from "leaflet";
 
 interface AddressFormProps {
     initialValues?: UpdateDeliveryRequest;
@@ -29,6 +24,9 @@ const AddressForm: React.FC<AddressFormProps> = ({initialValues, onFinish, onCan
         if (isAddingNew) {
             form.resetFields();
         } else if (initialValues) {
+            initialValues
+                .residence = initialValues.residence!
+                .split(",")[0];
             form.setFieldsValue(initialValues);
             if (initialValues.ghnProvinceId) {
                 fetchDistricts(initialValues.ghnProvinceId);
