@@ -7,8 +7,8 @@
   } from "react";
 import { FashionItemDetailResponse } from "../api";
 
-  interface Product {
-    itemId: any;
+  export interface Product {
+    itemId: string;
     name: string;
     sellingPrice: number;
     color: string;

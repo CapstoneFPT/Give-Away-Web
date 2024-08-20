@@ -18,9 +18,5 @@ export const useAddresses = (userId: string) => {
         }
     },[userId])
 
-    useEffect(() => {
-        fetchAddresses();
-    }, [fetchAddresses]);
-
     return {addresses, fetchAddresses};
 }

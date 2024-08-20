@@ -21,13 +21,16 @@ const AddressManagementPage = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null);
     const [editingAddress, setEditingAddress] = useState<UpdateDeliveryRequest | null>(null);
+    const [addressListVersion, setAddressListVersion] = useState(0);
+
+    const updateAddresses = useCallback(() => {
+        fetchAddresses();
+        setAddressListVersion(prev => prev + 1);
+    }, [fetchAddresses]);
 
     useEffect(() => {
-        fetchAddresses()
-            .then(() => console.log("Data fetched"))
-            .catch((error) => console.error('Error fetching addresses:', error));
-    }, []);
-
+        updateAddresses();
+    }, [updateAddresses]);
 
     const handleAddOrEditAddress = useCallback(async (values: UpdateDeliveryRequest) => {
         setIsLoading(true);
@@ -37,6 +40,7 @@ const AddressManagementPage = () => {
                 await accountApi.apiAccountsAccountIdDeliveriesDeliveryIdPut(selectedAddressId!, userId, values);
                 notification.success({message: 'Address updated successfully!'});
             } else {
+
                 await accountApi.apiAccountsAccountIdDeliveriesPost(userId, {
                     recipientName: values.recipientName!,
                     addressType: values.addressType!,
@@ -50,7 +54,7 @@ const AddressManagementPage = () => {
             }
 
             hideFormModal();
-            await fetchAddresses();
+            updateAddresses();
         } catch (e) {
             console.error('Error saving address:', e);
             notification.error({message: 'Failed to add or edit address. Please try again.'});
@@ -67,7 +71,7 @@ const AddressManagementPage = () => {
             await accountApi.apiAccountsAccountIdDeliveriesDeliveryIdDelete(selectedAddressId!, userId);
             notification.success({message: 'Address deleted successfully!'});
             hideDeleteAddressModal();
-            await fetchAddresses();
+            updateAddresses();
         } catch (e) {
             console.error("Error deleting address:", e);
             notification.error({message: 'Failed to delete address. Please try again.'});
@@ -82,7 +86,7 @@ const AddressManagementPage = () => {
             const accountApi = new AddressApi();
             await accountApi.apiAddressesAddressIdSetDefaultPatch(addressId);
             notification.success({message: 'Default address updated successfully!'});
-            await fetchAddresses();
+            updateAddresses()
         } catch (error) {
             console.error('Error setting default address:', error);
             notification.error({message: 'Failed to set default address. Please try again.'});
@@ -90,6 +94,10 @@ const AddressManagementPage = () => {
     }, [fetchAddresses]);
 
     const openAddressForm = useCallback((address: DeliveryListResponse | null = null) => {
+        if(addresses.length == 5){
+            notification.error({message: 'You can not add more than 5 addresses!'});
+            return;
+        }
         if (address) {
             setSelectedAddressId(address.addressId!);
             setEditingAddress({
@@ -159,7 +167,7 @@ const AddressManagementPage = () => {
                 footer={null}
             >
                 <AddressForm
-                    key={editingAddress ? selectedAddressId : 'new'}
+                    key={`${editingAddress ? selectedAddressId : 'new'}-${addressListVersion}`}
                     initialValues={editingAddress!}
                     onFinish={handleAddOrEditAddress}
                     onCancel={hideFormModal}

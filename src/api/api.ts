@@ -1273,13 +1273,25 @@ export interface CartRequest {
      * @type {number}
      * @memberof CartRequest
      */
-    'ghnDistrictId'?: number;
+    'ghnDistrictId'?: number | null;
     /**
      * 
      * @type {number}
      * @memberof CartRequest
      */
-    'ghnWardCode'?: number;
+    'ghnWardCode'?: number | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof CartRequest
+     */
+    'ghnProvinceId'?: number | null;
+    /**
+     * 
+     * @type {AddressType}
+     * @memberof CartRequest
+     */
+    'addressType'?: AddressType;
     /**
      * 
      * @type {string}
@@ -3455,7 +3467,8 @@ export const ErrorCode = {
     NetworkError: 'NetworkError',
     ServerError: 'ServerError',
     InvalidInput: 'InvalidInput',
-    NotFound: 'NotFound'
+    NotFound: 'NotFound',
+    UnsupportedShipping: 'UnsupportedShipping'
 } as const;
 
 export type ErrorCode = typeof ErrorCode[keyof typeof ErrorCode];
@@ -3511,7 +3524,8 @@ export const ErrorType = {
     TransactionError: 'TransactionError',
     OrderError: 'OrderError',
     PaymentError: 'PaymentError',
-    AccountError: 'AccountError'
+    AccountError: 'AccountError',
+    ShippingError: 'ShippingError'
 } as const;
 
 export type ErrorType = typeof ErrorType[keyof typeof ErrorType];
@@ -6961,6 +6975,18 @@ export interface Order {
      * @memberof Order
      */
     'email'?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof Order
+     */
+    'ghnProvinceId'?: number | null;
+    /**
+     * 
+     * @type {AddressType}
+     * @memberof Order
+     */
+    'addressType'?: AddressType;
 }
 
 
