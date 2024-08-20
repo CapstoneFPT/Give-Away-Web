@@ -2632,33 +2632,6 @@ export interface CreateInquiryResponse {
 /**
  * 
  * @export
- * @interface CreateInquiryResponseResult
- */
-export interface CreateInquiryResponseResult {
-    /**
-     * 
-     * @type {CreateInquiryResponse}
-     * @memberof CreateInquiryResponseResult
-     */
-    'data'?: CreateInquiryResponse;
-    /**
-     * 
-     * @type {ResultStatus}
-     * @memberof CreateInquiryResponseResult
-     */
-    'resultStatus'?: ResultStatus;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof CreateInquiryResponseResult
-     */
-    'messages'?: Array<string> | null;
-}
-
-
-/**
- * 
- * @export
  * @interface CreateItemVariationRequest
  */
 export interface CreateItemVariationRequest {
@@ -3103,33 +3076,6 @@ export interface CreateWithdrawResponse {
      * @memberof CreateWithdrawResponse
      */
     'amountLeft'?: number;
-}
-
-
-/**
- * 
- * @export
- * @interface CreateWithdrawResponseResult
- */
-export interface CreateWithdrawResponseResult {
-    /**
-     * 
-     * @type {CreateWithdrawResponse}
-     * @memberof CreateWithdrawResponseResult
-     */
-    'data'?: CreateWithdrawResponse;
-    /**
-     * 
-     * @type {ResultStatus}
-     * @memberof CreateWithdrawResponseResult
-     */
-    'resultStatus'?: ResultStatus;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof CreateWithdrawResponseResult
-     */
-    'messages'?: Array<string> | null;
 }
 
 
@@ -5031,33 +4977,6 @@ export interface GetWithdrawsResponsePaginationResponse {
      */
     'items'?: Array<GetWithdrawsResponse> | null;
 }
-/**
- * 
- * @export
- * @interface GetWithdrawsResponsePaginationResponseResult
- */
-export interface GetWithdrawsResponsePaginationResponseResult {
-    /**
-     * 
-     * @type {GetWithdrawsResponsePaginationResponse}
-     * @memberof GetWithdrawsResponsePaginationResponseResult
-     */
-    'data'?: GetWithdrawsResponsePaginationResponse;
-    /**
-     * 
-     * @type {ResultStatus}
-     * @memberof GetWithdrawsResponsePaginationResponseResult
-     */
-    'resultStatus'?: ResultStatus;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof GetWithdrawsResponsePaginationResponseResult
-     */
-    'messages'?: Array<string> | null;
-}
-
-
 /**
  * 
  * @export
@@ -10658,7 +10577,7 @@ export const AccountApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiAccountsAccountIdInquiriesPost(accountId: string, createInquiryRequest?: CreateInquiryRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CreateInquiryResponseResult>> {
+        async apiAccountsAccountIdInquiriesPost(accountId: string, createInquiryRequest?: CreateInquiryRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CreateInquiryResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.apiAccountsAccountIdInquiriesPost(accountId, createInquiryRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AccountApi.apiAccountsAccountIdInquiriesPost']?.[localVarOperationServerIndex]?.url;
@@ -10734,7 +10653,7 @@ export const AccountApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiAccountsAccountIdWithdrawsGet(accountId: string, page?: number, pageSize?: number, status?: WithdrawStatus, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetWithdrawsResponsePaginationResponseResult>> {
+        async apiAccountsAccountIdWithdrawsGet(accountId: string, page?: number, pageSize?: number, status?: WithdrawStatus, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetWithdrawsResponsePaginationResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.apiAccountsAccountIdWithdrawsGet(accountId, page, pageSize, status, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AccountApi.apiAccountsAccountIdWithdrawsGet']?.[localVarOperationServerIndex]?.url;
@@ -10747,7 +10666,7 @@ export const AccountApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiAccountsAccountIdWithdrawsPost(accountId: string, createWithdrawRequest?: CreateWithdrawRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CreateWithdrawResponseResult>> {
+        async apiAccountsAccountIdWithdrawsPost(accountId: string, createWithdrawRequest?: CreateWithdrawRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CreateWithdrawResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.apiAccountsAccountIdWithdrawsPost(accountId, createWithdrawRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AccountApi.apiAccountsAccountIdWithdrawsPost']?.[localVarOperationServerIndex]?.url;
@@ -10875,7 +10794,7 @@ export const AccountApiFactory = function (configuration?: Configuration, basePa
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAccountsAccountIdInquiriesPost(accountId: string, createInquiryRequest?: CreateInquiryRequest, options?: any): AxiosPromise<CreateInquiryResponseResult> {
+        apiAccountsAccountIdInquiriesPost(accountId: string, createInquiryRequest?: CreateInquiryRequest, options?: any): AxiosPromise<CreateInquiryResponse> {
             return localVarFp.apiAccountsAccountIdInquiriesPost(accountId, createInquiryRequest, options).then((request) => request(axios, basePath));
         },
         /**
@@ -10936,7 +10855,7 @@ export const AccountApiFactory = function (configuration?: Configuration, basePa
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAccountsAccountIdWithdrawsGet(accountId: string, page?: number, pageSize?: number, status?: WithdrawStatus, options?: any): AxiosPromise<GetWithdrawsResponsePaginationResponseResult> {
+        apiAccountsAccountIdWithdrawsGet(accountId: string, page?: number, pageSize?: number, status?: WithdrawStatus, options?: any): AxiosPromise<GetWithdrawsResponsePaginationResponse> {
             return localVarFp.apiAccountsAccountIdWithdrawsGet(accountId, page, pageSize, status, options).then((request) => request(axios, basePath));
         },
         /**
@@ -10946,7 +10865,7 @@ export const AccountApiFactory = function (configuration?: Configuration, basePa
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAccountsAccountIdWithdrawsPost(accountId: string, createWithdrawRequest?: CreateWithdrawRequest, options?: any): AxiosPromise<CreateWithdrawResponseResult> {
+        apiAccountsAccountIdWithdrawsPost(accountId: string, createWithdrawRequest?: CreateWithdrawRequest, options?: any): AxiosPromise<CreateWithdrawResponse> {
             return localVarFp.apiAccountsAccountIdWithdrawsPost(accountId, createWithdrawRequest, options).then((request) => request(axios, basePath));
         },
         /**
