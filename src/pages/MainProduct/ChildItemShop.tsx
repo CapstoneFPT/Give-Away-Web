@@ -35,8 +35,8 @@ const ChildItemShop = () => {
                     filterCondition, // condition filter
                     null!, // minPrice (not used here)
                     null!, // maxPrice (not used here)
-                    null!, // status (not used here)
-                    null!, // type (not used here)
+                    ["Available"], // status (not used here)
+                    ["ItemBase","ConsignedForSale"], // type (not used here)
                     null!, // sortBy (not used here)
                     null!, // sortDescending (not used here)
                     null!, // pageNumber (not used here)

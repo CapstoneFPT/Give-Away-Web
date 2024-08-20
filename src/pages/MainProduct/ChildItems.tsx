@@ -4,7 +4,7 @@ import { FashionItemApi, FashionItemList, MasterItemDetailResponse, SizeType } f
 import { useParams, useNavigate } from 'react-router-dom';
 
 const { Option } = Select;
-const { Text, Title } = Typography;
+const {  Title } = Typography;
 
 const formatBalance = (balance: any) => {
   return new Intl.NumberFormat('de-DE').format(balance);
@@ -39,8 +39,8 @@ const ChildItems: React.FC = () => {
           filterCondition, // condition filter
           null!, // minPrice (not used here)
           null!, // maxPrice (not used here)
-          null!, // status (not used here)
-          null!, // type (not used here)
+          ["Available"], // status (not used here)
+          ["ItemBase", "ConsignedForSale"], // type (not used here)
           null!, // sortBy (not used here)
           null!, // sortDescending (not used here)
           null!, // pageNumber (not used here)
