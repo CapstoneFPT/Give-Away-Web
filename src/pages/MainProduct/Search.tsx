@@ -1,5 +1,5 @@
 import React, {  useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import {
   Layout,
 } from "antd";
@@ -7,10 +7,11 @@ import {Content, Header} from "antd/es/layout/layout";
 import backgroundImageUrl from "../../components/Assets/719789-apparel-hanger-top-shirt-t-shirt-fashion-rack.jpg";
 import ProductList from "../../components/commons/ProductList.tsx";
 import useProductsFetch from "../../hooks/useProductsFetch.tsx";
+import useNavigateToListProducts from "../../hooks/useNavigateToListProducts.tsx";
 const Search: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
+  const { goToListProducts} = useNavigateToListProducts();
 
   const pageSize = 12;
   const searchQuery = searchParams.get("q");
@@ -23,7 +24,6 @@ const Search: React.FC = () => {
 
   // const formatBalance = (balance: number) => new Intl.NumberFormat("de-DE").format(balance);
 
-  const goToDetailPage = (itemId: string) => navigate(`/itemDetail/${itemId}`);
 
   return (
       <div style={{
@@ -45,7 +45,7 @@ const Search: React.FC = () => {
                 pageSize={pageSize}
                 totalCount={totalCount}
                 onPageChange={setCurrentPage}
-                onCardClick={goToDetailPage}
+                onCardClick={goToListProducts}
             />
           </Content>
         </Layout>
