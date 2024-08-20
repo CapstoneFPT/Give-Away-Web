@@ -19,7 +19,7 @@ const MyConsign = () => {
           null!,
           null!
         );
-        setData(response.data.data?.items!); // Lưu dữ liệu vào trạng thái
+        setData(response.data.data?.items || []); // Lưu dữ liệu vào trạng thái
       } catch (error) {
         console.error("Error fetching deposit history:", error);
       }

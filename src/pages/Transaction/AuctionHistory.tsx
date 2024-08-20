@@ -1,7 +1,7 @@
 import React, {  useEffect, useState } from "react";
 import {  Card, Row, Col, Table } from "antd";
 import NavProfile from "../../components/NavProfile/NavProfile";
-import { AccountApi, OrderStatus } from "../../api";
+import { AccountApi } from "../../api";
 
 const AuctionHistory = () => {
   const userId = JSON.parse(localStorage.getItem("userId") || "null");
@@ -20,7 +20,7 @@ const AuctionHistory = () => {
           "false",
          
         );
-        setData(response.data.data?.items!); // Lưu dữ liệu vào trạng thái
+        setData(response.data.data?.items || []); // Lưu dữ liệu vào trạng thái
       } catch (error) {
         console.error("Error fetching deposit history:", error);
       }

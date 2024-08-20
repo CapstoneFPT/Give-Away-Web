@@ -7,7 +7,6 @@ import {
   Spin,
   Tag,
   Image,
-  Typography,
   Divider,
   Descriptions,
 } from "antd";
@@ -15,7 +14,6 @@ import { Link, useLocation } from "react-router-dom";
 import NavProfile from "../../components/NavProfile/NavProfile";
 import {
   ConsignSaleApi,
-  ConsignSaleDetail,
   ConsignSaleDetailResponse,
 } from "../../api";
 

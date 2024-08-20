@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
-import {AccountApi, GetTransactionsResponse, TransactionType} from "../../api";
-import {Card, Col, Row, Table, TableColumnsType} from "antd";
+import {AccountApi, GetTransactionsResponse} from "../../api";
+import {Card, Col, Row, Table} from "antd";
 import NavProfile from "../../components/NavProfile/NavProfile.tsx";
 
 const RechargeHistory = () => {
@@ -17,7 +17,7 @@ const RechargeHistory = () => {
           null!,
           ["Recharge"]
         );
-        setData(response.data.data?.items || []); // Lưu dữ liệu vào trạng thái
+        setData(response.data.items || []); // Lưu dữ liệu vào trạng thái
       } catch (error) {
         console.error("Error fetching deposit history:", error);
       }

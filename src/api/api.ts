@@ -4910,33 +4910,6 @@ export interface GetTransactionsResponsePaginationResponse {
 /**
  * 
  * @export
- * @interface GetTransactionsResponsePaginationResponseResult
- */
-export interface GetTransactionsResponsePaginationResponseResult {
-    /**
-     * 
-     * @type {GetTransactionsResponsePaginationResponse}
-     * @memberof GetTransactionsResponsePaginationResponseResult
-     */
-    'data'?: GetTransactionsResponsePaginationResponse;
-    /**
-     * 
-     * @type {ResultStatus}
-     * @memberof GetTransactionsResponsePaginationResponseResult
-     */
-    'resultStatus'?: ResultStatus;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof GetTransactionsResponsePaginationResponseResult
-     */
-    'messages'?: Array<string> | null;
-}
-
-
-/**
- * 
- * @export
  * @interface GetWithdrawsResponse
  */
 export interface GetWithdrawsResponse {
@@ -10746,7 +10719,7 @@ export const AccountApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiAccountsAccountIdTransactionsGet(accountId: string, page?: number, pageSize?: number, types?: Array<TransactionType>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetTransactionsResponsePaginationResponseResult>> {
+        async apiAccountsAccountIdTransactionsGet(accountId: string, page?: number, pageSize?: number, types?: Array<TransactionType>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetTransactionsResponsePaginationResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.apiAccountsAccountIdTransactionsGet(accountId, page, pageSize, types, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AccountApi.apiAccountsAccountIdTransactionsGet']?.[localVarOperationServerIndex]?.url;
@@ -10951,7 +10924,7 @@ export const AccountApiFactory = function (configuration?: Configuration, basePa
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAccountsAccountIdTransactionsGet(accountId: string, page?: number, pageSize?: number, types?: Array<TransactionType>, options?: any): AxiosPromise<GetTransactionsResponsePaginationResponseResult> {
+        apiAccountsAccountIdTransactionsGet(accountId: string, page?: number, pageSize?: number, types?: Array<TransactionType>, options?: any): AxiosPromise<GetTransactionsResponsePaginationResponse> {
             return localVarFp.apiAccountsAccountIdTransactionsGet(accountId, page, pageSize, types, options).then((request) => request(axios, basePath));
         },
         /**

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {AccountApi, GetTransactionsResponse, TransactionType} from "../../api";
+import {AccountApi, GetTransactionsResponse} from "../../api";
 import {Card, Col, Row, Table, TableColumnsType} from "antd";
 import NavProfile from "../../components/NavProfile/NavProfile.tsx";
 
@@ -11,20 +11,19 @@ const PurchaseHistory = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-
         fetchData();
     }, [userId]);
     const fetchData = async (page = 1, size = 10) => {
         const accountApi = new AccountApi();
-        const response = await accountApi.apiAccountsAccountIdTransactionsGet(userId!, page, size, [TransactionType.Purchase]);
-        console.log(response.data.data?.items)
-        setData(response.data.data?.items || []);
-        setTotal(response.data.data?.totalCount || 0);
+        const response = await accountApi.apiAccountsAccountIdTransactionsGet(userId!, page, size, ["Purchase"]);
+        console.log(`Purchased transaction from ${userId}`, response.data.items)
+        setData(response.data.items || []);
+        setTotal(response.data.totalCount || 0);
         setLoading(false);
     }
-        const formatBalance = (balance:any) => {
-            return new Intl.NumberFormat('de-DE').format(balance);
-        };
+    const formatBalance = (balance: number) => {
+        return new Intl.NumberFormat('de-DE').format(balance);
+    };
 
     const columns: TableColumnsType<GetTransactionsResponse> = [
         {
@@ -36,7 +35,7 @@ const PurchaseHistory = () => {
             title: 'Amount',
             dataIndex: 'amount',
             key: 'amount',
-            render: (amount: number) => <strong>{formatBalance(amount)} VND</strong> ,
+            render: (amount: number) => <strong>{formatBalance(amount)} VND</strong>,
 
         },
         {
@@ -50,8 +49,8 @@ const PurchaseHistory = () => {
             dataIndex: 'type',
             key: 'type',
         },
-       
-        
+
+
     ]
 
     return (
@@ -82,7 +81,7 @@ const PurchaseHistory = () => {
                             columns={columns}
                             rowKey="id"
                             pagination={{
-                                total:total,
+                                total: total,
                                 onChange: (page, pageSize) => {
                                     setLoading(true)
                                     fetchData(page, pageSize)
