@@ -16,6 +16,7 @@ const ChildItemShop = () => {
     const [itemCodeFilter, setItemCodeFilter] = useState<string | undefined>(undefined);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const {shopId, masterItemId} = useParams<{ shopId: string, masterItemId: string }>();
+    const userId = JSON.parse(localStorage.getItem("userId") || "null");
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -23,12 +24,12 @@ const ChildItemShop = () => {
             setIsLoading(true);
             try {
                 const fashionItemApi = new FashionItemApi();
-                const masterResponse = await fashionItemApi.apiFashionitemsMasterItemsFindGet(null!,null!,masterItemId);
+                const masterResponse = await fashionItemApi.apiFashionitemsMasterItemsFindGet(null!, null!, masterItemId);
                 setDataMaster(masterResponse.data);
 
                 const itemResponse = await fashionItemApi.apiFashionitemsGet(
                     itemCodeFilter, // itemCode filter
-                    null!, // memberId (not used here)
+                    userId, // memberId (not used here)
                     null!, // gender (not used here)
                     filterColor, // color filter
                     filterSize, // size filter
@@ -36,7 +37,7 @@ const ChildItemShop = () => {
                     null!, // minPrice (not used here)
                     null!, // maxPrice (not used here)
                     ["Available"], // status (not used here)
-                    ["ItemBase","ConsignedForSale"], // type (not used here)
+                    ["ItemBase", "ConsignedForSale"], // type (not used here)
                     null!, // sortBy (not used here)
                     null!, // sortDescending (not used here)
                     null!, // pageNumber (not used here)
@@ -57,7 +58,7 @@ const ChildItemShop = () => {
         };
 
         fetchData();
-    }, [shopId,masterItemId, itemCodeFilter, filterSize, filterColor, filterCondition]);
+    }, [shopId, masterItemId, itemCodeFilter, filterSize, filterColor, filterCondition]);
 
     const showConditionGuide = () => {
         setIsModalVisible(true);
@@ -131,7 +132,8 @@ const ChildItemShop = () => {
                                         color: 'white'
                                     }} // Set background to black and text to white
                                 >
-                                    <Typography.Title level={5}><strong>Item Code:</strong> {dataMaster.masterItemCode}</Typography.Title>
+                                    <Typography.Title level={5}><strong>Item Code:</strong> {dataMaster.masterItemCode}
+                                    </Typography.Title>
                                     <Typography><strong>Name:</strong> {dataMaster.name}</Typography><br/>
                                     <Typography><strong>Brand:</strong> {dataMaster.brand}</Typography><br/>
                                     <Typography><strong>Category:</strong> {dataMaster.categoryName}</Typography><br/>
