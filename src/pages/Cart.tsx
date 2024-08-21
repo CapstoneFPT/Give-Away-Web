@@ -361,21 +361,12 @@ const Cart: React.FC = () => {
                     {
                         selectedAddress && (
                             <div>
-                                <Typography.Text strong>Recipient Name:</Typography.Text>
-                                <br/>
-                                <Typography.Text>{selectedAddress.recipientName}</Typography.Text>
-                                <br/>
-                                <Typography.Text strong>Phone:</Typography.Text>
-                                <br/>
-                                <Typography.Text>{selectedAddress.phone}</Typography.Text>
-                                <br/>
-                                <Typography.Text strong>Residence:</Typography.Text>
-                                <br/>
-                                <Typography.Text>{selectedAddress.residence}</Typography.Text>
-                                <br/>
-                                <Typography.Text strong>Address Type:</Typography.Text>
-                                <br/>
-                                <Typography.Text>{selectedAddress.addressType}</Typography.Text>
+                                <Typography><strong>Recipient Name:</strong> {selectedAddress.recipientName}</Typography>
+                                <Typography> <strong>Phone: </strong>{selectedAddress.phone}</Typography>
+                                <Typography><strong>Address Type: </strong>{selectedAddress.addressType}</Typography>
+                                <Typography><strong>Residence: </strong>{selectedAddress.residence}</Typography>
+                                
+                                
                             </div>
                         )
                     }
@@ -395,11 +386,11 @@ const Cart: React.FC = () => {
                         </Form.Item>
                     </Form>
                     <Divider/>
-                    <Typography.Title level={4}>
+                    <Typography.Title level={5}>
                         Sub Total: {formatBalance(calculateTotalItemPrice())} VND
                     </Typography.Title>
                     <Divider/>
-                    <Typography.Title level={4}>
+                    <Typography.Title level={5}>
                         Shipping Fee : {
                         isCalculatingShippingFee ? (
                             <Spin size={"small"}/>
@@ -413,6 +404,8 @@ const Cart: React.FC = () => {
                         Total Price: {formatBalance(calculateTotalPrice())} VND
                     </Typography.Title>
                     <Button
+                    style={{marginTop:'10px',backgroundColor:(selectedItems.length === 0 || !selectedAddress
+                        || shippingFee === null || isCalculatingShippingFee) ? 'gray': 'black', color:'white'}}
                         type="primary"
                         block
                         onClick={handleCheckOut}

@@ -58,6 +58,7 @@ const ItemDetail: React.FC = () => {
           const fashionItemApi = new FashionItemApi();
           const response = await fashionItemApi.apiFashionitemsItemIdGet(
             itemId!
+
           );
           console.debug(itemId, response.data);
           setProduct(response.data.data!);

@@ -28,6 +28,7 @@ import {
   ShopApi,
   SizeType,
 } from "../../api";
+import RuleConsign from "../../pages/RuleConsign";
 
 const normFile = (e: any) => {
   // Kiểm tra nếu e là một mảng hoặc có fileList
@@ -102,6 +103,7 @@ const ConsignForm = () => {
             brand: item.brand,
             gender: item.gender,
             images: fileUrls,
+            
           };
         })
       );
@@ -153,7 +155,10 @@ const ConsignForm = () => {
       className="consign-form-container"
       style={{ justifyContent: "center", display: "flex" }}
     >
-      <Form
+      <Row gutter={[16,16]}>
+        <Col span={16}>
+        
+        <Form
         form={form}
         className="consign-form"
         name="dynamic_form"
@@ -327,8 +332,7 @@ const ConsignForm = () => {
                               transform(value) {
                                 return Number(value);
                               },
-                              message:
-                                "Condition percentage must be a number between 0 and 100",
+                              
                             },
                           ]}
                         >
@@ -336,13 +340,9 @@ const ConsignForm = () => {
                             placeholder="Condition Percentage"
                             onKeyPress={(event) => {
                               // Prevent non-numeric input
-                              if (
-                                !/[0-9]/.test(event.key) &&
-                                event.key !== "Backspace" &&
-                                event.key !== "Tab"
-                              ) {
-                                event.preventDefault();
-                              }
+                              
+                              {}
+                              
                             }}
                           />
                         </Form.Item>
@@ -429,6 +429,11 @@ const ConsignForm = () => {
           </Button>
         </Form.Item>
       </Form>
+        </Col>
+        <Col span={8}>
+          <RuleConsign/>
+        </Col>
+      </Row>
     </Card>
   );
 };
