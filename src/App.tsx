@@ -44,6 +44,7 @@ import BranchItems from "./pages/MainProduct/BranchItems.tsx";
 import ChildItems from "./pages/MainProduct/ChildItems.tsx";
 import ChildItemShop from "./pages/MainProduct/ChildItemShop.tsx";
 import AddressManagementPage from "./pages/AddressManagementPage.tsx";
+import EmailVerification from "./components/Auth/EmailVerification.tsx";
 
 function App() {
     return (
@@ -51,6 +52,14 @@ function App() {
             <div>
                 <CartProvider>
                     <Routes>
+                        <Route
+                            path="/verify-email"
+                            element={
+                                <>
+                                    <Navbar/>
+                                    <EmailVerification/>
+                                </>
+                            }/>
                         <Route
                             path="/"
                             element={

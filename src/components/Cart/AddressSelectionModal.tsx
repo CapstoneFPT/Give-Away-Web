@@ -1,5 +1,5 @@
 import {DeliveryListResponse} from "../../api";
-import React, {useEffect, useState} from "react";
+import React, { useState} from "react";
 import {Button, List, Modal, notification} from "antd";
 import {PlusOutlined} from "@ant-design/icons";
 import AddressForm from "../Profile/AddressForm.tsx";
