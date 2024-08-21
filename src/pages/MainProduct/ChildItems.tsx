@@ -19,6 +19,7 @@ const ChildItems: React.FC = () => {
   const [filterCondition, setFilterCondition] = useState<string | undefined>(undefined);
   const [itemCodeFilter, setItemCodeFilter] = useState<string | undefined>(undefined);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const userId = JSON.parse(localStorage.getItem("userId") || "null");
   const { masterItemCode } = useParams<{ masterItemCode: string }>();
   const navigate = useNavigate();
 
@@ -32,7 +33,7 @@ const ChildItems: React.FC = () => {
 
         const itemResponse = await fashionItemApi.apiFashionitemsGet(
           itemCodeFilter, // itemCode filter
-          null!, // memberId (not used here)
+          userId, // memberId (not used here)
           null!, // gender (not used here)
           filterColor, // color filter
           filterSize, // size filter

@@ -1766,6 +1766,36 @@ export interface ConsignSaleDetail {
      * @type {string}
      * @memberof ConsignSaleDetail
      */
+    'productName'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof ConsignSaleDetail
+     */
+    'brand'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof ConsignSaleDetail
+     */
+    'color'?: string | null;
+    /**
+     * 
+     * @type {SizeType}
+     * @memberof ConsignSaleDetail
+     */
+    'size'?: SizeType;
+    /**
+     * 
+     * @type {string}
+     * @memberof ConsignSaleDetail
+     */
+    'condition'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof ConsignSaleDetail
+     */
     'createdDate'?: string;
     /**
      * 
@@ -1780,6 +1810,8 @@ export interface ConsignSaleDetail {
      */
     'images'?: Array<Image> | null;
 }
+
+
 /**
  * 
  * @export
@@ -2424,7 +2456,51 @@ export interface CreateConsignDetailRequest {
      * @memberof CreateConsignDetailRequest
      */
     'dealPrice'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateConsignDetailRequest
+     */
+    'productName'?: string | null;
+    /**
+     * 
+     * @type {GenderType}
+     * @memberof CreateConsignDetailRequest
+     */
+    'gender'?: GenderType;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateConsignDetailRequest
+     */
+    'condition'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateConsignDetailRequest
+     */
+    'color'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateConsignDetailRequest
+     */
+    'brand'?: string | null;
+    /**
+     * 
+     * @type {SizeType}
+     * @memberof CreateConsignDetailRequest
+     */
+    'size'?: SizeType;
+    /**
+     * 
+     * @type {Array<FashionItemImage>}
+     * @memberof CreateConsignDetailRequest
+     */
+    'images'?: Array<FashionItemImage> | null;
 }
+
+
 /**
  * 
  * @export
