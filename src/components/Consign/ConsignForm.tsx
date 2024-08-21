@@ -11,6 +11,7 @@ import {
   notification,
   Row,
   Col,
+  Typography,
 } from "antd";
 import type {
   FormListFieldData,
@@ -103,7 +104,6 @@ const ConsignForm = () => {
             brand: item.brand,
             gender: item.gender,
             images: fileUrls,
-            
           };
         })
       );
@@ -155,283 +155,308 @@ const ConsignForm = () => {
       className="consign-form-container"
       style={{ justifyContent: "center", display: "flex" }}
     >
-      <Row gutter={[16,16]}>
+      <Row gutter={[16, 16]}>
+        <Col span={8}>
+        <RuleConsign />
+        </Col>
         <Col span={16}>
-        
         <Form
-        form={form}
-        className="consign-form"
-        name="dynamic_form"
-        onFinish={onFinish}
-        autoComplete="off"
-        size="large"
-      >
-        <Card
-          className="user-info-card"
-          style={{
-            justifyContent: "center",
-            alignItems: "center",
-            display: "flex",
-          }}
-        >
-          <div style={{ width: "1000px" }}>
-            <h1>Consign/Sale Form</h1>
+            form={form}
+            className="consign-form"
+            name="dynamic_form"
+            onFinish={onFinish}
+            autoComplete="off"
+            size="large"
+          >
+            <Card style={{ width: "970px", border: "1px solid #aeacac", }}>
+              {/* <div style={{ width: "1000px" }}> */}
+              <h1 style={{ textAlign: "center", marginBottom: "10px" }}>
+                Consign/Sale Form
+              </h1>
 
-            <Form.Item
-              name={["userInfo", "clothBranches"]}
-              rules={[{ required: true, message: "Missing cloth branches" }]}
-            >
-              <Select style={{width:'50%'}} placeholder=" Branches">
-                {branches.map((data: any) => (
-                  <Select.Option key={data.shopId} value={data.shopId}>
-                    {data.address}
-                  </Select.Option>
-                ))}
-              </Select>
-            </Form.Item>
-            <Form.Item
-              name={["userInfo", "type"]}
-              rules={[{ required: true, message: "Missing type" }]}
-            >
-              <Select placeholder="Type Consign/Sale" style={{ width: "21%" }}>
-                {Object.values(ConsignSaleType).map(
-                  (
-                    type // Render options from the type
-                  ) => (
-                    <Select.Option key={type} value={type}>
-                      {type}
-                    </Select.Option>
-                  )
-                )}
-              </Select>
-            </Form.Item>
-          </div>
-        </Card>
-        <Card style={{width:'1300px'}}>
-          <Form.List name="items">
-            {(
-              fields: FormListFieldData[],
-              { add, remove }: FormListOperation
-            ) => (
-              <div
-                className="form-container"
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  gap: "10px",
-                  flexWrap: "wrap",
-                }}
+              <Form.Item
+                name={["userInfo", "clothBranches"]}
+                rules={[{ required: true, message: "Missing cloth branches" }]}
               >
-                {fields.map(({ key, name, ...restField }) => (
-                  <Card
-                    key={key}
+                <Typography>Select branch to Consign/Sale*: </Typography>
+                <Select style={{ width: "70%" }} placeholder=" Branches">
+                  {branches.map((data: any) => (
+                    <Select.Option key={data.shopId} value={data.shopId}>
+                      {data.address}
+                    </Select.Option>
+                  ))}
+                </Select>
+              </Form.Item>
+              <Form.Item
+                name={["userInfo", "type"]}
+                rules={[{ required: true, message: "Missing type" }]}
+              >
+                <Typography>Select type to Consign/Sale*: </Typography>
+                <Select
+                  placeholder="Type Consign/Sale"
+                  style={{ width: "21%" }}
+                >
+                  {Object.values(ConsignSaleType).map(
+                    (
+                      type // Render options from the type
+                    ) => (
+                      <Select.Option key={type} value={type}>
+                        {type}
+                      </Select.Option>
+                    )
+                  )}
+                </Select>
+              </Form.Item>
+              {/* </div> */}
+              <Form.List name="items">
+                {(
+                  fields: FormListFieldData[],
+                  { add, remove }: FormListOperation
+                ) => (
+                  <div
                     style={{
-                      marginBottom: "10px",
-                      position: "relative",
-                      padding: "10px",
+                      display: "flex",
+                      flexDirection: "row",
+                      gap: "10px",
+                      flexWrap: "wrap",
                     }}
                   >
-                    <Row gutter={[16, 16]}>
-                      <Col span={12}>
-                        <Form.Item
-                          {...restField}
-                          name={[name, "productName"]}
-                          rules={[
-                            { required: true, message: "Missing product name" },
-                          ]}
-                        >
-                          <Input placeholder="Product Name" />
-                        </Form.Item>
-                        <Form.Item
-                          {...restField}
-                          name={[name, "picture"]}
-                          valuePropName="fileList"
-                          getValueFromEvent={normFile}
-                          rules={[
-                            {
-                              required: true,
-                              message: "Please upload at least one picture",
-                            },
-                          ]}
-                        >
-                          <Upload
-                            className="upload-box"
-                            name="pictures"
-                            multiple={true}
-                            listType="picture-card"
-                            onChange={(info) => handleFileChange(key, info)}
-                          >
-                            <div>
-                              <div style={{ marginTop: 8 }}>Upload</div>
-                            </div>
-                          </Upload>
-                        </Form.Item>
-                        <Form.Item
-                          {...restField}
-                          name={[name, "gender"]}
-                          rules={[
-                            { required: true, message: "Missing gender" },
-                          ]}
-                        >
-                          <Select placeholder="Gender" style={{ width: "50%" }}>
-                            <Select.Option value="male">Male</Select.Option>
-                            <Select.Option value="female">Female</Select.Option>
-                          </Select>
-                        </Form.Item>
-                        <Form.Item
-                          {...restField}
-                          name={[name, "description"]}
-                          rules={[
-                            { required: true, message: "Missing description" },
-                          ]}
-                        >
-                          <Input.TextArea placeholder="Description" />
-                        </Form.Item>
-                        
-                      </Col>
+                    {fields.map(({ key, name, ...restField }) => (
+                      <Card
+                      title='Products Infomation'
+                      headStyle={{ backgroundColor: 'black', color: 'white' }}
+                        key={key}
+                        style={{
+                          marginBottom: "10px",
+                          position: "relative",
+                          padding: "10px",
+                          width: "400px",
+                          border: "1px solid #aeacac",
+                        }}
+                      >
+                        <Row gutter={[16, 16]}>
+                          <Col span={12}>
+                            <Form.Item
+                              {...restField}
+                              name={[name, "productName"]}
+                              rules={[
+                                {
+                                  required: true,
+                                  message: "Missing product name",
+                                },
+                              ]}
+                            >
+                              <Input placeholder="Product Name" />
+                            </Form.Item>
+                            <Form.Item
+                              {...restField}
+                              name={[name, "picture"]}
+                              valuePropName="fileList"
+                              getValueFromEvent={normFile}
+                              rules={[
+                                {
+                                  required: true,
+                                  message: "Please upload at least one picture",
+                                },
+                              ]}
+                            >
+                              <Upload
+                                className="upload-box"
+                                name="pictures"
+                                multiple={true}
+                                listType="picture-card"
+                                onChange={(info) => handleFileChange(key, info)}
+                              >
+                                <div>
+                                  <div style={{ marginTop: 8 }}>Upload</div>
+                                </div>
+                              </Upload>
+                            </Form.Item>
+                            <Form.Item
+                              {...restField}
+                              name={[name, "gender"]}
+                              rules={[
+                                { required: true, message: "Missing gender" },
+                              ]}
+                            >
+                              <Select
+                                placeholder="Gender"
+                                style={{ width: "50%" }}
+                              >
+                                <Select.Option value="male">Male</Select.Option>
+                                <Select.Option value="female">
+                                  Female
+                                </Select.Option>
+                              </Select>
+                            </Form.Item>
+                            <Form.Item
+                              {...restField}
+                              name={[name, "description"]}
+                              rules={[
+                                {
+                                  required: true,
+                                  message: "Missing description",
+                                },
+                              ]}
+                            >
+                              <Input.TextArea placeholder="Description" />
+                            </Form.Item>
+                          </Col>
 
-                      <Col span={12}>
-                      <Form.Item
-                          {...restField}
-                          name={[name, "dealPrice"]}
-                          rules={[
-                            { required: true, message: "Missing price" },
-                            {
-                              pattern: /^\d+(\.\d{1,2})?$/,
-                              message: "Invalid price",
-                            },
-                          ]}
-                        >
-                          <Input placeholder="Deal Price" />
-                        </Form.Item>
-                        <Form.Item
-                          {...restField}
-                          name={[name, "size"]}
-                          rules={[{ required: true, message: "Missing size" }]}
-                        >
-                          <Select placeholder="Size" style={{ width: "50%" }}>
-                            {Object.values(SizeType).map((size) => (
-                              <Select.Option key={size} value={size}>
-                                {size}
-                              </Select.Option>
-                            ))}
-                          </Select>
-                        </Form.Item>
-                        <Form.Item
-                          {...restField}
-                          name={[name, "conditionPercentage"]}
-                          rules={[
-                            {
-                              required: true,
-                              message: "Missing condition percentage",
-                            },
-                            {
-                              type: "number",
-                              min: 0,
-                              max: 100,
-                              transform(value) {
-                                return Number(value);
-                              },
-                              
-                            },
-                          ]}
-                        >
-                          <Input
-                            placeholder="Condition Percentage"
-                            onKeyPress={(event) => {
-                              // Prevent non-numeric input
-                              
-                              {}
-                              
-                            }}
-                          />
-                        </Form.Item>
-                        <Form.Item
-                          {...restField}
-                          name={[name, "color"]}
-                          rules={[{ required: true, message: "Missing color" }]}
-                        >
-                          <Input placeholder="Color" />
-                        </Form.Item>
-                        <Form.Item
-                          {...restField}
-                          name={[name, "brand"]}
-                          rules={[{ required: true, message: "Missing brand" }]}
-                        >
-                          <Input placeholder="Brand" />
-                        </Form.Item>
-                      </Col>
-                    </Row>
+                          <Col span={12}>
+                            <Form.Item
+                              {...restField}
+                              name={[name, "dealPrice"]}
+                              rules={[
+                                { required: true, message: "Missing price" },
+                                {
+                                  pattern: /^\d+(\.\d{1,2})?$/,
+                                  message: "Invalid price",
+                                },
+                              ]}
+                            >
+                              <Input placeholder="Deal Price" />
+                            </Form.Item>
+                            <Form.Item
+                              {...restField}
+                              name={[name, "size"]}
+                              rules={[
+                                { required: true, message: "Missing size" },
+                              ]}
+                            >
+                              <Select
+                                placeholder="Size"
+                                style={{ width: "50%" }}
+                              >
+                                {Object.values(SizeType).map((size) => (
+                                  <Select.Option key={size} value={size}>
+                                    {size}
+                                  </Select.Option>
+                                ))}
+                              </Select>
+                            </Form.Item>
+                            <Form.Item
+                              {...restField}
+                              name={[name, "conditionPercentage"]}
+                              rules={[
+                                {
+                                  required: true,
+                                  message: "Missing condition percentage",
+                                },
+                                {
+                                  type: "number",
+                                  min: 0,
+                                  max: 100,
+                                  transform(value) {
+                                    return Number(value);
+                                  },
+                                },
+                              ]}
+                            >
+                              <Input
+                                placeholder="Condition Percentage"
+                                onKeyPress={(event) => {
+                                  // Prevent non-numeric input
 
-                    <Button
-                      icon={<DeleteOutlined style={{ color: "red" }} />}
+                                  {
+                                  }
+                                }}
+                              />
+                            </Form.Item>
+                            <Form.Item
+                              {...restField}
+                              name={[name, "color"]}
+                              rules={[
+                                { required: true, message: "Missing color" },
+                              ]}
+                            >
+                              <Input placeholder="Color" />
+                            </Form.Item>
+                            <Form.Item
+                              {...restField}
+                              name={[name, "brand"]}
+                              rules={[
+                                { required: true, message: "Missing brand" },
+                              ]}
+                            >
+                              <Input placeholder="Brand" />
+                            </Form.Item>
+                          </Col>
+                        </Row>
+
+                        <Button
+                          icon={<DeleteOutlined style={{ color: "white" }} />}
+                          style={{
+                            position: "absolute",
+                            right: 25,
+                            top: 30,
+                            transform: "translate(50%, -50%)",
+                            backgroundColor: "transparent",
+                            border: "none",
+                          }}
+                          onClick={() => remove(name)}
+                        />
+                      </Card>
+                    ))}
+                    <div
                       style={{
-                        position: "absolute",
-                        right: 20,
-                        top: 20,
-                        transform: "translate(50%, -50%)",
-                        backgroundColor: "transparent",
-                        border: "none",
+                        width: "100%",
+                        display: "flex",
+                        justifyContent: "flex-start",
                       }}
-                      onClick={() => remove(name)}
-                    />
-                  </Card>
-                ))}
-                <div
-                  style={{
-                    width: "100%",
-                    display: "flex",
-                    justifyContent: "flex-start",
-                  }}
-                >
-                  {fields.length < 5 && (
-                    <Button
-                      style={{
-                        width: "10%",
-                        marginTop: "20px",
-                        backgroundColor: "black",
-                        color: "white",
-                      }}
-                      onClick={() => add()}
                     >
-                      Add Item
-                    </Button>
-                  )}
-                </div>
+                      {fields.length < 5 && (
+                        <Button
+                          style={{
+                            width: "10%",
+                            marginTop: "20px",
+                            backgroundColor: "black",
+                            color: "white",
+                          }}
+                          onClick={() => add()}
+                        >
+                          Add Item
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </Form.List>
+              <div>
+                <Form.Item
+                  name="termsAndRules"
+                  valuePropName="checked"
+                  rules={[
+                    {
+                      validator: (_, value) =>
+                        value
+                          ? Promise.resolve()
+                          : Promise.reject("Should accept terms and rules"),
+                    },
+                  ]}
+                >
+                  <Checkbox>
+                    I have read and agree to the terms and rules
+                  </Checkbox>
+                </Form.Item>
+                <Form.Item>
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    loading={uploading}
+                    style={{
+                      width: "15%",
+                      backgroundColor: "black",
+                      color: "white",
+                    }}
+                  >
+                    {uploading ? "Uploading..." : "Submit"}
+                  </Button>
+                </Form.Item>
               </div>
-            )}
-          </Form.List>
-        </Card>
-        <Form.Item
-          name="termsAndRules"
-          valuePropName="checked"
-          rules={[
-            {
-              validator: (_, value) =>
-                value
-                  ? Promise.resolve()
-                  : Promise.reject("Should accept terms and rules"),
-            },
-          ]}
-        >
-          <Checkbox>
-            I have read and agree to the <a href="">terms and rules</a>
-          </Checkbox>
-        </Form.Item>
-        <Form.Item>
-          <Button
-            type="primary"
-            htmlType="submit"
-            loading={uploading}
-            style={{ width: "15%", backgroundColor: "black", color: "white" }}
-          >
-            {uploading ? "Uploading..." : "Submit"}
-          </Button>
-        </Form.Item>
-      </Form>
-        </Col>
-        <Col span={8}>
-          <RuleConsign/>
+            </Card>
+          </Form>
+         
         </Col>
       </Row>
     </Card>
