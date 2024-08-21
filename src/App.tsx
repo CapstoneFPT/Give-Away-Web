@@ -11,7 +11,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import Breadcrumb from "./components/Breadcrums/Breadcrumb";
 import DetailProductAunction from "./pages/DetailProductAunction";
 import RuleAunction from "./pages/RuleAunction";
-import RuleDeposit from "./pages/RuleDeposit";
+import RuleConsign from "./pages/RuleConsign.tsx";
 import AunctionList from "./pages/AunctionList";
 import Aunction from "./pages/Aunction";
 import Consign from "./pages/ConsignForm";
@@ -160,11 +160,11 @@ function App() {
                             }
                         />
                         <Route
-                            path="/ruleDeposit"
+                            path="/ruleConsign"
                             element={
                                 <>
                                     <Navbar/>
-                                    <RuleDeposit/>
+                                    <RuleConsign/>
                                 </>
                             }
                         />
