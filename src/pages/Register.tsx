@@ -1,176 +1,157 @@
-import React from "react";
-import { useState } from "react";
-import { Button, Card, message, notification } from "antd"; // Import message from antd
-import {
-  UserOutlined,
-  EyeOutlined,
-  EyeInvisibleOutlined,
-  PhoneOutlined,
-  MailOutlined,
-} from "@ant-design/icons";
-import { Input } from "antd";
-import { AuthApi } from "../api";
+import React, {useState} from "react";
+import {Button, Card, Form, Input, message, notification} from "antd"; // Import message from antd
+import {LockOutlined, MailOutlined, PhoneOutlined, UserOutlined,} from "@ant-design/icons";
+import {AuthApi, RegisterRequest} from "../api";
+import {useNavigate} from "react-router-dom";
 
 const Register = () => {
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [formData, setFormData] = useState({
-    fullname: "",
-    email: "",
-    phone: "",
-    password: "",
-    confirmPassword: "",
-  });
+    const [form] = Form.useForm<RegisterRequest>();
+    const [isLoading, setIsLoading] = useState(false);
+    const navigate = useNavigate();
 
 
-  const togglePasswordVisibility = () => {
-    setIsPasswordVisible(!isPasswordVisible);
-  };
+    const handleRegister = async (values: RegisterRequest) => {
+        setIsLoading(true)
+        if (values.password !== values.confirmPassword) {
+            message.error("Passwords do not match!");
+            return;
+        }
 
-  const handleInputChange = (e: any) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
+        try {
+            const authApi = new AuthApi();
+            const response = await authApi.apiAuthRegisterPost(values);
 
-  const handleRegister = async () => {
-    if (formData.password !== formData.confirmPassword) {
-      message.error("Passwords do not match!");
-      return;
-    }
-    
+            if (response.data.resultStatus === "Success") {
+                notification.success({
+                    message: "Registration successful!",
+                    description: "You have successfully registered. Check your email to verify your account.",
+                });
 
-    try {
-      
-      const authApi = new AuthApi()
-      const response = await authApi.apiAuthRegisterPost(formData)
+                setTimeout(() => {
+                    navigate("/");
+                }, 1000)
+            } else {
+                message.error("Registration failed!");
+            }
+        } catch (error) {
+            console.log(error);
+            // @ts-expect-error This should return a result type
+            message.error(error.response.data.messages);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
-      if (response) {
-        notification.success({
-          message : "Registration successful!",
-          description : "You have successfully registered. Check your email to verify your account.",
-        });
-      } else {
-        message.error("Registration failed!");
-      }
-    } catch (error:any) {
-      console.log(error)
-      message.error(error.response.data.messages);
-    }
-  };
+    const styles = {
+        inputContainer: {
+            width: "90%",
+            marginBottom: "40px",
+            marginLeft: "40px",
+        },
+        registerTitle: {
+            fontSize: "40px",
+            fontWeight: "bold",
+            textAlign: "center" as const,
+            marginBottom: "10px",
+        },
+        buttonRegisterModalLayout: {
+            backgroundColor: "#000000",
+            color: "white",
+            width: "15%",
+        },
+    };
 
-  const styles = {
-    inputContainer: {
-      width: "90%",
-      marginBottom: "40px",
-      marginLeft: "40px",
-    },
-    registerTitle: {
-      fontSize: "40px",
-      fontWeight: "bold",
-      textAlign: "center" as const,
-      marginBottom: "10px",
-    },
-    buttonRegisterModalLayout: {
-      textAlign: "center" as const,
-      backgroundColor: "#000000",
-      color: "white",
-      width: "15%",
-    },
-    buttonLoginModal: {
-      backgroundColor: "#434040",
-    },
-  };
-
-  return (
-    <>
-      <div style={{ justifyContent: "center", display: "flex" }}>
-        <Card
-          bordered={false}
-          style={{
-            width: 700,
-            marginTop: "30px",
-            justifyContent: "center",
-          }}
-        >
-          <h2 style={styles.registerTitle}>Give Away</h2>
-          <h3
-            style={{
-              textAlign: "center",
-              marginBottom: "30px",
-              color: "#a19696",
-            }}
-          >
-            Register
-          </h3>
-          <div style={styles.inputContainer}>
-            <Input
-              size="large"
-              placeholder="Full Name"
-              prefix={<UserOutlined />}
-              name="fullname"
-              value={formData.fullname}
-              onChange={handleInputChange}
-            />
-          </div>
-
-          <div style={styles.inputContainer}>
-            <Input
-              prefix={<MailOutlined />}
-              placeholder="Email"
-              name="email"
-              value={formData.email}
-              onChange={handleInputChange}
-            />
-          </div>
-          <div style={styles.inputContainer}>
-            <Input
-              prefix={<PhoneOutlined />}
-              placeholder="phone"
-              
-              name="phone"
-              value={formData.phone}
-              onChange={handleInputChange}
-            />
-          </div>
-          <div style={styles.inputContainer}>
-            <Input
-              type={isPasswordVisible ? "text" : "password"}
-              size="large"
-              placeholder="Password"
-              prefix={
-                isPasswordVisible ? (
-                  <EyeInvisibleOutlined onClick={togglePasswordVisibility} />
-                ) : (
-                  <EyeOutlined onClick={togglePasswordVisibility} />
-                )
-              }
-              name="password"
-              value={formData.password}
-              onChange={handleInputChange}
-            />
-          </div>
-          <div style={styles.inputContainer}>
-            <Input
-              type={isPasswordVisible ? "text" : "password"}
-              size="large"
-              placeholder="Confirm Password"
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleInputChange}
-            />
-          </div>
-
-          <div style={{ textAlign: "center" }}>
-            <Button
-              style={styles.buttonRegisterModalLayout}
-              onClick={handleRegister}
+    return (
+        <div style={{justifyContent: "center", display: "flex"}}>
+            <Card
+                bordered={false}
+                style={{
+                    width: 700,
+                    marginTop: "30px",
+                    justifyContent: "center",
+                }}
             >
-              Register
-            </Button>
-          </div>
-        </Card>
-      </div>
-    </>
-  );
+                <h2 style={styles.registerTitle}>Give Away</h2>
+                <h3
+                    style={{
+                        textAlign: "center",
+                        marginBottom: "30px",
+                        color: "#a19696",
+                    }}
+                >
+                    Register
+                </h3>
+                <Form form={form} onFinish={handleRegister} layout="vertical">
+                    <Form.Item
+                        name="fullname"
+                        rules={[{required: true, message: "Please input your full name!"}]}
+                        style={styles.inputContainer}
+                    >
+                        <Input size="large" placeholder="Full Name" prefix={<UserOutlined/>}/>
+                    </Form.Item>
+
+                    <Form.Item
+                        name="email"
+                        rules={[
+                            {required: true, message: "Please input your email!"},
+                            {type: "email", message: "Please enter a valid email!"},
+                        ]}
+                        style={styles.inputContainer}
+                    >
+                        <Input placeholder="Email" prefix={<MailOutlined/>}/>
+                    </Form.Item>
+
+                    <Form.Item
+                        name="phone"
+                        rules={[{required: true, message: "Please input your phone number!"}]}
+                        style={styles.inputContainer}
+                    >
+                        <Input placeholder="Phone" prefix={<PhoneOutlined/>}/>
+                    </Form.Item>
+
+                    <Form.Item
+                        name="password"
+                        rules={[{required: true, message: "Please input your password!"}]}
+                        style={styles.inputContainer}
+                    >
+                        <Input.Password
+                            placeholder="Password"
+                            prefix={<LockOutlined/>}
+                        />
+                    </Form.Item>
+
+                    <Form.Item
+                        name="confirmPassword"
+                        rules={[
+                            {required: true, message: "Please confirm your password!"},
+                            ({getFieldValue}) => ({
+                                validator(_, value) {
+                                    if (!value || getFieldValue("password") === value) {
+                                        return Promise.resolve();
+                                    }
+                                    return Promise.reject(new Error("The two passwords do not match!"));
+                                },
+                            }),
+                        ]}
+                        style={styles.inputContainer}
+                    >
+                        <Input.Password prefix={<LockOutlined/>} placeholder="Confirm Password"/>
+                    </Form.Item>
+
+                    <Form.Item style={{textAlign: "center"}}>
+                        <Button
+                            type="primary"
+                            htmlType="submit"
+                            style={styles.buttonRegisterModalLayout}
+                            loading={isLoading}
+                        >
+                            Register
+                        </Button>
+                    </Form.Item>
+                </Form>
+            </Card>
+        </div>
+    );
 };
 
 export default Register;

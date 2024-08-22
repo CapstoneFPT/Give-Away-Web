@@ -13,24 +13,24 @@ const Navbar = () => {
   const [menu, setMenu] = useState("shop");
   const [balance, setBalance] = useState(0);
   const cart = useCart();
+  const userId = JSON.parse(localStorage.getItem("userId") || "null");
 
   useEffect(() => {
     const fetchBalance = async () => {
-      const userId = JSON.parse(localStorage.getItem("userId") || "null"); 
       try {
         const accountApi = new AccountApi()
-        // const response = await axios.get(`${BASE_URL}/accounts/${userId}`); 
 
         const response = await accountApi.apiAccountsIdGet(userId)
       
         setBalance(response.data?.data?.balance || 0);
       } catch (error) {
         console.error("Error fetching balance:", error);
+        setBalance(0);
       }
     };
 
     fetchBalance();
-  }, [balance]);
+  }, [balance,userId,balance]);
 
   const handleSearch = () => {};
   const formatBalance = (balance:any) => {

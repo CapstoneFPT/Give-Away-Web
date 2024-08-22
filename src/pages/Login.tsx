@@ -18,6 +18,7 @@ import { AuthApi, LoginRequest } from "../api";
 const Login = () => {
   const [isModalLoginOpen, setIsModalLoginOpen] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -46,6 +47,7 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
+      setIsLoading(true);
       const request: LoginRequest = {
         email,
         password,
@@ -88,6 +90,8 @@ const Login = () => {
         description: error.response.data.messages,
       });
       console.error("An error occurred while trying to login:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -232,7 +236,7 @@ const Login = () => {
             />
           </div>
           <div style={{ textAlign: "center" }}>
-            <Button style={styles.buttonLoginModalLayout} onClick={handleLogin}>
+            <Button loading={isLoading} style={styles.buttonLoginModalLayout} onClick={handleLogin}>
               Login
             </Button>
           </div>
