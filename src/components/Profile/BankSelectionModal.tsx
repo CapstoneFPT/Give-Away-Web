@@ -172,7 +172,7 @@ export const BankSelectionModal: React.FC<BankSelectionModalProps> = ({
                 open={showBankForm}
                 onCancel={handleBankFormCancel}
                 footer={null}
-                width={400}
+                width={600}
             >
                 <BankForm
                     initialValues={editingBankAccount || undefined}

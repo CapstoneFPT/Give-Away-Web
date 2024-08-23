@@ -1,6 +1,6 @@
 import {UpdateBankAccountRequest} from "../../api";
 import React, {useEffect, useState} from "react";
-import {Button, Checkbox, Form, Image, Input, Select} from "antd";
+import {Button, Checkbox, Form, Image, Input, Select, Space, Tooltip} from "antd";
 import * as axios from "axios";
 import {AxiosResponse} from "axios";
 
@@ -55,6 +55,17 @@ export const BankForm: React.FC<BankFormProps> = ({
             setVietQrBanks([]);
         }
     }
+
+    const fuzzySearch = (query: string, text: string): boolean => {
+        const queryChars = query.toLowerCase().split('');
+        let textIndex = 0;
+        for (const char of queryChars) {
+            textIndex = text.toLowerCase().indexOf(char, textIndex);
+            if (textIndex === -1) return false;
+            textIndex++;
+        }
+        return true;
+    };
     const handleBankChange = (value: string) => {
         const selectedBank = vietQrBanks.find(bank => bank.shortName === value);
         if (selectedBank) {
@@ -82,16 +93,32 @@ export const BankForm: React.FC<BankFormProps> = ({
                     placeholder="Select a bank"
                     optionFilterProp="children"
                     onChange={handleBankChange}
-                    filterOption={(input, option) =>
-                        option!.children!.toString()!.toLowerCase()!.indexOf(input.toLowerCase()!)! >= 0
-                    }
+                    style={{
+                        height: '40px',
+                    }}
+                    filterOption={(input, option) => {
+                        const bank = vietQrBanks.find(b => b.shortName === option?.value);
+                        if (bank) {
+                            return fuzzySearch(input, bank.name) || fuzzySearch(input, bank.shortName);
+                        }
+                        return false;
+                    }}
+                    dropdownRender={(menu) => (
+                        <div style={{ maxHeight: '300px', overflowY: 'auto' }}>
+                            {menu}
+                        </div>
+                    )}
                 >
                     {vietQrBanks.map((bank) => (
-                        <Select.Option key={bank.bin} value={bank.shortName!}>
-                            <div style={{ display: 'flex', alignItems: 'center' }}>
-                                <Image src={bank.logo} alt={bank.name} width={24} style={{ marginRight: 8 }} />
-                                {bank.name}
-                            </div>
+                        <Select.Option key={bank.bin} value={bank.shortName}>
+                            <Tooltip title={`${bank.name} (${bank.shortName})`}>
+                                <Space>
+                                    <img src={bank.logo} alt={bank.name} style={{ width: 60, height: 40, objectFit: 'contain' }} />
+                                    <span style={{ maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                        {bank.name}
+                                    </span>
+                                </Space>
+                            </Tooltip>
                         </Select.Option>
                     ))}
                 </Select>
