@@ -1062,6 +1062,12 @@ export interface BankAccountsListResponse {
     'bankAccountName'?: string | null;
     /**
      * 
+     * @type {string}
+     * @memberof BankAccountsListResponse
+     */
+    'bankLogo'?: string | null;
+    /**
+     * 
      * @type {boolean}
      * @memberof BankAccountsListResponse
      */
@@ -2455,6 +2461,12 @@ export interface CreateBankAccountRequest {
      * @memberof CreateBankAccountRequest
      */
     'bankName': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateBankAccountRequest
+     */
+    'bankLogo'?: string | null;
     /**
      * 
      * @type {string}
@@ -9710,6 +9722,12 @@ export interface UpdateBankAccountRequest {
      * @memberof UpdateBankAccountRequest
      */
     'isDefault'?: boolean | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateBankAccountRequest
+     */
+    'bankLogo'?: string | null;
 }
 /**
  * 
