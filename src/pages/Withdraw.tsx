@@ -131,13 +131,18 @@ const Withdraw: React.FC = () => {
         }
     };
 
+    const handleSelectBank = (bank: BankAccountsListResponse) => {
+        setSelectedBank(bank);
+        setShowBankSelectionModal(false);
+    }
+
     const renderSelectedBankInfo = () => (
         <Card style={{marginBottom: "16px", background: "#fff"}}>
             <Space align="center" style={{width: "100%"}}>
                 <img
                     src={selectedBank!.bankLogo || 'N/A'}
                     alt={selectedBank!.bankName || 'N/A'}
-                    style={{width: 40, height: 40, objectFit: 'contain', marginRight: 16}}
+                    style={{width: 100, height: 40, objectFit: 'contain', marginRight: 16}}
                 />
                 <div>
                     <Text strong>{selectedBank!.bankName}</Text><br/>
@@ -212,7 +217,7 @@ const Withdraw: React.FC = () => {
                         <BankSelectionModal
                             visible={showBankSelectionModal}
                             onCancel={() => setShowBankSelectionModal(false)}
-                            onSelect={setSelectedBank}
+                            onSelect={handleSelectBank}
                             bankAccounts={bankAccounts}
                             selectedBankAccountId={selectedBank?.bankAccountId || null}
                             onAddNewBankAccount={(values) => handleBankAccountOperation('add', values)}

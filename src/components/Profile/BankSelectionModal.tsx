@@ -134,7 +134,7 @@ export const BankSelectionModal: React.FC<BankSelectionModalProps> = ({
                                     <Image
                                         src={bankAccount.bankLogo || 'N/A'}
                                         alt={bankAccount.bankName || 'N/A'}
-                                        width={40}
+                                        width={60}
                                         style={{objectFit: 'contain'}}
                                     />
                                 }
@@ -143,7 +143,7 @@ export const BankSelectionModal: React.FC<BankSelectionModalProps> = ({
                                     {bankAccount.bankName}
                                     {bankAccount.isDefault && (
                                         <Typography.Text type="success" style={{marginLeft: '8px'}}>
-                                            (Default)
+                                            Default
                                         </Typography.Text>
                                     )}
                                 </Typography.Text>}
