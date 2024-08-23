@@ -93,7 +93,7 @@ const AddressManagementPage = () => {
         }
     }, [fetchAddresses]);
 
-    const openAddressForm = useCallback((address: DeliveryListResponse | null = null) => {
+    const openAddressForm = (address: DeliveryListResponse | null = null) => {
         if(addresses.length == 5){
             notification.error({message: 'You can not add more than 5 addresses!'});
             return;
@@ -115,7 +115,7 @@ const AddressManagementPage = () => {
             setEditingAddress(null);
         }
         showFormModal();
-    }, [showFormModal]);
+    }
 
 
     const renderAddressCards = useMemo(() => (
@@ -151,7 +151,7 @@ const AddressManagementPage = () => {
                                             }
                                         }
                                     icon={<PlusOutlined/>}
-                                    onClick={() => openAddressForm()}>
+                                    onClick={()=>openAddressForm()}>
                                 Add New Address
                             </Button>
                             {renderAddressCards}

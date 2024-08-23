@@ -95,7 +95,7 @@ const Navbar = () => {
                 <div className="navbar-section-1">
                     <div className="navbar-search">
                         <Input
-                            placeholder="Search by brand, item..."
+                            placeholder="Search by product name..."
                             prefix={<SearchOutlined/>}
                             className="navbar-search-input"
                             value={searchValue}

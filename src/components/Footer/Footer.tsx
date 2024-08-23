@@ -41,9 +41,9 @@ const Footer = () => {
             <FacebookOutlined style={{ color: 'white', fontSize: '30px' }} />
             <TwitterOutlined style={{ color: 'white', fontSize: '30px' }} />
           </Space>
-          <Title level={4} style={{ color: 'white', marginTop: '20px' }}>Subscribe to Our Newsletter</Title>
-          <Input placeholder="Enter your email" style={{ padding: '10px', width: '80%', marginBottom: '10px' }} />
-          <Button type="primary" style={{ padding: '10px 20px', backgroundColor: 'white', color: 'black' }}>Subscribe</Button>
+          {/*<Title level={4} style={{ color: 'white', marginTop: '20px' }}>Subscribe to Our Newsletter</Title>*/}
+          {/*<Input placeholder="Enter your email" style={{ padding: '10px', width: '80%', marginBottom: '10px' }} />*/}
+          {/*<Button type="primary" style={{ padding: '10px 20px', backgroundColor: 'white', color: 'black' }}>Subscribe</Button>*/}
         </Col>
       </Row>
       <div style={{ textAlign: 'center', marginTop: '20px', padding: '20px 0', backgroundColor: 'black' }}>
