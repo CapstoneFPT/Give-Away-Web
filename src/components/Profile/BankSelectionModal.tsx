@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import {Button, Image, List, Modal, notification, Popconfirm, Spin, Typography} from 'antd';
 import {DeleteOutlined, EditOutlined, PlusOutlined} from '@ant-design/icons';
 import {BankAccountsListResponse, UpdateBankAccountRequest} from '../../api';
@@ -52,26 +52,26 @@ export const BankSelectionModal: React.FC<BankSelectionModalProps> = ({
         setEditingBankAccount(null);
     };
 
+    const sortedBankAccounts = useMemo(() => {
+        return [...bankAccounts].sort((a, b) => {
+            if (a.isDefault && !b.isDefault) return -1;
+            if (!a.isDefault && b.isDefault) return 1;
+            return 0;
+        });
+    }, [bankAccounts]);
+
     const handleBankFormSubmit = async (values: UpdateBankAccountRequest) => {
         setFormLoading(true);
         try {
             if (editingBankAccount) {
-                await onEditBankAccount({ ...values, bankAccountId: editingBankAccount.bankAccountId });
+                await onEditBankAccount({...values, bankAccountId: editingBankAccount.bankAccountId});
             } else {
                 await onAddNewBankAccount(values);
             }
             setShowBankForm(false);
             setEditingBankAccount(null);
-            notification.success({
-                message: 'Success',
-                description: 'Bank account saved successfully.',
-            });
         } catch (error) {
             console.error('Error submitting bank form:', error);
-            notification.error({
-                message: 'Error',
-                description: 'Failed to save bank account. Please try again.',
-            });
         } finally {
             setFormLoading(false);
         }
@@ -91,7 +91,7 @@ export const BankSelectionModal: React.FC<BankSelectionModalProps> = ({
         >
             <Spin spinning={loading}>
                 <List
-                    dataSource={bankAccounts}
+                    dataSource={sortedBankAccounts}
                     renderItem={(bankAccount) => (
                         <List.Item
                             style={{
@@ -138,14 +138,18 @@ export const BankSelectionModal: React.FC<BankSelectionModalProps> = ({
                                         style={{objectFit: 'contain'}}
                                     />
                                 }
-                                title={<Typography.Text strong>{bankAccount.bankName}</Typography.Text>}
+                                title={
+                                <Typography.Text strong>
+                                    {bankAccount.bankName}
+                                    {bankAccount.isDefault && (
+                                        <Typography.Text type="success" style={{marginLeft: '8px'}}>
+                                            (Default)
+                                        </Typography.Text>
+                                    )}
+                                </Typography.Text>}
                                 description={
                                     <>
                                         <Typography.Text>{bankAccount.bankAccountNumber} - {bankAccount.bankAccountName}</Typography.Text>
-                                        {bankAccount.isDefault && (
-                                            <Typography.Text type="success"
-                                                             style={{marginLeft: '8px'}}>Default</Typography.Text>
-                                        )}
                                     </>
                                 }
                             />
