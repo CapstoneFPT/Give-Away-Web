@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
-import {Button, Image, List, Modal, notification, Popconfirm, Spin} from 'antd';
+import {Button, Image, List, Modal, notification, Popconfirm, Spin, Typography} from 'antd';
 import {DeleteOutlined, EditOutlined, PlusOutlined} from '@ant-design/icons';
-import {BankAccountsListResponse} from '../../api';
+import {BankAccountsListResponse, UpdateBankAccountRequest} from '../../api';
 import {BankForm} from './BankForm';
 
 interface BankSelectionModalProps {
@@ -52,11 +52,11 @@ export const BankSelectionModal: React.FC<BankSelectionModalProps> = ({
         setEditingBankAccount(null);
     };
 
-    const handleBankFormSubmit = async (values: any) => {
+    const handleBankFormSubmit = async (values: UpdateBankAccountRequest) => {
         setFormLoading(true);
         try {
             if (editingBankAccount) {
-                await onEditBankAccount({...values, bankAccountId: editingBankAccount.bankAccountId});
+                await onEditBankAccount({ ...values, bankAccountId: editingBankAccount.bankAccountId });
             } else {
                 await onAddNewBankAccount(values);
             }
@@ -65,7 +65,7 @@ export const BankSelectionModal: React.FC<BankSelectionModalProps> = ({
             notification.success({
                 message: 'Success',
                 description: 'Bank account saved successfully.',
-            })
+            });
         } catch (error) {
             console.error('Error submitting bank form:', error);
             notification.error({
@@ -78,21 +78,28 @@ export const BankSelectionModal: React.FC<BankSelectionModalProps> = ({
     };
 
     const handleRemoveBank = async (bankAccountId: string) => {
-      onRemoveBankAccount(bankAccountId);
+        onRemoveBankAccount(bankAccountId);
     };
 
     return (
         <Modal
-            title="Select Bank Account"
+            title={<Typography.Text strong style={{fontSize: '18px'}}>Select Bank Account</Typography.Text>}
             open={visible}
             onCancel={onCancel}
             footer={null}
+            width={600}
         >
             <Spin spinning={loading}>
                 <List
                     dataSource={bankAccounts}
                     renderItem={(bankAccount) => (
                         <List.Item
+                            style={{
+                                background: bankAccount.isDefault ? '#f0f8ff' : 'transparent',
+                                borderRadius: '8px',
+                                marginBottom: '8px',
+                                padding: '12px',
+                            }}
                             actions={[
                                 <Button
                                     type={bankAccount.bankAccountId === selectedBankAccountId ? "primary" : "default"}
@@ -123,12 +130,25 @@ export const BankSelectionModal: React.FC<BankSelectionModalProps> = ({
                             ]}
                         >
                             <List.Item.Meta
-                                avatar={<Image src={bankAccount.bankLogo || 'N/A'} alt={bankAccount.bankName || 'N/A'}
-                                               width={40}/>}
-                                title={bankAccount.bankName}
-                                description={`${bankAccount.bankAccountNumber} - ${bankAccount.bankAccountName}`}
+                                avatar={
+                                    <Image
+                                        src={bankAccount.bankLogo || 'N/A'}
+                                        alt={bankAccount.bankName || 'N/A'}
+                                        width={40}
+                                        style={{objectFit: 'contain'}}
+                                    />
+                                }
+                                title={<Typography.Text strong>{bankAccount.bankName}</Typography.Text>}
+                                description={
+                                    <>
+                                        <Typography.Text>{bankAccount.bankAccountNumber} - {bankAccount.bankAccountName}</Typography.Text>
+                                        {bankAccount.isDefault && (
+                                            <Typography.Text type="success"
+                                                             style={{marginLeft: '8px'}}>Default</Typography.Text>
+                                        )}
+                                    </>
+                                }
                             />
-                            {bankAccount.isDefault && <span style={{color: 'green'}}>Default</span>}
                         </List.Item>
                     )}
                 />
@@ -143,10 +163,12 @@ export const BankSelectionModal: React.FC<BankSelectionModalProps> = ({
             </Spin>
 
             <Modal
-                title={editingBankAccount ? "Edit Bank Account" : "Add New Bank Account"}
+                title={<Typography.Text
+                    strong>{editingBankAccount ? "Edit Bank Account" : "Add New Bank Account"}</Typography.Text>}
                 open={showBankForm}
                 onCancel={handleBankFormCancel}
                 footer={null}
+                width={400}
             >
                 <BankForm
                     initialValues={editingBankAccount || undefined}

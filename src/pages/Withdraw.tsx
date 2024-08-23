@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from "react"; // Thêm useState
-import {Button, Card, Col, Form, Input, message, Row, Spin,} from "antd";
-import {SendOutlined} from "@ant-design/icons";
+import {Button, Card, Col, Form, Input, message, Row, Space, Spin, Typography,} from "antd";
+import {BankOutlined, SendOutlined} from "@ant-design/icons";
 import NavProfile from "../components/NavProfile/NavProfile";
 import {AccountApi, BankAccountsListResponse, CreateWithdrawRequest, ErrorCode, UpdateBankAccountRequest} from "../api";
 import {BankSelectionModal} from "../components/Profile/BankSelectionModal.tsx";
@@ -117,20 +117,27 @@ const Withdraw = () => {
         }
     };
 
-    const handleEditBankAccount = async (values: UpdateBankAccountRequest) => {
+    const handleEditBankAccount = async (values: any) => {
         console.log("Editing bank account:", values);
         setAddEditBankLoading(true);
         const accountApi = new AccountApi();
         try {
-            await accountApi.apiAccountsAccountIdBankaccountsBankAccountIdPut(userId, selectedBank!.bankAccountId!, {
-                bankAccountName: values.bankAccountName!,
-                bankAccountNumber: values.bankAccountNumber!,
-                bankName: values.bankName!,
-                bankLogo: values.bankLogo!,
-                isDefault: values.isDefault!,
+            await accountApi.apiAccountsAccountIdBankaccountsBankAccountIdPut(userId, values.bankAccountId!, {
+                bankAccountName: values.bankAccountName,
+                bankAccountNumber: values.bankAccountNumber,
+                bankName: values.bankName,
+                bankLogo: values.bankLogo,
+                isDefault: values.isDefault,
             });
             message.success("Bank account updated successfully");
             updateBankAccounts();
+            // Update the selectedBank state if it's the one being edited
+            if (selectedBank && selectedBank.bankAccountId === values.bankAccountId) {
+                setSelectedBank({
+                    ...selectedBank,
+                    ...values,
+                });
+            }
         } catch (e) {
             console.error('Error updating bank account:', e);
             message.error("Failed to update bank account");
@@ -174,73 +181,74 @@ const Withdraw = () => {
                 </Col>
                 <Col span={19}>
                     <Spin spinning={isBankAccountsLoading}>
-                        <Card style={{borderRadius: "10px", boxShadow: "2px 2px 7px #cbc1c1"}}>
-                            <h3 style={{
-                                fontSize: "40px",
-                                fontWeight: "bold",
-                                textAlign: "center",
-                                marginBottom: "10px"
-                            }}>
+                        <Card
+                            style={{
+                                borderRadius: "10px",
+                                boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                                background: "#f8f8f8",
+                            }}
+                        >
+                            <Typography.Title level={2} style={{textAlign: "center", marginBottom: "24px"}}>
                                 Withdraw
-                            </h3>
-
-                            <Button onClick={() => setShowBankSelectionModal(true)}>
-                                {selectedBank ? 'Change Bank Account' : 'Select Bank Account'}
-                            </Button>
-
-                            {selectedBank && (
-                                <div style={{marginTop: '10px'}}>
-                                    <p><strong>Bank:</strong> {selectedBank.bankName}</p>
-                                    <p><strong>Account Number:</strong> {selectedBank.bankAccountNumber}</p>
-                                    <p><strong>Account Name:</strong> {selectedBank.bankAccountName}</p>
-                                </div>
-                            )}
-
-                            <Form
-                                form={form}
-                                style={styles.formContainer}
-                                name="withdrawForm"
-                                initialValues={{remember: true}}
-                                onFinish={handleSubmit}
-                                onFinishFailed={handleSubmitFailed}
-                            >
-                                <Form.Item
-                                    name="amount"
-                                    label="Amount"
-                                    rules={[{required: true, message: "Please enter the amount to withdraw!"}]}
+                            </Typography.Title>
+                            <div style={{maxWidth: "600px", margin: "0 auto"}}>
+                                <Button
+                                    icon={<BankOutlined/>}
+                                    onClick={() => setShowBankSelectionModal(true)}
+                                    style={{marginBottom: "16px"}}
                                 >
-                                    <Input
-                                        type="number"
-                                        style={{marginLeft: "5%", width: "89%"}}
-                                        placeholder="Enter the amount to withdraw"
-                                        onKeyPress={(event) => {
-                                            if (!/[0-9]/.test(event.key)) {
-                                                event.preventDefault();
-                                            }
-                                        }}
-                                        onChange={(e) => setAmount(Number(e.target.value))}
-                                    />
-                                </Form.Item>
+                                    {selectedBank ? 'Change Bank Account' : 'Select Bank Account'}
+                                </Button>
 
-                                <Form.Item>
-                                    <Button
-                                        style={{
-                                            backgroundColor: 'black',
-                                            color: 'white',
-                                            width: '120px',
-                                            height: '40px',
-                                            marginTop: '25px',
-                                        }}
-                                        type="primary"
-                                        htmlType="submit"
-                                        disabled={!selectedBank || withdrawLoading}
-                                        loading={withdrawLoading}
+                                {selectedBank && (<Card style={{marginBottom: "16px", background: "#fff"}}>
+                                    <Space align="center" style={{width: "100%"}}>
+                                        <img
+                                            src={selectedBank.bankLogo || 'N/A'}
+                                            alt={selectedBank.bankName || 'N/A'}
+                                            style={{width: 40, height: 40, objectFit: 'contain', marginRight: 16}}
+                                        />
+                                        <div>
+                                            <Typography.Text strong>{selectedBank.bankName}</Typography.Text><br/>
+                                            <Typography.Text>{selectedBank.bankAccountNumber}</Typography.Text><br/>
+                                            <Typography.Text>{selectedBank.bankAccountName}</Typography.Text>
+                                        </div>
+                                    </Space>
+                                </Card>)}
+
+                                <Form
+                                    form={form}
+                                    layout="vertical"
+                                    name="withdrawForm"
+                                    onFinish={handleSubmit}
+                                    onFinishFailed={handleSubmitFailed}
+                                >
+                                    <Form.Item
+                                        name="amount"
+                                        label="Amount"
+                                        rules={[{required: true, message: "Please enter the amount to withdraw!"}]}
                                     >
-                                        Withdraw
-                                        <SendOutlined/>
-                                    </Button>
-                                </Form.Item>
-                            </Form>
+                                        <Input
+                                            type="number"
+                                            placeholder="Enter the amount to withdraw"
+                                            onChange={(e) => setAmount(Number(e.target.value))}
+                                            style={{width: "100%"}}
+                                        />
+                                    </Form.Item>
+
+                                    <Form.Item>
+                                        <Button
+                                            type="primary"
+                                            htmlType="submit"
+                                            disabled={!selectedBank || withdrawLoading}
+                                            loading={withdrawLoading}
+                                            icon={<SendOutlined/>}
+                                            style={{width: "100%",backgroundColor: "black", borderColor: "black"}}
+                                        >
+                                            Withdraw
+                                        </Button>
+                                    </Form.Item>
+                                </Form>
+                            </div>
                         </Card>
 
                         <BankSelectionModal
@@ -253,16 +261,7 @@ const Withdraw = () => {
                             bankAccounts={bankAccounts}
                             selectedBankAccountId={selectedBank?.bankAccountId || null}
                             onAddNewBankAccount={handleAddBankAccount}
-                            onEditBankAccount={async (bankAccount) => {
-                                setSelectedBank(bankAccount);
-                                await handleEditBankAccount({
-                                    bankAccountName: bankAccount.bankAccountName,
-                                    bankAccountNumber: bankAccount.bankAccountNumber,
-                                    bankName: bankAccount.bankName,
-                                    bankLogo: bankAccount.bankLogo,
-                                    isDefault: bankAccount.isDefault,
-                                });
-                            }}
+                            onEditBankAccount={handleEditBankAccount}
                             onRemoveBankAccount={handleRemoveBankAccount}
                             loading={isBankAccountsLoading || addEditBankLoading}
                             key={bankListVersion}
