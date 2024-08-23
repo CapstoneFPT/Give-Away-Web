@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Menu, Dropdown, Typography, Space } from 'antd';
+import { Menu, Dropdown } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import { useNavigate, useParams } from "react-router-dom";
 import { ShopApi, ResultStatus } from '../../api';
@@ -38,26 +38,21 @@ const BranchNavbar: React.FC<navBranchProps> = ({navBranch}) => {
   };
 
   const menu = (
-    <Menu onClick={handleMenuClick}>
-      {branches.map(branch => (
-        <Menu.Item key={branch.shopId}>
-          {branch.address}
-        </Menu.Item>
-      ))}
-    </Menu>
+      <Menu onClick={handleMenuClick}>
+        {branches.map(branch => (
+            <Menu.Item key={branch.shopId}>
+              {branch.address}
+            </Menu.Item>
+        ))}
+      </Menu>
   );
 
   return (
-    <div className="branchNavbar">
-      <Dropdown overlay={menu}>
-        <Typography.Link>
-          <Space style={{ color: 'black', fontSize: '17px' }}>
-            Branch
-            <DownOutlined style={{ fontSize: '15px' }} />
-          </Space>
-        </Typography.Link>
+      <Dropdown overlay={menu} trigger={['hover']}>
+        <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
+          Branch <DownOutlined />
+        </a>
       </Dropdown>
-    </div>
   );
 };
 
