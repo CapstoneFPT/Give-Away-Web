@@ -134,16 +134,22 @@ export const BankForm: React.FC<BankFormProps> = ({
             <Form.Item
                 label="Bank Account Name"
                 name="bankAccountName"
-                rules={[{required: true, message: 'Please input your bank account name!'}]}
+                rules={[{required: true, message: 'Please input your bank account name!'},{
+                    pattern: new RegExp(/^[a-zA-Z\s]+$/),
+                    message: "Invalid bank account name",
+                }]}
             >
-                <Input/>
+                <Input onInput={(e) => (e.target as HTMLInputElement).value = (e.target as HTMLInputElement).value.toUpperCase()}/>
             </Form.Item>
             <Form.Item
                 label="Bank Account Number"
                 name="bankAccountNumber"
-                rules={[{required: true, message: 'Please input your bank account number!'}]}
+                rules={[{required: true, message: 'Please input your bank account number!'},{
+                    pattern: new RegExp(/^[0-9]+$/),
+                    message: "Invalid bank account number",
+                }]}
             >
-                <Input type="number"/>
+                <Input type="text"/>
             </Form.Item>
             {
                 !isAddingNew &&
