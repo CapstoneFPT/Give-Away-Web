@@ -24,10 +24,12 @@ import {useAddresses} from "../hooks/useAddresses.tsx";
 import {AddressSelectionModal} from "../components/Cart/AddressSelectionModal.tsx";
 import {useNavigate} from "react-router-dom";
 import {AxiosError} from "axios";
+import CartItem from "../components/Cart/CartItem.tsx";
+import Cart from "../components/Cart/Cart.tsx";
 
 const {Option} = Select;
 
-const Cart: React.FC = () => {
+const CartPage: React.FC = () => {
     const {state, dispatch} = useCart();
     const [showConfirm, setShowConfirm] = useState(false);
     const [itemToRemove, setItemToRemove] = useState<Product>(null!);
@@ -38,6 +40,7 @@ const Cart: React.FC = () => {
     const [showAddressModal, setShowAddressModal] = useState(false);
     const [addressListVersion, setAddressListVersion] = useState(0);
     const [shippingFee, setShippingFee] = useState<number | null>(null);
+    const [discount, setDiscount] = useState<number | null>(null);
     const [isCalculatingShippingFee, setIsCalculatingShippingFee] = useState(false);
     const navigate = useNavigate();
 
@@ -132,6 +135,8 @@ const Cart: React.FC = () => {
                 ? prevSelectedItems.filter((id) => id !== itemId)
                 : [...prevSelectedItems, itemId];
             console.log("Selected item:", itemId);
+
+
             return updatedSelectedItems;
         });
     };
@@ -256,6 +261,25 @@ const Cart: React.FC = () => {
         }
     };
 
+    const calculateDiscount = useCallback(() => {
+        const totalItemPrice = state.cartItems
+            .filter((item) => selectedItems.includes(item.itemId!))
+            .reduce((total, item) => total + (item.sellingPrice || 0), 0);
+
+        if (totalItemPrice >= 100000) {
+            return totalItemPrice * 0.1; // 10% discount for orders 100,000 VND and above
+        } else if (totalItemPrice >= 50000) {
+            return totalItemPrice * 0.05; // 5% discount for orders between 50,000 VND and 99,999 VND
+        } else {
+            return 0; // No discount for orders below 50,000 VND
+        }
+    }, [state.cartItems, selectedItems]);
+
+    useEffect(() => {
+        const newDiscount = calculateDiscount();
+        setDiscount(newDiscount);
+    }, [selectedItems, calculateDiscount]);
+
     const formatBalance = (balance: number) => {
         return new Intl.NumberFormat("de-DE").format(balance);
     };
@@ -269,7 +293,7 @@ const Cart: React.FC = () => {
 
     const calculateTotalPrice = () => {
         const itemTotal = calculateTotalItemPrice();
-        return itemTotal + (shippingFee || 0);
+        return itemTotal + (shippingFee || 0) - (discount || 0);
     }
 
     const handleAddNewAddress = async (value: DeliveryRequest) => {
@@ -299,46 +323,12 @@ const Cart: React.FC = () => {
                     <h1 style={{textAlign: "center", marginBottom: "20px"}}>
                         SHOPPING BAG
                     </h1>
-                    {state.cartItems.map((item) => (
-                        <Card style={{maxHeight: "calc(120vh - 100px)", overflowY: "auto"}}>
-                            <Table dataSource={state.cartItems} rowKey="itemId" pagination={false}>
-                                <Column title="Image" dataIndex="images" render={(images) => (
-                                    <Image
-                                        style={{height: "150px", width: "150px"}}
-                                        src={images && Array.isArray(images) ? images[0] : "N/A"}
-                                        alt="Product"
-                                    />
-                                )}/>
-                                <Column title="Product Name" dataIndex="name" render={(name) => name || "N/A"}/>
-                                <Column title="Price" dataIndex="sellingPrice"
-                                        render={(sellingPrice) => formatBalance(sellingPrice || 0) + " VND"}/>
-                                <Column title="Size" dataIndex="size" render={(size) => size || "N/A"}/>
-                                <Column title="Color" dataIndex="color" render={(color) => color || "N/A"}/>
-                                <Column title="Brand" dataIndex="brand" render={(brand) => brand || "N/A"}/>
-                                <Column title="Gender" dataIndex="gender" render={(gender) => gender || "N/A"}/>
-                                <Column title="Condition" dataIndex="condition"
-                                        render={(condition) => condition || "N/A"}/>
-                                <Column
-                                    title="Actions"
-                                    render={(item) => (
-                                        <div style={{display: "flex", justifyContent: "space-between"}}>
-                                            <Checkbox
-                                                checked={selectedItems.includes(item.itemId!)}
-                                                onChange={() => handleCheckboxChange(item.itemId!)}
-                                            />
-                                            <Button
-                                                type="link"
-                                                danger
-                                                onClick={() => handleDeleteItem(item)}
-                                            >
-                                                <DeleteOutlined/>
-                                            </Button>
-                                        </div>
-                                    )}
-                                />
-                            </Table>
-                        </Card>
-                    ))}
+                    <Cart
+                        cartItems={state.cartItems}
+                        selectedItems={selectedItems}
+                        onSelect={handleCheckboxChange}
+                        onRemove={handleDeleteItem}
+                    />
                     <Modal
                         title="Confirm Removal"
                         open={showConfirm}
@@ -365,8 +355,8 @@ const Cart: React.FC = () => {
                                 <Typography> <strong>Phone: </strong>{selectedAddress.phone}</Typography>
                                 <Typography><strong>Address Type: </strong>{selectedAddress.addressType}</Typography>
                                 <Typography><strong>Residence: </strong>{selectedAddress.residence}</Typography>
-                                
-                                
+
+
                             </div>
                         )
                     }
@@ -400,12 +390,24 @@ const Cart: React.FC = () => {
                     }
                     </Typography.Title>
                     <Divider/>
+                    <Typography.Title level={5}>
+                        Discount : {
+                        isCalculatingShippingFee ? (
+                            <Spin size={"small"}/>
+                        ) : (
+                            discount !== null ? "-" + formatBalance(discount!) + " VND" : 0 + " VND"
+                        )
+                    }
+                    </Typography.Title>
+                    <Divider/>
                     <Typography.Title level={4}>
                         Total Price: {formatBalance(calculateTotalPrice())} VND
                     </Typography.Title>
                     <Button
-                    style={{marginTop:'10px',backgroundColor:(selectedItems.length === 0 || !selectedAddress
-                        || shippingFee === null || isCalculatingShippingFee) ? 'gray': 'black', color:'white'}}
+                        style={{
+                            marginTop: '10px', backgroundColor: (selectedItems.length === 0 || !selectedAddress
+                                || shippingFee === null || isCalculatingShippingFee) ? 'gray' : 'black', color: 'white'
+                        }}
                         type="primary"
                         block
                         onClick={handleCheckOut}
@@ -432,4 +434,4 @@ const Cart: React.FC = () => {
     );
 };
 
-export default Cart;
+export default CartPage;

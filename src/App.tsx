@@ -3,7 +3,7 @@ import "./App.css";
 import Navbar from "./components/Navbar/Navbar";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import Shop from "./pages/Shop";
-import Cart from "./pages/Cart";
+import CartPage from "./pages/CartPage.tsx";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ConfirmPassword from "./pages/ConfirmPassword";
@@ -83,7 +83,7 @@ function App() {
                             element={
                                 <>
                                     <Navbar/>
-                                    <Cart/>
+                                    <CartPage/>
                                 </>
                             }
                         />
