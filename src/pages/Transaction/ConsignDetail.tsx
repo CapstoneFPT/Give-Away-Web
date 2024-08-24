@@ -10,7 +10,7 @@ import {
   Divider,
   Descriptions,
 } from "antd";
-import {Link, useLocation, useParams} from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 import NavProfile from "../../components/NavProfile/NavProfile";
 import {
   ConsignSaleApi,
@@ -21,7 +21,6 @@ const ConsignDetail = () => {
   const [consignDetail, setConsignDetail] = useState<ConsignSaleDetailResponse[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [consignInformation, setConsignInformation] = useState<any>(null); // State to store consign information
-  const location = useLocation();
   const params = useParams();
 
   useEffect(() => {
@@ -31,8 +30,8 @@ const ConsignDetail = () => {
         console.log(params);
         const consignApi = new ConsignSaleApi();
         const response = await consignApi.apiConsginsalesConsignsaleIdConsignsaledetailsGet(params.consignId!);
-        setConsignDetail(response.data.data || []);
-        console.log(response);
+        setConsignDetail(response.data || []);
+        console.log("Consign Details: ", response);
       } catch (error) {
         console.error("Failed to fetch order details", error);
         setConsignDetail([]);
@@ -95,8 +94,8 @@ const ConsignDetail = () => {
                   </Descriptions.Item>
                   <Descriptions.Item label="Consignor">{consignInformation.consginer}</Descriptions.Item>
                   <Descriptions.Item label="Created Date">{new Date(consignInformation.createdDate).toLocaleString()}</Descriptions.Item>
-                  <Descriptions.Item label="Start Date">{new Date(consignInformation.startDate).toLocaleString()}</Descriptions.Item>
-                  <Descriptions.Item label="End Date">{new Date(consignInformation.endDate!).toLocaleString()}</Descriptions.Item>
+                  <Descriptions.Item label="Start Date">{new Date(consignInformation.startDate) > new Date(-8640000000000000) ? new Date(consignInformation.startDate).toLocaleString() : "N/A"}</Descriptions.Item>
+                  <Descriptions.Item label="End Date">{new Date(consignInformation.endDate!) > new Date(-8640000000000000) ? new Date(consignInformation.endDate!).toLocaleString() : "N/A"}</Descriptions.Item>
                   <Descriptions.Item label="Consign Sale Method">{consignInformation.consignSaleMethod}</Descriptions.Item>
                   <Descriptions.Item label="Phone">{consignInformation.phone}</Descriptions.Item>
                   <Descriptions.Item label="Email">{consignInformation.email}</Descriptions.Item>
@@ -107,14 +106,14 @@ const ConsignDetail = () => {
             {consignDetail.map((item, index) => (
               <Card
                 key={index}
-                title={`Item ${index + 1}`}
+                title={item.productName}
                 bordered={false}
                 style={{ marginBottom: "20px" }}
               >
                 <Descriptions column={1} bordered size="small">
                   <Descriptions.Item label="Image">
                     <Image.PreviewGroup>
-                      {item.fashionItem!.images!.map((img, index) => (
+                      {item.images!.map((img, index) => (
                         <Image
                           key={index}
                           src={img}
@@ -129,13 +128,13 @@ const ConsignDetail = () => {
                     </Image.PreviewGroup>
                   </Descriptions.Item>
                   <Descriptions.Item label="Item Name">
-                    {item.fashionItem!.name}
-                    <Tag
-                      color={item.fashionItem!.status === "Sold" ? "green" : "blue"}
-                      style={{ marginLeft: "10px" }}
-                    >
-                      {item.fashionItem!.status}
-                    </Tag>
+                    {item!.productName}
+                    {/*<Tag*/}
+                    {/*  color={item.status === "Sold" ? "green" : "blue"}*/}
+                    {/*  style={{ marginLeft: "10px" }}*/}
+                    {/*>*/}
+                    {/*  {item.fashionItem!.status}*/}
+                    {/*</Tag>*/}
                   </Descriptions.Item>
                   <Descriptions.Item label="Deal Price">
                     <strong>
@@ -148,23 +147,23 @@ const ConsignDetail = () => {
                     </strong>
                   </Descriptions.Item>
                   <Descriptions.Item label="Gender">
-                    {item.fashionItem!.gender}
+                    {item.gender}
                   </Descriptions.Item>
                   <Descriptions.Item label="Brand">
-                    {item.fashionItem!.brand}
+                    {item.brand}
                   </Descriptions.Item>
                   <Descriptions.Item label="Condition">
-                    {item.fashionItem!.condition}
+                    {item.condition}
                   </Descriptions.Item>
                   <Descriptions.Item label="Size">
-                    {item.fashionItem!.size}
+                    {item.size}
                   </Descriptions.Item>
                   <Descriptions.Item label="Color">
-                    {item.fashionItem!.color}
+                    {item.color}
                   </Descriptions.Item>
-                  <Descriptions.Item label="Shop Address">
-                    {item.fashionItem!.shopAddress}
-                  </Descriptions.Item>
+                  {/*<Descriptions.Item label="Shop Address">*/}
+                  {/*  {item.shopAddress}*/}
+                  {/*</Descriptions.Item>*/}
                 </Descriptions>
               </Card>
             ))}

@@ -1836,6 +1836,12 @@ export interface ConsignSaleDetail {
     'condition'?: string | null;
     /**
      * 
+     * @type {GenderType}
+     * @memberof ConsignSaleDetail
+     */
+    'gender'?: GenderType;
+    /**
+     * 
      * @type {string}
      * @memberof ConsignSaleDetail
      */
@@ -1875,29 +1881,73 @@ export interface ConsignSaleDetailResponse {
     'consignSaleId'?: string;
     /**
      * 
-     * @type {string}
-     * @memberof ConsignSaleDetailResponse
-     */
-    'consignSaleCode'?: string | null;
-    /**
-     * 
      * @type {number}
      * @memberof ConsignSaleDetailResponse
      */
     'dealPrice'?: number;
     /**
      * 
+     * @type {string}
+     * @memberof ConsignSaleDetailResponse
+     */
+    'note'?: string | null;
+    /**
+     * 
      * @type {number}
      * @memberof ConsignSaleDetailResponse
      */
-    'confirmedPrice'?: number;
+    'confirmedPrice'?: number | null;
     /**
      * 
-     * @type {FashionItemDetailResponse}
+     * @type {string}
      * @memberof ConsignSaleDetailResponse
      */
-    'fashionItem'?: FashionItemDetailResponse;
+    'productName'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof ConsignSaleDetailResponse
+     */
+    'brand'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof ConsignSaleDetailResponse
+     */
+    'color'?: string | null;
+    /**
+     * 
+     * @type {SizeType}
+     * @memberof ConsignSaleDetailResponse
+     */
+    'size'?: SizeType;
+    /**
+     * 
+     * @type {GenderType}
+     * @memberof ConsignSaleDetailResponse
+     */
+    'gender'?: GenderType;
+    /**
+     * 
+     * @type {string}
+     * @memberof ConsignSaleDetailResponse
+     */
+    'condition'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof ConsignSaleDetailResponse
+     */
+    'createdDate'?: string;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof ConsignSaleDetailResponse
+     */
+    'images'?: Array<string> | null;
 }
+
+
 /**
  * 
  * @export
@@ -1935,33 +1985,6 @@ export interface ConsignSaleDetailResponse2 {
      */
     'note'?: string | null;
 }
-/**
- * 
- * @export
- * @interface ConsignSaleDetailResponseListResult
- */
-export interface ConsignSaleDetailResponseListResult {
-    /**
-     * 
-     * @type {Array<ConsignSaleDetailResponse>}
-     * @memberof ConsignSaleDetailResponseListResult
-     */
-    'data'?: Array<ConsignSaleDetailResponse> | null;
-    /**
-     * 
-     * @type {ResultStatus}
-     * @memberof ConsignSaleDetailResponseListResult
-     */
-    'resultStatus'?: ResultStatus;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof ConsignSaleDetailResponseListResult
-     */
-    'messages'?: Array<string> | null;
-}
-
-
 /**
  * 
  * @export
@@ -15333,7 +15356,7 @@ export const ConsignSaleApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiConsginsalesConsignsaleIdConsignsaledetailsGet(consignsaleId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ConsignSaleDetailResponseListResult>> {
+        async apiConsginsalesConsignsaleIdConsignsaledetailsGet(consignsaleId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ConsignSaleDetailResponse>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.apiConsginsalesConsignsaleIdConsignsaledetailsGet(consignsaleId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['ConsignSaleApi.apiConsginsalesConsignsaleIdConsignsaledetailsGet']?.[localVarOperationServerIndex]?.url;
@@ -15444,7 +15467,7 @@ export const ConsignSaleApiFactory = function (configuration?: Configuration, ba
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiConsginsalesConsignsaleIdConsignsaledetailsGet(consignsaleId: string, options?: any): AxiosPromise<ConsignSaleDetailResponseListResult> {
+        apiConsginsalesConsignsaleIdConsignsaledetailsGet(consignsaleId: string, options?: any): AxiosPromise<Array<ConsignSaleDetailResponse>> {
             return localVarFp.apiConsginsalesConsignsaleIdConsignsaledetailsGet(consignsaleId, options).then((request) => request(axios, basePath));
         },
         /**
