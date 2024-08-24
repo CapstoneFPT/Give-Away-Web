@@ -123,8 +123,11 @@ const Navbar = () => {
                                     <span className="navbar-cart-count">{cart.state.cartItems.length}</span>
                                 </Link>
                                 <div className="navbar-balance">
+                                    <span className="balance-label">Balance:</span>
                                     <Spin spinning={isLoading} size="small">
+                                    <span className="balance-amount">
                                         {isLoading ? 'Loading...' : `${formatBalance(balance)} VND`}
+                                    </span>
                                     </Spin>
                                 </div>
                             </>
