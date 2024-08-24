@@ -87,7 +87,7 @@ export const BankSelectionModal: React.FC<BankSelectionModalProps> = ({
             open={visible}
             onCancel={onCancel}
             footer={null}
-            width={600}
+            width={700}
         >
             <Spin spinning={loading}>
                 <List
