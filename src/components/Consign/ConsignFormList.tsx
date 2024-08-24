@@ -50,7 +50,6 @@ const ConsignFormList = ({
         justifyContent: "flex-start",
       }}
     >
-      {fields.length < 2 && (
         <Button
           style={{
             width: "10%",
@@ -62,7 +61,6 @@ const ConsignFormList = ({
         >
           Add Item
         </Button>
-      )}
     </div>
   </div>
 );
