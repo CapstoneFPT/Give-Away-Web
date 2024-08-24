@@ -421,7 +421,7 @@ function App() {
                         />
 
                         <Route
-                            path="/ConsignDetail" // Sửa lại đường dẫn
+                            path="/transaction/My-consign/:consignId"
                             element={
                                 <>
                                     <Navbar/>

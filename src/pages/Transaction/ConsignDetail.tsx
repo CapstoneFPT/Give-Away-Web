@@ -10,7 +10,7 @@ import {
   Divider,
   Descriptions,
 } from "antd";
-import { Link, useLocation } from "react-router-dom"; 
+import {Link, useLocation, useParams} from "react-router-dom";
 import NavProfile from "../../components/NavProfile/NavProfile";
 import {
   ConsignSaleApi,
@@ -21,17 +21,17 @@ const ConsignDetail = () => {
   const [consignDetail, setConsignDetail] = useState<ConsignSaleDetailResponse[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [consignInformation, setConsignInformation] = useState<any>(null); // State to store consign information
-  const location = useLocation(); 
-  const queryParams = new URLSearchParams(location.search); 
-  const consignSaleId = queryParams.get("consignSaleId");
+  const location = useLocation();
+  const params = useParams();
 
   useEffect(() => {
     const fetchConsignDetails = async () => {
       setLoading(true);
       try {
+        console.log(params);
         const consignApi = new ConsignSaleApi();
-        const response = await consignApi.apiConsginsalesConsignsaleIdConsignsaledetailsGet(consignSaleId!);
-        setConsignDetail(response.data.data!);
+        const response = await consignApi.apiConsginsalesConsignsaleIdConsignsaledetailsGet(params.consignId!);
+        setConsignDetail(response.data.data || []);
         console.log(response);
       } catch (error) {
         console.error("Failed to fetch order details", error);
@@ -44,7 +44,7 @@ const ConsignDetail = () => {
     const fetchConsignInformation = async () => {
       try {
         const consignInfomationApi = new ConsignSaleApi();
-        const responseInfoamtionConsign = await consignInfomationApi.apiConsginsalesConsignsaleIdGet(consignSaleId!);
+        const responseInfoamtionConsign = await consignInfomationApi.apiConsginsalesConsignsaleIdGet(params!.consignId!);
         setConsignInformation(responseInfoamtionConsign.data.data); // Update state with consign information
         console.log(responseInfoamtionConsign.data.data);
       } catch (error) {
@@ -52,11 +52,11 @@ const ConsignDetail = () => {
       }
     };
 
-    if (consignSaleId) {
+    if (params) {
       fetchConsignInformation();
       fetchConsignDetails();
     }
-  }, [consignSaleId]);
+  }, [params]);
 
   if (loading) {
     return <Spin size="large" style={{ display: "block", margin: "auto" }} />;

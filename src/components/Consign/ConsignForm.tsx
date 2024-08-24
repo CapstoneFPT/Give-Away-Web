@@ -1,315 +1,315 @@
-import React, { useState, useEffect } from "react";
-import {
-  Form,
-  Input,
-  Button,
-  Checkbox,
-  Card,
-  Upload,
-  Select,
-  message,
-  notification,
-  Row,
-  Col,
-  Typography,
-} from "antd";
-import type {
-  FormListFieldData,
-  FormListOperation,
-} from "antd/lib/form/FormList";
-import { DeleteOutlined } from "@ant-design/icons";
-import { storage } from "../../pages/Firebase/firebase-config";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import React, {useEffect, useState} from "react";
+import {Button, Card, Checkbox, Col, Form, Input, message, notification, Row, Select,} from "antd";
+import type {FormListFieldData, FormListOperation,} from "antd/lib/form/FormList";
+import {storage} from "../../pages/Firebase/firebase-config";
+import {getDownloadURL, ref, uploadBytes} from "firebase/storage";
 import "./ConsignForm.css";
 import {
-  AccountApi,
-  ConsignSaleType,
-  CreateConsignDetailRequest,
-  CreateConsignSaleRequest,
-  ResultStatus,
-  ShopApi,
-  ShopDetailResponse,
-  SizeType,
+    AccountApi,
+    ConsignSaleType,
+    CreateConsignSaleRequest,
+    ResultStatus,
+    ShopApi,
+    ShopDetailResponse,
 } from "../../api";
 import RuleConsign from "../../pages/RuleConsign";
 import ConsignFormList from "./ConsignFormList";
 
 const normFile = (e: any) => {
-  // Kiểm tra nếu e là một mảng hoặc có fileList
-  if (Array.isArray(e)) {
-    return e;
-  }
-  return e && e.fileList ? e.fileList : []; // Trả về mảng rỗng nếu không có fileList
+    // Kiểm tra nếu e là một mảng hoặc có fileList
+    if (Array.isArray(e)) {
+        return e;
+    }
+    return e && e.fileList ? e.fileList : []; // Trả về mảng rỗng nếu không có fileList
 };
 
 const ConsignForm = () => {
-  const [fileLists, setFileLists] = useState<{ [key: number]: any[] }>({});
-  const [uploading, setUploading] = useState<boolean>(false);
-  const [branches, setBranches] = useState<ShopDetailResponse[]>([]);
-  const shopApi = new ShopApi();
-  const [form] = Form.useForm<CreateConsignSaleRequest>(); // Form instance for resetting fields
-  const userId = JSON.parse(localStorage.getItem("userId") || "null");
+    const [fileLists, setFileLists] = useState<{ [key: number]: any[] }>({});
+    const [uploading, setUploading] = useState<boolean>(false);
+    const [branches, setBranches] = useState<ShopDetailResponse[]>([]);
+    const shopApi = new ShopApi();
+    const [form] = Form.useForm<CreateConsignSaleRequest>(); // Form instance for resetting fields
+    const userId = JSON.parse(localStorage.getItem("userId") || "null");
 
-  console.log(userId);
-  useEffect(() => {
-    const fetchBranches = async () => {
-      try {
-        const response = await shopApi.apiShopsGet();
-        if (response.data.resultStatus !== ResultStatus.Success) {
-          throw new Error(`HTTP error! Status: ${response.data.resultStatus}`);
-        }
-        setBranches(response.data.data || []);
-        console.log(response);
-      } catch (error) {
-        console.error("Failed to fetch branches:", error);
-        setBranches([]);
-      }
-    };
-    fetchBranches();
-  }, []);
-
-  const handleFileChange = (key: number, info: any) => {
-    setFileLists((prev) => ({
-      ...prev,
-      [key]: info.fileList,
-    }));
-  };
-
-  const onFinish = async (values: CreateConsignSaleRequest) => {
-    setUploading(true);
-    message.loading({ content: "Uploading...", key: "upload" });
-    console.log(values);
-    try {
-      const itemsWithUrls : any[] = await Promise.all(
-        values.consignDetailRequests.map(async (item: any, index: number) => {
-          const fileUrls = await Promise.all(
-            (fileLists[index] || []).map(async (file: any) => {
-              if (file.originFileObj) {
-                const storageRef = ref(storage, `images/${file.name}`);
-                const metadata = { contentType: file.type };
-                try {
-                  await uploadBytes(storageRef, file.originFileObj, metadata);
-                  const downloadURL = await getDownloadURL(storageRef);
-                  return downloadURL;
-                } catch (error) {
-                  console.error("Upload error:", error);
-                  return "";
+    console.log(userId);
+    useEffect(() => {
+        const fetchBranches = async () => {
+            try {
+                const response = await shopApi.apiShopsGet();
+                if (response.data.resultStatus !== ResultStatus.Success) {
+                    throw new Error(`HTTP error! Status: ${response.data.resultStatus}`);
                 }
-              }
-              return "";
-            })
-          );
+                setBranches(response.data.data || []);
+                console.log(response);
+            } catch (error) {
+                console.error("Failed to fetch branches:", error);
+                setBranches([]);
+            }
+        };
+        fetchBranches();
+    }, []);
 
-          return {
-            productName: item.productName,
-            note: item.note,
-            dealPrice: item.dealPrice,
-            condition: item.conditionPercentage,
-            size: item.size,
-            color: item.color,
-            brand: item.brand,
-            gender: item.gender,
-            imageUrls: fileUrls,
-          };
-        })
-      );
+    const handleFileChange = (key: number, info: any) => {
+        setFileLists((prev) => ({
+            ...prev,
+            [key]: info.fileList,
+        }));
+    };
 
-      const consignData: CreateConsignSaleRequest = {
-        shopId: values.shopId,
-        type: values.type , // Updated to use the new type
-        consignDetailRequests: itemsWithUrls,
-        address: values.address,
-        consignorName: values.consignorName,
-        phone: values.phone,
-      };
+    const onFinish = async (values: CreateConsignSaleRequest) => {
+        setUploading(true);
+        message.loading({content: "Uploading...", key: "upload"});
+        console.log(values);
+        console.log(fileLists);
+        try {
+            const itemsWithUrls: any[] = await Promise.all(
+                values.consignDetailRequests.map(async (item: any, index: number) => {
+                    console.log("Consign Item: ", item);
+                    const fileUrls = await Promise.all(
+                        item.picture.map(async (file: any) => {
+                            console.log("File: ", file);
+                            if (file.originFileObj) {
+                                const storageRef = ref(storage, `images/${file.name}`);
+                                const metadata = {contentType: file.type};
+                                try {
+                                    console.log("Uploading file:", file.originFileObj);
+                                    await uploadBytes(storageRef, file.originFileObj, metadata);
+                                    const downloadURL = await getDownloadURL(storageRef);
+                                    console.log("Download URL:", downloadURL);
+                                    return downloadURL;
+                                } catch (error) {
+                                    console.log("Upload error:", error);
+                                    return "";
+                                }
+                            }
+                            return "";
+                        })
+                    );
 
-      const consignApi = new AccountApi();
-      const response = await consignApi.apiAccountsAccountIdConsignsalesPost(
-        userId,
-        consignData
-      );
 
-      if (response.data.resultStatus === ResultStatus.Success) {
-        notification.success({
-          message: "Success",
-          description: "Upload successful!",
-          duration: 2,
-        });
-        form.resetFields(); // Reset form fields
-        setFileLists({}); // Clear file lists
-      } else {
-        notification.error({
-          message: "Error",
-          description: "Upload failed!",
-          duration: 2,
-        });
-      }
-    } catch (error) {
-      console.error("Backend error:", error);
-      notification.error({
-        message: "Error",
-        description: "An error occurred during the upload.",
-        duration: 2,
-      });
-    }
+                    return {
+                        productName: item.productName,
+                        note: item.note,
+                        dealPrice: item.dealPrice,
+                        condition: item.conditionPercentage,
+                        size: item.size,
+                        color: item.color,
+                        brand: item.brand,
+                        gender: item.gender,
+                        imageUrls: fileUrls,
+                    };
+                })
+            );
 
-    setUploading(false);
-  };
+            const consignData: CreateConsignSaleRequest = {
+                shopId: values.shopId,
+                type: values.type, // Updated to use the new type
+                consignDetailRequests: itemsWithUrls.map((item) => ({
+                    brand: item.brand,
+                    color: item.color,
+                    conditionPercentage: item.condition,
+                    dealPrice: item.dealPrice,
+                    gender: item.gender,
+                    note: item.note,
+                    productName: item.productName,
+                    size: item.size,
+                    condition: item.condition,
+                    imageUrls: item.imageUrls,
+                })),
+                address: values.address,
+                consignorName: values.consignorName,
+                phone: values.phone,
+            };
 
-  return (
-    <Card
-      className="consign-form-container"
-      style={{ justifyContent: "center", display: "flex" }}
-    >
-      <Row gutter={[16, 16]}>
-        <Col span={8}>
-          <RuleConsign />
-        </Col>
-        <Col span={16}>
-          <Form
-            form={form}
-            className="consign-form"
-            name="dynamic_form"
-            onFinish={onFinish}
-            autoComplete="off"
-            size="large"
-          >
-            <Card style={{ width: "970px", border: "1px solid #aeacac" }}>
-              {/* <div style={{ width: "1000px" }}> */}
-              <h1 style={{ textAlign: "center", marginBottom: "10px" }}>
-                Consign/Sale Form
-              </h1>
-              <Card
-                style={{ marginBottom: "20px", border: "1px solid #aeacac" }}
-              >
-                <Row gutter={[16, 16]}>
-                  <Col span={16}>
-                    <Form.Item
-                    label="Select branch to Consign/Sale*:"
-                      name="shopId"
-                      rules={[
-                        { required: true, message: "Missing cloth branches" },
-                      ]}
+            console.log(consignData);
+
+            const consignApi = new AccountApi();
+            const response = await consignApi.apiAccountsAccountIdConsignsalesPost(
+              userId,
+              consignData
+            );
+
+            if (response.data.resultStatus === ResultStatus.Success) {
+              notification.success({
+                message: "Success",
+                description: "Upload successful!",
+                duration: 2,
+              });
+              form.resetFields(); // Reset form fields
+              setFileLists({}); // Clear file lists
+            } else {
+              notification.error({
+                message: "Error",
+                description: "Upload failed!",
+                duration: 2,
+              });
+            }
+        } catch (error) {
+            console.error("Backend error:", error);
+            notification.error({
+                message: "Error",
+                description: "An error occurred during the upload.",
+                duration: 2,
+            });
+        }
+
+        setUploading(false);
+    };
+
+    return (
+        <Card
+            className="consign-form-container"
+            style={{justifyContent: "center", display: "flex"}}
+        >
+            <Row gutter={[16, 16]}>
+                <Col span={8}>
+                    <RuleConsign/>
+                </Col>
+                <Col span={16}>
+                    <Form
+                        form={form}
+                        className="consign-form"
+                        name="dynamic_form"
+                        onFinish={onFinish}
+                        autoComplete="off"
+                        size="large"
                     >
-                      <Select style={{ width: "80%" }} placeholder="Branches">
-                        {branches.map((data) => (
-                          <Select.Option key={data.shopId} value={data.shopId}>
-                            {data.address}
-                          </Select.Option>
-                        ))}
-                      </Select>
-                    </Form.Item>
-                    <Form.Item
-                      name="type"
-                      label="Select type to Consign/Sale*:"
-                      rules={[{ required: true, message: "Missing type" }]}
-                    >
-                      <Select
-                        placeholder="Type Consign/Sale"
-                        style={{ width: "50%" }}
-                      >
-                        {Object.values(ConsignSaleType).map((type) => (
-                          <Select.Option key={type} value={type}>
-                            {type}
-                          </Select.Option>
-                        ))}
-                      </Select>
-                    </Form.Item>
-                    <Form.Item
-                      style={{ width: "50%" }}
-                      name="consignorName"
-                      label="Consignor Name"
-                      rules={[
-                        {
-                          required: true,
-                          message: "Missing your consignor name",
-                        },
-                      ]}
-                    >
-                      <Input placeholder="Consignor Name" />
-                    </Form.Item>
-                  </Col>
-                  <Col span={8}>
-                    <Form.Item
-                      style={{ width: "100%" }}
-                      name="address"
-                      label="Your address*:"
-                      rules={[
-                        { required: true, message: "Missing your address" },
-                      ]}
-                    >
-                      <Input.TextArea placeholder="Your address" />
-                    </Form.Item>
+                        <Card style={{width: "970px", border: "1px solid #aeacac"}}>
+                            {/* <div style={{ width: "1000px" }}> */}
+                            <h1 style={{textAlign: "center", marginBottom: "10px"}}>
+                                Consign/Sale Form
+                            </h1>
+                            <Card
+                                style={{marginBottom: "20px", border: "1px solid #aeacac"}}
+                            >
+                                <Row gutter={[16, 16]}>
+                                    <Col span={16}>
+                                        <Form.Item
+                                            label="Select branch to Consign/Sale*:"
+                                            name="shopId"
+                                            rules={[
+                                                {required: true, message: "Missing cloth branches"},
+                                            ]}
+                                        >
+                                            <Select style={{width: "80%"}} placeholder="Branches">
+                                                {branches.map((data) => (
+                                                    <Select.Option key={data.shopId} value={data.shopId}>
+                                                        {data.address}
+                                                    </Select.Option>
+                                                ))}
+                                            </Select>
+                                        </Form.Item>
+                                        <Form.Item
+                                            name="type"
+                                            label="Select type to Consign/Sale*:"
+                                            rules={[{required: true, message: "Missing type"}]}
+                                        >
+                                            <Select
+                                                placeholder="Type Consign/Sale"
+                                                style={{width: "50%"}}
+                                            >
+                                                {Object.values(ConsignSaleType).map((type) => (
+                                                    <Select.Option key={type} value={type}>
+                                                        {type}
+                                                    </Select.Option>
+                                                ))}
+                                            </Select>
+                                        </Form.Item>
+                                        <Form.Item
+                                            style={{width: "50%"}}
+                                            name="consignorName"
+                                            label="Consignor Name"
+                                            rules={[
+                                                {
+                                                    required: true,
+                                                    message: "Missing your consignor name",
+                                                },
+                                            ]}
+                                        >
+                                            <Input placeholder="Consignor Name"/>
+                                        </Form.Item>
+                                    </Col>
+                                    <Col span={8}>
+                                        <Form.Item
+                                            style={{width: "100%"}}
+                                            name="address"
+                                            label="Your address*:"
+                                            rules={[
+                                                {required: true, message: "Missing your address"},
+                                            ]}
+                                        >
+                                            <Input.TextArea placeholder="Your address"/>
+                                        </Form.Item>
 
-                    <Form.Item
-                      style={{ width: "100%" }}
-                      name="phone"
-                      label="Phone"
-                      rules={[
-                        { required: true, message: "Missing your phone" },
-                      ]}
-                    >
-                      <Input placeholder="Phone" />
-                    </Form.Item>
-                  </Col>
-                </Row>
-              </Card>
+                                        <Form.Item
+                                            style={{width: "100%"}}
+                                            name="phone"
+                                            label="Phone"
+                                            rules={[
+                                                {required: true, message: "Missing your phone"},
+                                            ]}
+                                        >
+                                            <Input placeholder="Phone"/>
+                                        </Form.Item>
+                                    </Col>
+                                </Row>
+                            </Card>
 
-              {/* </div> */}
-              <Form.List name="consignDetailRequests">
-                {(
-                  fields: FormListFieldData[],
-                  { add, remove }: FormListOperation
-                ) => (
-                  <>
-                    <ConsignFormList
-                      fields={fields}
-                      fileLists={[]} // Provide the appropriate file list if needed
-                      handleFileChange={handleFileChange}
-                      add={add}
-                      remove={remove}
-                    />
-                  </>
-                )}
-              </Form.List>
-              <div>
-                <Form.Item
-                  name="termsAndRules"
-                  valuePropName="checked"
-                  rules={[
-                    {
-                      validator: (_, value) =>
-                        value
-                          ? Promise.resolve()
-                          : Promise.reject("Should accept terms and rules"),
-                    },
-                  ]}
-                >
-                  <Checkbox>
-                    I have read and agree to the terms and rules
-                  </Checkbox>
-                </Form.Item>
-                <Form.Item>
-                  <Button
-                    type="primary"
-                    htmlType="submit"
-                    loading={uploading}
-                    style={{
-                      width: "15%",
-                      backgroundColor: "black",
-                      color: "white",
-                    }}
-                  >
-                    {uploading ? "Uploading..." : "Submit"}
-                  </Button>
-                </Form.Item>
-              </div>
-            </Card>
-          </Form>
-        </Col>
-      </Row>
-    </Card>
-  );
+                            {/* </div> */}
+                            <Form.List name="consignDetailRequests">
+                                {(
+                                    fields: FormListFieldData[],
+                                    {add, remove}: FormListOperation
+                                ) => (
+                                    <>
+                                        <ConsignFormList
+                                            fields={fields}
+                                            fileLists={[]} // Provide the appropriate file list if needed
+                                            handleFileChange={handleFileChange}
+                                            add={add}
+                                            remove={remove}
+                                        />
+                                    </>
+                                )}
+                            </Form.List>
+                            <div>
+                                <Form.Item
+                                    name="termsAndRules"
+                                    valuePropName="checked"
+                                    rules={[
+                                        {
+                                            validator: (_, value) =>
+                                                value
+                                                    ? Promise.resolve()
+                                                    : Promise.reject("Should accept terms and rules"),
+                                        },
+                                    ]}
+                                >
+                                    <Checkbox>
+                                        I have read and agree to the terms and rules
+                                    </Checkbox>
+                                </Form.Item>
+                                <Form.Item>
+                                    <Button
+                                        type="primary"
+                                        htmlType="submit"
+                                        loading={uploading}
+                                        style={{
+                                            width: "15%",
+                                            backgroundColor: "black",
+                                            color: "white",
+                                        }}
+                                    >
+                                        {uploading ? "Uploading..." : "Submit"}
+                                    </Button>
+                                </Form.Item>
+                            </div>
+                        </Card>
+                    </Form>
+                </Col>
+            </Row>
+        </Card>
+    );
 };
 
 export default ConsignForm;

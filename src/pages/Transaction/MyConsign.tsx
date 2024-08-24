@@ -99,7 +99,7 @@ const MyConsign = () => {
   ];
 
   const handleDetail = (consignSaleId: string) => {
-    navigate(`/ConsignDetail?consignSaleId=${consignSaleId}`); 
+    navigate(`/transaction/My-consign/${consignSaleId}`);
   };
   const formatBalance = (balance:any) => {
     return new Intl.NumberFormat('de-DE').format(balance);

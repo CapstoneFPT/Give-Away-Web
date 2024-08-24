@@ -1,10 +1,20 @@
 import React from 'react';
 import {Button, Checkbox, Image, Space, Table, Tag, Typography} from 'antd';
 import {DeleteOutlined} from '@ant-design/icons';
+import {FashionItemDetailResponse} from "../../api";
+import {Product} from "../../pages/CartContext.tsx";
 
 const {Text, Title, Paragraph} = Typography;
 
-const Cart = ({cartItems, selectedItems, onSelect, onRemove, onSelectAll}: any) => {
+interface CartProps {
+   cartItems : FashionItemDetailResponse[],
+   selectedItems: string[],
+   onSelect: (itemId: string) => void,
+   onRemove: (itemId: Product) => void,
+   onSelectAll: (checked: boolean) => void
+}
+
+const Cart : React.FC<CartProps> = ({cartItems, selectedItems, onSelect, onRemove, onSelectAll}: any) => {
     const columns: any = [
             {
                 title: () => (

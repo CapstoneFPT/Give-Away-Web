@@ -5,26 +5,20 @@ import {
     Col,
     Divider,
     Form,
-    Image,
     message,
     Modal,
     notification,
     Row,
     Select,
     Spin,
-    Table,
     Typography,
 } from "antd";
 import {Product, useCart} from "./CartContext";
-import {DeleteOutlined} from "@ant-design/icons";
-import Checkbox from "antd/es/checkbox/Checkbox";
 import {AccountApi, CartRequest, DeliveryListResponse, DeliveryRequest, ErrorResponse, OrderApi} from "../api";
-import Column from "antd/es/table/Column";
 import {useAddresses} from "../hooks/useAddresses.tsx";
 import {AddressSelectionModal} from "../components/Cart/AddressSelectionModal.tsx";
 import {useNavigate} from "react-router-dom";
 import {AxiosError} from "axios";
-import CartItem from "../components/Cart/CartItem.tsx";
 import Cart from "../components/Cart/Cart.tsx";
 
 const {Option} = Select;
@@ -365,8 +359,6 @@ const CartPage: React.FC = () => {
                                 <Typography> <strong>Phone: </strong>{selectedAddress.phone}</Typography>
                                 <Typography><strong>Address Type: </strong>{selectedAddress.addressType}</Typography>
                                 <Typography><strong>Residence: </strong>{selectedAddress.residence}</Typography>
-
-
                             </div>
                         )
                     }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Row, Col, Form, Input, Select, Upload, Button, Typography } from 'antd';
+import { Card, Row, Col, Form, Input, Select, Upload, Button } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import { SizeType } from '../../api'; // Ensure SizeType is imported from the correct path
 import { Option } from 'antd/es/mentions';
