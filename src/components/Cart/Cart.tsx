@@ -4,13 +4,19 @@ import {DeleteOutlined} from '@ant-design/icons';
 
 const {Text, Title, Paragraph} = Typography;
 
-const Cart = ({cartItems, selectedItems, onSelect, onRemove} : any) => {
-    const columns : any = [
+const Cart = ({cartItems, selectedItems, onSelect, onRemove, onSelectAll}: any) => {
+    const columns: any = [
             {
-                title: '',
+                title: () => (
+                    <Checkbox
+                        checked={selectedItems.length === cartItems.length && cartItems.length > 0}
+                        indeterminate={selectedItems.length > 0 && selectedItems.length < cartItems.length}
+                        onChange={(e) => onSelectAll(e.target.checked)}
+                    />
+                ),
                 dataIndex: 'select',
                 width: 50,
-                render: (_ : any, record: any) => (
+                render: (_: any, record: any) => (
                     <Checkbox
                         checked={selectedItems.includes(record.itemId)}
                         onChange={() => onSelect(record.itemId)}
@@ -22,7 +28,7 @@ const Cart = ({cartItems, selectedItems, onSelect, onRemove} : any) => {
                 dataIndex: 'images',
                 align: 'center',
                 width: 250,
-                render: (images : any[], record : any) => (
+                render: (images: any[], record: any) => (
                     <>
                         <Paragraph>
                             <Text strong style={{
@@ -44,7 +50,7 @@ const Cart = ({cartItems, selectedItems, onSelect, onRemove} : any) => {
                 title: 'Product Details',
                 align: 'center',
                 dataIndex: 'name',
-                render: (_ : any, record : any) => (
+                render: (_: any, record: any) => (
                     <Space direction="vertical" size={8} align="start">
                         <div>
                             <Typography><strong>Brand: </strong> <Tag color="black">{record.brand}</Tag></Typography>
@@ -82,8 +88,8 @@ const Cart = ({cartItems, selectedItems, onSelect, onRemove} : any) => {
                 align:
                     'center',
                 render:
-                    (price : number) => (
-                        <Title level={2} style={{color: 'black', margin: 0}}>
+                    (price: number) => (
+                        <Title level={4} style={{color: 'black', margin: 0}}>
                             {new Intl.NumberFormat('de-DE').format(price)} VND
                         </Title>
                     ),
@@ -98,7 +104,7 @@ const Cart = ({cartItems, selectedItems, onSelect, onRemove} : any) => {
                 width:
                     100,
                 render:
-                    (_ : any, record : any) => (
+                    (_: any, record: any) => (
                         <Button
                             type="text"
                             danger

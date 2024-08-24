@@ -80,6 +80,15 @@ const CartPage: React.FC = () => {
             );
         }
     };
+
+    const handleSelectAll = (checked : boolean) => {
+        if (checked) {
+            setSelectedItems(state.cartItems!.map(item => item.itemId!));
+        } else {
+            setSelectedItems([]);
+        }
+    };
+
     const calculateShippingFees = useCallback(async () => {
         if (selectedItems.length === 0 || !selectedAddress) {
             setShippingFee(null);
@@ -328,6 +337,7 @@ const CartPage: React.FC = () => {
                         selectedItems={selectedItems}
                         onSelect={handleCheckboxChange}
                         onRemove={handleDeleteItem}
+                        onSelectAll={handleSelectAll}
                     />
                     <Modal
                         title="Confirm Removal"
