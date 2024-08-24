@@ -15,13 +15,6 @@ import {
 import RuleConsign from "../../pages/RuleConsign";
 import ConsignFormList from "./ConsignFormList";
 
-const normFile = (e: any) => {
-    // Kiểm tra nếu e là một mảng hoặc có fileList
-    if (Array.isArray(e)) {
-        return e;
-    }
-    return e && e.fileList ? e.fileList : []; // Trả về mảng rỗng nếu không có fileList
-};
 
 const ConsignForm = () => {
     const [fileLists, setFileLists] = useState<{ [key: number]: any[] }>({});

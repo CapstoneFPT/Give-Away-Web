@@ -397,7 +397,7 @@ const CartPage: React.FC = () => {
                         isCalculatingShippingFee ? (
                             <Spin size={"small"}/>
                         ) : (
-                            discount !== null ? "-" + formatBalance(discount!) + " VND" : 0 + " VND"
+                            discount !== 0 ? "-" + formatBalance(discount!) + " VND" : 0 + " VND"
                         )
                     }
                     </Typography.Title>

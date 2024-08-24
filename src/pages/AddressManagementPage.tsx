@@ -94,10 +94,7 @@ const AddressManagementPage = () => {
     }, [fetchAddresses]);
 
     const openAddressForm = (address: DeliveryListResponse | null = null) => {
-        if(addresses.length == 5){
-            notification.error({message: 'You can not add more than 5 addresses!'});
-            return;
-        }
+
         if (address) {
             setSelectedAddressId(address.addressId!);
             setEditingAddress({
@@ -151,7 +148,13 @@ const AddressManagementPage = () => {
                                             }
                                         }
                                     icon={<PlusOutlined/>}
-                                    onClick={()=>openAddressForm()}>
+                                    onClick={() => {
+                                        if (addresses.length == 5) {
+                                            notification.error({message: 'You can not add more than 5 addresses!'});
+                                            return;
+                                        }
+                                        openAddressForm()
+                                    }}>
                                 Add New Address
                             </Button>
                             {renderAddressCards}
