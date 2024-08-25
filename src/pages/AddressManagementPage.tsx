@@ -114,9 +114,17 @@ const AddressManagementPage = () => {
         showFormModal();
     }
 
+    const sortedAddresses = useMemo(() => {
+        return [...addresses].sort((a, b) => {
+            if (a.isDefault && !b.isDefault) return -1;
+            if (!a.isDefault && b.isDefault) return 1;
+            return 0;
+        });
+    }, [addresses]);
+
 
     const renderAddressCards = useMemo(() => (
-        addresses.map(address => (
+        sortedAddresses.map(address => (
             <AddressCard
                 key={address.addressId}
                 address={address}
