@@ -1296,6 +1296,25 @@ export interface BidListResponsePaginationResponse {
 /**
  * 
  * @export
+ * @interface CartItem
+ */
+export interface CartItem {
+    /**
+     * 
+     * @type {string}
+     * @memberof CartItem
+     */
+    'itemId'?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof CartItem
+     */
+    'quantity'?: number;
+}
+/**
+ * 
+ * @export
  * @interface CartRequest
  */
 export interface CartRequest {
@@ -1349,10 +1368,10 @@ export interface CartRequest {
     'phone'?: string | null;
     /**
      * 
-     * @type {Array<string>}
+     * @type {Array<CartItem>}
      * @memberof CartRequest
      */
-    'itemIds'?: Array<string> | null;
+    'cartItems'?: Array<CartItem> | null;
 }
 
 
@@ -7251,6 +7270,12 @@ export interface OrderDetail {
      * @type {number}
      * @memberof OrderDetail
      */
+    'quantity'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof OrderDetail
+     */
     'unitPrice'?: number;
     /**
      * 
@@ -7392,6 +7417,12 @@ export interface OrderDetailsResponse {
      * @memberof OrderDetailsResponse
      */
     'unitPrice'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof OrderDetailsResponse
+     */
+    'quantity'?: number;
     /**
      * 
      * @type {string}

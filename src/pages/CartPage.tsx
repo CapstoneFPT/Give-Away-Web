@@ -165,7 +165,10 @@ const CartPage: React.FC = () => {
                 recipientName: selectedAddress?.recipientName,
                 address: selectedAddress?.residence || null!,
                 phone: selectedAddress?.phone,
-                itemIds: selectedItems,
+                cartItems: selectedItems.map((item) => {return {
+                    itemId: item,
+                    quantity: 1
+                }}),
                 addressType: selectedAddress?.addressType,
                 ghnProvinceId: selectedAddress?.ghnProvinceId,
                 ghnDistrictId: selectedAddress?.ghnDistrictId,

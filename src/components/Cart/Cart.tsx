@@ -7,14 +7,14 @@ import {Product} from "../../pages/CartContext.tsx";
 const {Text, Title, Paragraph} = Typography;
 
 interface CartProps {
-   cartItems : FashionItemDetailResponse[],
-   selectedItems: string[],
-   onSelect: (itemId: string) => void,
-   onRemove: (itemId: Product) => void,
-   onSelectAll: (checked: boolean) => void
+    cartItems: FashionItemDetailResponse[],
+    selectedItems: string[],
+    onSelect: (itemId: string) => void,
+    onRemove: (itemId: Product) => void,
+    onSelectAll: (checked: boolean) => void
 }
 
-const Cart : React.FC<CartProps> = ({cartItems, selectedItems, onSelect, onRemove, onSelectAll}: any) => {
+const Cart: React.FC<CartProps> = ({cartItems, selectedItems, onSelect, onRemove, onSelectAll}: any) => {
     const columns: any = [
             {
                 title: () => (
@@ -92,7 +92,7 @@ const Cart : React.FC<CartProps> = ({cartItems, selectedItems, onSelect, onRemov
             }
             ,
             {
-                title: 'Price',
+                title: 'UnitPrice',
                 dataIndex:
                     'sellingPrice',
                 align:
@@ -101,6 +101,34 @@ const Cart : React.FC<CartProps> = ({cartItems, selectedItems, onSelect, onRemov
                     (price: number) => (
                         <Title level={4} style={{color: 'black', margin: 0}}>
                             {new Intl.NumberFormat('de-DE').format(price)} VND
+                        </Title>
+                    ),
+            }
+            ,
+            {
+                title: 'Quantity',
+                dataIndex:
+                    'quantity',
+                align:
+                    'center',
+                render:
+                    (quantity: number = 1) => (
+                        <Title level={4} style={{color: 'black', margin: 0}}>
+                            {quantity}
+                        </Title>
+                    ),
+            }
+            ,
+            {
+                title: 'Price',
+                dataIndex:
+                    'sellingPrice',
+                align:
+                    'center',
+                render:
+                    (total: number, record: any) => (
+                        <Title level={4} style={{color: 'black', margin: 0}}>
+                            {new Intl.NumberFormat('de-DE').format(record.sellingPrice * record.quantity)} VND
                         </Title>
                     ),
             }

@@ -12,7 +12,7 @@ const OrderDetail = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
   const location = useLocation();
-  const { paymentMethod, recipientName, address, contactNumber, totalPrice, statusOder } = location.state || {};
+  const { paymentMethod, recipientName, address, contactNumber, totalPrice, statusOder, createdDate } = location.state || {};
 
   useEffect(() => {
     const fetchOrderDetails = async () => {
@@ -51,7 +51,7 @@ const OrderDetail = () => {
   const handleRefundClick = (orderDetail: OrderDetailsResponse, orderDetailId: string) => {
     navigate("/refunds", { state: { items: [orderDetail], orderDetailId } });
   };
-  const formatBalance = (balance:any) => {
+  const formatBalance = (balance:number) => {
     return new Intl.NumberFormat('de-DE').format(balance);
   };
 
@@ -80,7 +80,8 @@ const OrderDetail = () => {
         </>
       ),
     },
-    { title: 'Price', dataIndex: 'unitPrice', key: 'unitPrice', render: (price: number) => <strong>{formatBalance(price)} VND</strong> },
+    { title: 'Unit Price', dataIndex: 'unitPrice', key: 'unitPrice', render: (price: number) => <strong>{formatBalance(price)} VND</strong> },
+    { title: 'Quantity', dataIndex: 'quantity', key: 'quantity' },
     { title: 'Color', dataIndex: 'itemColor', key: 'itemColor' },
     { title: 'Size', dataIndex: 'itemSize', key: 'itemSize' },
     { title: 'Gender', dataIndex: 'itemGender', key: 'itemGender' },
@@ -139,7 +140,8 @@ const OrderDetail = () => {
                 <Descriptions.Item label="Recipient Name">{recipientName}</Descriptions.Item>
                 <Descriptions.Item label="Address">{address}</Descriptions.Item>
                 <Descriptions.Item label="Phone Number">{contactNumber}</Descriptions.Item>
-                <Descriptions.Item label="Toltal Price"><strong>{formatBalance(totalPrice)} VND </strong></Descriptions.Item>
+                <Descriptions.Item label="Total"><strong>{formatBalance(totalPrice)} VND </strong></Descriptions.Item>
+                <Descriptions.Item label="Created At">{createdDate}</Descriptions.Item>
 
               </Descriptions>
             </Card>

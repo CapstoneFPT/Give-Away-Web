@@ -73,7 +73,7 @@ const ItemDetail: React.FC = () => {
                 message: "Already Ordered",
                 description: `The item "${product.name}" has already been ordered.`,
             });
-        } else if (isItemInCart(product.itemId)) {
+        } else if (isItemInCart(product.itemId!)) {
             notification.warning({
                 message: "Already in Cart",
                 description: `The item "${product.name}" is already in your cart.`,

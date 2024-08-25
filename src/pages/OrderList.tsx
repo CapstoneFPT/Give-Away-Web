@@ -209,6 +209,7 @@ const OrderList: React.FC = () => {
         contactNumber: record.contactNumber,
         totalPrice: record.totalPrice,
         statusOder: record.status,
+        createdDate: record.createdDate,
       },
     });
   };

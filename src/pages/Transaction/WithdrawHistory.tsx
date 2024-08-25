@@ -45,7 +45,7 @@ const WithdrawHistory = () => {
             title: 'Created Date ',
             dataIndex: 'createdDate',
             key: 'createdDate',
-            render: (createdDate: string) => new Date(createdDate).toLocaleDateString(),
+            render: (createdDate: string) => new Date(createdDate).toLocaleString(),
         },
         {
             title: 'Bank Account ',
