@@ -2,47 +2,26 @@ import React, {createContext, ReactNode, useContext, useEffect, useReducer,} fro
 import {FashionItemStatus, FashionItemType, GenderType, SizeType} from "../api";
 
 export interface Product {
-
     'itemId'?: string;
-
     'type'?: FashionItemType;
-
     'itemCode'?: string | null;
-
     'sellingPrice'?: number;
-
     'name'?: string | null;
-
     'note'?: string | null;
-
     'description'?: string | null;
-
     'condition'?: string | null;
-
     'status'?: FashionItemStatus;
-
     'shopAddress'?: string | null;
-
     'shopId'?: string;
-
     'categoryId'?: string;
-
     'categoryName'?: string | null;
-
     'size'?: SizeType;
-
     'color'?: string | null;
-
     'brand'?: string | null;
-
     'isConsignment'?: boolean;
-
     'isOrderedYet'?: boolean;
-
     'gender'?: GenderType;
-
     'images'?: Array<string> | null;
-
     'quantity'?: number | 1;
 }
 
