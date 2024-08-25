@@ -3969,6 +3969,12 @@ export interface FashionItemDetailResponse {
     'isConsignment'?: boolean;
     /**
      * 
+     * @type {boolean}
+     * @memberof FashionItemDetailResponse
+     */
+    'isOrderedYet'?: boolean;
+    /**
+     * 
      * @type {GenderType}
      * @memberof FashionItemDetailResponse
      */
@@ -16209,10 +16215,11 @@ export const FashionItemApiAxiosParamCreator = function (configuration?: Configu
         /**
          * 
          * @param {string} itemId 
+         * @param {string} [memberId] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiFashionitemsItemIdGet: async (itemId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        apiFashionitemsItemIdGet: async (itemId: string, memberId?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'itemId' is not null or undefined
             assertParamExists('apiFashionitemsItemIdGet', 'itemId', itemId)
             const localVarPath = `/api/fashionitems/{itemId}`
@@ -16231,6 +16238,10 @@ export const FashionItemApiAxiosParamCreator = function (configuration?: Configu
             // authentication Bearer required
             // http bearer authentication required
             await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            if (memberId !== undefined) {
+                localVarQueryParameter['memberId'] = memberId;
+            }
 
 
     
@@ -16884,11 +16895,12 @@ export const FashionItemApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {string} itemId 
+         * @param {string} [memberId] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiFashionitemsItemIdGet(itemId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FashionItemDetailResponseResult>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiFashionitemsItemIdGet(itemId, options);
+        async apiFashionitemsItemIdGet(itemId: string, memberId?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FashionItemDetailResponseResult>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiFashionitemsItemIdGet(itemId, memberId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['FashionItemApi.apiFashionitemsItemIdGet']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -17108,11 +17120,12 @@ export const FashionItemApiFactory = function (configuration?: Configuration, ba
         /**
          * 
          * @param {string} itemId 
+         * @param {string} [memberId] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiFashionitemsItemIdGet(itemId: string, options?: any): AxiosPromise<FashionItemDetailResponseResult> {
-            return localVarFp.apiFashionitemsItemIdGet(itemId, options).then((request) => request(axios, basePath));
+        apiFashionitemsItemIdGet(itemId: string, memberId?: string, options?: any): AxiosPromise<FashionItemDetailResponseResult> {
+            return localVarFp.apiFashionitemsItemIdGet(itemId, memberId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -17295,12 +17308,13 @@ export class FashionItemApi extends BaseAPI {
     /**
      * 
      * @param {string} itemId 
+     * @param {string} [memberId] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof FashionItemApi
      */
-    public apiFashionitemsItemIdGet(itemId: string, options?: RawAxiosRequestConfig) {
-        return FashionItemApiFp(this.configuration).apiFashionitemsItemIdGet(itemId, options).then((request) => request(this.axios, this.basePath));
+    public apiFashionitemsItemIdGet(itemId: string, memberId?: string, options?: RawAxiosRequestConfig) {
+        return FashionItemApiFp(this.configuration).apiFashionitemsItemIdGet(itemId, memberId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
