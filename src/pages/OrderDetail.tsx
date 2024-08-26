@@ -80,6 +80,7 @@ const OrderDetail = () => {
         </>
       ),
     },
+    {title: 'Item Code', dataIndex: 'itemCode', key: 'itemCode'},
     { title: 'Unit Price', dataIndex: 'unitPrice', key: 'unitPrice', render: (price: number) => <strong>{formatBalance(price)} VND</strong> },
     { title: 'Quantity', dataIndex: 'quantity', key: 'quantity' },
     { title: 'Color', dataIndex: 'itemColor', key: 'itemColor' },

@@ -7446,6 +7446,12 @@ export interface OrderDetailsResponse {
      * @type {string}
      * @memberof OrderDetailsResponse
      */
+    'itemCode'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof OrderDetailsResponse
+     */
     'itemNote'?: string | null;
     /**
      * 
