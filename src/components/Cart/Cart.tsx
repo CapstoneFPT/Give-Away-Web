@@ -45,6 +45,9 @@ const Cart: React.FC<CartProps> = ({cartItems, selectedItems, onSelect, onRemove
                                 fontSize: '16px',
                             }}>{record.name}</Text>
                         </Paragraph>
+                        <Paragraph>
+                            <Text type="secondary">{record.itemCode}</Text>
+                        </Paragraph>
                         <Image
                             src={images[0]}
                             alt="Product"
