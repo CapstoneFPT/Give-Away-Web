@@ -3,7 +3,7 @@ import { Button, Card, Row, Col, Form, Input, Upload, message, Table, UploadFile
 import { UploadOutlined, SendOutlined } from '@ant-design/icons';
 import { useLocation, useNavigate } from 'react-router-dom';
 import NavProfile from '../components/NavProfile/NavProfile';
-import { CreateRefundRequest, OrderDetailsResponse, RefundApi } from '../api';
+import { CreateRefundRequest, OrderLineItemListResponse, RefundApi } from '../api';
 import { storage } from './Firebase/firebase-config'; // Import the storage instance from Firebase config
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
@@ -27,7 +27,7 @@ const styles = {
 const Refunds = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { items, orderDetailId } = location.state || { items: [] };
+  const { items, orderDetailId: orderLineItemId } = location.state || { items: [] };
   const [form] = Form.useForm();
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [uploading, setUploading] = useState(false); // State to manage uploading status
@@ -64,7 +64,7 @@ const Refunds = () => {
   
       // Wrap requestData in an array if the API expects an array
       const requestData: CreateRefundRequest = {
-        orderDetailIds: orderDetailId,
+        orderLineItemId: orderLineItemId,
         description: values.reason,
         images: imageUrls,
       };
@@ -87,7 +87,7 @@ const Refunds = () => {
     console.log('Failed:', errorInfo);
   };
 
-  const columns : TableColumnsType<OrderDetailsResponse> = [
+  const columns : TableColumnsType<OrderLineItemListResponse> = [
     {
       title: 'Product',
       dataIndex: 'itemImage',
