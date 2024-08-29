@@ -14,11 +14,11 @@ import {Link, useParams} from "react-router-dom";
 import NavProfile from "../../components/NavProfile/NavProfile";
 import {
   ConsignSaleApi,
-  ConsignSaleDetailResponse,
+  ConsignSaleLineItemsListResponse,
 } from "../../api";
 
 const ConsignDetail = () => {
-  const [consignDetail, setConsignDetail] = useState<ConsignSaleDetailResponse[]>([]);
+  const [consignLineItems, setConsignLineItems] = useState<ConsignSaleLineItemsListResponse[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [consignInformation, setConsignInformation] = useState<any>(null); // State to store consign information
   const params = useParams();
@@ -29,12 +29,12 @@ const ConsignDetail = () => {
       try {
         console.log(params);
         const consignApi = new ConsignSaleApi();
-        const response = await consignApi.apiConsginsalesConsignsaleIdConsignsaledetailsGet(params.consignId!);
-        setConsignDetail(response.data || []);
+        const response = await consignApi.apiConsignsalesConsignsaleIdConsignlineitemsGet(params.consignId!);
+        setConsignLineItems(response.data || []);
         console.log("Consign Details: ", response);
       } catch (error) {
         console.error("Failed to fetch order details", error);
-        setConsignDetail([]);
+        setConsignLineItems([]);
       } finally {
         setLoading(false);
       }
@@ -43,9 +43,9 @@ const ConsignDetail = () => {
     const fetchConsignInformation = async () => {
       try {
         const consignInfomationApi = new ConsignSaleApi();
-        const responseInfoamtionConsign = await consignInfomationApi.apiConsginsalesConsignsaleIdGet(params!.consignId!);
-        setConsignInformation(responseInfoamtionConsign.data.data); // Update state with consign information
-        console.log(responseInfoamtionConsign.data.data);
+        const responseInfoamtionConsign = await consignInfomationApi.apiConsignsalesConsignSaleIdGet(params!.consignId!);
+        setConsignInformation(responseInfoamtionConsign.data); // Update state with consign information
+        console.log(responseInfoamtionConsign.data);
       } catch (error) {
         console.error("Failed to fetch consign information", error);
       }
@@ -103,7 +103,7 @@ const ConsignDetail = () => {
               )}
             </Card>
 
-            {consignDetail.map((item, index) => (
+            {consignLineItems.map((item, index) => (
               <Card
                 key={index}
                 title={item.productName}

@@ -19,7 +19,7 @@ import { useNavigate } from "react-router-dom";
 import {
   AccountApi,
   OrderApi,
-  OrderDetailsResponse,
+  OrderLineItemListResponse,
   OrderResponse,
   PaymentMethod,
 } from "../api";
@@ -33,7 +33,7 @@ const OrderList: React.FC = () => {
   const [selectedOrder, setSelectedOrder] = useState<OrderResponse | null>(
     null
   );
-  const [orderDetails, setOrderDetails] = useState<OrderDetailsResponse[]>([]);
+  const [orderLineItems, setOrderLineItems] = useState<OrderLineItemListResponse[]>([]);
   const [detailsLoading, setDetailsLoading] = useState<boolean>(false);
   const navigate = useNavigate();
   const [form] = Form.useForm();
@@ -91,13 +91,13 @@ const OrderList: React.FC = () => {
     setDetailsLoading(true);
     try {
       const orderApi = new OrderApi();
-      const response = await orderApi.apiOrdersOrderIdOrderdetailsGet(orderId);
-      setOrderDetails(response.data?.data?.items || []);
+      const response = await orderApi.apiOrdersOrderIdOrderlineitemsGet(orderId);
+      setOrderLineItems(response.data?.items || []);
       console.log(response);
     } catch (error) {
       console.error("Failed to fetch order details:", error);
       // Removed notification error display
-      setOrderDetails([]); // Clear order details on error
+      setOrderLineItems([]); // Clear order details on error
     } finally {
       setDetailsLoading(false);
     }
@@ -105,7 +105,7 @@ const OrderList: React.FC = () => {
 
   const openCheckoutModal = async (order: OrderResponse) => {
     setSelectedOrder(order);
-    setOrderDetails([]);
+    setOrderLineItems([]);
     await fetchOrderDetails(order.orderId!);
   };
 
@@ -197,7 +197,7 @@ const OrderList: React.FC = () => {
 
   const handleCloseModal = () => {
     setSelectedOrder(null);
-    setOrderDetails([]);
+    setOrderLineItems([]);
   };
 
   const handleDetail = (record: OrderResponse) => {
@@ -345,10 +345,10 @@ const OrderList: React.FC = () => {
                 <Card title="Product" style={{ marginRight: "20px" }}>
                   <Row>
                     <Col span={24}>
-                      {orderDetails.length > 0 ? (
-                        orderDetails.map((product) => (
+                      {orderLineItems.length > 0 ? (
+                        orderLineItems.map((product) => (
                           <Card
-                            key={product.orderDetailId}
+                            key={product.orderLineItemId}
                             style={{ marginBottom: "10px" }}
                           >
                             <Row>

@@ -14,8 +14,8 @@ interface CartProps {
     onSelectAll: (checked: boolean) => void
 }
 
-const Cart: React.FC<CartProps> = ({cartItems, selectedItems, onSelect, onRemove, onSelectAll}: any) => {
-    const columns: any = [
+const Cart: React.FC<CartProps> = ({cartItems, selectedItems, onSelect, onRemove, onSelectAll}: CartProps) => {
+    const columns : any= [
             {
                 title: () => (
                     <Checkbox

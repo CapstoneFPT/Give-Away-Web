@@ -2,13 +2,13 @@ import React, { useEffect, useState } from "react";
 import { Card, Row, Col, Button, Spin, Tag, Image, Typography, Divider, Descriptions, Table } from "antd";
 import { useParams, useNavigate, useLocation, Link } from "react-router-dom";
 import NavProfile from "../components/NavProfile/NavProfile";
-import { FashionItemStatus, OrderApi, OrderDetailsResponse } from "../api";
+import { FashionItemStatus, OrderApi, OrderLineItemListResponse } from "../api";
 
 const { Title } = Typography;
 
 const OrderDetail = () => {
   const { id } = useParams<{ id: string }>();
-  const [orderDetails, setOrderDetails] = useState<OrderDetailsResponse[] | null>(null);
+  const [orderLineItems, setOrderLineItems] = useState<OrderLineItemListResponse[] | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
   const location = useLocation();
@@ -19,12 +19,12 @@ const OrderDetail = () => {
       setLoading(true);
       try {
         const orderApi = new OrderApi();
-        const response = await orderApi.apiOrdersOrderIdOrderdetailsGet(id!);
-        setOrderDetails(response.data?.data!.items || []);
+        const response = await orderApi.apiOrdersOrderIdOrderlineitemsGet(id!);
+        setOrderLineItems(response.data?.items || []);
         console.log(response);
       } catch (error) {
         console.error("Failed to fetch order details", error);
-        setOrderDetails(null);
+        setOrderLineItems(null);
       } finally {
         setLoading(false);
       }
@@ -37,7 +37,7 @@ const OrderDetail = () => {
     return <Spin size="large" style={{ display: "block", margin: "auto" }} />;
   }
 
-  if (!orderDetails) {
+  if (!orderLineItems) {
     return <p>Order not found</p>;
   }
 
@@ -48,8 +48,8 @@ const OrderDetail = () => {
     return expirationDate > currentDate;
   };
 
-  const handleRefundClick = (orderDetail: OrderDetailsResponse, orderDetailId: string) => {
-    navigate("/refunds", { state: { items: [orderDetail], orderDetailId } });
+  const handleRefundClick = (orderLineItem: OrderLineItemListResponse, orderDetailId: string) => {
+    navigate("/refunds", { state: { items: [orderLineItem], orderDetailId } });
   };
   const formatBalance = (balance:number) => {
     return new Intl.NumberFormat('de-DE').format(balance);
@@ -71,7 +71,7 @@ const OrderDetail = () => {
       title: 'Product Name',
       dataIndex: 'itemName',
       key: 'itemName',
-      render: (text: string, record: OrderDetailsResponse) => (
+      render: (text: string, record: OrderLineItemListResponse) => (
         <>
           {text}
           <Tag color={record.itemStatus === FashionItemStatus.Sold ? 'green' : 'blue'} style={{ marginLeft: '10px' }}>
@@ -93,12 +93,12 @@ const OrderDetail = () => {
     {
       title: 'Action',
       key: 'action',
-      render: (text: any, record: OrderDetailsResponse) => (
+      render: (text: any, record: OrderLineItemListResponse) => (
         isRefundEligible(record.refundExpirationDate!) && record.itemStatus === FashionItemStatus.Refundable && (
           <Button
             type="primary"
             style={{ backgroundColor: 'black', borderColor: 'black', width: '100px', height: '35px' }}
-            onClick={() => handleRefundClick(record, record.orderDetailId!)}
+            onClick={() => handleRefundClick(record, record.orderLineItemId!)}
           >
             Refund
           </Button>
@@ -148,7 +148,7 @@ const OrderDetail = () => {
             </Card>
             <Table
               columns={columns}
-              dataSource={orderDetails}
+              dataSource={orderLineItems}
               rowKey="orderDetailId"
               pagination={false}
             />
