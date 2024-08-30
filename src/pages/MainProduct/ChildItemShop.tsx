@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {FashionItemApi, FashionItemList, MasterItemDetailResponse, SizeType} from "../../api";
+import {FashionItemApi, FashionItemList, MasterItemApi, MasterItemDetailResponse, SizeType} from "../../api";
 import {useNavigate, useParams} from "react-router-dom";
 import {Button, Card, Col, Image, Input, Modal, Row, Select, Spin, Typography} from "antd";
 
@@ -24,7 +24,8 @@ const ChildItemShop = () => {
             setIsLoading(true);
             try {
                 const fashionItemApi = new FashionItemApi();
-                const masterResponse = await fashionItemApi.apiFashionitemsMasterItemsFindGet(null!, null!, masterItemId);
+                const masterItemApi = new MasterItemApi();
+                const masterResponse = await masterItemApi.apiMasterItemsFindGet(null!, null!, masterItemId);
                 setDataMaster(masterResponse.data);
 
                 const itemResponse = await fashionItemApi.apiFashionitemsGet(
@@ -144,7 +145,7 @@ const ChildItemShop = () => {
                         </Col>
                         {dataSource.map(record => (
                             <Col span={6}
-                                 key={record.variationId}> {/* Each card takes 6 columns for 4 cards per row */}
+                                 key={record.itemId}> {/* Each card takes 6 columns for 4 cards per row */}
                                 <Card
                                     style={{marginBottom: '16px', cursor: 'pointer', overflow: 'hidden'}}
                                     onClick={() => navigate(`/itemDetail/${record.itemId}`)}
