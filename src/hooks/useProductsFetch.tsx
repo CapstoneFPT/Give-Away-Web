@@ -1,4 +1,4 @@
-import {FashionItemApi, GenderType, MasterItemListResponse} from "../api";
+import {FashionItemApi, GenderType, MasterItemApi, MasterItemListResponse} from "../api";
 import {useEffect, useState} from "react";
 
 interface UseProductsFetchProps {
@@ -26,11 +26,11 @@ const useProductsFetch = ({
             const fetchProducts = async () => {
                 setIsLoading(true);
                 try {
-                    const fashionItemApi = new FashionItemApi();
+                    const fashionItemApi = new MasterItemApi();
                     let response;
 
                     if (searchTerm) {
-                        response = await fashionItemApi.apiFashionitemsMasterItemsFrontpageGet(
+                        response = await fashionItemApi.apiMasterItemsFrontpageGet(
                             searchTerm,
                             categoryId,
                             null!,
@@ -38,14 +38,14 @@ const useProductsFetch = ({
                             pageSize
                         );
                     } else if (gender) {
-                        response = await fashionItemApi.apiFashionitemsMasterItemsFrontpageGet(
+                        response = await fashionItemApi.apiMasterItemsFrontpageGet(
                             null!,
                             categoryId,
                             gender,
                             page,
                             pageSize)
                     } else if (shopId) {
-                        response = await fashionItemApi.apiFashionitemsMasterItemsGet(
+                        response = await fashionItemApi.apiMasterItemsGet(
                             null!,
                             null!,
                             page,
@@ -55,7 +55,7 @@ const useProductsFetch = ({
                             null!
                         )
                     } else {
-                        response = await fashionItemApi.apiFashionitemsMasterItemsFrontpageGet(
+                        response = await fashionItemApi.apiMasterItemsFrontpageGet(
                             null!,
                             null!,
                             null!,

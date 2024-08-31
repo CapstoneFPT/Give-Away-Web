@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Spin, Card, Row, Col, Input, Select, Button, Modal, Typography, Image } from 'antd';
-import { FashionItemApi, FashionItemList, MasterItemDetailResponse, SizeType } from '../../api';
+import { FashionItemApi, FashionItemList, MasterItemApi, MasterItemDetailResponse, SizeType } from '../../api';
 import { useParams, useNavigate } from 'react-router-dom';
 
 const { Option } = Select;
@@ -28,7 +28,8 @@ const ChildItems: React.FC = () => {
       setIsLoading(true);
       try {
         const fashionItemApi = new FashionItemApi();
-        const masterResponse = await fashionItemApi.apiFashionitemsMasterItemsFindGet(masterItemCode!);
+        const masterItemApi = new MasterItemApi();
+        const masterResponse = await masterItemApi.apiMasterItemsFindGet(masterItemCode!);
         setDataMaster(masterResponse.data);
 
         const itemResponse = await fashionItemApi.apiFashionitemsGet(
@@ -143,7 +144,7 @@ const ChildItems: React.FC = () => {
               )}
             </Col>
             {dataSource.map(record => (
-              <Col span={6} key={record.variationId}> {/* Each card takes 6 columns for 4 cards per row */}
+              <Col span={6} key={record.itemId}> {/* Each card takes 6 columns for 4 cards per row */}
                 <Card
                   style={{ marginBottom: '16px', cursor: 'pointer', overflow: 'hidden' }}
                   onClick={() => navigate(`/itemDetail/${record.itemId}`)}
@@ -173,7 +174,7 @@ const ChildItems: React.FC = () => {
       )}
       <Modal
         title=""
-        visible={isModalVisible}
+        open={isModalVisible}
         onCancel={handleCancel}
         footer={null}
         width={800}
