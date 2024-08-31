@@ -70,13 +70,13 @@ const ConsignItemCard = ({ key, name, restField, fileLists, handleFileChange, re
         <Col span={12}>
           <Form.Item
             {...restField}
-            name={[name, "dealPrice"]}
+            name={[name, "expectedPrice"]}
             rules={[
               { required: true, message: "Missing price" },
               { pattern: /^\d+(\.\d{1,2})?$/, message: "Invalid price" },
             ]}
           >
-            <Input placeholder="Deal Price" />
+            <Input placeholder="Expected Price" />
           </Form.Item>
           <Form.Item
             {...restField}
