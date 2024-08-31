@@ -9,29 +9,41 @@ import {
   Image,
   Divider,
   Descriptions,
+  message,
+  Modal,
 } from "antd";
-import {Link, useParams} from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import NavProfile from "../../components/NavProfile/NavProfile";
 import {
   ConsignSaleApi,
   ConsignSaleLineItemsListResponse,
 } from "../../api";
 
+// Mock API function for submitting user's decision on deal price
+const mockSubmitDealDecision = (itemId: string, decision: 'accept' | 'reject'): Promise<{ success: boolean }> => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({ success: Math.random() > 0.1 }); // 90% success rate
+    }, 1000);
+  });
+};
+
 const ConsignDetail = () => {
   const [consignLineItems, setConsignLineItems] = useState<ConsignSaleLineItemsListResponse[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [consignInformation, setConsignInformation] = useState<any>(null); // State to store consign information
+  const [consignInformation, setConsignInformation] = useState<any>(null);
+  const [processingDecision, setProcessingDecision] = useState<{ [key: string]: boolean }>({});
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [selectedItem, setSelectedItem] = useState<ConsignSaleLineItemsListResponse | null>(null);
   const params = useParams();
 
   useEffect(() => {
     const fetchConsignDetails = async () => {
       setLoading(true);
       try {
-        console.log(params);
         const consignApi = new ConsignSaleApi();
         const response = await consignApi.apiConsignsalesConsignsaleIdConsignlineitemsGet(params.consignId!);
         setConsignLineItems(response.data || []);
-        console.log("Consign Details: ", response);
       } catch (error) {
         console.error("Failed to fetch order details", error);
         setConsignLineItems([]);
@@ -44,8 +56,7 @@ const ConsignDetail = () => {
       try {
         const consignInfomationApi = new ConsignSaleApi();
         const responseInfoamtionConsign = await consignInfomationApi.apiConsignsalesConsignSaleIdGet(params!.consignId!);
-        setConsignInformation(responseInfoamtionConsign.data); // Update state with consign information
-        console.log(responseInfoamtionConsign.data);
+        setConsignInformation(responseInfoamtionConsign.data);
       } catch (error) {
         console.error("Failed to fetch consign information", error);
       }
@@ -57,20 +68,47 @@ const ConsignDetail = () => {
     }
   }, [params]);
 
+  const handleDealDecision = async (itemId: string, decision: 'accept' | 'reject') => {
+    setProcessingDecision((prev) => ({ ...prev, [itemId]: true }));
+    try {
+      const result = await mockSubmitDealDecision(itemId, decision);
+      if (result.success) {
+        message.success(`Deal ${decision === 'accept' ? 'accepted' : 'rejected'} successfully!`);
+        setConsignLineItems((items) =>
+          items.map((item) =>
+            item.id === itemId ? { 
+              ...item, 
+              dealDecision: decision
+            } : item
+          )
+        );
+        setModalVisible(false);
+      } else {
+        message.error(`Failed to ${decision} deal. Please try again.`);
+      }
+    } catch (error) {
+      console.error(`Error ${decision}ing deal:`, error);
+      message.error("An error occurred. Please try again.");
+    } finally {
+      setProcessingDecision((prev) => ({ ...prev, [itemId]: false }));
+    }
+  };
+
+  const openDecisionModal = (item: ConsignSaleLineItemsListResponse) => {
+    setSelectedItem(item);
+    setModalVisible(true);
+  };
+
   if (loading) {
     return <Spin size="large" style={{ display: "block", margin: "auto" }} />;
   }
-  const formatBalance = (sellingPrice: number): string => {
-    return new Intl.NumberFormat("de-DE").format(sellingPrice);
+
+  const formatBalance = (price: number): string => {
+    return new Intl.NumberFormat("de-DE").format(price);
   };
+
   return (
-    <Card
-      style={{
-        borderRadius: "10px",
-        boxShadow: "2px 2px 10px rgba(0,0,0,0.1)",
-        padding: "20px",
-      }}
-    >
+    <Card style={{ borderRadius: "10px", boxShadow: "2px 2px 10px rgba(0,0,0,0.1)", padding: "20px" }}>
       <Row gutter={[24, 24]}>
         <Col span={6}>
           <NavProfile />
@@ -84,8 +122,9 @@ const ConsignDetail = () => {
             >
               {consignInformation && (
                 <Descriptions column={1} bordered size="small">
-                  <Descriptions.Item label="Consign Code">{consignInformation.consignSaleCode}
-                  <Tag
+                  <Descriptions.Item label="Consign Code">
+                    {consignInformation.consignSaleCode}
+                    <Tag
                       color={consignInformation.status === "Sold" ? "green" : "blue"}
                       style={{ marginLeft: "10px" }}
                     >
@@ -94,8 +133,12 @@ const ConsignDetail = () => {
                   </Descriptions.Item>
                   <Descriptions.Item label="Consignor">{consignInformation.consginer}</Descriptions.Item>
                   <Descriptions.Item label="Created Date">{new Date(consignInformation.createdDate).toLocaleString()}</Descriptions.Item>
-                  <Descriptions.Item label="Start Date">{new Date(consignInformation.startDate) > new Date(-8640000000000000) ? new Date(consignInformation.startDate).toLocaleString() : "N/A"}</Descriptions.Item>
-                  <Descriptions.Item label="End Date">{new Date(consignInformation.endDate!) > new Date(-8640000000000000) ? new Date(consignInformation.endDate!).toLocaleString() : "N/A"}</Descriptions.Item>
+                  <Descriptions.Item label="Start Date">
+                    {new Date(consignInformation.startDate) > new Date(-8640000000000000) ? new Date(consignInformation.startDate).toLocaleString() : "N/A"}
+                  </Descriptions.Item>
+                  <Descriptions.Item label="End Date">
+                    {new Date(consignInformation.endDate!) > new Date(-8640000000000000) ? new Date(consignInformation.endDate!).toLocaleString() : "N/A"}
+                  </Descriptions.Item>
                   <Descriptions.Item label="Consign Sale Method">{consignInformation.consignSaleMethod}</Descriptions.Item>
                   <Descriptions.Item label="Phone">{consignInformation.phone}</Descriptions.Item>
                   <Descriptions.Item label="Email">{consignInformation.email}</Descriptions.Item>
@@ -128,23 +171,13 @@ const ConsignDetail = () => {
                     </Image.PreviewGroup>
                   </Descriptions.Item>
                   <Descriptions.Item label="Item Name">
-                    {item!.productName}
-                    {/*<Tag*/}
-                    {/*  color={item.status === "Sold" ? "green" : "blue"}*/}
-                    {/*  style={{ marginLeft: "10px" }}*/}
-                    {/*>*/}
-                    {/*  {item.fashionItem!.status}*/}
-                    {/*</Tag>*/}
+                    {item.productName}
+                  </Descriptions.Item>
+                  <Descriptions.Item label="Original Price">
+                    <strong>{formatBalance(item.confirmedPrice || 0)} VND</strong>
                   </Descriptions.Item>
                   <Descriptions.Item label="Deal Price">
-                    <strong>
-                      {formatBalance(item.dealPrice || 0)} VND
-                    </strong>
-                  </Descriptions.Item>
-                  <Descriptions.Item label="Confirmed Price">
-                  <strong>
-                      {formatBalance(item.confirmedPrice || 0)} VND
-                    </strong>
+                    <strong>{formatBalance(item.dealPrice || 0)} VND</strong>
                   </Descriptions.Item>
                   <Descriptions.Item label="Gender">
                     {item.gender}
@@ -161,9 +194,22 @@ const ConsignDetail = () => {
                   <Descriptions.Item label="Color">
                     {item.color}
                   </Descriptions.Item>
-                  {/*<Descriptions.Item label="Shop Address">*/}
-                  {/*  {item.shopAddress}*/}
-                  {/*</Descriptions.Item>*/}
+                  <Descriptions.Item label="Deal Status">
+                    {item.dealDecision ? (
+                      <Tag color={item.dealDecision === 'accept' ? "green" : "orange"}>
+                        {item.dealDecision === 'accept' ? "Deal Accepted" : "Deal Rejected"}
+                      </Tag>
+                    ) : (
+                      <Button
+                        type="primary"
+                        onClick={() => openDecisionModal(item)}
+                        loading={processingDecision[item.id!]}
+                        disabled={processingDecision[item.id!]}
+                      >
+                        Decide on Deal Price
+                      </Button>
+                    )}
+                  </Descriptions.Item>
                 </Descriptions>
               </Card>
             ))}
@@ -186,6 +232,33 @@ const ConsignDetail = () => {
           </Card>
         </Col>
       </Row>
+
+      <Modal
+        title="Decide on Deal Price"
+        open={modalVisible}
+        onCancel={() => setModalVisible(false)}
+        footer={null}
+      >
+        {selectedItem && (
+          <>
+            <p>Original Price: {formatBalance(selectedItem.confirmedPrice || 0)} VND</p>
+            <p>Deal Price: {formatBalance(selectedItem.dealPrice || 0)} VND</p>
+            <Button
+              type="primary"
+              onClick={() => handleDealDecision(selectedItem.id!, 'accept')}
+              style={{ marginRight: '10px' }}
+            >
+              Accept Deal
+            </Button>
+            <Button
+              onClick={() => handleDealDecision(selectedItem.id!, 'reject')}
+              style={{ marginRight: '10px' }}
+            >
+              Reject Deal
+            </Button>
+          </>
+        )}
+      </Modal>
     </Card>
   );
 };
