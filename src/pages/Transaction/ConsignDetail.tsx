@@ -15,12 +15,16 @@ import {
 import { Link, useParams } from "react-router-dom";
 import NavProfile from "../../components/NavProfile/NavProfile";
 import {
+  ConsignLineItemApi,
   ConsignSaleApi,
   ConsignSaleLineItemsListResponse,
 } from "../../api";
 
 // Mock API function for submitting user's decision on deal price
-const mockSubmitDealDecision = (itemId: string, decision: 'accept' | 'reject'): Promise<{ success: boolean }> => {
+const mockSubmitDealDecision = (
+  itemId: string,
+  decision: "accept" | "reject"
+): Promise<{ success: boolean }> => {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve({ success: Math.random() > 0.1 }); // 90% success rate
@@ -29,12 +33,17 @@ const mockSubmitDealDecision = (itemId: string, decision: 'accept' | 'reject'): 
 };
 
 const ConsignDetail = () => {
-  const [consignLineItems, setConsignLineItems] = useState<ConsignSaleLineItemsListResponse[]>([]);
+  const [consignLineItems, setConsignLineItems] = useState<
+    ConsignSaleLineItemsListResponse[]
+  >([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [consignInformation, setConsignInformation] = useState<any>(null);
-  const [processingDecision, setProcessingDecision] = useState<{ [key: string]: boolean }>({});
+  const [processingDecision, setProcessingDecision] = useState<{
+    [key: string]: boolean;
+  }>({});
   const [modalVisible, setModalVisible] = useState<boolean>(false);
-  const [selectedItem, setSelectedItem] = useState<ConsignSaleLineItemsListResponse | null>(null);
+  const [selectedItem, setSelectedItem] =
+    useState<ConsignSaleLineItemsListResponse | null>(null);
   const params = useParams();
 
   useEffect(() => {
@@ -42,7 +51,10 @@ const ConsignDetail = () => {
       setLoading(true);
       try {
         const consignApi = new ConsignSaleApi();
-        const response = await consignApi.apiConsignsalesConsignsaleIdConsignlineitemsGet(params.consignId!);
+        const response =
+          await consignApi.apiConsignsalesConsignsaleIdConsignlineitemsGet(
+            params.consignId!
+          );
         setConsignLineItems(response.data || []);
       } catch (error) {
         console.error("Failed to fetch order details", error);
@@ -55,7 +67,10 @@ const ConsignDetail = () => {
     const fetchConsignInformation = async () => {
       try {
         const consignInfomationApi = new ConsignSaleApi();
-        const responseInfoamtionConsign = await consignInfomationApi.apiConsignsalesConsignSaleIdGet(params!.consignId!);
+        const responseInfoamtionConsign =
+          await consignInfomationApi.apiConsignsalesConsignSaleIdGet(
+            params!.consignId!
+          );
         setConsignInformation(responseInfoamtionConsign.data);
       } catch (error) {
         console.error("Failed to fetch consign information", error);
@@ -68,18 +83,40 @@ const ConsignDetail = () => {
     }
   }, [params]);
 
-  const handleDealDecision = async (itemId: string, decision: 'accept' | 'reject') => {
+  const handleDealDecision = async (
+    itemId: string,
+    decision: "accept" | "reject"
+  ) => {
     setProcessingDecision((prev) => ({ ...prev, [itemId]: true }));
     try {
-      const result = await mockSubmitDealDecision(itemId, decision);
-      if (result.success) {
-        message.success(`Deal ${decision === 'accept' ? 'accepted' : 'rejected'} successfully!`);
+      const consignSaleLineItemApi = new ConsignLineItemApi();
+      let response;
+      if (decision === "accept") {
+        response =
+          await consignSaleLineItemApi.apiConsignlineitemsConsignLineItemIdAprroveNegotiationPut(
+            itemId
+          );
+      } else {
+        response =
+          await consignSaleLineItemApi.apiConsignlineitemsConsignLineItemIdRejectNegotiationPut(
+            itemId
+          );
+      }
+
+      if (response.status === 200) {
+        message.success(
+          `Deal ${
+            decision === "accept" ? "accepted" : "rejected"
+          } successfully!`
+        );
         setConsignLineItems((items) =>
           items.map((item) =>
-            item.id === itemId ? { 
-              ...item, 
-              dealDecision: decision
-            } : item
+            item.consignSaleLineItemId === itemId
+              ? {
+                  ...item,
+                  dealDecision: decision,
+                }
+              : item
           )
         );
         setModalVisible(false);
@@ -108,7 +145,13 @@ const ConsignDetail = () => {
   };
 
   return (
-    <Card style={{ borderRadius: "10px", boxShadow: "2px 2px 10px rgba(0,0,0,0.1)", padding: "20px" }}>
+    <Card
+      style={{
+        borderRadius: "10px",
+        boxShadow: "2px 2px 10px rgba(0,0,0,0.1)",
+        padding: "20px",
+      }}
+    >
       <Row gutter={[24, 24]}>
         <Col span={6}>
           <NavProfile />
@@ -125,23 +168,41 @@ const ConsignDetail = () => {
                   <Descriptions.Item label="Consign Code">
                     {consignInformation.consignSaleCode}
                     <Tag
-                      color={consignInformation.status === "Sold" ? "green" : "blue"}
+                      color={
+                        consignInformation.status === "Sold" ? "green" : "blue"
+                      }
                       style={{ marginLeft: "10px" }}
                     >
                       {consignInformation.status}
                     </Tag>
                   </Descriptions.Item>
-                  <Descriptions.Item label="Consignor">{consignInformation.consginer}</Descriptions.Item>
-                  <Descriptions.Item label="Created Date">{new Date(consignInformation.createdDate).toLocaleString()}</Descriptions.Item>
+                  <Descriptions.Item label="Consignor">
+                    {consignInformation.consginer}
+                  </Descriptions.Item>
+                  <Descriptions.Item label="Created Date">
+                    {new Date(consignInformation.createdDate).toLocaleString()}
+                  </Descriptions.Item>
                   <Descriptions.Item label="Start Date">
-                    {new Date(consignInformation.startDate) > new Date(-8640000000000000) ? new Date(consignInformation.startDate).toLocaleString() : "N/A"}
+                    {new Date(consignInformation.startDate) >
+                    new Date(-8640000000000000)
+                      ? new Date(consignInformation.startDate).toLocaleString()
+                      : "N/A"}
                   </Descriptions.Item>
                   <Descriptions.Item label="End Date">
-                    {new Date(consignInformation.endDate!) > new Date(-8640000000000000) ? new Date(consignInformation.endDate!).toLocaleString() : "N/A"}
+                    {new Date(consignInformation.endDate!) >
+                    new Date(-8640000000000000)
+                      ? new Date(consignInformation.endDate!).toLocaleString()
+                      : "N/A"}
                   </Descriptions.Item>
-                  <Descriptions.Item label="Consign Sale Method">{consignInformation.consignSaleMethod}</Descriptions.Item>
-                  <Descriptions.Item label="Phone">{consignInformation.phone}</Descriptions.Item>
-                  <Descriptions.Item label="Email">{consignInformation.email}</Descriptions.Item>
+                  <Descriptions.Item label="Consign Sale Method">
+                    {consignInformation.consignSaleMethod}
+                  </Descriptions.Item>
+                  <Descriptions.Item label="Phone">
+                    {consignInformation.phone}
+                  </Descriptions.Item>
+                  <Descriptions.Item label="Email">
+                    {consignInformation.email}
+                  </Descriptions.Item>
                 </Descriptions>
               )}
             </Card>
@@ -173,11 +234,18 @@ const ConsignDetail = () => {
                   <Descriptions.Item label="Item Name">
                     {item.productName}
                   </Descriptions.Item>
-                  <Descriptions.Item label="Original Price">
-                    <strong>{formatBalance(item.confirmedPrice || 0)} VND</strong>
+                  <Descriptions.Item label="Expected Price">
+                    <strong>
+                      {formatBalance(item.expectedPrice || 0)} VND
+                    </strong>
                   </Descriptions.Item>
                   <Descriptions.Item label="Deal Price">
                     <strong>{formatBalance(item.dealPrice || 0)} VND</strong>
+                  </Descriptions.Item>
+                  <Descriptions.Item label="Confirmed Price">
+                    <strong>
+                      {formatBalance(item.confirmedPrice || 0)} VND
+                    </strong>
                   </Descriptions.Item>
                   <Descriptions.Item label="Gender">
                     {item.gender}
@@ -188,23 +256,38 @@ const ConsignDetail = () => {
                   <Descriptions.Item label="Condition">
                     {item.condition}
                   </Descriptions.Item>
+                  <Descriptions.Item label="Note">
+                    {item.note}
+                  </Descriptions.Item>
+                  <Descriptions.Item label="Shop Response">
+                    {item.shopResponse ? item.shopResponse : "N/A"}
+                  </Descriptions.Item>
                   <Descriptions.Item label="Size">
                     {item.size}
                   </Descriptions.Item>
                   <Descriptions.Item label="Color">
                     {item.color}
                   </Descriptions.Item>
+                  <Descriptions.Item label="Status">
+                    <Tag>{item.status}</Tag>
+                  </Descriptions.Item>
                   <Descriptions.Item label="Deal Status">
-                    {item.dealDecision ? (
-                      <Tag color={item.dealDecision === 'accept' ? "green" : "orange"}>
-                        {item.dealDecision === 'accept' ? "Deal Accepted" : "Deal Rejected"}
+                    {item.confirmedPrice ? (
+                      <Tag color={item.confirmedPrice ? "green" : "orange"}>
+                        {item.confirmedPrice
+                          ? "Deal Accepted"
+                          : "Deal Rejected"}
                       </Tag>
                     ) : (
                       <Button
                         type="primary"
                         onClick={() => openDecisionModal(item)}
-                        loading={processingDecision[item.id!]}
-                        disabled={processingDecision[item.id!]}
+                        loading={
+                          processingDecision[item.consignSaleLineItemId!]
+                        }
+                        disabled={
+                          processingDecision[item.consignSaleLineItemId!]
+                        }
                       >
                         Decide on Deal Price
                       </Button>
@@ -241,18 +324,31 @@ const ConsignDetail = () => {
       >
         {selectedItem && (
           <>
-            <p>Original Price: {formatBalance(selectedItem.confirmedPrice || 0)} VND</p>
+            <p>
+              Expected Price: {formatBalance(selectedItem.expectedPrice || 0)}{" "}
+              VND
+            </p>
             <p>Deal Price: {formatBalance(selectedItem.dealPrice || 0)} VND</p>
             <Button
               type="primary"
-              onClick={() => handleDealDecision(selectedItem.id!, 'accept')}
-              style={{ marginRight: '10px' }}
+              onClick={() =>
+                handleDealDecision(
+                  selectedItem.consignSaleLineItemId!,
+                  "accept"
+                )
+              }
+              style={{ marginRight: "10px" }}
             >
               Accept Deal
             </Button>
             <Button
-              onClick={() => handleDealDecision(selectedItem.id!, 'reject')}
-              style={{ marginRight: '10px' }}
+              onClick={() =>
+                handleDealDecision(
+                  selectedItem.consignSaleLineItemId!,
+                  "reject"
+                )
+              }
+              style={{ marginRight: "10px" }}
             >
               Reject Deal
             </Button>
