@@ -286,7 +286,8 @@ const ConsignDetail = () => {
                           processingDecision[item.consignSaleLineItemId!]
                         }
                         disabled={
-                          processingDecision[item.consignSaleLineItemId!]
+                          (item.dealPrice == null) ||
+                          processingDecision[item.consignSaleLineItemId!] 
                         }
                       >
                         Decide on Deal Price
