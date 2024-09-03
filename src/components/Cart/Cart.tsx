@@ -122,20 +122,20 @@ const Cart: React.FC<CartProps> = ({cartItems, selectedItems, onSelect, onRemove
                     ),
             }
             ,
-            {
-                title: 'Price',
-                dataIndex:
-                    'sellingPrice',
-                align:
-                    'center',
-                render:
-                    (total: number, record: any) => (
-                        <Title level={4} style={{color: 'black', margin: 0}}>
-                            {new Intl.NumberFormat('de-DE').format(record.sellingPrice * record.quantity)} VND
-                        </Title>
-                    ),
-            }
-            ,
+            // {
+            //     title: 'Price',
+            //     dataIndex:
+            //         'sellingPrice',
+            //     align:
+            //         'center',
+            //     render:
+            //         (total: number, record: any) => (
+            //             <Title level={4} style={{color: 'black', margin: 0}}>
+            //                 {new Intl.NumberFormat('de-DE').format(record.sellingPrice * record.quantity)} VND
+            //             </Title>
+            //         ),
+            // }
+            // ,
             {
                 title: 'Action',
                 key:
@@ -162,11 +162,19 @@ const Cart: React.FC<CartProps> = ({cartItems, selectedItems, onSelect, onRemove
 
     return (
         <Table
+        
+            components={{
+                header: {
+                    cell: (props: any) => (
+                        <th {...props} style={{ backgroundColor: "gray", color: "white", border:'none',  }} />
+                    ),
+                },
+            }}
             columns={columns}
             dataSource={cartItems}
             rowKey="itemId"
             pagination={false}
-            style={{background: 'white'}}
+            style={{ background: 'white', border: "1px solid #aeacac",borderRadius: "10px",    }}
         />
     );
 };
