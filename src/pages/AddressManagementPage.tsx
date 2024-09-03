@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Button, Card, Col, Modal, notification, Row, Space } from "antd";
+import React, { useCallback, useMemo, useState } from "react";
+import { Button, Card, Col, Modal, Row, Space, Spin } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-import { AccountApi, AddressApi, DeliveryListResponse, UpdateDeliveryRequest } from "../api";
+import { DeliveryListResponse, UpdateDeliveryRequest } from "../api";
 import { useAddresses } from "../hooks/useAddresses";
 import { useModal } from "../hooks/useModal";
 import NavProfile from "../components/NavProfile/NavProfile";
@@ -10,78 +10,38 @@ import AddressForm from "../components/Profile/AddressForm";
 
 const AddressManagementPage: React.FC = () => {
     const userId = useMemo(() => JSON.parse(localStorage.getItem('userId') || 'null'), []);
-    const { addresses, fetchAddresses } = useAddresses(userId);
+    const { addresses, isLoading, error, addNewAddress, updateAddress, deleteAddress, setDefaultAddress } = useAddresses(userId);
     const formModal = useModal();
     const deleteModal = useModal();
 
-    const [isLoading, setIsLoading] = useState(false);
     const [selectedAddress, setSelectedAddress] = useState<DeliveryListResponse | null>(null);
 
-    const updateAddresses = useCallback(() => {
-        fetchAddresses();
-    }, [fetchAddresses]);
-
-    useEffect(() => {
-        updateAddresses();
-    }, [updateAddresses]);
-
     const handleAddOrEditAddress = useCallback(async (values: UpdateDeliveryRequest) => {
-        setIsLoading(true);
-        try {
-            const accountApi = new AccountApi();
-            if (selectedAddress) {
-                await accountApi.apiAccountsAccountIdDeliveriesDeliveryIdPut(selectedAddress.addressId!, userId, values);
-                notification.success({ message: 'Address updated successfully!' });
-            } else {
-                await accountApi.apiAccountsAccountIdDeliveriesPost(userId, {
-                    recipientName: values.recipientName!,
-                    phone: values.phone!,
-                    residence: values.residence!,
-                    addressType: values.addressType!,
-                    ghnProvinceId: values.ghnProvinceId!,
-                    ghnDistrictId: values.ghnDistrictId!,
-                    ghnWardCode: values.ghnWardCode!,
-                });
-                notification.success({ message: 'Address added successfully!' });
-            }
-            formModal.hideModal();
-            updateAddresses();
-        } catch (e) {
-            console.error('Error saving address:', e);
-            notification.error({ message: 'Failed to add or edit address. Please try again.' });
-        } finally {
-            setIsLoading(false);
+        if (selectedAddress) {
+            await updateAddress(selectedAddress.addressId!, values);
+        } else {
+            await addNewAddress({
+                addressType: values.addressType!,
+                ghnDistrictId: values.ghnDistrictId!,
+                ghnProvinceId: values.ghnProvinceId!,
+                ghnWardCode: values.ghnWardCode!,
+                phone: values.phone!,
+                recipientName: values.recipientName!,
+                residence: values.residence!,
+            });
         }
-    }, [selectedAddress, userId, formModal.hideModal, updateAddresses]);
+        formModal.hideModal();
+    }, [selectedAddress, addNewAddress, updateAddress, formModal.hideModal]);
 
     const handleDelete = useCallback(async () => {
         if (!selectedAddress) return;
-        setIsLoading(true);
-        try {
-            const accountApi = new AccountApi();
-            await accountApi.apiAccountsAccountIdDeliveriesDeliveryIdDelete(selectedAddress.addressId!, userId);
-            notification.success({ message: 'Address deleted successfully!' });
-            deleteModal.hideModal();
-            updateAddresses();
-        } catch (e) {
-            console.error("Error deleting address:", e);
-            notification.error({ message: 'Failed to delete address. Please try again.' });
-        } finally {
-            setIsLoading(false);
-        }
-    }, [selectedAddress, userId, deleteModal.hideModal, updateAddresses]);
+        await deleteAddress(selectedAddress.addressId!);
+        deleteModal.hideModal();
+    }, [selectedAddress, deleteAddress, deleteModal.hideModal]);
 
     const handleSetDefault = useCallback(async (addressId: string) => {
-        try {
-            const addressApi = new AddressApi();
-            await addressApi.apiAddressesAddressIdSetDefaultPatch(addressId);
-            notification.success({ message: 'Default address updated successfully!' });
-            updateAddresses();
-        } catch (error) {
-            console.error('Error setting default address:', error);
-            notification.error({ message: 'Failed to set default address. Please try again.' });
-        }
-    }, [updateAddresses]);
+        await setDefaultAddress(addressId);
+    }, [setDefaultAddress]);
 
     const openAddressForm = useCallback((address: DeliveryListResponse | null = null) => {
         setSelectedAddress(address);
@@ -108,6 +68,10 @@ const AddressManagementPage: React.FC = () => {
         ))
     ), [sortedAddresses, handleSetDefault, openAddressForm, deleteModal.showModal]);
 
+    if (error) {
+        return <div>Error loading addresses: {error.message}</div>;
+    }
+
     return (
         <Card>
             <Row gutter={[16, 16]}>
@@ -123,7 +87,10 @@ const AddressManagementPage: React.FC = () => {
                                 icon={<PlusOutlined />}
                                 onClick={() => {
                                     if (addresses.length === 5) {
-                                        notification.error({ message: 'You cannot add more than 5 addresses!' });
+                                        Modal.error({ 
+                                            title: 'Error',
+                                            content: 'You cannot add more than 5 addresses!' 
+                                        });
                                         return;
                                     }
                                     openAddressForm();
@@ -131,7 +98,13 @@ const AddressManagementPage: React.FC = () => {
                             >
                                 Add New Address
                             </Button>
-                            {renderAddressCards}
+                            {isLoading ? (
+                                <div style={{ textAlign: 'center', padding: '20px' }}>
+                                    <Spin size="large" />
+                                </div>
+                            ) : (
+                                renderAddressCards
+                            )}
                         </Space>
                     </Card>
                 </Col>
