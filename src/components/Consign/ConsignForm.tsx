@@ -52,7 +52,7 @@ const ConsignForm = () => {
     const onFinish = async (values: CreateConsignSaleRequest) => {
         setUploading(true);
         message.loading({content: "Uploading...", key: "upload"});
-        console.log(values);
+        console.log("Form values, ", values);
         console.log(fileLists);
         try {
             const itemsWithUrls: any[] = await Promise.all(
@@ -83,7 +83,7 @@ const ConsignForm = () => {
                     return {
                         productName: item.productName,
                         note: item.note,
-                        dealPrice: item.dealPrice,
+                        expectedPrice: item.expectedPrice,
                         condition: item.conditionPercentage,
                         size: item.size,
                         color: item.color,
@@ -94,6 +94,8 @@ const ConsignForm = () => {
                 })
             );
 
+
+
             const consignData: CreateConsignSaleRequest = {
                 shopId: values.shopId,
                 type: values.type, // Updated to use the new type
@@ -101,20 +103,20 @@ const ConsignForm = () => {
                     brand: item.brand,
                     color: item.color,
                     conditionPercentage: item.condition,
-                    dealPrice: item.dealPrice,
                     gender: item.gender,
                     note: item.note,
                     productName: item.productName,
                     size: item.size,
                     condition: item.condition,
                     imageUrls: item.imageUrls,
+                    expectedPrice: item.expectedPrice,
                 })),
                 address: values.address,
                 consignorName: values.consignorName,
                 phone: values.phone,
             };
 
-            console.log(consignData);
+            console.log("Consign Data: ", consignData);
 
             const consignApi = new AccountApi();
             const response = await consignApi.apiAccountsAccountIdConsignsalesPost(
