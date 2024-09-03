@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from 'react';
-import {Button, Checkbox, Form, Input, Select} from 'antd';
-import {AddressApi, GHNDistrictResponse, GHNProvinceResponse, GHNWardResponse, UpdateDeliveryRequest} from '../../api';
-import {Util} from "leaflet";
+import React, { useEffect } from 'react';
+import { Button, Checkbox, Form, Input, Select, Spin } from 'antd';
+import { UpdateDeliveryRequest } from '../../api';
+import { useDistricts, useProvinces, useWards } from '../../hooks/addressHooks';
 
 interface AddressFormProps {
     initialValues?: UpdateDeliveryRequest;
@@ -11,70 +11,35 @@ interface AddressFormProps {
     loading: boolean;
 }
 
-const AddressForm: React.FC<AddressFormProps> = ({initialValues, onFinish, onCancel, isAddingNew, loading}) => {
+const AddressForm: React.FC<AddressFormProps> = ({
+    initialValues,
+    onFinish,
+    onCancel,
+    isAddingNew,
+    loading
+}) => {
     const [form] = Form.useForm<UpdateDeliveryRequest>();
-    const [provinces, setProvinces] = useState<GHNProvinceResponse[]>([]);
-    const [districts, setDistricts] = useState<GHNDistrictResponse[]>([]);
-    const [wards, setWards] = useState<GHNWardResponse[]>([]);
+    const { data: provinces, isLoading: isLoadingProvinces } = useProvinces();
+    const { data: districts, isLoading: isLoadingDistricts } = useDistricts(form.getFieldValue('ghnProvinceId'));
+    const { data: wards, isLoading: isLoadingWards } = useWards(form.getFieldValue('ghnDistrictId'));
 
     useEffect(() => {
-        console.log("Is adding new ", isAddingNew);
-        console.log("Initial values", initialValues);
-        fetchProvinces();
         if (isAddingNew) {
             form.resetFields();
         } else if (initialValues) {
-            initialValues
-                .residence = initialValues.residence!
-                .split(",")[0];
-            form.setFieldsValue(initialValues);
-            if (initialValues.ghnProvinceId) {
-                fetchDistricts(initialValues.ghnProvinceId);
-            }
-            if (initialValues.ghnDistrictId) {
-                fetchWards(initialValues.ghnDistrictId);
-            }
+            form.setFieldsValue({
+                ...initialValues,
+                residence: initialValues.residence?.split(',')[0]
+            });
         }
-    }, [initialValues, form, isAddingNew]);
+    }, [form, initialValues, isAddingNew]);
 
-    const fetchProvinces = async () => {
-        try {
-            const addressApi = new AddressApi();
-            const response = await addressApi.apiAddressesProvincesGet();
-            setProvinces(response.data.data || []);
-        } catch (error) {
-            console.error('Error fetching provinces:', error);
-        }
+    const handleProvinceChange = (value: number) => {
+        form.setFieldsValue({ ghnDistrictId: undefined, ghnWardCode: undefined });
     };
 
-    const fetchDistricts = async (provinceId: number) => {
-        try {
-            const addressApi = new AddressApi();
-            const response = await addressApi.apiAddressesDistrictsGet(provinceId);
-            setDistricts(response.data.data || []);
-        } catch (error) {
-            console.error('Error fetching districts:', error);
-        }
-    };
-
-    const fetchWards = async (districtId: number) => {
-        try {
-            const addressApi = new AddressApi();
-            const response = await addressApi.apiAddressesWardsGet(districtId);
-            setWards(response.data.data || []);
-        } catch (error) {
-            console.error('Error fetching wards:', error);
-        }
-    };
-
-    const handleProvinceChange = async (value: number) => {
-        form.setFieldsValue({ghnDistrictId: undefined, ghnWardCode: undefined});
-        await fetchDistricts(value);
-    };
-
-    const handleDistrictChange = async (value: number) => {
-        form.setFieldsValue({ghnWardCode: undefined});
-        await fetchWards(value);
+    const handleDistrictChange = (value: number) => {
+        form.setFieldsValue({ ghnWardCode: undefined });
     };
 
     return (
@@ -82,33 +47,36 @@ const AddressForm: React.FC<AddressFormProps> = ({initialValues, onFinish, onCan
             form={form}
             layout="vertical"
             onFinish={onFinish}
-            initialValues={initialValues || {}}
+            initialValues={initialValues}
         >
             <Form.Item
                 name="recipientName"
                 label="Recipient Name"
-                rules={[{required: true, message: 'Please input recipient name!'}]}
+                rules={[{ required: true, message: 'Please input recipient name!' }]}
             >
-                <Input/>
+                <Input />
             </Form.Item>
             <Form.Item
                 name="phone"
                 label="Phone"
                 rules={[
-                    {required: true, message: 'Please input phone number!'},
-                    {pattern: /^[0-9]+$/, message: 'Please enter a valid phone number!'},
+                    { required: true, message: 'Please input phone number!' },
+                    { pattern: /^[0-9]+$/, message: 'Please enter a valid phone number!' },
                 ]}
             >
-                <Input/>
+                <Input />
             </Form.Item>
             <Form.Item
                 name="ghnProvinceId"
                 label="Province"
-                rules={[{required: true, message: 'Please select province!'}]}
+                rules={[{ required: true, message: 'Please select province!' }]}
             >
-                <Select onChange={handleProvinceChange}
-                        value={initialValues?.ghnProvinceId}>
-                    {provinces.map(province => (
+                <Select 
+                    onChange={handleProvinceChange}
+                    loading={isLoadingProvinces}
+                    disabled={isLoadingProvinces}
+                >
+                    {provinces?.map(province => (
                         <Select.Option key={province.provinceId} value={province.provinceId}>
                             {province.provinceName}
                         </Select.Option>
@@ -118,11 +86,14 @@ const AddressForm: React.FC<AddressFormProps> = ({initialValues, onFinish, onCan
             <Form.Item
                 name="ghnDistrictId"
                 label="District"
-                rules={[{required: true, message: 'Please select district!'}]}
+                rules={[{ required: true, message: 'Please select district!' }]}
             >
-                <Select onChange={handleDistrictChange}
-                        value={initialValues?.ghnDistrictId}>
-                    {districts.map(district => (
+                <Select 
+                    onChange={handleDistrictChange}
+                    loading={isLoadingDistricts}
+                    disabled={isLoadingDistricts || !form.getFieldValue('ghnProvinceId')}
+                >
+                    {districts?.map(district => (
                         <Select.Option key={district.districtId} value={district.districtId}>
                             {district.districtName}
                         </Select.Option>
@@ -132,10 +103,13 @@ const AddressForm: React.FC<AddressFormProps> = ({initialValues, onFinish, onCan
             <Form.Item
                 name="ghnWardCode"
                 label="Ward"
-                rules={[{required: true, message: 'Please select ward!'}]}
+                rules={[{ required: true, message: 'Please select ward!' }]}
             >
-                <Select value={initialValues?.ghnWardCode}>
-                    {wards.map(ward => (
+                <Select
+                    loading={isLoadingWards}
+                    disabled={isLoadingWards || !form.getFieldValue('ghnDistrictId')}
+                >
+                    {wards?.map(ward => (
                         <Select.Option key={ward.wardCode} value={ward.wardCode}>
                             {ward.wardName}
                         </Select.Option>
@@ -145,46 +119,37 @@ const AddressForm: React.FC<AddressFormProps> = ({initialValues, onFinish, onCan
             <Form.Item
                 name="residence"
                 label="Address Detail"
-                rules={[{required: true, message: 'Please input address detail!'}]}
+                rules={[{ required: true, message: 'Please input address detail!' }]}
             >
-                <Input.TextArea/>
+                <Input.TextArea />
             </Form.Item>
             <Form.Item
                 name="addressType"
-                valuePropName="addressType"
                 label="Address Type"
-                rules={
-                    [
-                        {
-                            required: true,
-                            message: 'Please select address type!',
-                        }
-                    ]
-                }>
-                <Select value={initialValues?.addressType}>
+                rules={[{ required: true, message: 'Please select address type!' }]}
+            >
+                <Select>
                     <Select.Option value="Home">Home</Select.Option>
                     <Select.Option value="Business">Business</Select.Option>
                 </Select>
             </Form.Item>
-            {
-                !isAddingNew &&
+            {!isAddingNew && (
                 <Form.Item
                     name="isDefault"
                     valuePropName="checked"
                     label="Set as default"
                 >
-                    <Checkbox/>
+                    <Checkbox />
                 </Form.Item>
-            }
+            )}
             <Form.Item>
                 <Button loading={loading} type="primary" htmlType="submit">
-                    {initialValues ? 'Update' : 'Add'} Address
+                    {isAddingNew ? 'Add' : 'Update'} Address
                 </Button>
-                <Button onClick={onCancel} style={{marginLeft: 8}}>
+                <Button onClick={onCancel} style={{ marginLeft: 8 }}>
                     Cancel
                 </Button>
             </Form.Item>
-
         </Form>
     );
 };
