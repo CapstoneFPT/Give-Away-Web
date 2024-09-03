@@ -314,7 +314,7 @@ const CartPage: React.FC = () => {
             {isCalculatingShippingFee ? (
               <Spin size="small" />
             ) : shippingFeeData !== null ? (
-              `${formatBalance(shippingFeeData)} VND`
+              `${formatBalance(shippingFeeData || 0)} VND`
             ) : (
               "N/A"
             )}
