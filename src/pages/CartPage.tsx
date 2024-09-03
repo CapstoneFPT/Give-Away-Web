@@ -112,6 +112,8 @@ const CartPage: React.FC = () => {
                 ghnProvinceId: selectedAddress?.ghnProvinceId,
                 ghnDistrictId: selectedAddress?.ghnDistrictId,
                 ghnWardCode: selectedAddress?.ghnWardCode,
+                discount: discount || 0,
+                shippingFee: shippingFee || 0
             };
 
             const accountApi = new AccountApi();
