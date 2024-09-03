@@ -18,117 +18,105 @@ import {
   ConsignLineItemApi,
   ConsignSaleApi,
   ConsignSaleLineItemsListResponse,
+  ConsignSaleStatus,
 } from "../../api";
-
-// Mock API function for submitting user's decision on deal price
-const mockSubmitDealDecision = (
-  itemId: string,
-  decision: "accept" | "reject"
-): Promise<{ success: boolean }> => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({ success: Math.random() > 0.1 }); // 90% success rate
-    }, 1000);
-  });
-};
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const ConsignDetail = () => {
-  const [consignLineItems, setConsignLineItems] = useState<
-    ConsignSaleLineItemsListResponse[]
-  >([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [consignInformation, setConsignInformation] = useState<any>(null);
-  const [processingDecision, setProcessingDecision] = useState<{
-    [key: string]: boolean;
-  }>({});
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [selectedItem, setSelectedItem] =
     useState<ConsignSaleLineItemsListResponse | null>(null);
+  const [confirmationModalVisible, setConfirmationModalVisible] =
+    useState<boolean>(false);
+  const [confirmationAction, setConfirmationAction] = useState<
+    "continue" | "cancel" | null
+  >(null);
   const params = useParams();
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    const fetchConsignDetails = async () => {
-      setLoading(true);
-      try {
-        const consignApi = new ConsignSaleApi();
-        const response =
-          await consignApi.apiConsignsalesConsignsaleIdConsignlineitemsGet(
-            params.consignId!
-          );
-        setConsignLineItems(response.data || []);
-      } catch (error) {
-        console.error("Failed to fetch order details", error);
-        setConsignLineItems([]);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const consignSaleApi = new ConsignSaleApi();
+  const consignLineItemApi = new ConsignLineItemApi();
 
-    const fetchConsignInformation = async () => {
-      try {
-        const consignInfomationApi = new ConsignSaleApi();
-        const responseInfoamtionConsign =
-          await consignInfomationApi.apiConsignsalesConsignSaleIdGet(
-            params!.consignId!
-          );
-        setConsignInformation(responseInfoamtionConsign.data);
-      } catch (error) {
-        console.error("Failed to fetch consign information", error);
-      }
-    };
+  const { data: consignLineItems, isLoading: lineItemsLoading } = useQuery({
+    queryKey: ["consignLineItems", params.consignId],
+    queryFn: () =>
+      consignSaleApi.apiConsignsalesConsignsaleIdConsignlineitemsGet(
+        params.consignId!
+      ),
+    select: (response) => response.data || [],
+  });
 
-    if (params) {
-      fetchConsignInformation();
-      fetchConsignDetails();
-    }
-  }, [params]);
+  const { data: consignInformation, isLoading: informationLoading } = useQuery({
+    queryKey: ["consignInformation", params.consignId],
+    queryFn: () =>
+      consignSaleApi.apiConsignsalesConsignSaleIdGet(params.consignId!),
+    select: (response) => response.data,
+  });
 
-  const handleDealDecision = async (
+  const dealDecisionMutation = useMutation({
+    mutationFn: ({
+      itemId,
+      decision,
+    }: {
+      itemId: string;
+      decision: "accept" | "reject";
+    }) =>
+      decision === "accept"
+        ? consignLineItemApi.apiConsignlineitemsConsignLineItemIdAprroveNegotiationPut(
+            itemId
+          )
+        : consignLineItemApi.apiConsignlineitemsConsignLineItemIdRejectNegotiationPut(
+            itemId
+          ),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["consignLineItems"] });
+      message.success(
+        `Deal ${
+          confirmationAction === "continue" ? "accepted" : "rejected"
+        } successfully!`
+      );
+      setModalVisible(false);
+    },
+    onError: () => {
+      message.error(`Failed to ${confirmationAction} deal. Please try again.`);
+    },
+  });
+
+  const continueConsignMutation = useMutation({
+    mutationFn: () =>
+      consignSaleApi.apiConsignsalesConsignsaleIdContinueConsignsalePut(
+        consignInformation!.consignSaleId!
+      ),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["consignInformation"] });
+      message.success("Consignment continued successfully!");
+      setConfirmationModalVisible(false);
+    },
+    onError: () => {
+      message.error("Failed to continue consignment. Please try again.");
+    },
+  });
+
+  const cancelConsignMutation = useMutation({
+    mutationFn: () =>
+      consignSaleApi.apiConsignsalesConsignsaleIdCancelAllConsignsalelinePut(
+        consignInformation!.consignSaleId!
+      ),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["consignInformation"] });
+      message.success("Consignment cancelled successfully!");
+      setConfirmationModalVisible(false);
+    },
+    onError: () => {
+      message.error("Failed to cancel consignment. Please try again.");
+    },
+  });
+
+  const handleDealDecision = (
     itemId: string,
     decision: "accept" | "reject"
   ) => {
-    setProcessingDecision((prev) => ({ ...prev, [itemId]: true }));
-    try {
-      const consignSaleLineItemApi = new ConsignLineItemApi();
-      let response;
-      if (decision === "accept") {
-        response =
-          await consignSaleLineItemApi.apiConsignlineitemsConsignLineItemIdAprroveNegotiationPut(
-            itemId
-          );
-      } else {
-        response =
-          await consignSaleLineItemApi.apiConsignlineitemsConsignLineItemIdRejectNegotiationPut(
-            itemId
-          );
-      }
-
-      if (response.status === 200) {
-        message.success(
-          `Deal ${
-            decision === "accept" ? "accepted" : "rejected"
-          } successfully!`
-        );
-        setConsignLineItems((items) =>
-          items.map((item) =>
-            item.consignSaleLineItemId === itemId
-              ? {
-                  ...item,
-                  dealDecision: decision,
-                }
-              : item
-          )
-        );
-        setModalVisible(false);
-      } else {
-        message.error(`Failed to ${decision} deal. Please try again.`);
-      }
-    } catch (error) {
-      console.error(`Error ${decision}ing deal:`, error);
-      message.error("An error occurred. Please try again.");
-    } finally {
-      setProcessingDecision((prev) => ({ ...prev, [itemId]: false }));
-    }
+    dealDecisionMutation.mutate({ itemId, decision });
   };
 
   const openDecisionModal = (item: ConsignSaleLineItemsListResponse) => {
@@ -136,14 +124,26 @@ const ConsignDetail = () => {
     setModalVisible(true);
   };
 
-  if (loading) {
+  const openConfirmationModal = (action: "continue" | "cancel") => {
+    setConfirmationAction(action);
+    setConfirmationModalVisible(true);
+  };
+
+  const handleConfirmation = () => {
+    if (confirmationAction === "continue") {
+      continueConsignMutation.mutate();
+    } else if (confirmationAction === "cancel") {
+      cancelConsignMutation.mutate();
+    }
+  };
+
+  if (lineItemsLoading || informationLoading) {
     return <Spin size="large" style={{ display: "block", margin: "auto" }} />;
   }
 
   const formatBalance = (price: number): string => {
     return new Intl.NumberFormat("de-DE").format(price);
   };
-
   return (
     <Card
       style={{
@@ -169,7 +169,9 @@ const ConsignDetail = () => {
                     {consignInformation.consignSaleCode}
                     <Tag
                       color={
-                        consignInformation.status === "Sold" ? "green" : "blue"
+                        consignInformation.status! === "Completed"
+                          ? "green"
+                          : "blue"
                       }
                       style={{ marginLeft: "10px" }}
                     >
@@ -180,12 +182,12 @@ const ConsignDetail = () => {
                     {consignInformation.consginer}
                   </Descriptions.Item>
                   <Descriptions.Item label="Created Date">
-                    {new Date(consignInformation.createdDate).toLocaleString()}
+                    {new Date(consignInformation.createdDate!).toLocaleString()}
                   </Descriptions.Item>
                   <Descriptions.Item label="Start Date">
-                    {new Date(consignInformation.startDate) >
+                    {new Date(consignInformation.startDate!) >
                     new Date(-8640000000000000)
-                      ? new Date(consignInformation.startDate).toLocaleString()
+                      ? new Date(consignInformation.startDate!).toLocaleString()
                       : "N/A"}
                   </Descriptions.Item>
                   <Descriptions.Item label="End Date">
@@ -207,112 +209,133 @@ const ConsignDetail = () => {
               )}
             </Card>
 
-            {consignLineItems.map((item, index) => (
-              <Card
-                key={index}
-                title={item.productName}
-                bordered={false}
-                style={{ marginBottom: "20px" }}
-              >
-                <Descriptions column={1} bordered size="small">
-                  <Descriptions.Item label="Image">
-                    <Image.PreviewGroup>
-                      {item.images!.map((img, index) => (
-                        <Image
-                          key={index}
-                          src={img}
-                          alt="Product Image"
-                          style={{
-                            width: "100px",
-                            height: "auto",
-                            borderRadius: "10px",
-                          }}
-                        />
-                      ))}
-                    </Image.PreviewGroup>
-                  </Descriptions.Item>
-                  <Descriptions.Item label="Item Name">
-                    {item.productName}
-                  </Descriptions.Item>
-                  <Descriptions.Item label="Expected Price">
-                    <strong>
-                      {formatBalance(item.expectedPrice || 0)} VND
-                    </strong>
-                  </Descriptions.Item>
-                  <Descriptions.Item label="Deal Price">
-                    <strong>{formatBalance(item.dealPrice || 0)} VND</strong>
-                  </Descriptions.Item>
-                  <Descriptions.Item label="Confirmed Price">
-                    <strong>
-                      {formatBalance(item.confirmedPrice || 0)} VND
-                    </strong>
-                  </Descriptions.Item>
-                  <Descriptions.Item label="Gender">
-                    {item.gender}
-                  </Descriptions.Item>
-                  <Descriptions.Item label="Brand">
-                    {item.brand}
-                  </Descriptions.Item>
-                  <Descriptions.Item label="Condition">
-                    {item.condition}
-                  </Descriptions.Item>
-                  <Descriptions.Item label="Note">
-                    {item.note}
-                  </Descriptions.Item>
-                  <Descriptions.Item label="Shop Response">
-                    {item.shopResponse ? item.shopResponse : "N/A"}
-                  </Descriptions.Item>
-                  <Descriptions.Item label="Size">
-                    {item.size}
-                  </Descriptions.Item>
-                  <Descriptions.Item label="Color">
-                    {item.color}
-                  </Descriptions.Item>
-                  <Descriptions.Item label="Status">
-                    <Tag>{item.status}</Tag>
-                  </Descriptions.Item>
-                  <Descriptions.Item label="Deal Status">
-                    {item.confirmedPrice ? (
-                      <Tag color={item.confirmedPrice ? "green" : "orange"}>
-                        {item.confirmedPrice
-                          ? "Deal Accepted"
-                          : "Deal Rejected"}
-                      </Tag>
-                    ) : (
-                      <Button
-                        type="primary"
-                        onClick={() => openDecisionModal(item)}
-                        loading={
-                          processingDecision[item.consignSaleLineItemId!]
-                        }
-                        disabled={
-                          (item.dealPrice == null) ||
-                          processingDecision[item.consignSaleLineItemId!] 
-                        }
-                      >
-                        Decide on Deal Price
-                      </Button>
-                    )}
-                  </Descriptions.Item>
-                </Descriptions>
-              </Card>
-            ))}
+            {consignLineItems &&
+              consignLineItems.map((item, index) => (
+                <Card
+                  key={index}
+                  title={item.productName}
+                  bordered={false}
+                  style={{ marginBottom: "20px" }}
+                >
+                  <Descriptions column={1} bordered size="small">
+                    <Descriptions.Item label="Image">
+                      <Image.PreviewGroup>
+                        {item.images!.map((img, index) => (
+                          <Image
+                            key={index}
+                            src={img}
+                            alt="Product Image"
+                            style={{
+                              width: "100px",
+                              height: "auto",
+                              borderRadius: "10px",
+                            }}
+                          />
+                        ))}
+                      </Image.PreviewGroup>
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Item Name">
+                      {item.productName}
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Expected Price">
+                      <strong>
+                        {formatBalance(item.expectedPrice || 0)} VND
+                      </strong>
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Deal Price">
+                      <strong>{formatBalance(item.dealPrice || 0)} VND</strong>
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Confirmed Price">
+                      <strong>
+                        {formatBalance(item.confirmedPrice || 0)} VND
+                      </strong>
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Gender">
+                      {item.gender}
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Brand">
+                      {item.brand}
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Condition">
+                      {item.condition}
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Note">
+                      {item.note}
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Shop Response">
+                      {item.shopResponse ? item.shopResponse : "N/A"}
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Size">
+                      {item.size}
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Color">
+                      {item.color}
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Status">
+                      <Tag>{item.status}</Tag>
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Deal Status">
+                {item.confirmedPrice !== null && item.confirmedPrice !== undefined ? (
+                  <Tag color={item.isApproved ? "green" : "red"}>
+                    {item.isApproved ? "Deal Accepted" : "Deal Rejected"}
+                  </Tag>
+                ) : item.dealPrice !== null && item.dealPrice !== undefined ? (
+                  <Button
+                    type="primary"
+                    onClick={() => openDecisionModal(item)}
+                    disabled={
+                      consignInformation?.status !== "Negotiating" ||
+                      item.status !== 'Negotiating'
+                    }
+                  >
+                    Decide on Deal Price
+                  </Button>
+                ) : (
+                  <Tag color="orange">Pending Deal</Tag>
+                )}
+              </Descriptions.Item>
+                  </Descriptions>
+                </Card>
+              ))}
 
             <Divider />
-            <Link to="/transaction/My-consign">
-              <Button
-                type="primary"
-                style={{
-                  backgroundColor: "black",
-                  borderColor: "black",
-                  width: "100px",
-                  height: "35px",
-                  marginTop: "20px",
-                }}
-              >
-                Back
-              </Button>
-            </Link>
+            <Row justify="space-between">
+              <Col>
+                <Link to="/transaction/My-consign">
+                  <Button
+                    type="primary"
+                    style={{
+                      backgroundColor: "black",
+                      borderColor: "black",
+                      width: "100px",
+                      height: "35px",
+                    }}
+                  >
+                    Back
+                  </Button>
+                </Link>
+              </Col>
+              <Col>
+                <Button
+                  onClick={() => openConfirmationModal("continue")}
+                  disabled={
+                    consignInformation?.status !== "Negotiating" ||
+                    consignLineItems && consignLineItems.some((item) => item.isApproved == null || item.isApproved == undefined)
+                  }
+                  style={{ marginRight: "10px" }}
+                >
+                  Continue Consign
+                </Button>
+                <Button onClick={() => openConfirmationModal("cancel")}
+                disabled={(consignInformation!.status! !== ConsignSaleStatus.Negotiating
+                  && consignInformation!.status! !== ConsignSaleStatus.Pending
+                  && consignInformation!.status !== ConsignSaleStatus.AwaitDelivery
+                  && consignInformation!.status !== ConsignSaleStatus.Processing)
+                } danger>
+                  Cancel Consign
+                </Button>
+              </Col>
+            </Row>
           </Card>
         </Col>
       </Row>
@@ -355,6 +378,21 @@ const ConsignDetail = () => {
             </Button>
           </>
         )}
+      </Modal>
+
+      <Modal
+        title={`Confirm ${
+          confirmationAction === "continue" ? "Continue" : "Cancel"
+        } Consignment`}
+        open={confirmationModalVisible}
+        onOk={handleConfirmation}
+        onCancel={() => setConfirmationModalVisible(false)}
+      >
+        <p>
+          Are you sure you want to{" "}
+          {confirmationAction === "continue" ? "continue" : "cancel"} this
+          consignment?
+        </p>
       </Modal>
     </Card>
   );

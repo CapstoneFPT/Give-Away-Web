@@ -52,7 +52,7 @@ const OrderDetail = () => {
   }
 
   const isRefundEligible = (refundExpirationDate: string | null) => {
-    if (!refundExpirationDate) return true;
+    if (!refundExpirationDate) return false;
     const expirationDate = new Date(refundExpirationDate);
     const currentDate = new Date();
     return expirationDate > currentDate;
@@ -163,8 +163,8 @@ const OrderDetail = () => {
     {
       title: "Action",
       key: "action",
+      align: "center",
       render: (text: any, record: OrderLineItemListResponse) =>
-        isRefundEligible(record.refundExpirationDate!) &&
         record.itemStatus === FashionItemStatus.Refundable && (
           <Button
             type="primary"
