@@ -17,8 +17,14 @@ const AuctionHistory = () => {
           null!,
           null!,
           null!,
-          "false",
-         
+          null!,
+          null!,
+          null!,
+          null!,
+          null!,
+          null!,
+          true,
+          false,
         );
         setData(response.data.data?.items || []); // Lưu dữ liệu vào trạng thái
       } catch (error) {

@@ -275,11 +275,11 @@ const ConsignDetail = () => {
                       <Tag>{item.status}</Tag>
                     </Descriptions.Item>
                     <Descriptions.Item label="Deal Status">
-                {item.confirmedPrice !== null && item.confirmedPrice !== undefined ? (
+                {item.status !== 'Negotiating' ? (
                   <Tag color={item.isApproved ? "green" : "red"}>
                     {item.isApproved ? "Deal Accepted" : "Deal Rejected"}
                   </Tag>
-                ) : item.dealPrice !== null && item.dealPrice !== undefined ? (
+                ) : item.status === 'Negotiating' ?  (
                   <Button
                     type="primary"
                     onClick={() => openDecisionModal(item)}
@@ -319,8 +319,7 @@ const ConsignDetail = () => {
                 <Button
                   onClick={() => openConfirmationModal("continue")}
                   disabled={
-                    consignInformation?.status !== "Negotiating" ||
-                    consignLineItems && consignLineItems.some((item) => item.isApproved == null || item.isApproved == undefined)
+                   consignLineItems && consignLineItems.some((item) => item.status === 'Negotiating') 
                   }
                   style={{ marginRight: "10px" }}
                 >
