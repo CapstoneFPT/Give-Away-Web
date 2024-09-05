@@ -186,13 +186,13 @@ const ConsignDetail = () => {
                   </Descriptions.Item>
                   <Descriptions.Item label="Start Date">
                     {new Date(consignInformation.startDate!) >
-                    new Date(-8640000000000000)
+                    new Date(null!)
                       ? new Date(consignInformation.startDate!).toLocaleString()
                       : "N/A"}
                   </Descriptions.Item>
                   <Descriptions.Item label="End Date">
                     {new Date(consignInformation.endDate!) >
-                    new Date(-8640000000000000)
+                    new Date(null!)
                       ? new Date(consignInformation.endDate!).toLocaleString()
                       : "N/A"}
                   </Descriptions.Item>
@@ -217,8 +217,8 @@ const ConsignDetail = () => {
                   bordered={false}
                   style={{ marginBottom: "20px" }}
                 >
-                  <Descriptions column={1} bordered size="small">
-                    <Descriptions.Item label="Image">
+                  <Descriptions column={2} bordered size="small">
+                    <Descriptions.Item label="Product">
                       <Image.PreviewGroup>
                         {item.images!.map((img, index) => (
                           <Image

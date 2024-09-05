@@ -216,8 +216,8 @@ const CartPage: React.FC = () => {
       .filter((item) => selectedItems.includes(item.itemId!))
       .reduce((total, item) => total + (item.sellingPrice || 0), 0);
 
-    if (totalItemPrice >= 100000) return totalItemPrice * 0.1;
-    if (totalItemPrice >= 50000) return totalItemPrice * 0.05;
+    if (totalItemPrice >= 1000000) return totalItemPrice * 0.1;
+    if (totalItemPrice >= 500000) return totalItemPrice * 0.05;
     return 0;
   }, [state.cartItems, selectedItems]);
 

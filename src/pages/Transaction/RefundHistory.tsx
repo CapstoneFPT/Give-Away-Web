@@ -1,37 +1,55 @@
 import React, { useEffect, useState } from "react";
-import {
-  AccountApi,
-  GetTransactionsResponse,
-} from "../../api";
-import { Card, Col, Row, Table } from "antd";
+import { RefundApi, RefundResponse } from "../../api";
+import { Card, Col, Row, Table, Modal, Button } from "antd";
 import NavProfile from "../../components/NavProfile/NavProfile.tsx";
 
 const RefundHistory = () => {
   const userId = JSON.parse(localStorage.getItem("userId") || "null");
-  const [data, setData] = useState<GetTransactionsResponse[]>([]); // Thêm trạng thái để lưu dữ liệu
-  useEffect(() => {
-    const fetchDepositHistory = async () => {
-      const DepositListApi = new AccountApi();
-      try {
-        const response =
-          await DepositListApi.apiAccountsAccountIdTransactionsGet(
-            userId,
-            null!,
-            null!,
-            ["Refund"]
-          );
-        console.log(response.data.items);
+  const [data, setData] = useState<RefundResponse[]>([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedRefund, setSelectedRefund] = useState<RefundResponse | null>(null);
 
-        setData(response.data.items || []); // Lưu dữ liệu vào trạng thái
+  useEffect(() => {
+    const fetchRefundHistory = async () => {
+      const Refund = new RefundApi();
+      try {
+        const response = await Refund.apiRefundsGet(
+          null!,
+          null!,
+          null!,
+          null!,
+          null!,
+          userId
+        );
+
+        setData(response.data.items || []);
+        console.log(response);
       } catch (error) {
-        console.error("Error fetching deposit history:", error);
+        console.error("Error fetching refund history:", error);
       }
     };
 
-    fetchDepositHistory();
+    fetchRefundHistory();
   }, [userId]);
+
   const formatBalance = (balance: number) => {
     return new Intl.NumberFormat("de-DE").format(balance);
+  };
+
+  const showModal = async (refundId: string) => {
+    const Refund = new RefundApi();
+    try {
+      const response = await Refund.apiRefundsRefundIdGet(refundId);
+      setSelectedRefund(response.data.data!);
+      setIsModalVisible(true);
+    } catch (error) {
+      console.error("Error fetching refund details:", error);
+    }
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+    setSelectedRefund(null);
   };
 
   const columns = [
@@ -40,14 +58,24 @@ const RefundHistory = () => {
       dataIndex: "orderCode",
       key: "orderCode",
     },
-
+    {
+      title: "Item Code",
+      dataIndex: "itemCode",
+      key: "itemCode",
+    },
+    {
+      title: "Item Name",
+      dataIndex: "itemName",
+      key: "itemName",
+    },
     {
       title: "Amount",
-      dataIndex: "amount",
+      dataIndex: "unitPrice",
       key: "amount",
-      render: (amount: number) => <strong>{formatBalance(amount)} VND</strong>,
+      render: (unitPrice: number) => (
+        <strong>{formatBalance(unitPrice)} VND</strong>
+      ),
     },
-
     {
       title: "Created Date",
       dataIndex: "createdDate",
@@ -56,11 +84,26 @@ const RefundHistory = () => {
         new Date(createdDate).toLocaleDateString(),
     },
     {
-      title: "Type",
-      dataIndex: "type",
-      key: "type",
+      title: "Status",
+      dataIndex: "refundStatus",
+      key: "status",
+    },
+    {
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+    },
+    {
+      title: "Detail",
+      key: "detail",
+      render: (text: string, record: RefundResponse) => (
+        <Button type="primary" onClick={() => showModal(record.refundId!)}>
+          Detail
+        </Button>
+      ),
     },
   ];
+
   return (
     <Card>
       <Row gutter={[16, 16]}>
@@ -87,13 +130,46 @@ const RefundHistory = () => {
             <Table
               dataSource={data}
               columns={columns}
-              rowKey="id"
+              rowKey="refundId"
               pagination={{ pageSize: 4 }}
               style={{ marginTop: "20px" }}
             />
           </Card>
         </Col>
       </Row>
+      
+      <Modal
+        title="Refund Details"
+        visible={isModalVisible}
+        onCancel={handleCancel}
+        footer={null}
+      >
+        {selectedRefund && (
+          <div>
+            <p><strong>Order Code:</strong> {selectedRefund.orderCode}</p>
+            <p><strong>Item Code:</strong> {selectedRefund.itemCode}</p>
+            <p><strong>Item Name:</strong> {selectedRefund.itemName}</p>
+            <p><strong>Amount:</strong> {formatBalance(selectedRefund.unitPrice!)} VND</p>
+            <p><strong>Created Date:</strong> {new Date(selectedRefund.createdDate!).toLocaleDateString()}</p>
+            <p><strong>Status:</strong> {selectedRefund.refundStatus}</p>
+            <p><strong>Description:</strong> {selectedRefund.description}</p>
+            <p><strong>Customer Name:</strong> {selectedRefund.customerName}</p>
+            <p><strong>Customer Phone:</strong> {selectedRefund.customerPhone}</p>
+            <p><strong>Customer Email:</strong> {selectedRefund.customerEmail}</p>
+            <div><strong>Images:</strong></div>
+            <div>
+              {selectedRefund.imagesForCustomer!.map((image, index) => (
+                <img
+                  key={index}
+                  src={image}
+                  alt={`refund-image-${index}`}
+                  style={{ width: "50px", height: "50px", marginRight: "5px" }}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+      </Modal>
     </Card>
   );
 };
