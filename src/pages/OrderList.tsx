@@ -70,7 +70,22 @@ const OrderList: React.FC = () => {
 
     try {
       const accountApi = new AccountApi();
-      const response = await accountApi.apiAccountsAccountIdOrdersGet(userId);
+      const response = await accountApi.apiAccountsAccountIdOrdersGet(
+        userId,
+        null!,
+        null!,
+        null!,
+        null!,
+        null!,
+        null!,
+        null!,
+        null!,
+        null!,
+        null!,
+        null!,
+        false,//order auction
+        false,  //ispointPackage
+      );
       const orders = response.data.data?.items || [];
       setData(orders);
       const formattedOrders = orders.map(order => ({

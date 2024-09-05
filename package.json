@@ -8,8 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "scaffold-api-local" : "openapi-generator-cli generate -i http://localhost:5039/swagger/v1/swagger.json -g typescript-axios -o ./src/api",
-    "scaffold-api-server" : "openapi-generator-cli generate -i https://giveawayproject.jettonetto.org:8443/swagger/v1/swagger.json -g typescript-axios -o ./src/api"
+    "scaffold-api-local": "openapi-generator-cli generate -i http://localhost:5039/swagger/v1/swagger.json -g typescript-axios -o ./src/api",
+    "scaffold-api-server": "openapi-generator-cli generate -i https://giveawayproject.jettonetto.org:8443/swagger/v1/swagger.json -g typescript-axios -o ./src/api"
   },
   "dependencies": {
     "@ant-design/icons": "^5.4.0",
@@ -18,10 +18,12 @@
     "@react-buddy/palette-antd": "^5.3.0",
     "@tanstack/react-query": "^5.53.3",
     "@tanstack/react-query-devtools": "^5.54.0",
+    "@types/js-cookie": "^3.0.6",
     "antd": "^5.19.3",
     "axios": "^1.7.2",
     "crypto-browserify": "^3.12.0",
     "firebase": "^10.12.4",
+    "js-cookie": "^3.0.5",
     "jsrsasign": "^11.1.0",
     "leaflet": "^1.9.4",
     "mdb-react-ui-kit": "^8.0.0",

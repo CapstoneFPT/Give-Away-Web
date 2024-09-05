@@ -76,6 +76,13 @@ const OrderDetail = () => {
       key: "itemImage",
       render: (images: string[], record: OrderLineItemListResponse) => (
         <>
+        <Image
+            src={images[0]}
+            alt="Product"
+            width={100}
+            height={100}
+            style={{ objectFit: "cover" }}
+          />
           <Paragraph>
             <Text
               strong
@@ -91,13 +98,7 @@ const OrderDetail = () => {
               <strong>{record.itemCode}</strong>
             </Text>
           </Paragraph>
-          <Image
-            src={images[0]}
-            alt="Product"
-            width={100}
-            height={100}
-            style={{ objectFit: "cover" }}
-          />
+          
         </>
       ),
     },
@@ -229,55 +230,63 @@ const OrderDetail = () => {
                 bordered={false}
                 style={{ borderRadius: "10px", marginBottom: "20px" }}
               >
-                <Descriptions column={1} bordered size="small">
-                  <Descriptions.Item label="Order Code">
-                    {orderDetail?.orderCode}
-                  </Descriptions.Item>
-                  <Descriptions.Item label="Payment Method">
-                    {orderDetail?.paymentMethod}
-                  </Descriptions.Item>
-                  <Descriptions.Item label="Recipient Name">
-                    {orderDetail?.reciepientName}
-                  </Descriptions.Item>
-                  <Descriptions.Item label="Customer Name">
-                    {orderDetail?.customerName}
-                  </Descriptions.Item>
-                  <Descriptions.Item label="Address">
-                    {orderDetail?.address}
-                  </Descriptions.Item>
-                  <Descriptions.Item label="Address Type">
-                    {orderDetail?.addressType}
-                  </Descriptions.Item>
-                  <Descriptions.Item label="Phone Number">
-                    {orderDetail?.phone}
-                  </Descriptions.Item>
-                  <Descriptions.Item label="Email">
-                    {orderDetail?.email}
-                  </Descriptions.Item>
-                  <Descriptions.Item label="Sub Total">
-                    {formatBalance(orderDetail?.subtotal || 0)} VND
-                  </Descriptions.Item>
-                  <Descriptions.Item label="Shipping Fee">
-                    {formatBalance(orderDetail?.shippingFee || 0)} VND
-                  </Descriptions.Item>
-                  <Descriptions.Item label="Discount">
-                    -{formatBalance(orderDetail?.discount || 0)} VND
-                  </Descriptions.Item>
-                  <Descriptions.Item label="Total">
-                    <strong>
-                      {formatBalance(orderDetail?.totalPrice || 0)} VND{" "}
-                    </strong>
-                  </Descriptions.Item>
-                  <Descriptions.Item label="Created At">
-                    {new Date(orderDetail?.createdDate || 0).toLocaleString()}
-                  </Descriptions.Item>
-                  <Descriptions.Item label="Payment Date">
-                    {new Date(orderDetail?.paymentDate || 0).toLocaleString()}
-                  </Descriptions.Item>
-                  <Descriptions.Item label="Completed Date">
-                    {new Date(orderDetail?.completedDate || 0).toLocaleString()}
-                  </Descriptions.Item>
-                </Descriptions>
+                <Row gutter={[16, 16]}>
+                  <Col span={12}>
+                    <Descriptions column={1} bordered size="small">
+                      <Descriptions.Item label="Order Code">
+                        {orderDetail?.orderCode}
+                      </Descriptions.Item>
+                      <Descriptions.Item label="Payment Method">
+                        {orderDetail?.paymentMethod}
+                      </Descriptions.Item>
+                      <Descriptions.Item label="Recipient Name">
+                        {orderDetail?.reciepientName}
+                      </Descriptions.Item>
+                      <Descriptions.Item label="Customer Name">
+                        {orderDetail?.customerName}
+                      </Descriptions.Item>
+                      <Descriptions.Item label="Address">
+                        {orderDetail?.address}
+                      </Descriptions.Item>
+                      <Descriptions.Item label="Address Type">
+                        {orderDetail?.addressType}
+                      </Descriptions.Item>
+                      <Descriptions.Item label="Phone Number">
+                        {orderDetail?.phone}
+                      </Descriptions.Item>
+                      <Descriptions.Item label="Email">
+                        {orderDetail?.email}
+                      </Descriptions.Item>
+                    </Descriptions>
+                  </Col>
+                  <Col span={12}>
+                    <Descriptions column={1} bordered size="small">
+                      <Descriptions.Item label="Sub Total">
+                        {formatBalance(orderDetail?.subtotal || 0)} VND
+                      </Descriptions.Item>
+                      <Descriptions.Item label="Shipping Fee">
+                        {formatBalance(orderDetail?.shippingFee || 0)} VND
+                      </Descriptions.Item>
+                      <Descriptions.Item label="Discount">
+                        -{formatBalance(orderDetail?.discount || 0)} VND
+                      </Descriptions.Item>
+                      <Descriptions.Item label="Total">
+                        <strong>
+                          {formatBalance(orderDetail?.totalPrice || 0)} VND{" "}
+                        </strong>
+                      </Descriptions.Item>
+                      <Descriptions.Item label="Created At">
+                        {new Date(orderDetail?.createdDate || 0).toLocaleString()}
+                      </Descriptions.Item>
+                      <Descriptions.Item label="Payment Date">
+                        {new Date(orderDetail?.paymentDate || 0).toLocaleString()}
+                      </Descriptions.Item>
+                      <Descriptions.Item label="Completed Date">
+                        {new Date(orderDetail?.completedDate || 0).toLocaleString()}
+                      </Descriptions.Item>
+                    </Descriptions>
+                  </Col>
+                </Row>
               </Card>
               <Table
                 columns={columns}

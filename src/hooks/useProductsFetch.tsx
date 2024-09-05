@@ -54,6 +54,7 @@ const useProductsFetch = ({
           response = await fashionItemApi.apiMasterItemsGet(
             null!,
             null!,
+            null!,
             page,
             pageSize,
             categoryId,

@@ -27,9 +27,9 @@ const PurchaseHistory = () => {
 
     const columns: TableColumnsType<GetTransactionsResponse> = [
         {
-            title: 'Id',
-            dataIndex: 'transactionId',
-            key: 'transactionId',
+            title: 'Order Code',
+            dataIndex: 'orderCode',
+            key: 'orderCode',
         },
         {
             title: 'Amount',
