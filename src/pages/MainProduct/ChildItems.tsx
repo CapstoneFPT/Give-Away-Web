@@ -4,7 +4,7 @@ import { FashionItemApi, FashionItemList, MasterItemApi, MasterItemDetailRespons
 import { useParams, useNavigate } from 'react-router-dom';
 
 const { Option } = Select;
-const {  Title } = Typography;
+const { Title } = Typography;
 
 const formatBalance = (balance: any) => {
   return new Intl.NumberFormat('de-DE').format(balance);
@@ -128,47 +128,49 @@ const ChildItems: React.FC = () => {
       ) : (
         <Card>
           <Row gutter={[16, 16]}>
-          <Col span={6}>
+            <Col span={6}>
               {dataMaster && (
                 <Card 
-                title="Master Product Details" 
-                headStyle={{ backgroundColor: 'black', color: 'white' }} // Set background to black and text to white
-              >
-                <Title level={5}><strong>Item Code:</strong> {dataMaster.masterItemCode}</Title>
-                <Typography><strong>Name:</strong> {dataMaster.name}</Typography><br />
-                <Typography><strong>Brand:</strong> {dataMaster.brand}</Typography><br />
-                <Typography><strong>Category:</strong> {dataMaster.categoryName}</Typography><br />
-                <Typography><strong>Gender:</strong> {dataMaster.gender}</Typography><br />
-                <Typography><strong>Description:</strong> {dataMaster.description}</Typography><br />
-              </Card>
+                  title="Master Product Details" 
+                  headStyle={{ backgroundColor: 'black', color: 'white' }} // Set background to black and text to white
+                >
+                  <Title level={5}><strong>Item Code:</strong> {dataMaster.masterItemCode}</Title>
+                  <Typography><strong>Name:</strong> {dataMaster.name}</Typography><br />
+                  <Typography><strong>Brand:</strong> {dataMaster.brand}</Typography><br />
+                  <Typography><strong>Category:</strong> {dataMaster.categoryName}</Typography><br />
+                  <Typography><strong>Gender:</strong> {dataMaster.gender}</Typography><br />
+                  <Typography><strong>Description:</strong> {dataMaster.description}</Typography><br />
+                </Card>
               )}
             </Col>
-            {dataSource.map(record => (
-              <Col span={6} key={record.itemId}> {/* Each card takes 6 columns for 4 cards per row */}
-                <Card
-                  style={{ marginBottom: '16px', cursor: 'pointer', overflow: 'hidden' }}
-                  onClick={() => navigate(`/itemDetail/${record.itemId}`)}
-                  cover={
-                    <Image
-                      alt={record.name ?? "N/A"}
-                      src={record.image!}
-                      style={{ height: "300px", objectFit: "cover" }}
-                    />
-                  }
-                >
-                 
-                  <div style={{ padding: '10px' }}>
-                    <Title level={5}>Product Code: {record.itemCode}</Title>
-                    <Typography>Brand: {record.brand}  </Typography>
-                    <Typography>Size: {record.size}</Typography>
-                    <Typography>Color: {record.color}</Typography>
-                    <div><strong>Price: {formatBalance(record.sellingPrice)} VND</strong></div>
-                    <Typography>Condition: {record.condition}</Typography>
-                  </div>
-                </Card>
-              </Col>
-            ))}
-            
+            <Col span={18}> {/* Adjusted to take 18 columns for the right side */}
+              <Row gutter={[16, 16]} justify="start"> {/* Added nested Row for items */}
+                {dataSource.map(record => (
+                  <Col span={8} key={record.itemId}> {/* Each item takes 8 columns for 3 items per row */}
+                    <Card
+                      style={{ marginBottom: '16px', cursor: 'pointer', overflow: 'hidden' }}
+                      onClick={() => navigate(`/itemDetail/${record.itemId}`)}
+                      cover={
+                        <Image
+                          alt={record.name ?? "N/A"}
+                          src={record.image!}
+                          style={{ height: "300px", objectFit: "cover" }}
+                        />
+                      }
+                    >
+                      <div style={{ padding: '10px' }}>
+                        <Title level={5}>Product Code: {record.itemCode}</Title>
+                        <Typography>Brand: {record.brand}  </Typography>
+                        <Typography>Size: {record.size}</Typography>
+                        <Typography>Color: {record.color}</Typography>
+                        <div><strong>Price: {formatBalance(record.sellingPrice)} VND</strong></div>
+                        <Typography>Condition: {record.condition}</Typography>
+                      </div>
+                    </Card>
+                  </Col>
+                ))}
+              </Row>
+            </Col>
           </Row>
         </Card>
       )}
@@ -178,17 +180,13 @@ const ChildItems: React.FC = () => {
         onCancel={handleCancel}
         footer={null}
         width={800}
-       
       >
-        
         <h2 style={{textAlign:'center'}}>Condition Guide</h2>
         <p><strong>Never worn, with tag</strong> - A never-worn item with tag is an item which has never been worn and still has the original purchase hangtags on it (include a photo of the tag).</p> <br/>
         <p><strong>Never worn</strong> - A never-worn item without a tag is an item which has never been worn and shows no defects or alterations.</p> <br/>
         <p><strong>Very good</strong> - An item in very good condition is a second-hand item which has been only lightly used and extremely well maintained, which can show slight defects from usage. These must be mentioned in the description and visible on the photos.</p> <br/>
         <p><strong>Good</strong> - An item in good condition is a second-hand item which has been worn and well maintained. If the item has defects, they must be mentioned in the description and visible in the photos.</p> <br/>
         <p><strong>Fair</strong> - An item in fair condition is a second-hand item which has been worn frequently and shows defects (these are mentioned in the description and visible in photos).</p>
-        
-       
       </Modal>
     </div>
   );
