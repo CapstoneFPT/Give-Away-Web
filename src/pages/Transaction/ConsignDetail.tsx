@@ -320,6 +320,7 @@ const ConsignDetail = () => {
                   onClick={() => openConfirmationModal("continue")}
                   disabled={
                    consignLineItems && consignLineItems.some((item) => item.status === 'Negotiating') 
+                   && consignInformation?.status !== "Negotiating"
                   }
                   style={{ marginRight: "10px" }}
                 >
