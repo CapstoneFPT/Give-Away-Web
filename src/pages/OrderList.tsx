@@ -83,11 +83,8 @@ const OrderList: React.FC = () => {
         null!,
         null!,
         null!,
-        null!, //order auction
-        null!, //ispointPackage
-        // false,
-        // true
-        
+        false,//order auction
+        false,  //ispointPackage
       );
       const orders = response.data.data?.items || [];
       setData(orders);
