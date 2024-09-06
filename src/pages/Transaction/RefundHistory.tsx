@@ -1,13 +1,27 @@
 import React, { useEffect, useState } from "react";
-import { RefundApi, RefundResponse } from "../../api";
-import { Card, Col, Row, Table, Modal, Button } from "antd";
+import { RefundApi, RefundResponse, RefundStatus } from "../../api";
+import {
+  Card,
+  Col,
+  Row,
+  Table,
+  Modal,
+  Button,
+  Image,
+  Typography,
+  Tag,
+} from "antd";
 import NavProfile from "../../components/NavProfile/NavProfile.tsx";
+import { getRefundStatus } from "../../utils/types.ts";
+import TextArea from "antd/es/input/TextArea";
 
 const RefundHistory = () => {
   const userId = JSON.parse(localStorage.getItem("userId") || "null");
   const [data, setData] = useState<RefundResponse[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [selectedRefund, setSelectedRefund] = useState<RefundResponse | null>(null);
+  const [selectedRefund, setSelectedRefund] = useState<RefundResponse | null>(
+    null
+  );
 
   useEffect(() => {
     const fetchRefundHistory = async () => {
@@ -22,8 +36,11 @@ const RefundHistory = () => {
           userId
         );
 
-        setData(response.data.items || []);
-        console.log(response);
+        if (response && response.data && response.data.items) {
+          setData(response.data.items);
+        } else {
+          console.error("Invalid response format:", response);
+        }
       } catch (error) {
         console.error("Error fetching refund history:", error);
       }
@@ -40,8 +57,13 @@ const RefundHistory = () => {
     const Refund = new RefundApi();
     try {
       const response = await Refund.apiRefundsRefundIdGet(refundId);
-      setSelectedRefund(response.data.data!);
-      setIsModalVisible(true);
+      if (response.data) {
+        setSelectedRefund(response.data);
+        setIsModalVisible(true);
+        console.log(response)
+      } else {
+        console.error("No data found for the provided refund ID");
+      }
     } catch (error) {
       console.error("Error fetching refund details:", error);
     }
@@ -87,6 +109,14 @@ const RefundHistory = () => {
       title: "Status",
       dataIndex: "refundStatus",
       key: "status",
+      render: (refundStatus: RefundStatus) => (
+        <Tag
+          style={{ marginRight: "10px" }}
+          color={getRefundStatus(refundStatus!)}
+        >
+          {refundStatus!}
+        </Tag>
+      ),
     },
     {
       title: "Description",
@@ -97,7 +127,11 @@ const RefundHistory = () => {
       title: "Detail",
       key: "detail",
       render: (text: string, record: RefundResponse) => (
-        <Button type="primary" onClick={() => showModal(record.refundId!)}>
+        <Button
+          style={{ backgroundColor: "black", color: "white" }}
+          type="default"
+          onClick={() => showModal(record.refundId!)}
+        >
           Detail
         </Button>
       ),
@@ -137,37 +171,127 @@ const RefundHistory = () => {
           </Card>
         </Col>
       </Row>
-      
+
       <Modal
         title="Refund Details"
         visible={isModalVisible}
         onCancel={handleCancel}
+        width={1200}
         footer={null}
       >
         {selectedRefund && (
-          <div>
-            <p><strong>Order Code:</strong> {selectedRefund.orderCode}</p>
-            <p><strong>Item Code:</strong> {selectedRefund.itemCode}</p>
-            <p><strong>Item Name:</strong> {selectedRefund.itemName}</p>
-            <p><strong>Amount:</strong> {formatBalance(selectedRefund.unitPrice!)} VND</p>
-            <p><strong>Created Date:</strong> {new Date(selectedRefund.createdDate!).toLocaleDateString()}</p>
-            <p><strong>Status:</strong> {selectedRefund.refundStatus}</p>
-            <p><strong>Description:</strong> {selectedRefund.description}</p>
-            <p><strong>Customer Name:</strong> {selectedRefund.customerName}</p>
-            <p><strong>Customer Phone:</strong> {selectedRefund.customerPhone}</p>
-            <p><strong>Customer Email:</strong> {selectedRefund.customerEmail}</p>
-            <div><strong>Images:</strong></div>
-            <div>
-              {selectedRefund.imagesForCustomer!.map((image, index) => (
-                <img
-                  key={index}
-                  src={image}
-                  alt={`refund-image-${index}`}
-                  style={{ width: "50px", height: "50px", marginRight: "5px" }}
-                />
-              ))}
+          <Card>
+            <Row gutter={[16, 16]}>
+              <Col span={12}>
+                <Typography>
+                  <strong>Order Code:</strong> {selectedRefund.orderCode}
+                </Typography>
+                <Typography>
+                  <strong>Item Code:</strong> {selectedRefund.itemCode}
+                </Typography>
+                <Typography>
+                  <strong>Item Name:</strong> {selectedRefund.itemName}
+                </Typography>
+                <Typography>
+                  <strong>Amount:</strong>{" "}
+                  {formatBalance(selectedRefund.unitPrice!)} VND
+                </Typography>
+                <Typography>
+                  <strong>Refund Amount:</strong>{" "}
+                  {selectedRefund.refundAmount || "N/A"}
+                </Typography>
+                <Typography>
+                  <strong>Refund Percentage: </strong>
+                  {selectedRefund.refundPercentage || "N/A"}%
+                </Typography>
+                <Typography>
+                  <strong>Response From Shop:</strong>
+                  <TextArea
+                    value={selectedRefund.responseFromShop || "N/A"}
+                    readOnly
+                    rows={3}
+                  />
+                </Typography>
+              </Col>
+              <Col span={12}>
+                <Typography>
+                  <strong>Customer Name:</strong> {selectedRefund.customerName}
+                </Typography>
+                <Typography>
+                  <strong>Customer Phone:</strong>{" "}
+                  {selectedRefund.customerPhone}
+                </Typography>
+                <Typography>
+                  <strong>Email:</strong> {selectedRefund.customerEmail}
+                </Typography>
+                <Typography>
+                  <strong>Refund Date:</strong>{" "}
+                  {new Date(selectedRefund.createdDate!).toLocaleDateString()}
+                </Typography>
+                <Typography>
+                  <strong>Status: </strong>
+                  <Tag color={getRefundStatus(selectedRefund.refundStatus!)}>
+                    {selectedRefund.refundStatus!}
+                  </Tag>
+                </Typography>
+                <Typography style={{ marginTop: "20px" }}>
+                  <strong>Response From Customer:</strong>
+                  <TextArea
+                    value={selectedRefund.description || "N/A"}
+                    readOnly
+                    rows={3}
+                  />
+                </Typography>
+              </Col>
+            </Row>
+
+            <Row style={{ marginTop: "20px" }} gutter={[16, 16]}>
+              <Col span={12}>
+                <Card title="Product Images">
+                  <div>
+                    {selectedRefund.itemImages?.map((image, index) => (
+                      <Image
+                        key={index}
+                        src={image}
+                        alt={`refund-image-${index}`}
+                        style={{
+                          width: "100px",
+                          height: "100px",
+                          marginRight: "5px",
+                        }}
+                      />
+                    ))}
+                  </div>
+                </Card>
+              </Col>
+              <Col span={12}>
+                <Card title="Image Customer Response">
+                  <div>
+                    {selectedRefund.imagesForCustomer?.map((image, index) => (
+                      <Image
+                        key={index}
+                        src={image}
+                        alt={`refund-image-${index}`}
+                        style={{
+                          width: "100px",
+                          height: "100px",
+                          marginRight: "5px",
+                        }}
+                      />
+                    ))}
+                  </div>
+                </Card>
+              </Col>
+            </Row>
+            <div style={{ margin: "20px" }}>
+              <Button style={{ backgroundColor: "red", color: "white" }}>
+                Cancel
+              </Button>
+              <Button style={{ backgroundColor: "black", color: "white" }}>
+                Update Refund
+              </Button>
             </div>
-          </div>
+          </Card>
         )}
       </Modal>
     </Card>

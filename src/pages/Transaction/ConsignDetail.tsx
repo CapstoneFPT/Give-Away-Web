@@ -11,6 +11,7 @@ import {
   Descriptions,
   message,
   Modal,
+  Typography,
 } from "antd";
 import { Link, useParams } from "react-router-dom";
 import NavProfile from "../../components/NavProfile/NavProfile";
@@ -158,25 +159,15 @@ const ConsignDetail = () => {
         </Col>
         <Col span={18}>
           <Card bordered={false} style={{ borderRadius: "10px" }}>
-            <Card
-              title="Consign Information"
-              bordered={false}
-              style={{ borderRadius: "10px", marginBottom: "20px" }}
-            >
-              {consignInformation && (
-                <Descriptions column={1} bordered size="small">
+            
+             <div style={{marginBottom:'40px'}}>
+              <h2>Consgin Detail</h2>
+             {consignInformation && (
+              
+                <Descriptions column={2} bordered size="small">
                   <Descriptions.Item label="Consign Code">
                     {consignInformation.consignSaleCode}
-                    <Tag
-                      color={
-                        consignInformation.status! === "Completed"
-                          ? "green"
-                          : "blue"
-                      }
-                      style={{ marginLeft: "10px" }}
-                    >
-                      {consignInformation.status}
-                    </Tag>
+                    
                   </Descriptions.Item>
                   <Descriptions.Item label="Consignor">
                     {consignInformation.consginer}
@@ -205,9 +196,25 @@ const ConsignDetail = () => {
                   <Descriptions.Item label="Email">
                     {consignInformation.email}
                   </Descriptions.Item>
+                  <Descriptions.Item label="Consign Status">
+                  <Typography>
+                  
+                <Tag
+                      color={
+                        consignInformation.status! === "Completed"
+                          ? "green"
+                          : "blue"
+                      }
+                      style={{ marginLeft: "10px" }}
+                    >
+                      {consignInformation.status}
+                    </Tag>
+                </Typography>
+                  </Descriptions.Item>
                 </Descriptions>
               )}
-            </Card>
+             </div>
+            
 
             {consignLineItems &&
               consignLineItems.map((item, index) => (
@@ -271,7 +278,7 @@ const ConsignDetail = () => {
                     <Descriptions.Item label="Color">
                       {item.color}
                     </Descriptions.Item>
-                    <Descriptions.Item label="Status">
+                    <Descriptions.Item label="Product Status">
                       <Tag>{item.status}</Tag>
                     </Descriptions.Item>
                     <Descriptions.Item label="Deal Status">

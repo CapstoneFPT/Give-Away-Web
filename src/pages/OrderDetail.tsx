@@ -18,6 +18,7 @@ import NavProfile from "../components/NavProfile/NavProfile";
 import { FashionItemStatus, OrderApi, OrderLineItemListResponse } from "../api";
 import { useQuery } from "@tanstack/react-query";
 import { ColumnsType } from "antd/es/table";
+import { getOrderStatus, getStatusColor } from "../utils/types";
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -76,7 +77,20 @@ const OrderDetail = () => {
       key: "itemImage",
       render: (images: string[], record: OrderLineItemListResponse) => (
         <>
-        <Image
+          <Text
+            strong
+            style={{
+              fontSize: "16px",
+            }}
+          >
+            <Tag
+              style={{ marginBottom: "10px" }}
+              color={getStatusColor(record.itemStatus!)}
+            >
+              {record.itemStatus}
+            </Tag>
+          </Text>
+          <Image
             src={images[0]}
             alt="Product"
             width={100}
@@ -98,7 +112,6 @@ const OrderDetail = () => {
               <strong>{record.itemCode}</strong>
             </Text>
           </Paragraph>
-          
         </>
       ),
     },
@@ -109,7 +122,12 @@ const OrderDetail = () => {
       align: "center",
       render: (text: string, record: OrderLineItemListResponse) => (
         <>
-          <Space direction="vertical" size={8} align="start">
+          <Space
+            style={{ width: "150px" }}
+            direction="vertical"
+            size={10}
+            align="baseline"
+          >
             <div>
               <Typography>
                 <strong>Brand: </strong>{" "}
@@ -143,7 +161,13 @@ const OrderDetail = () => {
       dataIndex: "unitPrice",
       key: "unitPrice",
       align: "center",
-      render: (price: number) => <strong>{formatBalance(price)} VND</strong>,
+      render: (price: number) => (
+        <>
+          <div style={{ width: "100px" }}>
+            <strong>{formatBalance(price)} VND</strong>
+          </div>
+        </>
+      ),
     },
     {
       title: "Quantity",
@@ -152,7 +176,12 @@ const OrderDetail = () => {
       width: 100,
       align: "center",
     },
-    { title: "Condition", dataIndex: "condition", key: "condition", align:"center" },
+    {
+      title: "Condition",
+      dataIndex: "condition",
+      key: "condition",
+      align: "center",
+    },
     {
       title: "Shop",
       dataIndex: "shopAddress",
@@ -199,22 +228,18 @@ const OrderDetail = () => {
           <Card
             title={
               <>
-                Order Detail
-                <Tag
-                  color={
-                    orderDetail?.status === "Completed"
-                      ? "green"
-                      : orderDetail?.status === "AwaitingPayment"
-                      ? "yellow"
-                      : orderDetail?.status === "OnDelivery"
-                      ? "blue"
-                      : "red"
-                  }
-                >
-                  {orderDetail?.status
-                    ? orderDetail?.status.toUpperCase()
-                    : "N/A"}
-                </Tag>
+                <h3>Order Detail</h3>
+
+                <Typography>
+                  <strong>Status Order: </strong>
+                  <Tag
+                    style={{ marginRight: "10px" }}
+                    color={getOrderStatus(orderDetail?.status!)}
+                  >
+                    {" "}
+                    {orderDetail?.status!}
+                  </Tag>
+                </Typography>
               </>
             }
           >
@@ -275,14 +300,29 @@ const OrderDetail = () => {
                           {formatBalance(orderDetail?.totalPrice || 0)} VND{" "}
                         </strong>
                       </Descriptions.Item>
-                      <Descriptions.Item label="Created At">
-                        {new Date(orderDetail?.createdDate || 0).toLocaleString()}
+                      <Descriptions.Item label="Create At">
+                        {new Date(orderDetail?.createdDate || 0).getTime() ===
+                        new Date("0001-01-01T00:00:00").getTime()
+                          ? "N/A"
+                          : new Date(
+                              orderDetail?.createdDate || ""
+                            ).toLocaleString()}
                       </Descriptions.Item>
                       <Descriptions.Item label="Payment Date">
-                        {new Date(orderDetail?.paymentDate || 0).toLocaleString()}
+                        {new Date(orderDetail?.paymentDate || 0).getTime() ===
+                        new Date("0001-01-01T00:00:00").getTime()
+                          ? "N/A"
+                          : new Date(
+                              orderDetail?.paymentDate || ""
+                            ).toLocaleString()}
                       </Descriptions.Item>
                       <Descriptions.Item label="Completed Date">
-                        {new Date(orderDetail?.completedDate || 0).toLocaleString()}
+                        {new Date(orderDetail?.completedDate || 0).getTime() ===
+                        new Date("0001-01-01T00:00:00").getTime()
+                          ? "N/A"
+                          : new Date(
+                              orderDetail?.completedDate || ""
+                            ).toLocaleString()}
                       </Descriptions.Item>
                     </Descriptions>
                   </Col>
