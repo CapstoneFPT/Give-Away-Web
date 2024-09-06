@@ -1931,6 +1931,12 @@ export interface ConsignSaleDetailedResponse {
      * @type {string}
      * @memberof ConsignSaleDetailedResponse
      */
+    'shopAddress'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof ConsignSaleDetailedResponse
+     */
     'memberId'?: string | null;
     /**
      * 

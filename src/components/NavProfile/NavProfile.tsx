@@ -63,18 +63,23 @@ const NavProfile: React.FC = () => {
         {key: "3", icon: <OrderedListOutlined/>, label: "Order list", to: "/order-list"},
         {key: "4", icon: <DollarOutlined/>, label: "Withdraw", to: "/transaction/withdraw"},
         {key: "5", icon: <InboxOutlined />,label: "Consign History", to: "/transaction/My-consign"},
+        {key: "6", icon: <InboxOutlined />,label: "Refund List", to: "/profile/refundList"},
+
+        // {key: "6", icon: <InboxOutlined />,label: "Refund History", to: "/transaction/refund-history"},
+
         // { key: "sub1", icon: <RetweetOutlined />, label: "Refunds", to: "/refunds" },
         {
             key: "sub2",
             icon: <AppstoreOutlined/>,
             label: "Transaction",
             children: [
-                {key: "9", label: "Withdraw History", to: "/transaction/withdraw-history"},
-                {key: "10", label: "Deposit History", to: "/transaction/deposit-history"},
+                {key: "9", label: "ALL Transaction", to: "/transaction/allTransaction"},
+                {key: "10", label: "Withdraw History", to: "/transaction/withdraw-history"},
+                {key: "11", label: "Deposit History", to: "/transaction/deposit-history"},
                 {key: "12", label: "Auction History", to: "/transaction/Auction-history"},
                 {key: "13", label: "Purchase History", to: "/transaction/purchase-history"},
                 {key: "14", label: "Recharge History", to: "/transaction/recharge-history"},
-                {key: "15", label: "Refund History", to: "/transaction/refund-history"},
+               
                 {key: "16", label: "Payout History", to: "/transaction/payout-history"},
             ],
         },

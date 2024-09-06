@@ -45,6 +45,10 @@ import ChildItems from "./pages/MainProduct/ChildItems.tsx";
 import ChildItemShop from "./pages/MainProduct/ChildItemShop.tsx";
 import AddressManagementPage from "./pages/AddressManagementPage.tsx";
 import EmailVerification from "./components/Auth/EmailVerification.tsx";
+import AllTracnsaction from "./pages/Transaction/AllTransaction.tsx";
+import AllTransaction from "./pages/Transaction/AllTransaction.tsx";
+import RefundList from "./pages/RefundList.tsx";
+import RefundDetail from "./pages/RefundDetail.tsx";
 
 function App() {
     return (
@@ -445,6 +449,30 @@ function App() {
                                 <>
                                     <Navbar/>
                                     <AddressManagementPage/>
+                                </>
+                            }/>
+                            <Route
+                            path="/profile/refundList"
+                            element={
+                                <>
+                                    <Navbar/>
+                                    <RefundList/>
+                                </>
+                            }/>
+                             <Route
+                            path="/refundDetail/:refundId"
+                            element={
+                                <>
+                                    <Navbar/>
+                                    <RefundDetail/>
+                                </>
+                            }/>
+                            <Route
+                            path="/transaction/allTransaction"
+                            element={
+                                <>
+                                    <Navbar/>
+                                    <AllTransaction/>
                                 </>
                             }/>
                     </Routes>

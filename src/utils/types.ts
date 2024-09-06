@@ -71,6 +71,9 @@ export const getRefundStatus = (status: string) => {
       return "blue";
       case RefundStatus.Rejected:
       return "red";
+      case RefundStatus.Cancelled:
+      return "orange";
+
     default:
       return "default";
   }

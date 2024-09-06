@@ -193,6 +193,9 @@ const ConsignDetail = () => {
                   <Descriptions.Item label="Phone">
                     {consignInformation.phone}
                   </Descriptions.Item>
+                  <Descriptions.Item label="Shop Adress">
+                    {consignInformation.shopAddress}
+                  </Descriptions.Item>
                   <Descriptions.Item label="Email">
                     {consignInformation.email}
                   </Descriptions.Item>
