@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Checkbox, Form, Input, Select, Spin } from 'antd';
 import { UpdateDeliveryRequest } from '../../api';
 import { useDistricts, useProvinces, useWards } from '../../hooks/addressHooks';
@@ -19,9 +19,12 @@ const AddressForm: React.FC<AddressFormProps> = ({
     loading
 }) => {
     const [form] = Form.useForm<UpdateDeliveryRequest>();
+    const [selectedProvinceId, setSelectedProvinceId] = useState<number | undefined>(undefined);
+    const [selectedDistrictId, setSelectedDistrictId] = useState<number | undefined>(undefined);
+
     const { data: provinces, isLoading: isLoadingProvinces } = useProvinces();
-    const { data: districts, isLoading: isLoadingDistricts } = useDistricts(form.getFieldValue('ghnProvinceId'));
-    const { data: wards, isLoading: isLoadingWards } = useWards(form.getFieldValue('ghnDistrictId'));
+    const { data: districts, isLoading: isLoadingDistricts } = useDistricts(selectedProvinceId);
+    const { data: wards, isLoading: isLoadingWards } = useWards(selectedDistrictId);
 
     useEffect(() => {
         if (isAddingNew) {
@@ -31,18 +34,20 @@ const AddressForm: React.FC<AddressFormProps> = ({
                 ...initialValues,
                 residence: initialValues.residence?.split(',')[0]
             });
+            setSelectedProvinceId(initialValues.ghnProvinceId ?? undefined);
+            setSelectedDistrictId(initialValues.ghnDistrictId ?? undefined);
         }
     }, [form, initialValues, isAddingNew]);
 
     const handleProvinceChange = (value: number) => {
         form.setFieldsValue({ ghnDistrictId: undefined, ghnWardCode: undefined });
-        console.log(value)
-        console.log(form.getFieldValue('ghnProvinceId'))
-        
+        setSelectedProvinceId(value);
+        setSelectedDistrictId(undefined);
     };
 
     const handleDistrictChange = (value: number) => {
         form.setFieldsValue({ ghnWardCode: undefined });
+        setSelectedDistrictId(value);
     };
 
     return (
@@ -94,7 +99,7 @@ const AddressForm: React.FC<AddressFormProps> = ({
                 <Select 
                     onChange={handleDistrictChange}
                     loading={isLoadingDistricts}
-                    disabled={isLoadingDistricts || !form.getFieldValue('ghnProvinceId')}
+                    disabled={isLoadingDistricts || !selectedProvinceId}
                 >
                     {districts?.map(district => (
                         <Select.Option key={district.districtId} value={district.districtId}>
@@ -110,7 +115,7 @@ const AddressForm: React.FC<AddressFormProps> = ({
             >
                 <Select
                     loading={isLoadingWards}
-                    disabled={isLoadingWards || !form.getFieldValue('ghnDistrictId')}
+                    disabled={isLoadingWards || !selectedDistrictId}
                 >
                     {wards?.map(ward => (
                         <Select.Option key={ward.wardCode} value={ward.wardCode}>
