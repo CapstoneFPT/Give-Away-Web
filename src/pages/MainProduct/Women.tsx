@@ -20,7 +20,7 @@ import useMenuItems from "../../hooks/useMenuItems.tsx";
 const Women: React.FC = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [categories, setCategories] = useState<CategoryTreeNode[]>([]);
-    const [selectedCategoryId, setSelectedCategoryId] = useState<string>("3e4c6370-a72b-44e3-a5eb-8f459764158f");
+    const [selectedCategoryId, setSelectedCategoryId] = useState<string>("550e8400-e29b-41d4-a716-446655440001");
     const {goToListProducts} = useNavigateToListProducts();
 
     const pageSize = 12;
@@ -39,7 +39,7 @@ const Women: React.FC = () => {
     const fetchCategories = async () => {
         try {
             const categoryApi = new CategoryApi();
-            const rootCategoryId = "3e4c6370-a72b-44e3-a5eb-8f459764158f";
+            const rootCategoryId = "550e8400-e29b-41d4-a716-446655440001";
             const response = await categoryApi.apiCategoriesTreeGet(null!, rootCategoryId);
             setCategories(response.data.categories || []);
         } catch (error) {

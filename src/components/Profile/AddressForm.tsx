@@ -36,6 +36,9 @@ const AddressForm: React.FC<AddressFormProps> = ({
 
     const handleProvinceChange = (value: number) => {
         form.setFieldsValue({ ghnDistrictId: undefined, ghnWardCode: undefined });
+        console.log(value)
+        console.log(form.getFieldValue('ghnProvinceId'))
+        
     };
 
     const handleDistrictChange = (value: number) => {

@@ -12,7 +12,7 @@ const Men: React.FC = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [categories, setCategories] = useState<CategoryTreeNode[]>([]);
     const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(
-        "535d3b90-dc58-41e3-ad32-055e261bd6a7");
+        "550e8400-e29b-41d4-a716-446655440000");
 
     const {goToListProducts} = useNavigateToListProducts()
     const pageSize = 12;
@@ -33,7 +33,7 @@ const Men: React.FC = () => {
     const fetchCategories = async () => {
         try {
             const categoryApi = new CategoryApi();
-            const rootCategoryId = "535d3b90-dc58-41e3-ad32-055e261bd6a7";
+            const rootCategoryId = "550e8400-e29b-41d4-a716-446655440000";
             const responseCategory = await categoryApi.apiCategoriesTreeGet(
                 null!,
                 rootCategoryId
