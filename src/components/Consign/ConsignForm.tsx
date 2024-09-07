@@ -182,11 +182,11 @@ const ConsignForm = () => {
                                         <Form.Item
                                             label="Select branch to Consign/Sale*:"
                                             name="shopId"
-                                            rules={[
-                                                {required: true, message: "Missing cloth branches"},
-                                            ]}
+                                            rules={[{required: true, message: "Missing cloth branches"}]}
+                                            labelCol={{ span: 24 }} // Ensure label takes full width
+                                            wrapperCol={{ span: 16 }} // Ensure input takes full width
                                         >
-                                            <Select style={{width: "80%"}} placeholder="Branches">
+                                            <Select style={{width: "100%"}} placeholder="Branches">
                                                 {branches.map((data) => (
                                                     <Select.Option key={data.shopId} value={data.shopId}>
                                                         {data.address}
@@ -198,10 +198,12 @@ const ConsignForm = () => {
                                             name="type"
                                             label="Select type to Consign/Sale*:"
                                             rules={[{required: true, message: "Missing type"}]}
+                                            labelCol={{ span: 24 }} // Ensure label takes full width
+                                            wrapperCol={{ span: 10 }} // Ensure input takes full width
                                         >
                                             <Select
                                                 placeholder="Type Consign/Sale"
-                                                style={{width: "50%"}}
+                                                style={{width: "100%"}}
                                             >
                                                 {Object.values(ConsignSaleType).map((type) => (
                                                     <Select.Option key={type} value={type}>
@@ -211,15 +213,12 @@ const ConsignForm = () => {
                                             </Select>
                                         </Form.Item>
                                         <Form.Item
-                                            style={{width: "50%"}}
+                                            style={{width: "100%"}}
                                             name="consignorName"
                                             label="Consignor Name"
-                                            rules={[
-                                                {
-                                                    required: true,
-                                                    message: "Missing your consignor name",
-                                                },
-                                            ]}
+                                            rules={[{required: true, message: "Missing your consignor name"}]}
+                                            labelCol={{ span: 24 }} // Ensure label takes full width
+                                            wrapperCol={{ span: 16 }} // Ensure input takes full width
                                         >
                                             <Input placeholder="Consignor Name"/>
                                         </Form.Item>
@@ -229,9 +228,9 @@ const ConsignForm = () => {
                                             style={{width: "100%"}}
                                             name="address"
                                             label="Your address*:"
-                                            rules={[
-                                                {required: true, message: "Missing your address"},
-                                            ]}
+                                            rules={[{required: true, message: "Missing your address"}]}
+                                            labelCol={{ span: 24 }} // Ensure label takes full width
+                                            wrapperCol={{ span: 24 }} // Ensure input takes full width
                                         >
                                             <Input.TextArea placeholder="Your address"/>
                                         </Form.Item>
@@ -242,9 +241,23 @@ const ConsignForm = () => {
                                             label="Phone"
                                             rules={[
                                                 {required: true, message: "Missing your phone"},
+                                                {
+                                                    pattern: /^[0-9]{10}$/,
+                                                    message: "Phone number must be exactly 10 digits and numeric only",
+                                                },
                                             ]}
+                                            labelCol={{ span: 24 }} // Ensure label takes full width
+                                            wrapperCol={{ span: 24 }} // Ensure input takes full width
                                         >
-                                            <Input placeholder="Phone"/>
+                                            <Input 
+                                                placeholder="Phone" 
+                                                maxLength={10} 
+                                                onKeyPress={(e) => {
+                                                    if (!/[0-9]/.test(e.key)) {
+                                                        e.preventDefault(); // Prevent non-numeric input
+                                                    }
+                                                }} 
+                                            />
                                         </Form.Item>
                                     </Col>
                                 </Row>

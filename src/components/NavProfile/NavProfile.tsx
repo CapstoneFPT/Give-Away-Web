@@ -65,7 +65,7 @@ const NavProfile: React.FC = () => {
         {key: "5", icon: <InboxOutlined />,label: "Consign History", to: "/transaction/My-consign"},
         {key: "6", icon: <InboxOutlined />,label: "Refund List", to: "/profile/refundList"},
 
-        // {key: "6", icon: <InboxOutlined />,label: "Refund History", to: "/transaction/refund-history"},
+        
 
         // { key: "sub1", icon: <RetweetOutlined />, label: "Refunds", to: "/refunds" },
         {
@@ -79,7 +79,7 @@ const NavProfile: React.FC = () => {
                 {key: "12", label: "Auction History", to: "/transaction/Auction-history"},
                 {key: "13", label: "Purchase History", to: "/transaction/purchase-history"},
                 {key: "14", label: "Recharge History", to: "/transaction/recharge-history"},
-               
+                {key: "15", icon: <InboxOutlined />,label: "Refund History", to: "/transaction/refund-history"},
                 {key: "16", label: "Payout History", to: "/transaction/payout-history"},
             ],
         },

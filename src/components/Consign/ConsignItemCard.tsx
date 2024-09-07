@@ -49,23 +49,8 @@ const ConsignItemCard = ({ key, name, restField, fileLists, handleFileChange, re
               </div>
             </Upload>
           </Form.Item>
-          <Form.Item
-            {...restField}
-            name={[name, "gender"]}
-            rules={[{ required: true, message: "Missing gender" }]}
-          >
-            <Select placeholder="Gender" style={{ width: "50%" }}>
-              <Option value="male">Male</Option>
-              <Option value="female">Female</Option>
-            </Select>
-          </Form.Item>
-          <Form.Item
-            {...restField}
-            name={[name, "note"]}
-            rules={[{ required: true, message: "Missing description" }]}
-          >
-            <TextArea placeholder="Description" />
-          </Form.Item>
+          
+          
         </Col>
         <Col span={12}>
           <Form.Item
@@ -77,19 +62,6 @@ const ConsignItemCard = ({ key, name, restField, fileLists, handleFileChange, re
             ]}
           >
             <Input placeholder="Expected Price" />
-          </Form.Item>
-          <Form.Item
-            {...restField}
-            name={[name, "size"]}
-            rules={[{ required: true, message: "Missing size" }]}
-          >
-            <Select placeholder="Size" style={{ width: "50%" }}>
-              {Object.values(SizeType).map((size) => (
-                <Option key={size} value={size}>
-                  {size}
-                </Option>
-              ))}
-            </Select>
           </Form.Item>
           <Form.Item
             {...restField}
@@ -106,6 +78,30 @@ const ConsignItemCard = ({ key, name, restField, fileLists, handleFileChange, re
           </Form.Item>
           <Form.Item
             {...restField}
+            name={[name, "gender"]}
+            rules={[{ required: true, message: "Missing gender" }]}
+          >
+            <Select placeholder="Gender" style={{ width: "70%" }}>
+              <Option value="male">Male</Option>
+              <Option value="female">Female</Option>
+            </Select>
+          </Form.Item>
+          <Form.Item
+            {...restField}
+            name={[name, "size"]}
+            rules={[{ required: true, message: "Missing size" }]}
+          >
+            <Select placeholder="Size" style={{ width: "50%" }}>
+              {Object.values(SizeType).map((size) => (
+                <Option key={size} value={size}>
+                  {size}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+         
+          <Form.Item
+            {...restField}
             name={[name, "color"]}
             rules={[{ required: true, message: "Missing color" }]}
           >
@@ -117,6 +113,13 @@ const ConsignItemCard = ({ key, name, restField, fileLists, handleFileChange, re
             rules={[{ required: true, message: "Missing brand" }]}
           >
             <Input placeholder="Brand" />
+          </Form.Item>
+          <Form.Item
+            {...restField}
+            name={[name, "note"]}
+            rules={[{ required: true, message: "Missing Note" }]}
+          >
+            <TextArea placeholder="Note" rows={4} />
           </Form.Item>
         </Col>
       </Row>
