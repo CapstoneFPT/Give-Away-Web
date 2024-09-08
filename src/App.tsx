@@ -49,6 +49,7 @@ import AllTracnsaction from "./pages/Transaction/AllTransaction.tsx";
 import AllTransaction from "./pages/Transaction/AllTransaction.tsx";
 import RefundList from "./pages/RefundList.tsx";
 import RefundDetail from "./pages/RefundDetail.tsx";
+import ProcessPayment from "./components/Payment/ProcessPayment.tsx";
 
 function App() {
     return (
@@ -62,6 +63,13 @@ function App() {
                                 <>
                                     <Navbar/>
                                     <EmailVerification/>
+                                </>
+                            }/>
+                            <Route path="/process-payment"
+                            element={
+                                <>
+                                    <Navbar/>
+                                    <ProcessPayment/>
                                 </>
                             }/>
                         <Route

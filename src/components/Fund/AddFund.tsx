@@ -1,157 +1,125 @@
-import React, { useEffect, useState } from "react";
-import { Card, Button, Row, Col, Modal, Spin, message } from "antd";
-import { SmileOutlined as Icon } from "@ant-design/icons";
-import {
-  PointPackageApi,
-  PointPackageListResponse,
-} from "../../api";
+import React, { useState, useMemo } from "react";
+import { Card, Button, Row, Col, InputNumber, message, Typography } from "antd";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { RechargeApi, InitiateRechargeRequest } from "../../api/api";
+import { WalletOutlined } from "@ant-design/icons";
 
-type Package = {
-  pointPackageId: string;
-  points: number;
-  price: string;
-};
+const { Title } = Typography;
 
-const PointPackageShop = () => {
-  const [packages, setPackages] = useState<PointPackageListResponse[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [selectedPackage, setSelectedPackage] = useState<PointPackageListResponse | null>(null);
+const AddFund = () => {
+  const [amount, setAmount] = useState<number | null>(null);
+  const userId = JSON.parse(localStorage.getItem("userId") || "null");
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    const userId = JSON.parse(localStorage.getItem("userId") || "null");
-    async function fetchPointPackages() {
-      const pointPackageApi = new PointPackageApi();
-      const response = await pointPackageApi.apiPointpackagesGet(null!, null!, ["Active"]);
-      setPackages(response.data.items || []);
-      setIsLoading(false);
+  const suggestions = useMemo(() => {
+    if (amount) {
+      const baseMultipliers = amount >= 1000 ? [10, 100, 1000] : [1000, 10000, 100000];
+      return baseMultipliers
+        .map(multiplier => Math.min(amount * multiplier, 250000000))
+        .filter((suggestion, index, array) => suggestion !== array[index - 1]);
     }
-    fetchPointPackages();
-  }, []);
+    return [10000, 100000, 1000000];
+  }, [amount]);
 
-  const handleBuy = async (pkg: PointPackageListResponse) => {
-    const userId = JSON.parse(localStorage.getItem("userId") || "null");
-    if (!userId) {
-      message.error("User ID not found. Please log in again.");
-      return;
-    }
-    const pointPackageApi = new PointPackageApi();
-    try {
-      const response = await pointPackageApi.apiPointpackagesPointPackageIdPurchasePost(
-        pkg.pointPackageId!,
-        { memberId: userId },
-      );
-      if (response.data.paymentUrl) {
-        window.location.href = response.data.paymentUrl;
+  const rechargeMutation = useMutation({
+    mutationFn: (rechargeAmount: number) => {
+      const rechargeApi = new RechargeApi();
+      const request: InitiateRechargeRequest = {
+        memberId: userId,
+        amount: rechargeAmount
+      };
+      return rechargeApi.apiRechargesInitiatePost(request);
+    },
+    onSuccess: (data) => {
+      if (data.data.paymentUrl) {
+        window.location.href = data.data.paymentUrl;
       } else {
-        message.error("Failed to get payment URL. Please try again.");
+        throw new Error("Payment URL not received");
       }
-    } catch (error) {
-      console.error("Point package purchase error", error);
-      message.error("Point package purchase error");
+    },
+    onError: (error) => {
+      console.error("Recharge error", error);
+      message.error("Recharge error. Please try again.");
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['rechargeHistory'] });
+    }
+  });
+
+  const handleAmountChange = (value: string | number | null) => {
+    if (typeof value === 'string') {
+      const numericValue = value.replace(/\D/g, '');
+      setAmount(numericValue ? parseInt(numericValue, 10) : null);
+    } else {
+      setAmount(value);
     }
   };
 
-  const handleIconClick = (pkg: PointPackageListResponse) => {
-    setIsModalVisible(true);
-    setSelectedPackage(pkg);
+  const handleRecharge = (rechargeAmount: number) => {
+    if (rechargeAmount > 1000)
+      rechargeMutation.mutate(rechargeAmount);
   };
 
-  const handleCancel = () => {
-    setIsModalVisible(false);
-  };
-
-  const getPackageColor = (points: number) => {
-    switch (points) {
-      case 50000:
-        return "rgb(255, 228, 225)"; // Light Pink
-      case 100000:
-        return "rgb(255, 218, 185)"; // Peach Puff
-      case 200000:
-        return "rgb(255, 239, 213)"; // Papaya Whip
-      case 500000:
-        return "rgb(240, 255, 240)"; // Honeydew
-      case 1000000:
-        return "rgb(224, 255, 255)"; // Light Cyan
-      case 2000000:
-        return "rgb(230, 230, 250)"; // Lavender
-      default:
-        return "rgb(255, 255, 255)"; // White
-    }
-  };
-  const formatBalance = (balance:any) => {
+  const formatBalance = (balance: number) => {
     return new Intl.NumberFormat('de-DE').format(balance);
   };
+
   return (
-    <div className="fund-container">
-      <Card>
-        <h1 style={{ marginBottom: "10px", textAlign: "center" }}>Add Fund</h1>
-        <Row gutter={24}>
-          <Col span={16}>
-            <Row gutter={[24, 24]}>
-              {isLoading ? (
-                <Spin size="large" />
-              ) : packages.length > 0 ? (
-                packages.map((pkg) => (
-                  <Col span={12} key={pkg.pointPackageId}>
-                    <Card
-                      style={{ width: "100%", backgroundColor: getPackageColor(pkg.points!) }}
-                      title={`${formatBalance(pkg.price)} Points`}
-                      extra={<Icon onClick={() => handleIconClick(pkg)} />}
-                    >
-                      <strong>Price: {formatBalance(pkg.price)} VND</strong>
-                    </Card>
-                  </Col>
-                ))
-              ) : (
-                <p>No packages available</p>
-              )}
-            </Row>
-          </Col>
-          <Col span={8}>
-            <Card title="Total">
-              {selectedPackage && (
-                <div>
-                  <p>Points: {formatBalance(selectedPackage.points)}</p>
-                  <p>Price: {formatBalance(selectedPackage.price)}</p>
-                </div>
-              )}
-              <Button
-                onClick={() => selectedPackage && handleBuy(selectedPackage)}
-              >
-                Checkout
-              </Button>
-            </Card>
+    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "80vh" }}>
+      <Card style={{ width: "100%", maxWidth: "500px", boxShadow: "0 4px 8px rgba(0,0,0,0.1)" }}>
+        <Title level={2} style={{ marginBottom: "24px", textAlign: "center" }}>
+          <WalletOutlined style={{ marginRight: "8px" }} />
+          Add Fund
+        </Title>
+        <Row gutter={[0, 24]}>
+          <Col span={24}>
+            <InputNumber
+              style={{ width: "100%", height: "50px", fontSize: "18px" }}
+              placeholder="Enter amount"
+              value={amount}
+              onChange={handleAmountChange}
+              min={1}
+              max={250000000}
+              formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+              parser={(value) => Number.parseInt(value!.replace(/\$\s?|(,*)/g, ''))}
+              onKeyDown={(event) => {
+                if (!/[0-9]/.test(event.key) && event.key !== 'Backspace' && event.key !== 'Delete' && event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') {
+                  event.preventDefault();
+                }
+              }}
+            />
           </Col>
         </Row>
+        <Row gutter={[16, 16]} style={{ marginTop: "16px" }}>
+          {suggestions.map((suggestion, index) => (
+            <Col span={8} key={index}>
+              <Button
+                style={{ width: "100%", height: "40px" }}
+                onClick={() => handleAmountChange(suggestion)}
+              >
+                {formatBalance(suggestion)} VND
+              </Button>
+            </Col>
+          ))}
+        </Row>
+        <Button 
+          style={{ 
+            width: "100%", 
+            marginTop: "24px", 
+            backgroundColor: "black", 
+            color: "white",
+            height: "50px",
+            fontSize: "18px"
+          }}
+          onClick={() => handleRecharge(amount || 0)}
+          disabled={!amount || rechargeMutation.isPending}
+          loading={rechargeMutation.isPending}
+        >
+          Recharge
+        </Button>
       </Card>
-
-      <Modal
-        title="Package Details"
-        visible={isModalVisible}
-        onCancel={handleCancel}
-        footer={[
-          <Button key="back" onClick={handleCancel}>
-            Cancel
-          </Button>,
-          <Button
-            key="buy"
-            type="primary"
-            onClick={() => selectedPackage && handleBuy(selectedPackage)}
-          >
-            Buy
-          </Button>,
-        ]}
-      >
-        {selectedPackage && (
-          <div>
-            <p>Points: {selectedPackage.points}</p>
-            <p>Price: {selectedPackage.price}</p>
-          </div>
-        )}
-      </Modal>
     </div>
   );
 };
 
-export default PointPackageShop;
+export default AddFund;

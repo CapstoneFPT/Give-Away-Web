@@ -77,7 +77,7 @@ const Navbar = () => {
     };
 
     const dropdownItems = [
-        {key: "1", icon: <MoneyCollectOutlined/>, label: <Link to="/add-fund">Add Fund</Link>},
+        {key: "1", icon: <MoneyCollectOutlined/>, label: <Link to="/add-fund">Recharge</Link>},
         {key: "2", icon: <UserOutlined/>, label: <Link to="/profile">Profile</Link>},
         {
             key: "3", icon: <LogoutOutlined/>,

@@ -4223,7 +4223,9 @@ export const ErrorCode = {
     DuplicateBankAccount: 'DuplicateBankAccount',
     NoBankAccountLeft: 'NoBankAccountLeft',
     RefundStatusNotAvailable: 'RefundStatusNotAvailable',
-    MissingFeature: 'MissingFeature'
+    MissingFeature: 'MissingFeature',
+    InvalidOperation: 'InvalidOperation',
+    PaymentFailed: 'PaymentFailed'
 } as const;
 
 export type ErrorCode = typeof ErrorCode[keyof typeof ErrorCode];
@@ -4872,6 +4874,7 @@ export const FashionItemStatus = {
     PendingForRefund: 'PendingForRefund',
     PendingForOrder: 'PendingForOrder',
     AwaitingAuction: 'AwaitingAuction',
+    AwaitingReturn: 'AwaitingReturn',
     Bidding: 'Bidding',
     Rejected: 'Rejected',
     Returned: 'Returned',
@@ -6285,6 +6288,25 @@ export interface IndividualItemListResponsePaginationResponse {
 /**
  * 
  * @export
+ * @interface InitiateRechargeRequest
+ */
+export interface InitiateRechargeRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof InitiateRechargeRequest
+     */
+    'memberId'?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof InitiateRechargeRequest
+     */
+    'amount'?: number;
+}
+/**
+ * 
+ * @export
  * @interface InquiryListResponse
  */
 export interface InquiryListResponse {
@@ -7592,18 +7614,6 @@ export interface OrderLineItem {
     'individualFashionItemId'?: string | null;
     /**
      * 
-     * @type {PointPackage}
-     * @memberof OrderLineItem
-     */
-    'pointPackage'?: PointPackage;
-    /**
-     * 
-     * @type {string}
-     * @memberof OrderLineItem
-     */
-    'pointPackageId'?: string | null;
-    /**
-     * 
      * @type {Feedback}
      * @memberof OrderLineItem
      */
@@ -7741,12 +7751,6 @@ export interface OrderLineItemDetailedResponse {
      * @memberof OrderLineItemDetailedResponse
      */
     'shopId'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof OrderLineItemDetailedResponse
-     */
-    'pointPackageId'?: string | null;
     /**
      * 
      * @type {string}
@@ -8841,217 +8845,6 @@ export interface Point {
 /**
  * 
  * @export
- * @interface PointPackage
- */
-export interface PointPackage {
-    /**
-     * 
-     * @type {string}
-     * @memberof PointPackage
-     */
-    'pointPackageId'?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof PointPackage
-     */
-    'points'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof PointPackage
-     */
-    'price'?: number;
-    /**
-     * 
-     * @type {PointPackageStatus}
-     * @memberof PointPackage
-     */
-    'status'?: PointPackageStatus;
-    /**
-     * 
-     * @type {string}
-     * @memberof PointPackage
-     */
-    'createdDate'?: string;
-    /**
-     * 
-     * @type {Array<OrderLineItem>}
-     * @memberof PointPackage
-     */
-    'orderLineItems'?: Array<OrderLineItem> | null;
-}
-
-
-/**
- * 
- * @export
- * @interface PointPackageDetailResponse
- */
-export interface PointPackageDetailResponse {
-    /**
-     * 
-     * @type {string}
-     * @memberof PointPackageDetailResponse
-     */
-    'pointPackageId'?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof PointPackageDetailResponse
-     */
-    'points'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof PointPackageDetailResponse
-     */
-    'price'?: number;
-    /**
-     * 
-     * @type {PointPackageStatus}
-     * @memberof PointPackageDetailResponse
-     */
-    'status'?: PointPackageStatus;
-}
-
-
-/**
- * 
- * @export
- * @interface PointPackageListResponse
- */
-export interface PointPackageListResponse {
-    /**
-     * 
-     * @type {string}
-     * @memberof PointPackageListResponse
-     */
-    'pointPackageId'?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof PointPackageListResponse
-     */
-    'points'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof PointPackageListResponse
-     */
-    'price'?: number;
-    /**
-     * 
-     * @type {PointPackageStatus}
-     * @memberof PointPackageListResponse
-     */
-    'status'?: PointPackageStatus;
-}
-
-
-/**
- * 
- * @export
- * @interface PointPackageListResponsePaginationResponse
- */
-export interface PointPackageListResponsePaginationResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof PointPackageListResponsePaginationResponse
-     */
-    'pageNumber'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof PointPackageListResponsePaginationResponse
-     */
-    'pageSize'?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof PointPackageListResponsePaginationResponse
-     */
-    'searchTerm'?: string | null;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof PointPackageListResponsePaginationResponse
-     */
-    'filters'?: Array<string> | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof PointPackageListResponsePaginationResponse
-     */
-    'orderBy'?: string | null;
-    /**
-     * 
-     * @type {number}
-     * @memberof PointPackageListResponsePaginationResponse
-     */
-    'totalCount'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof PointPackageListResponsePaginationResponse
-     */
-    'totalPages'?: number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PointPackageListResponsePaginationResponse
-     */
-    'hasNext'?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PointPackageListResponsePaginationResponse
-     */
-    'hasPrevious'?: boolean;
-    /**
-     * 
-     * @type {Array<PointPackageListResponse>}
-     * @memberof PointPackageListResponsePaginationResponse
-     */
-    'items'?: Array<PointPackageListResponse> | null;
-}
-/**
- * 
- * @export
- * @interface PointPackagePurchaseResponse
- */
-export interface PointPackagePurchaseResponse {
-    /**
-     * 
-     * @type {string}
-     * @memberof PointPackagePurchaseResponse
-     */
-    'paymentUrl'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof PointPackagePurchaseResponse
-     */
-    'orderCode'?: string | null;
-}
-/**
- * 
- * @export
- * @enum {string}
- */
-
-export const PointPackageStatus = {
-    Active: 'Active',
-    Inactive: 'Inactive'
-} as const;
-
-export type PointPackageStatus = typeof PointPackageStatus[keyof typeof PointPackageStatus];
-
-
-/**
- * 
- * @export
  * @interface PrecisionModel
  */
 export interface PrecisionModel {
@@ -9158,19 +8951,6 @@ export interface PurchaseOrderRequest {
 /**
  * 
  * @export
- * @interface PurchasePointPackageRequest
- */
-export interface PurchasePointPackageRequest {
-    /**
-     * 
-     * @type {string}
-     * @memberof PurchasePointPackageRequest
-     */
-    'memberId'?: string;
-}
-/**
- * 
- * @export
  * @enum {string}
  */
 
@@ -9180,6 +8960,216 @@ export const PurchaseType = {
 } as const;
 
 export type PurchaseType = typeof PurchaseType[keyof typeof PurchaseType];
+
+
+/**
+ * 
+ * @export
+ * @interface Recharge
+ */
+export interface Recharge {
+    /**
+     * 
+     * @type {string}
+     * @memberof Recharge
+     */
+    'rechargeId'?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof Recharge
+     */
+    'amount'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof Recharge
+     */
+    'rechargeCode'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof Recharge
+     */
+    'createdDate'?: string;
+    /**
+     * 
+     * @type {RechargeStatus}
+     * @memberof Recharge
+     */
+    'status'?: RechargeStatus;
+    /**
+     * 
+     * @type {PaymentMethod}
+     * @memberof Recharge
+     */
+    'paymentMethod'?: PaymentMethod;
+    /**
+     * 
+     * @type {string}
+     * @memberof Recharge
+     */
+    'memberId'?: string;
+    /**
+     * 
+     * @type {Member}
+     * @memberof Recharge
+     */
+    'member'?: Member;
+    /**
+     * 
+     * @type {Transaction}
+     * @memberof Recharge
+     */
+    'transaction'?: Transaction;
+}
+
+
+/**
+ * 
+ * @export
+ * @interface RechargeListResponse
+ */
+export interface RechargeListResponse {
+    /**
+     * 
+     * @type {string}
+     * @memberof RechargeListResponse
+     */
+    'rechargeId'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof RechargeListResponse
+     */
+    'memberId'?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof RechargeListResponse
+     */
+    'amount'?: number;
+    /**
+     * 
+     * @type {RechargeStatus}
+     * @memberof RechargeListResponse
+     */
+    'status'?: RechargeStatus;
+    /**
+     * 
+     * @type {string}
+     * @memberof RechargeListResponse
+     */
+    'createdDate'?: string;
+    /**
+     * 
+     * @type {PaymentMethod}
+     * @memberof RechargeListResponse
+     */
+    'paymentMethod'?: PaymentMethod;
+}
+
+
+/**
+ * 
+ * @export
+ * @interface RechargeListResponsePaginationResponse
+ */
+export interface RechargeListResponsePaginationResponse {
+    /**
+     * 
+     * @type {number}
+     * @memberof RechargeListResponsePaginationResponse
+     */
+    'pageNumber'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof RechargeListResponsePaginationResponse
+     */
+    'pageSize'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof RechargeListResponsePaginationResponse
+     */
+    'searchTerm'?: string | null;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof RechargeListResponsePaginationResponse
+     */
+    'filters'?: Array<string> | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof RechargeListResponsePaginationResponse
+     */
+    'orderBy'?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof RechargeListResponsePaginationResponse
+     */
+    'totalCount'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof RechargeListResponsePaginationResponse
+     */
+    'totalPages'?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof RechargeListResponsePaginationResponse
+     */
+    'hasNext'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof RechargeListResponsePaginationResponse
+     */
+    'hasPrevious'?: boolean;
+    /**
+     * 
+     * @type {Array<RechargeListResponse>}
+     * @memberof RechargeListResponsePaginationResponse
+     */
+    'items'?: Array<RechargeListResponse> | null;
+}
+/**
+ * 
+ * @export
+ * @interface RechargePurchaseResponse
+ */
+export interface RechargePurchaseResponse {
+    /**
+     * 
+     * @type {string}
+     * @memberof RechargePurchaseResponse
+     */
+    'paymentUrl'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof RechargePurchaseResponse
+     */
+    'rechargeId'?: string;
+}
+/**
+ * 
+ * @export
+ * @enum {string}
+ */
+
+export const RechargeStatus = {
+    Pending: 'Pending',
+    Completed: 'Completed',
+    Failed: 'Failed',
+    Cancelled: 'Cancelled'
+} as const;
+
+export type RechargeStatus = typeof RechargeStatus[keyof typeof RechargeStatus];
 
 
 /**
@@ -10068,6 +10058,18 @@ export interface Transaction {
      * @memberof Transaction
      */
     'refund'?: Refund;
+    /**
+     * 
+     * @type {string}
+     * @memberof Transaction
+     */
+    'rechargeId'?: string | null;
+    /**
+     * 
+     * @type {Recharge}
+     * @memberof Transaction
+     */
+    'recharge'?: Recharge;
     /**
      * 
      * @type {string}
@@ -11598,6 +11600,63 @@ export const AccountApiAxiosParamCreator = function (configuration?: Configurati
          * @param {string} accountId 
          * @param {number} [page] 
          * @param {number} [pageSize] 
+         * @param {string} [rechargeCode] 
+         * @param {RechargeStatus} [rechargeStatus] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiAccountsAccountIdRechargesGet: async (accountId: string, page?: number, pageSize?: number, rechargeCode?: string, rechargeStatus?: RechargeStatus, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'accountId' is not null or undefined
+            assertParamExists('apiAccountsAccountIdRechargesGet', 'accountId', accountId)
+            const localVarPath = `/api/accounts/{accountId}/recharges`
+                .replace(`{${"accountId"}}`, encodeURIComponent(String(accountId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            if (page !== undefined) {
+                localVarQueryParameter['Page'] = page;
+            }
+
+            if (pageSize !== undefined) {
+                localVarQueryParameter['PageSize'] = pageSize;
+            }
+
+            if (rechargeCode !== undefined) {
+                localVarQueryParameter['RechargeCode'] = rechargeCode;
+            }
+
+            if (rechargeStatus !== undefined) {
+                localVarQueryParameter['RechargeStatus'] = rechargeStatus;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} accountId 
+         * @param {number} [page] 
+         * @param {number} [pageSize] 
          * @param {Array<TransactionType>} [types] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -12134,6 +12193,22 @@ export const AccountApiFp = function(configuration?: Configuration) {
          * @param {string} accountId 
          * @param {number} [page] 
          * @param {number} [pageSize] 
+         * @param {string} [rechargeCode] 
+         * @param {RechargeStatus} [rechargeStatus] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiAccountsAccountIdRechargesGet(accountId: string, page?: number, pageSize?: number, rechargeCode?: string, rechargeStatus?: RechargeStatus, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RechargeListResponsePaginationResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAccountsAccountIdRechargesGet(accountId, page, pageSize, rechargeCode, rechargeStatus, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AccountApi.apiAccountsAccountIdRechargesGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {string} accountId 
+         * @param {number} [page] 
+         * @param {number} [pageSize] 
          * @param {Array<TransactionType>} [types] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -12399,6 +12474,19 @@ export const AccountApiFactory = function (configuration?: Configuration, basePa
          */
         apiAccountsAccountIdPut(accountId: string, updateAccountRequest?: UpdateAccountRequest, options?: any): AxiosPromise<AccountResponseResult> {
             return localVarFp.apiAccountsAccountIdPut(accountId, updateAccountRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} accountId 
+         * @param {number} [page] 
+         * @param {number} [pageSize] 
+         * @param {string} [rechargeCode] 
+         * @param {RechargeStatus} [rechargeStatus] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiAccountsAccountIdRechargesGet(accountId: string, page?: number, pageSize?: number, rechargeCode?: string, rechargeStatus?: RechargeStatus, options?: any): AxiosPromise<RechargeListResponsePaginationResponse> {
+            return localVarFp.apiAccountsAccountIdRechargesGet(accountId, page, pageSize, rechargeCode, rechargeStatus, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -12678,6 +12766,21 @@ export class AccountApi extends BaseAPI {
      */
     public apiAccountsAccountIdPut(accountId: string, updateAccountRequest?: UpdateAccountRequest, options?: RawAxiosRequestConfig) {
         return AccountApiFp(this.configuration).apiAccountsAccountIdPut(accountId, updateAccountRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} accountId 
+     * @param {number} [page] 
+     * @param {number} [pageSize] 
+     * @param {string} [rechargeCode] 
+     * @param {RechargeStatus} [rechargeStatus] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AccountApi
+     */
+    public apiAccountsAccountIdRechargesGet(accountId: string, page?: number, pageSize?: number, rechargeCode?: string, rechargeStatus?: RechargeStatus, options?: RawAxiosRequestConfig) {
+        return AccountApiFp(this.configuration).apiAccountsAccountIdRechargesGet(accountId, page, pageSize, rechargeCode, rechargeStatus, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -17781,6 +17884,43 @@ export const FashionItemApiAxiosParamCreator = function (configuration?: Configu
         /**
          * 
          * @param {string} itemId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiFashionitemsItemIdAddReturnedItemPatch: async (itemId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'itemId' is not null or undefined
+            assertParamExists('apiFashionitemsItemIdAddReturnedItemPatch', 'itemId', itemId)
+            const localVarPath = `/api/fashionitems/{itemId}/add-returned-item`
+                .replace(`{${"itemId"}}`, encodeURIComponent(String(itemId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} itemId 
          * @param {string} [memberId] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -17994,6 +18134,18 @@ export const FashionItemApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {string} itemId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiFashionitemsItemIdAddReturnedItemPatch(itemId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FashionItemDetailResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiFashionitemsItemIdAddReturnedItemPatch(itemId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['FashionItemApi.apiFashionitemsItemIdAddReturnedItemPatch']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {string} itemId 
          * @param {string} [memberId] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -18091,6 +18243,15 @@ export const FashionItemApiFactory = function (configuration?: Configuration, ba
         /**
          * 
          * @param {string} itemId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiFashionitemsItemIdAddReturnedItemPatch(itemId: string, options?: any): AxiosPromise<FashionItemDetailResponse> {
+            return localVarFp.apiFashionitemsItemIdAddReturnedItemPatch(itemId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} itemId 
          * @param {string} [memberId] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -18175,6 +18336,17 @@ export class FashionItemApi extends BaseAPI {
      */
     public apiFashionitemsGet(itemCode?: string, memberId?: string, gender?: GenderType, color?: string, size?: SizeType, condition?: string, minPrice?: number, maxPrice?: number, status?: Array<FashionItemStatus>, type?: Array<FashionItemType>, sortBy?: string, sortDescending?: boolean, pageNumber?: number, pageSize?: number, name?: string, categoryId?: string, shopId?: string, masterItemId?: string, masterItemCode?: string, options?: RawAxiosRequestConfig) {
         return FashionItemApiFp(this.configuration).apiFashionitemsGet(itemCode, memberId, gender, color, size, condition, minPrice, maxPrice, status, type, sortBy, sortDescending, pageNumber, pageSize, name, categoryId, shopId, masterItemId, masterItemCode, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} itemId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FashionItemApi
+     */
+    public apiFashionitemsItemIdAddReturnedItemPatch(itemId: string, options?: RawAxiosRequestConfig) {
+        return FashionItemApiFp(this.configuration).apiFashionitemsItemIdAddReturnedItemPatch(itemId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -20142,21 +20314,23 @@ export class OrderLineItemApi extends BaseAPI {
 
 
 /**
- * PointPackageApi - axios parameter creator
+ * RechargeApi - axios parameter creator
  * @export
  */
-export const PointPackageApiAxiosParamCreator = function (configuration?: Configuration) {
+export const RechargeApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
          * 
          * @param {number} [page] 
          * @param {number} [pageSize] 
-         * @param {Array<PointPackageStatus>} [status] 
+         * @param {string} [memberId] 
+         * @param {string} [rechargeCode] 
+         * @param {RechargeStatus} [rechargeStatus] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiPointpackagesGet: async (page?: number, pageSize?: number, status?: Array<PointPackageStatus>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/pointpackages`;
+        apiRechargesGet: async (page?: number, pageSize?: number, memberId?: string, rechargeCode?: string, rechargeStatus?: RechargeStatus, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/recharges`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -20180,8 +20354,16 @@ export const PointPackageApiAxiosParamCreator = function (configuration?: Config
                 localVarQueryParameter['PageSize'] = pageSize;
             }
 
-            if (status) {
-                localVarQueryParameter['Status'] = status;
+            if (memberId !== undefined) {
+                localVarQueryParameter['MemberId'] = memberId;
+            }
+
+            if (rechargeCode !== undefined) {
+                localVarQueryParameter['RechargeCode'] = rechargeCode;
+            }
+
+            if (rechargeStatus !== undefined) {
+                localVarQueryParameter['RechargeStatus'] = rechargeStatus;
             }
 
 
@@ -20197,86 +20379,12 @@ export const PointPackageApiAxiosParamCreator = function (configuration?: Config
         },
         /**
          * 
+         * @param {InitiateRechargeRequest} [initiateRechargeRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiPointpackagesPaymentReturnGet: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/pointpackages/payment-return`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication Bearer required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @param {string} pointPackageId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        apiPointpackagesPointPackageIdGet: async (pointPackageId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'pointPackageId' is not null or undefined
-            assertParamExists('apiPointpackagesPointPackageIdGet', 'pointPackageId', pointPackageId)
-            const localVarPath = `/api/pointpackages/{pointPackageId}`
-                .replace(`{${"pointPackageId"}}`, encodeURIComponent(String(pointPackageId)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication Bearer required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @param {string} pointPackageId 
-         * @param {PurchasePointPackageRequest} [purchasePointPackageRequest] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        apiPointpackagesPointPackageIdPurchasePost: async (pointPackageId: string, purchasePointPackageRequest?: PurchasePointPackageRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'pointPackageId' is not null or undefined
-            assertParamExists('apiPointpackagesPointPackageIdPurchasePost', 'pointPackageId', pointPackageId)
-            const localVarPath = `/api/pointpackages/{pointPackageId}/purchase`
-                .replace(`{${"pointPackageId"}}`, encodeURIComponent(String(pointPackageId)));
+        apiRechargesInitiatePost: async (initiateRechargeRequest?: InitiateRechargeRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/recharges/initiate`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -20299,7 +20407,40 @@ export const PointPackageApiAxiosParamCreator = function (configuration?: Config
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(purchasePointPackageRequest, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(initiateRechargeRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiRechargesPaymentReturnGet: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/recharges/payment-return`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -20310,24 +20451,38 @@ export const PointPackageApiAxiosParamCreator = function (configuration?: Config
 };
 
 /**
- * PointPackageApi - functional programming interface
+ * RechargeApi - functional programming interface
  * @export
  */
-export const PointPackageApiFp = function(configuration?: Configuration) {
-    const localVarAxiosParamCreator = PointPackageApiAxiosParamCreator(configuration)
+export const RechargeApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = RechargeApiAxiosParamCreator(configuration)
     return {
         /**
          * 
          * @param {number} [page] 
          * @param {number} [pageSize] 
-         * @param {Array<PointPackageStatus>} [status] 
+         * @param {string} [memberId] 
+         * @param {string} [rechargeCode] 
+         * @param {RechargeStatus} [rechargeStatus] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiPointpackagesGet(page?: number, pageSize?: number, status?: Array<PointPackageStatus>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PointPackageListResponsePaginationResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiPointpackagesGet(page, pageSize, status, options);
+        async apiRechargesGet(page?: number, pageSize?: number, memberId?: string, rechargeCode?: string, rechargeStatus?: RechargeStatus, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RechargeListResponsePaginationResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiRechargesGet(page, pageSize, memberId, rechargeCode, rechargeStatus, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['PointPackageApi.apiPointpackagesGet']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['RechargeApi.apiRechargesGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {InitiateRechargeRequest} [initiateRechargeRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiRechargesInitiatePost(initiateRechargeRequest?: InitiateRechargeRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RechargePurchaseResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiRechargesInitiatePost(initiateRechargeRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['RechargeApi.apiRechargesInitiatePost']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -20335,139 +20490,96 @@ export const PointPackageApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiPointpackagesPaymentReturnGet(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiPointpackagesPaymentReturnGet(options);
+        async apiRechargesPaymentReturnGet(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiRechargesPaymentReturnGet(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['PointPackageApi.apiPointpackagesPaymentReturnGet']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * 
-         * @param {string} pointPackageId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async apiPointpackagesPointPackageIdGet(pointPackageId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PointPackageDetailResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiPointpackagesPointPackageIdGet(pointPackageId, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['PointPackageApi.apiPointpackagesPointPackageIdGet']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * 
-         * @param {string} pointPackageId 
-         * @param {PurchasePointPackageRequest} [purchasePointPackageRequest] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async apiPointpackagesPointPackageIdPurchasePost(pointPackageId: string, purchasePointPackageRequest?: PurchasePointPackageRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PointPackagePurchaseResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiPointpackagesPointPackageIdPurchasePost(pointPackageId, purchasePointPackageRequest, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['PointPackageApi.apiPointpackagesPointPackageIdPurchasePost']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['RechargeApi.apiRechargesPaymentReturnGet']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
 };
 
 /**
- * PointPackageApi - factory interface
+ * RechargeApi - factory interface
  * @export
  */
-export const PointPackageApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = PointPackageApiFp(configuration)
+export const RechargeApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = RechargeApiFp(configuration)
     return {
         /**
          * 
          * @param {number} [page] 
          * @param {number} [pageSize] 
-         * @param {Array<PointPackageStatus>} [status] 
+         * @param {string} [memberId] 
+         * @param {string} [rechargeCode] 
+         * @param {RechargeStatus} [rechargeStatus] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiPointpackagesGet(page?: number, pageSize?: number, status?: Array<PointPackageStatus>, options?: any): AxiosPromise<PointPackageListResponsePaginationResponse> {
-            return localVarFp.apiPointpackagesGet(page, pageSize, status, options).then((request) => request(axios, basePath));
+        apiRechargesGet(page?: number, pageSize?: number, memberId?: string, rechargeCode?: string, rechargeStatus?: RechargeStatus, options?: any): AxiosPromise<RechargeListResponsePaginationResponse> {
+            return localVarFp.apiRechargesGet(page, pageSize, memberId, rechargeCode, rechargeStatus, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {InitiateRechargeRequest} [initiateRechargeRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiRechargesInitiatePost(initiateRechargeRequest?: InitiateRechargeRequest, options?: any): AxiosPromise<RechargePurchaseResponse> {
+            return localVarFp.apiRechargesInitiatePost(initiateRechargeRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiPointpackagesPaymentReturnGet(options?: any): AxiosPromise<void> {
-            return localVarFp.apiPointpackagesPaymentReturnGet(options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @param {string} pointPackageId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        apiPointpackagesPointPackageIdGet(pointPackageId: string, options?: any): AxiosPromise<PointPackageDetailResponse> {
-            return localVarFp.apiPointpackagesPointPackageIdGet(pointPackageId, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @param {string} pointPackageId 
-         * @param {PurchasePointPackageRequest} [purchasePointPackageRequest] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        apiPointpackagesPointPackageIdPurchasePost(pointPackageId: string, purchasePointPackageRequest?: PurchasePointPackageRequest, options?: any): AxiosPromise<PointPackagePurchaseResponse> {
-            return localVarFp.apiPointpackagesPointPackageIdPurchasePost(pointPackageId, purchasePointPackageRequest, options).then((request) => request(axios, basePath));
+        apiRechargesPaymentReturnGet(options?: any): AxiosPromise<void> {
+            return localVarFp.apiRechargesPaymentReturnGet(options).then((request) => request(axios, basePath));
         },
     };
 };
 
 /**
- * PointPackageApi - object-oriented interface
+ * RechargeApi - object-oriented interface
  * @export
- * @class PointPackageApi
+ * @class RechargeApi
  * @extends {BaseAPI}
  */
-export class PointPackageApi extends BaseAPI {
+export class RechargeApi extends BaseAPI {
     /**
      * 
      * @param {number} [page] 
      * @param {number} [pageSize] 
-     * @param {Array<PointPackageStatus>} [status] 
+     * @param {string} [memberId] 
+     * @param {string} [rechargeCode] 
+     * @param {RechargeStatus} [rechargeStatus] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof PointPackageApi
+     * @memberof RechargeApi
      */
-    public apiPointpackagesGet(page?: number, pageSize?: number, status?: Array<PointPackageStatus>, options?: RawAxiosRequestConfig) {
-        return PointPackageApiFp(this.configuration).apiPointpackagesGet(page, pageSize, status, options).then((request) => request(this.axios, this.basePath));
+    public apiRechargesGet(page?: number, pageSize?: number, memberId?: string, rechargeCode?: string, rechargeStatus?: RechargeStatus, options?: RawAxiosRequestConfig) {
+        return RechargeApiFp(this.configuration).apiRechargesGet(page, pageSize, memberId, rechargeCode, rechargeStatus, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {InitiateRechargeRequest} [initiateRechargeRequest] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof RechargeApi
+     */
+    public apiRechargesInitiatePost(initiateRechargeRequest?: InitiateRechargeRequest, options?: RawAxiosRequestConfig) {
+        return RechargeApiFp(this.configuration).apiRechargesInitiatePost(initiateRechargeRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof PointPackageApi
+     * @memberof RechargeApi
      */
-    public apiPointpackagesPaymentReturnGet(options?: RawAxiosRequestConfig) {
-        return PointPackageApiFp(this.configuration).apiPointpackagesPaymentReturnGet(options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @param {string} pointPackageId 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof PointPackageApi
-     */
-    public apiPointpackagesPointPackageIdGet(pointPackageId: string, options?: RawAxiosRequestConfig) {
-        return PointPackageApiFp(this.configuration).apiPointpackagesPointPackageIdGet(pointPackageId, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @param {string} pointPackageId 
-     * @param {PurchasePointPackageRequest} [purchasePointPackageRequest] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof PointPackageApi
-     */
-    public apiPointpackagesPointPackageIdPurchasePost(pointPackageId: string, purchasePointPackageRequest?: PurchasePointPackageRequest, options?: RawAxiosRequestConfig) {
-        return PointPackageApiFp(this.configuration).apiPointpackagesPointPackageIdPurchasePost(pointPackageId, purchasePointPackageRequest, options).then((request) => request(this.axios, this.basePath));
+    public apiRechargesPaymentReturnGet(options?: RawAxiosRequestConfig) {
+        return RechargeApiFp(this.configuration).apiRechargesPaymentReturnGet(options).then((request) => request(this.axios, this.basePath));
     }
 }
 
