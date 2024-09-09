@@ -475,7 +475,7 @@ function App() {
                                 </>
                             }/>
                             <Route
-                            path="/transaction/allTransaction"
+                            path="/transactions"
                             element={
                                 <>
                                     <Navbar/>

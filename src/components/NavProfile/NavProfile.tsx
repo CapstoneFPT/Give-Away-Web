@@ -6,11 +6,13 @@ import {
     UserOutlined,
     OrderedListOutlined,
     InboxOutlined,
-     HomeOutlined
+     HomeOutlined,
+     ClockCircleOutlined
 } from "@ant-design/icons";
 import {Button, Menu, Card} from "antd";
 import {useNavigate} from "react-router-dom";
 import {AccountApi} from "../../api";
+import { icon } from "leaflet";
 
 
 const MenuItemWithButton = ({key, icon, label, to}: {
@@ -60,27 +62,20 @@ const NavProfile: React.FC = () => {
         {key: "1", icon: <UserOutlined/>, label: "Profile", to: "/profile"},
         {key: "2", icon: <KeyOutlined/>, label: "Change Password", to: "/change-password"},
         {key:"address", icon: <HomeOutlined/>, label: "Address", to: "/profile/addresses"},
-        {key: "3", icon: <OrderedListOutlined/>, label: "Order list", to: "/order-list"},
-        {key: "4", icon: <DollarOutlined/>, label: "Withdraw", to: "/transaction/withdraw"},
-        {key: "5", icon: <InboxOutlined />,label: "Consign History", to: "/transaction/My-consign"},
-        {key: "6", icon: <InboxOutlined />,label: "Refund List", to: "/profile/refundList"},
-
-        
-
+        {key: "13",icon: <OrderedListOutlined/>, label: "Orders", to: "/order-list"},
+        {key: "17",icon: <OrderedListOutlined/>, label: "Consignment", to: "/transaction/My-consign"},
+        {key: "12", icon: <OrderedListOutlined/>, label: "Auction", to: "/transaction/Auction-history"},
+        {key: "15", icon: <OrderedListOutlined/>, label: "Refund", to: "/profile/refundList"},
         // { key: "sub1", icon: <RetweetOutlined />, label: "Refunds", to: "/refunds" },
         {
             key: "sub2",
-            icon: <AppstoreOutlined/>,
-            label: "Transaction",
+            icon: <ClockCircleOutlined/>,
+            label: "History",
             children: [
-                {key: "9", label: "ALL Transaction", to: "/transaction/allTransaction"},
-                {key: "10", label: "Withdraw History", to: "/transaction/withdraw-history"},
-                {key: "11", label: "Deposit History", to: "/transaction/deposit-history"},
-                {key: "12", label: "Auction History", to: "/transaction/Auction-history"},
-                {key: "13", label: "Purchase History", to: "/transaction/purchase-history"},
-                {key: "14", label: "Recharge History", to: "/transaction/recharge-history"},
-                {key: "15", icon: <InboxOutlined />,label: "Refund History", to: "/transaction/refund-history"},
-                {key: "16", label: "Payout History", to: "/transaction/payout-history"},
+                {key: "9", label: "Transactions", to: "/transactions"},
+                {key: "10", label: "Withdraw", to: "/transaction/withdraw-history"},
+                {key: "11", label: "Deposit", to: "/transaction/deposit-history"},
+                {key: "14", label: "Recharge", to: "/transaction/recharge-history"},
             ],
         },
         // { key: "3", icon: <LogoutOutlined />, label: "Logout", to: "/logout" },
