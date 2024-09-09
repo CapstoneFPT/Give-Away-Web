@@ -64,16 +64,15 @@ const ConsignDetail = () => {
     }) =>
       decision === "accept"
         ? consignLineItemApi.apiConsignlineitemsConsignLineItemIdAprroveNegotiationPut(
-            itemId
-          )
+          itemId
+        )
         : consignLineItemApi.apiConsignlineitemsConsignLineItemIdRejectNegotiationPut(
-            itemId
-          ),
+          itemId
+        ),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["consignLineItems"] });
       message.success(
-        `Deal ${
-          confirmationAction === "continue" ? "accepted" : "rejected"
+        `Deal ${confirmationAction === "continue" ? "accepted" : "rejected"
         } successfully!`
       );
       setModalVisible(false);
@@ -138,6 +137,33 @@ const ConsignDetail = () => {
     }
   };
 
+  const renderDealStatus = (item: ConsignSaleLineItemsListResponse, consignInformation: any) => {
+    if (item.isApproved == null || item.isApproved == undefined) {
+      if (item.status === 'Negotiating') return (
+        <Button
+          type="primary"
+          onClick={() => openDecisionModal(item)}
+          disabled={
+            consignInformation?.status !== "Negotiating" ||
+            item.status !== 'Negotiating'
+          }
+        >
+          Decide on Deal Price
+        </Button>
+      )
+    }
+    else if (item.isApproved == false) {
+      return (
+        <Tag color="red">Deal Rejected</Tag>
+      )
+    }
+    else if (item.isApproved == true) {
+      return (
+        <Tag color="green">Deal Accepted</Tag>
+      )
+    }
+  };
+
   if (lineItemsLoading || informationLoading) {
     return <Spin size="large" style={{ display: "block", margin: "auto" }} />;
   }
@@ -159,15 +185,15 @@ const ConsignDetail = () => {
         </Col>
         <Col span={18}>
           <Card bordered={false} style={{ borderRadius: "10px" }}>
-            
-             <div style={{marginBottom:'40px'}}>
+
+            <div style={{ marginBottom: '40px' }}>
               <h2>Consgin Detail</h2>
-             {consignInformation && (
-              
+              {consignInformation && (
+
                 <Descriptions column={2} bordered size="small">
                   <Descriptions.Item label="Consign Code">
                     {consignInformation.consignSaleCode}
-                    
+
                   </Descriptions.Item>
                   <Descriptions.Item label="Consignor">
                     {consignInformation.consginer}
@@ -177,13 +203,13 @@ const ConsignDetail = () => {
                   </Descriptions.Item>
                   <Descriptions.Item label="Start Date">
                     {new Date(consignInformation.startDate!) >
-                    new Date(null!)
+                      new Date(null!)
                       ? new Date(consignInformation.startDate!).toLocaleString()
                       : "N/A"}
                   </Descriptions.Item>
                   <Descriptions.Item label="End Date">
                     {new Date(consignInformation.endDate!) >
-                    new Date(null!)
+                      new Date(null!)
                       ? new Date(consignInformation.endDate!).toLocaleString()
                       : "N/A"}
                   </Descriptions.Item>
@@ -200,24 +226,24 @@ const ConsignDetail = () => {
                     {consignInformation.email}
                   </Descriptions.Item>
                   <Descriptions.Item label="Consign Status">
-                  <Typography>
-                  
-                <Tag
-                      color={
-                        consignInformation.status! === "Completed"
-                          ? "green"
-                          : "blue"
-                      }
-                      style={{ marginLeft: "10px" }}
-                    >
-                      {consignInformation.status}
-                    </Tag>
-                </Typography>
+                    <Typography>
+
+                      <Tag
+                        color={
+                          consignInformation.status! === "Completed"
+                            ? "green"
+                            : "blue"
+                        }
+                        style={{ marginLeft: "10px" }}
+                      >
+                        {consignInformation.status}
+                      </Tag>
+                    </Typography>
                   </Descriptions.Item>
                 </Descriptions>
               )}
-             </div>
-            
+            </div>
+
 
             {consignLineItems &&
               consignLineItems.map((item, index) => (
@@ -285,25 +311,8 @@ const ConsignDetail = () => {
                       <Tag>{item.status}</Tag>
                     </Descriptions.Item>
                     <Descriptions.Item label="Deal Status">
-                {item.status !== 'Negotiating' ? (
-                  <Tag color={item.isApproved ? "green" : "red"}>
-                    {item.isApproved ? "Deal Accepted" : "Deal Rejected"}
-                  </Tag>
-                ) : item.status === 'Negotiating' ?  (
-                  <Button
-                    type="primary"
-                    onClick={() => openDecisionModal(item)}
-                    disabled={
-                      consignInformation?.status !== "Negotiating" ||
-                      item.status !== 'Negotiating'
-                    }
-                  >
-                    Decide on Deal Price
-                  </Button>
-                ) : (
-                  <Tag color="orange">Pending Deal</Tag>
-                )}
-              </Descriptions.Item>
+                      {renderDealStatus(item, consignInformation)}
+                    </Descriptions.Item>
                   </Descriptions>
                 </Card>
               ))}
@@ -329,24 +338,26 @@ const ConsignDetail = () => {
                 <Button
                   onClick={() => openConfirmationModal("continue")}
                   disabled={(
-                   consignLineItems && consignLineItems.some((item) => item.status === 'Negotiating') 
-                   && consignInformation?.status === "Negotiating"
+                    consignLineItems && consignLineItems.some((item) => item.status === 'Negotiating')
+                    && consignInformation?.status === "Negotiating"
                   ) || (
-                    consignInformation?.status === ConsignSaleStatus.Pending ||
-                    consignInformation?.status === ConsignSaleStatus.AwaitDelivery ||
-                    consignInformation?.status === ConsignSaleStatus.Processing
-                  )
+                      consignInformation?.status === ConsignSaleStatus.Pending ||
+                      consignInformation?.status === ConsignSaleStatus.AwaitDelivery ||
+                      consignInformation?.status === ConsignSaleStatus.Processing ||
+                      consignInformation?.status === ConsignSaleStatus.Completed ||
+                      consignInformation?.status === ConsignSaleStatus.Cancelled
+                    )
                   }
                   style={{ marginRight: "10px" }}
                 >
                   Continue Consign
                 </Button>
                 <Button onClick={() => openConfirmationModal("cancel")}
-                disabled={(consignInformation!.status! !== ConsignSaleStatus.Negotiating
-                  && consignInformation!.status! !== ConsignSaleStatus.Pending
-                  && consignInformation!.status !== ConsignSaleStatus.AwaitDelivery
-                  && consignInformation!.status !== ConsignSaleStatus.Processing)
-                } danger>
+                  disabled={(consignInformation!.status! !== ConsignSaleStatus.Negotiating
+                    && consignInformation!.status! !== ConsignSaleStatus.Pending
+                    && consignInformation!.status !== ConsignSaleStatus.AwaitDelivery
+                    && consignInformation!.status !== ConsignSaleStatus.Processing)
+                  } danger>
                   Cancel Consign
                 </Button>
               </Col>
@@ -396,9 +407,8 @@ const ConsignDetail = () => {
       </Modal>
 
       <Modal
-        title={`Confirm ${
-          confirmationAction === "continue" ? "Continue" : "Cancel"
-        } Consignment`}
+        title={`Confirm ${confirmationAction === "continue" ? "Continue" : "Cancel"
+          } Consignment`}
         open={confirmationModalVisible}
         onOk={handleConfirmation}
         onCancel={() => setConfirmationModalVisible(false)}
