@@ -38,7 +38,7 @@ const Cart: React.FC<CartProps> = ({cartItems, selectedItems, onSelect, onRemove
                 dataIndex: 'images',
                 align: 'center',
                 width: 250,
-                render: (images: any[], record: any) => (
+                render: (images: string[], record: any) => (
                     <>
                         <Paragraph>
                             <Text strong style={{
@@ -49,7 +49,7 @@ const Cart: React.FC<CartProps> = ({cartItems, selectedItems, onSelect, onRemove
                             <Text type="secondary">{record.itemCode}</Text>
                         </Paragraph>
                         <Image
-                            src={images[0]}
+                            src={images ? images[0] : ''}
                             alt="Product"
                             width={100}
                             height={100}

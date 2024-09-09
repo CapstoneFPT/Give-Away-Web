@@ -12,19 +12,22 @@ import {
   Descriptions,
   Table,
   Space,
+  notification,
 } from "antd";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import NavProfile from "../components/NavProfile/NavProfile";
-import { FashionItemStatus, OrderApi, OrderLineItemListResponse } from "../api";
+import { FashionItemDetailResponse, FashionItemStatus, OrderApi, OrderLineItemListResponse } from "../api";
 import { useQuery } from "@tanstack/react-query";
 import { ColumnsType } from "antd/es/table";
 import { getOrderStatus, getStatusColor } from "../utils/types";
+import { useCart } from "./CartContext";
 
 const { Title, Text, Paragraph } = Typography;
 
 const OrderDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const {dispatch, isItemInCart} = useCart();
 
   const orderApi = new OrderApi();
 
@@ -58,6 +61,26 @@ const OrderDetail = () => {
     const currentDate = new Date();
     return expirationDate > currentDate;
   };
+  const handleAddToCart = (product: FashionItemDetailResponse) => {
+    if (product.isOrderedYet) {
+        notification.error({
+            message: "Already Ordered",
+            description: `The item "${product.name}" has already been ordered.`,
+        });
+    } else if (isItemInCart(product.itemId!)) {
+        notification.warning({
+            message: "Already in Cart",
+            description: `The item "${product.name}" is already in your cart.`,
+        });
+    } else {
+        dispatch({type: "ADD_TO_CART", payload: {...product}});
+        notification.success({
+            message: "Added to Cart",
+            description: `The item "${product.name}" has been added to your cart.`,
+        });
+        console.log("Adding item to cart with itemId:", product.itemId);
+    }
+};
 
   const handleRefundClick = (
     orderLineItem: OrderLineItemListResponse,
@@ -188,27 +211,62 @@ const OrderDetail = () => {
       key: "shopId",
       width: 200,
       align: "center",
-    },
+     },
 
-    {
+     {
       title: "Action",
       key: "action",
       align: "center",
-      render: (text: any, record: OrderLineItemListResponse) =>
-        record.itemStatus === FashionItemStatus.Refundable && (
-          <Button
-            type="primary"
-            style={{
-              backgroundColor: "black",
-              borderColor: "black",
-              width: "100px",
-              height: "35px",
-            }}
-            onClick={() => handleRefundClick(record, record.orderLineItemId!)}
-          >
-            Refund
-          </Button>
-        ),
+      render: (text: any, record: OrderLineItemListResponse) => (
+        <>
+          {record.itemStatus === FashionItemStatus.Refundable && (
+            <Button
+              type="primary"
+              style={{
+                backgroundColor: "black",
+                borderColor: "black",
+                width: "100px",
+                height: "35px",
+              }}
+              onClick={() => handleRefundClick(record, record.orderLineItemId!)}
+            >
+              Refund
+            </Button>
+          )}
+           {record.itemStatus === FashionItemStatus.Reserved && (
+            <Button
+              type="default"
+              style={{
+                width: "100px",
+                height: "35px",
+                marginLeft: "10px",
+              }}
+              onClick={() => {
+                // Create a new object of type FashionItemDetailResponse
+                const product: FashionItemDetailResponse = {
+                  itemId: record.orderLineItemId!,
+                  name: record.itemName,
+                   // Set this based on your logic
+                  images: record.itemImage!,
+                  brand: record.itemBrand,
+                  size: record.itemSize,
+                  gender: record.itemGender,
+                  color: record.itemColor,
+                  sellingPrice: record.unitPrice,
+                  condition: record.condition
+                  
+
+                   // Assuming this is the correct mapping
+                  // Add other necessary properties from record to match FashionItemDetailResponse
+                };
+                handleAddToCart(product);
+              }}
+            >
+              Add to Cart
+            </Button>
+          )}
+        </>
+      ),
     },
   ];
 

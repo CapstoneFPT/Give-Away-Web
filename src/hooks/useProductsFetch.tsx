@@ -40,7 +40,9 @@ const useProductsFetch = ({
             categoryId,
             null!,
             page,
-            pageSize
+            pageSize,
+            true
+            
           );
         } else if (gender) {
           response = await fashionItemApi.apiMasterItemsFrontpageGet(
@@ -48,7 +50,9 @@ const useProductsFetch = ({
             categoryId,
             gender,
             page,
-            pageSize
+            pageSize,
+            true,
+
           );
         } else if (shopId) {
           response = await fashionItemApi.apiMasterItemsGet(
@@ -59,7 +63,9 @@ const useProductsFetch = ({
             pageSize,
             categoryId,
             shopId,
-            null!
+            null!,
+            null!,
+            true
           );
         } else {
           response = await fashionItemApi.apiMasterItemsFrontpageGet(
