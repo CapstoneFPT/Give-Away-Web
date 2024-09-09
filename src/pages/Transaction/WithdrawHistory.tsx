@@ -1,65 +1,60 @@
-import React, {useEffect, useState} from "react";
-import {Card, Col, Row, Table} from "antd";
+import React, { useState } from "react";
+import { Card, Col, Row, Table, Typography, Input, Select, Space } from "antd";
 import NavProfile from "../../components/NavProfile/NavProfile";
-import {AccountApi, GetWithdrawsResponse} from "../../api";
+import { GetWithdrawsResponse, WithdrawStatus } from "../../api";
+import useWithdrawHistory from "../../hooks/useWithdraws";
 
-const WithdrawHistory = () => {
+const { Title } = Typography;
+const { Search } = Input;
+const { Option } = Select;
+
+const WithdrawHistory: React.FC = () => {
     const userId = JSON.parse(localStorage.getItem("userId") || "null");
-    console.log(userId);
+    const [page, setPage] = useState(1);
+    const [pageSize, setPageSize] = useState(10);
+    const [status, setStatus] = useState<WithdrawStatus | undefined>(undefined);
+    const [searchTerm, setSearchTerm] = useState("");
 
-    const [data, setData] = useState<GetWithdrawsResponse[]>([]);
+    const { data, isLoading, error } = useWithdrawHistory({
+        accountId: userId,
+        page,
+        pageSize,
+        status,
+        withdrawCode: searchTerm,
+    });
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                // const response = await axios.get(`${BASE_URL}/accounts/${userId}/withdraws`);
-                const accountApi = new AccountApi();
-                const response = await accountApi.apiAccountsAccountIdWithdrawsGet(userId);
-                const transactions = response.data.items; // Extracting transactions array from the response object
-                setData(transactions || []);
-                console.log(transactions)
-            } catch (error) {
-                console.error("Error fetching data:", error);
-            }
-        };
-
-        fetchData();
-    }, [userId]);
-    const formatBalance = (balance: any) => {
+    const formatBalance = (balance: number) => {
         return new Intl.NumberFormat('de-DE').format(balance);
     };
+
     const columns = [
         {
-            title: 'Bank Name ',
+            title: 'Bank Name',
             dataIndex: 'bankAccountName',
             key: 'bankAccountName',
         },
         {
-            title: 'Amount ',
+            title: 'Amount',
             dataIndex: 'amount',
             key: 'amount',
             render: (amount: number) => <strong>{formatBalance(amount)} VND</strong>,
         },
-
         {
-            title: 'Created Date ',
+            title: 'Created Date',
             dataIndex: 'createdDate',
             key: 'createdDate',
             render: (createdDate: string) => new Date(createdDate).toLocaleString(),
         },
         {
-            title: 'Bank Account ',
+            title: 'Bank Account',
             dataIndex: 'bankAccountNumber',
             key: 'bankAccountNumber',
         },
-
         {
-            title: 'Bank ',
+            title: 'Bank',
             dataIndex: 'bank',
             key: 'bank',
         },
-
-
         {
             title: 'Status',
             dataIndex: 'status',
@@ -67,11 +62,12 @@ const WithdrawHistory = () => {
         },
     ];
 
+
     return (
         <Card>
             <Row gutter={[16, 16]}>
                 <Col span={5}>
-                    <NavProfile/>
+                    <NavProfile />
                 </Col>
                 <Col span={19}>
                     <Card
@@ -80,28 +76,49 @@ const WithdrawHistory = () => {
                             boxShadow: "2px 2px 7px #cbc1c1",
                         }}
                     >
-                        <h3
-                            style={{
-                                fontSize: "40px",
-                                fontWeight: "bold",
-                                textAlign: "center",
-                                marginBottom: "10px",
-                            }}
-                        >
-                            Withdraw history
-                        </h3>
+                        <Title level={3} style={{ textAlign: "center", marginBottom: "20px" }}>
+                            Withdraw History
+                        </Title>
+                        <Space style={{ marginBottom: 16 }}>
+                            <Search
+                                placeholder="Search by withdraw code"
+                                onSearch={(value) => setSearchTerm(value)}
+                                style={{ width: 300 }}
+                            />
+                            <Select
+                                style={{ width: 200 }}
+                                placeholder="Filter by status"
+                                onChange={(value) => setStatus(value)}
+                                allowClear
+                            >
+                                {Object.values(WithdrawStatus).map((status) => (
+                                    <Option key={status} value={status}>
+                                        {status}
+                                    </Option>
+                                ))}
+                            </Select>
+                        </Space>
                         <Table
-                            dataSource={data}
+                            dataSource={data?.items || []}
                             columns={columns}
-                            rowKey="id"
-                            pagination={{pageSize: 4}}
-                            style={{marginTop: '20px'}}
+                            rowKey="withdrawId"
+                            loading={isLoading}
+                            pagination={{
+                                current: page,
+                                pageSize: pageSize,
+                                total: data?.totalCount,
+                                onChange: (page, pageSize) => {
+                                    setPage(page);
+                                    setPageSize(pageSize);
+                                },
+                            }}
                         />
+                        {error && <p>Error: {(error as Error).message}</p>}
                     </Card>
                 </Col>
             </Row>
         </Card>
     );
-}
+};
 
 export default WithdrawHistory;
