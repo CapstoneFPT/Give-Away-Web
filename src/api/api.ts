@@ -548,6 +548,12 @@ export interface AuctionDeposit {
      * @memberof AuctionDeposit
      */
     'transactionId'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AuctionDeposit
+     */
+    'depositCode'?: string | null;
 }
 /**
  * 
@@ -603,6 +609,12 @@ export interface AuctionDepositDetailResponse {
      * @memberof AuctionDepositDetailResponse
      */
     'createdDate'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AuctionDepositDetailResponse
+     */
+    'depositCode'?: string | null;
 }
 /**
  * 
@@ -5504,6 +5516,12 @@ export interface GetTransactionsResponse {
      * @type {string}
      * @memberof GetTransactionsResponse
      */
+    'transactionCode'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof GetTransactionsResponse
+     */
     'orderCode'?: string | null;
     /**
      * 
@@ -5511,6 +5529,12 @@ export interface GetTransactionsResponse {
      * @memberof GetTransactionsResponse
      */
     'consignSaleCode'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof GetTransactionsResponse
+     */
+    'rechargeCode'?: string | null;
     /**
      * 
      * @type {number}
@@ -5535,6 +5559,12 @@ export interface GetTransactionsResponse {
      * @memberof GetTransactionsResponse
      */
     'memberId'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof GetTransactionsResponse
+     */
+    'depositCode'?: string | null;
 }
 
 
@@ -5659,6 +5689,12 @@ export interface GetWithdrawsResponse {
      * @memberof GetWithdrawsResponse
      */
     'bankAccountNumber'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof GetWithdrawsResponse
+     */
+    'withdrawCode'?: string | null;
 }
 
 
@@ -9060,6 +9096,12 @@ export interface RechargeListResponse {
      * @type {string}
      * @memberof RechargeListResponse
      */
+    'rechargeCode'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof RechargeListResponse
+     */
     'createdDate'?: string;
     /**
      * 
@@ -10136,6 +10178,12 @@ export interface Transaction {
      * @memberof Transaction
      */
     'auctionDeposit'?: AuctionDeposit;
+    /**
+     * 
+     * @type {string}
+     * @memberof Transaction
+     */
+    'transactionCode'?: string | null;
 }
 
 
@@ -10856,6 +10904,12 @@ export interface Withdraw {
      * @memberof Withdraw
      */
     'member'?: Member;
+    /**
+     * 
+     * @type {string}
+     * @memberof Withdraw
+     */
+    'withdrawCode'?: string | null;
     /**
      * 
      * @type {Transaction}
@@ -11658,10 +11712,15 @@ export const AccountApiAxiosParamCreator = function (configuration?: Configurati
          * @param {number} [page] 
          * @param {number} [pageSize] 
          * @param {Array<TransactionType>} [types] 
+         * @param {string} [transactionCode] 
+         * @param {string} [orderCode] 
+         * @param {string} [consignSaleCode] 
+         * @param {string} [rechargeCode] 
+         * @param {string} [depositCode] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAccountsAccountIdTransactionsGet: async (accountId: string, page?: number, pageSize?: number, types?: Array<TransactionType>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        apiAccountsAccountIdTransactionsGet: async (accountId: string, page?: number, pageSize?: number, types?: Array<TransactionType>, transactionCode?: string, orderCode?: string, consignSaleCode?: string, rechargeCode?: string, depositCode?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'accountId' is not null or undefined
             assertParamExists('apiAccountsAccountIdTransactionsGet', 'accountId', accountId)
             const localVarPath = `/api/accounts/{accountId}/transactions`
@@ -11693,6 +11752,26 @@ export const AccountApiAxiosParamCreator = function (configuration?: Configurati
                 localVarQueryParameter['Types'] = types;
             }
 
+            if (transactionCode !== undefined) {
+                localVarQueryParameter['TransactionCode'] = transactionCode;
+            }
+
+            if (orderCode !== undefined) {
+                localVarQueryParameter['OrderCode'] = orderCode;
+            }
+
+            if (consignSaleCode !== undefined) {
+                localVarQueryParameter['ConsignSaleCode'] = consignSaleCode;
+            }
+
+            if (rechargeCode !== undefined) {
+                localVarQueryParameter['RechargeCode'] = rechargeCode;
+            }
+
+            if (depositCode !== undefined) {
+                localVarQueryParameter['DepositCode'] = depositCode;
+            }
+
 
     
             setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -11710,10 +11789,11 @@ export const AccountApiAxiosParamCreator = function (configuration?: Configurati
          * @param {number} [page] 
          * @param {number} [pageSize] 
          * @param {WithdrawStatus} [status] 
+         * @param {string} [withdrawCode] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAccountsAccountIdWithdrawsGet: async (accountId: string, page?: number, pageSize?: number, status?: WithdrawStatus, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        apiAccountsAccountIdWithdrawsGet: async (accountId: string, page?: number, pageSize?: number, status?: WithdrawStatus, withdrawCode?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'accountId' is not null or undefined
             assertParamExists('apiAccountsAccountIdWithdrawsGet', 'accountId', accountId)
             const localVarPath = `/api/accounts/{accountId}/withdraws`
@@ -11743,6 +11823,10 @@ export const AccountApiAxiosParamCreator = function (configuration?: Configurati
 
             if (status !== undefined) {
                 localVarQueryParameter['Status'] = status;
+            }
+
+            if (withdrawCode !== undefined) {
+                localVarQueryParameter['WithdrawCode'] = withdrawCode;
             }
 
 
@@ -12210,11 +12294,16 @@ export const AccountApiFp = function(configuration?: Configuration) {
          * @param {number} [page] 
          * @param {number} [pageSize] 
          * @param {Array<TransactionType>} [types] 
+         * @param {string} [transactionCode] 
+         * @param {string} [orderCode] 
+         * @param {string} [consignSaleCode] 
+         * @param {string} [rechargeCode] 
+         * @param {string} [depositCode] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiAccountsAccountIdTransactionsGet(accountId: string, page?: number, pageSize?: number, types?: Array<TransactionType>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetTransactionsResponsePaginationResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAccountsAccountIdTransactionsGet(accountId, page, pageSize, types, options);
+        async apiAccountsAccountIdTransactionsGet(accountId: string, page?: number, pageSize?: number, types?: Array<TransactionType>, transactionCode?: string, orderCode?: string, consignSaleCode?: string, rechargeCode?: string, depositCode?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetTransactionsResponsePaginationResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAccountsAccountIdTransactionsGet(accountId, page, pageSize, types, transactionCode, orderCode, consignSaleCode, rechargeCode, depositCode, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AccountApi.apiAccountsAccountIdTransactionsGet']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -12225,11 +12314,12 @@ export const AccountApiFp = function(configuration?: Configuration) {
          * @param {number} [page] 
          * @param {number} [pageSize] 
          * @param {WithdrawStatus} [status] 
+         * @param {string} [withdrawCode] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiAccountsAccountIdWithdrawsGet(accountId: string, page?: number, pageSize?: number, status?: WithdrawStatus, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetWithdrawsResponsePaginationResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAccountsAccountIdWithdrawsGet(accountId, page, pageSize, status, options);
+        async apiAccountsAccountIdWithdrawsGet(accountId: string, page?: number, pageSize?: number, status?: WithdrawStatus, withdrawCode?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetWithdrawsResponsePaginationResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAccountsAccountIdWithdrawsGet(accountId, page, pageSize, status, withdrawCode, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AccountApi.apiAccountsAccountIdWithdrawsGet']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -12494,11 +12584,16 @@ export const AccountApiFactory = function (configuration?: Configuration, basePa
          * @param {number} [page] 
          * @param {number} [pageSize] 
          * @param {Array<TransactionType>} [types] 
+         * @param {string} [transactionCode] 
+         * @param {string} [orderCode] 
+         * @param {string} [consignSaleCode] 
+         * @param {string} [rechargeCode] 
+         * @param {string} [depositCode] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAccountsAccountIdTransactionsGet(accountId: string, page?: number, pageSize?: number, types?: Array<TransactionType>, options?: any): AxiosPromise<GetTransactionsResponsePaginationResponse> {
-            return localVarFp.apiAccountsAccountIdTransactionsGet(accountId, page, pageSize, types, options).then((request) => request(axios, basePath));
+        apiAccountsAccountIdTransactionsGet(accountId: string, page?: number, pageSize?: number, types?: Array<TransactionType>, transactionCode?: string, orderCode?: string, consignSaleCode?: string, rechargeCode?: string, depositCode?: string, options?: any): AxiosPromise<GetTransactionsResponsePaginationResponse> {
+            return localVarFp.apiAccountsAccountIdTransactionsGet(accountId, page, pageSize, types, transactionCode, orderCode, consignSaleCode, rechargeCode, depositCode, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -12506,11 +12601,12 @@ export const AccountApiFactory = function (configuration?: Configuration, basePa
          * @param {number} [page] 
          * @param {number} [pageSize] 
          * @param {WithdrawStatus} [status] 
+         * @param {string} [withdrawCode] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAccountsAccountIdWithdrawsGet(accountId: string, page?: number, pageSize?: number, status?: WithdrawStatus, options?: any): AxiosPromise<GetWithdrawsResponsePaginationResponse> {
-            return localVarFp.apiAccountsAccountIdWithdrawsGet(accountId, page, pageSize, status, options).then((request) => request(axios, basePath));
+        apiAccountsAccountIdWithdrawsGet(accountId: string, page?: number, pageSize?: number, status?: WithdrawStatus, withdrawCode?: string, options?: any): AxiosPromise<GetWithdrawsResponsePaginationResponse> {
+            return localVarFp.apiAccountsAccountIdWithdrawsGet(accountId, page, pageSize, status, withdrawCode, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -12789,12 +12885,17 @@ export class AccountApi extends BaseAPI {
      * @param {number} [page] 
      * @param {number} [pageSize] 
      * @param {Array<TransactionType>} [types] 
+     * @param {string} [transactionCode] 
+     * @param {string} [orderCode] 
+     * @param {string} [consignSaleCode] 
+     * @param {string} [rechargeCode] 
+     * @param {string} [depositCode] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AccountApi
      */
-    public apiAccountsAccountIdTransactionsGet(accountId: string, page?: number, pageSize?: number, types?: Array<TransactionType>, options?: RawAxiosRequestConfig) {
-        return AccountApiFp(this.configuration).apiAccountsAccountIdTransactionsGet(accountId, page, pageSize, types, options).then((request) => request(this.axios, this.basePath));
+    public apiAccountsAccountIdTransactionsGet(accountId: string, page?: number, pageSize?: number, types?: Array<TransactionType>, transactionCode?: string, orderCode?: string, consignSaleCode?: string, rechargeCode?: string, depositCode?: string, options?: RawAxiosRequestConfig) {
+        return AccountApiFp(this.configuration).apiAccountsAccountIdTransactionsGet(accountId, page, pageSize, types, transactionCode, orderCode, consignSaleCode, rechargeCode, depositCode, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -12803,12 +12904,13 @@ export class AccountApi extends BaseAPI {
      * @param {number} [page] 
      * @param {number} [pageSize] 
      * @param {WithdrawStatus} [status] 
+     * @param {string} [withdrawCode] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AccountApi
      */
-    public apiAccountsAccountIdWithdrawsGet(accountId: string, page?: number, pageSize?: number, status?: WithdrawStatus, options?: RawAxiosRequestConfig) {
-        return AccountApiFp(this.configuration).apiAccountsAccountIdWithdrawsGet(accountId, page, pageSize, status, options).then((request) => request(this.axios, this.basePath));
+    public apiAccountsAccountIdWithdrawsGet(accountId: string, page?: number, pageSize?: number, status?: WithdrawStatus, withdrawCode?: string, options?: RawAxiosRequestConfig) {
+        return AccountApiFp(this.configuration).apiAccountsAccountIdWithdrawsGet(accountId, page, pageSize, status, withdrawCode, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

@@ -45,11 +45,10 @@ import ChildItems from "./pages/MainProduct/ChildItems.tsx";
 import ChildItemShop from "./pages/MainProduct/ChildItemShop.tsx";
 import AddressManagementPage from "./pages/AddressManagementPage.tsx";
 import EmailVerification from "./components/Auth/EmailVerification.tsx";
-import AllTracnsaction from "./pages/Transaction/AllTransaction.tsx";
-import AllTransaction from "./pages/Transaction/AllTransaction.tsx";
 import RefundList from "./pages/RefundList.tsx";
 import RefundDetail from "./pages/RefundDetail.tsx";
 import ProcessPayment from "./components/Payment/ProcessPayment.tsx";
+import TransactionHistory from "./pages/Transaction/AllTransaction.tsx";
 
 function App() {
     return (
@@ -476,11 +475,11 @@ function App() {
                                 </>
                             }/>
                             <Route
-                            path="/transaction/allTransaction"
+                            path="/transactions"
                             element={
                                 <>
                                     <Navbar/>
-                                    <AllTransaction/>
+                                    <TransactionHistory/>
                                 </>
                             }/>
                     </Routes>
