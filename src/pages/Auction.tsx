@@ -17,8 +17,8 @@ import {
   BidDetailResponse,
   CreateBidRequest,
 } from "../api";
-import signalRService from "../pages/service/signalrService";
-import signalrService from "../pages/service/signalrService";
+import signalRService from "./service/signalrService";
+import signalrService from "./service/signalrService";
 
 const { Title, Paragraph } = Typography;
 
