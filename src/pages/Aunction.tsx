@@ -52,7 +52,7 @@ const Auction: React.FC = () => {
         auctionId!
       );
       console.log(auctionDetailResponse);
-      const fetchedProduct = auctionDetailResponse.data.auctionItem;
+      const fetchedProduct = await auctionDetailApi.apiAuctionsIdAuctionItemGet(auctionId!);
       console.log(fetchedProduct);
 
       const latestBidResponse =
@@ -60,30 +60,29 @@ const Auction: React.FC = () => {
       console.log(latestBidResponse.data);
 
       const productData: AuctionItemDetailResponse = {
-        initialPrice: fetchedProduct?.initialPrice,
-        images: fetchedProduct?.images,
-        category: fetchedProduct?.category,
-        condition: fetchedProduct?.condition,
-        brand: fetchedProduct?.brand,
-        color: fetchedProduct?.color,
-        description: fetchedProduct?.description,
-        fashionItemType: fetchedProduct?.fashionItemType,
-        gender: fetchedProduct?.gender,
-        itemId: fetchedProduct?.itemId,
-        note: fetchedProduct?.note,
-        sellingPrice: fetchedProduct?.sellingPrice,
-        size: fetchedProduct?.size,
-        status: fetchedProduct?.status,
-        name: fetchedProduct?.name,
-        shop: {
-          address: fetchedProduct?.shop?.address,
-        },
+        initialPrice: fetchedProduct?.data.initialPrice,
+        images: fetchedProduct?.data.images,
+        categoryName: fetchedProduct?.data.categoryName,
+        condition: fetchedProduct?.data.condition,
+        brand: fetchedProduct?.data.brand,
+        color: fetchedProduct?.data.color,
+        description: fetchedProduct?.data.description,
+        fashionItemType: fetchedProduct?.data.fashionItemType,
+        gender: fetchedProduct?.data.gender,
+        itemCode: fetchedProduct?.data.itemCode,
+        itemId: fetchedProduct?.data.itemId,
+        note: fetchedProduct?.data.note,
+        sellingPrice: fetchedProduct?.data.sellingPrice,
+        size: fetchedProduct?.data.size,
+        status: fetchedProduct?.data.status,
+        name: fetchedProduct?.data.name,
+        shopAddress: fetchedProduct?.data.shopAddress,
       };
 
       setProduct(productData);
-      setSelectedImage(fetchedProduct!.images![0]!.imageUrl!);
+      setSelectedImage(fetchedProduct!.data.images![0]!);
 
-      const initialBidAmount = fetchedProduct?.initialPrice || 0;
+      const initialBidAmount = fetchedProduct?.data.initialPrice || 0;
       console.log(initialBidAmount);
       if (latestBidResponse.data) {
         addBid(latestBidResponse.data);
@@ -167,18 +166,18 @@ const Auction: React.FC = () => {
             {product.images?.map((image, index) => (
               <Col span={24} key={index}>
                 <img
-                  src={image.imageUrl!}
+                  src={image}
                   alt={`Thumbnail ${index}`}
                   style={{
                     width: "90%",
                     height: "230px",
                     cursor: "pointer",
                     border:
-                      selectedImage === image.imageUrl
+                      selectedImage === image
                         ? "2px solid #1890ff"
                         : "none",
                   }}
-                  onClick={() => setSelectedImage(image.imageUrl!)}
+                  onClick={() => setSelectedImage(image)}
                 />
               </Col>
             ))}
@@ -200,7 +199,7 @@ const Auction: React.FC = () => {
             <Row gutter={[16, 16]}>
               <Col span={14}>
                 <Paragraph>
-                  <strong>Category:</strong> {product.category?.categoryName}
+                  <strong>Category:</strong> {product.categoryName}
                 </Paragraph>
                 <Paragraph>
                   <strong>Condition:</strong> {product.condition}%
