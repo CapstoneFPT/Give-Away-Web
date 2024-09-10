@@ -17,27 +17,32 @@ import {
 import NavProfile from "../components/NavProfile/NavProfile";
 import { useNavigate } from "react-router-dom";
 import {
-  AccountApi,
   OrderApi,
   OrderLineItemListResponse,
   OrderResponse,
   PaymentMethod,
+  OrderStatus,
+  PurchaseType,
 } from "../api";
+import useOrders from "../hooks/useOrders";
 
 const { Option } = Select;
 
 const OrderList: React.FC = () => {
-  const [data, setData] = useState<OrderResponse[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-  const [selectedOrder, setSelectedOrder] = useState<OrderResponse | null>(
-    null
-  );
+  const [userId, setUserId] = useState<string | null>(null);
+  const [selectedOrder, setSelectedOrder] = useState<OrderResponse | null>(null);
   const [orderLineItems, setOrderLineItems] = useState<OrderLineItemListResponse[]>([]);
   const [detailsLoading, setDetailsLoading] = useState<boolean>(false);
   const navigate = useNavigate();
   const [form] = Form.useForm();
-  const [userId, setUserId] = useState<string | null>(null);
+
+  const [queryParams, setQueryParams] = useState({
+    pageNumber: 1,
+    pageSize: 10,
+    status: undefined as OrderStatus | undefined,
+    paymentMethod: undefined as PaymentMethod | undefined,
+    orderCode: undefined as string | undefined,
+  });
 
   useEffect(() => {
     const storedUserId = localStorage.getItem("userId");
@@ -46,60 +51,38 @@ const OrderList: React.FC = () => {
         setUserId(JSON.parse(storedUserId));
       } catch (error) {
         console.error("Failed to parse userId from localStorage:", error);
-        setError("Invalid user data. Please log in again.");
-        setLoading(false);
+        notification.error({
+          message: "Error",
+          description: "Invalid user data. Please log in again.",
+        });
       }
     } else {
-      setError("User not logged in. Please log in to view orders.");
-      setLoading(false);
+      notification.error({
+        message: "Error",
+        description: "User not logged in. Please log in to view orders.",
+      });
     }
   }, []);
 
-  useEffect(() => {
-    if (userId) {
-      fetchOrders();
-    }
-  }, [userId]);
+  const { data: ordersData, isLoading, isError, error, refetch } = useOrders({
+    accountId: userId!,
+    ...queryParams,
+  });
 
-  const fetchOrders = async () => {
-    if (!userId) {
-      setError("User ID not found. Please log in again.");
-      setLoading(false);
-      return;
-    }
-
-    try {
-      const accountApi = new AccountApi();
-      const response = await accountApi.apiAccountsAccountIdOrdersGet(
-        userId,
-        null!,
-        null!,
-        null!,
-        null!,
-        null!,
-        null!,
-        null!,
-        null!,
-        null!,
-        null!,
-        null!,
-        false,//order auction
-        false,  //ispointPackage
-      );
-      const orders = response.data.data?.items || [];
-      setData(orders);
-      const formattedOrders = orders.map(order => ({
-        ...order,
-        createdDate: new Date(order.createdDate!).toLocaleString(), // Format date here
+  const handleSearch = (changedValues: any, allValues: any) => {
+    setQueryParams(prev => ({
+      ...prev,
+      ...allValues,
+      pageNumber: 1, // Reset to first page on new search
     }));
-    setData(formattedOrders);
-      console.log(response)
-    } catch (err) {
-      console.error("Failed to fetch orders:", err);
-      setError("Failed to fetch orders. Please try again later.");
-    } finally {
-      setLoading(false);
-    }
+  };
+
+  const handleTableChange = (pagination: any) => {
+    setQueryParams(prev => ({
+      ...prev,
+      pageNumber: pagination.current,
+      pageSize: pagination.pageSize,
+    }));
   };
 
   const fetchOrderDetails = async (orderId: string) => {
@@ -176,35 +159,36 @@ const OrderList: React.FC = () => {
       });
     }
   };
-  const handleCancel = async () => {
-    if (!selectedOrder) return; // Ensure selectedOrder is available
 
-    // Show confirmation modal
+  const handleCancel = async () => {
+    if (!selectedOrder) return;
+
     Modal.confirm({
-        title: "Confirm Cancellation",
-        content: "Are you sure you want to cancel this order?",
-        okText: "Yes",
-        cancelText: "No",
-        onOk: async () => {
-            const cancelOrderApi = new OrderApi();
-            try {
-                await cancelOrderApi.apiOrdersOrderIdCancelPut(selectedOrder.orderId!);
-                notification.success({
-                    message: "Order Canceled",
-                    description: "Your order has been successfully canceled.",
-                });
-                // Optionally, refresh the order list after cancellation
-                fetchOrders();
-            } catch (error) {
-                console.error("Failed to cancel order:", error);
-                notification.error({
-                    message: "Cancellation Error",
-                    description: "Failed to cancel the order. Please try again later.",
-                });
-            }
-        },
+      title: "Confirm Cancellation",
+      content: "Are you sure you want to cancel this order?",
+      okText: "Yes",
+      cancelText: "No",
+      onOk: async () => {
+        const cancelOrderApi = new OrderApi();
+        try {
+          await cancelOrderApi.apiOrdersOrderIdCancelPut(selectedOrder.orderId!);
+          notification.success({
+            message: "Order Canceled",
+            description: "Your order has been successfully canceled.",
+          });
+
+          refetch();
+          setSelectedOrder(null);
+        } catch (error) {
+          console.error("Failed to cancel order:", error);
+          notification.error({
+            message: "Cancellation Error",
+            description: "Failed to cancel the order. Please try again later.",
+          });
+        }
+      },
     });
-}
+  };
 
   const formatBalance = (sellingPrice: number): string => {
     return new Intl.NumberFormat("de-DE").format(sellingPrice);
@@ -302,13 +286,6 @@ const OrderList: React.FC = () => {
     },
   ];
 
-  if (loading) return <Spin size="large" />;
-  if (error)
-    return (
-      <Card>
-        <div>{error}</div>
-      </Card>
-    );
 
   return (
     <Card>
@@ -333,11 +310,38 @@ const OrderList: React.FC = () => {
             >
               Order List
             </h3>
+            <Form layout="inline" onValuesChange={handleSearch}>
+              <Form.Item name="orderCode">
+                <Input placeholder="Order Code" />
+              </Form.Item>
+              <Form.Item name="status">
+                <Select placeholder="Status" allowClear>
+                  {Object.values(OrderStatus).map(status => (
+                    <Option key={status} value={status}>{status}</Option>
+                  ))}
+                </Select>
+              </Form.Item>
+              <Form.Item name="paymentMethod">
+                <Select placeholder="Payment Method" allowClear>
+                  {Object.values(PaymentMethod).map(method => (
+                    <Option key={method} value={method}>{method}</Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            </Form>
             <Table
-              dataSource={data}
+              dataSource={ordersData?.items || []}
               columns={columns}
               rowKey="orderId"
-              pagination={{ pageSize: 4 }}
+              loading={isLoading}
+              pagination={{
+                current: queryParams.pageNumber,
+                pageSize: queryParams.pageSize,
+                total: ordersData?.totalCount,
+                showSizeChanger: true,
+                showQuickJumper: true,
+              }}
+              onChange={handleTableChange}
               style={{ marginTop: "20px" }}
             />
           </Card>
@@ -345,7 +349,7 @@ const OrderList: React.FC = () => {
       </Row>
       <Modal
         title="Checkout"
-        visible={!!selectedOrder}
+        open={!!selectedOrder}
         onCancel={handleCloseModal}
         footer={null}
         width={1100}
