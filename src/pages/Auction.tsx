@@ -8,6 +8,7 @@ import {
   List,
   Image,
   Statistic,
+  message
 } from "antd";
 import Footer from "../components/Footer/Footer";
 import { useParams, useNavigate } from "react-router-dom";
@@ -17,8 +18,11 @@ import {
   BidDetailResponse,
   CreateBidRequest,
 } from "../api";
-import signalRService from "../pages/service/signalrService";
-import signalrService from "../pages/service/signalrService";
+import signalRService from "./service/signalrService";
+import signalrService from "./service/signalrService";
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useAuctionData, usePlaceBid } from "../hooks/auctionHooks";
+import { useSignalRSetup } from "../hooks/useSignalRSetup";
 
 const { Title, Paragraph } = Typography;
 
@@ -26,9 +30,6 @@ const Auction: React.FC = () => {
   const { auctionId } = useParams<{ auctionId: string }>();
   const navigate = useNavigate();
   const userId = JSON.parse(localStorage.getItem("userId") || "null");
-  const [product, setProduct] = useState<AuctionItemDetailResponse | null>(
-    null
-  );
   const [selectedImage, setSelectedImage] = useState<string>("");
   const [bids, setBids] = useState<BidDetailResponse[]>([]);
   const [nextBidAmount, setNextBidAmount] = useState<number | undefined>(
@@ -36,103 +37,41 @@ const Auction: React.FC = () => {
   );
   const [deadline, setDeadline] = useState<number>(0);
 
+  const { data, isLoading, error } = useAuctionData(auctionId!);
+  const placeBidMutation = usePlaceBid(auctionId!);
+
   const addBid = useCallback((newBid: BidDetailResponse) => {
-    setBids((prevBids) => [newBid, ...prevBids]);
-    setNextBidAmount(newBid.nextAmount);
+    setBids((prevBids) => {
+      const updatedBids = [newBid, ...prevBids];
+      const latestBid = updatedBids[0];
+      setNextBidAmount(latestBid.amount || 0 + (data?.auctionDetail.stepIncrement || 0)); 
+      return updatedBids;
+    });
   }, []);
-  const onFinish = () => {
-    console.log("Auction ended!");
-    alert("Auction has ended");
-    navigate("/");
-  };
-  const fetchData = async () => {
-    try {
-      const auctionDetailApi = new AuctionApi();
-      const auctionDetailResponse = await auctionDetailApi.apiAuctionsIdGet(
-        auctionId!
-      );
-      console.log(auctionDetailResponse);
-      const fetchedProduct = auctionDetailResponse.data.auctionItem;
-      console.log(fetchedProduct);
 
-      const latestBidResponse =
-        await auctionDetailApi.apiAuctionsIdBidsLatestGet(auctionId!);
-      console.log(latestBidResponse.data);
-
-      const productData: AuctionItemDetailResponse = {
-        initialPrice: fetchedProduct?.initialPrice,
-        images: fetchedProduct?.images,
-        category: fetchedProduct?.category,
-        condition: fetchedProduct?.condition,
-        brand: fetchedProduct?.brand,
-        color: fetchedProduct?.color,
-        description: fetchedProduct?.description,
-        fashionItemType: fetchedProduct?.fashionItemType,
-        gender: fetchedProduct?.gender,
-        itemId: fetchedProduct?.itemId,
-        note: fetchedProduct?.note,
-        sellingPrice: fetchedProduct?.sellingPrice,
-        size: fetchedProduct?.size,
-        status: fetchedProduct?.status,
-        name: fetchedProduct?.name,
-        shop: {
-          address: fetchedProduct?.shop?.address,
-        },
-      };
-
-      setProduct(productData);
-      setSelectedImage(fetchedProduct!.images![0]!.imageUrl!);
-
-      const initialBidAmount = fetchedProduct?.initialPrice || 0;
-      console.log(initialBidAmount);
-      if (latestBidResponse.data) {
-        addBid(latestBidResponse.data);
+  useEffect(() => {
+    if (data) {
+      const { product, latestBid, auctionDetail, serverTime } = data;
+      
+      setSelectedImage(product.images![0]!);
+      
+      if (latestBid) {
+        addBid(latestBid);
       } else {
-        setNextBidAmount(initialBidAmount);
+        setNextBidAmount(product.initialPrice || 0);
       }
 
-      const serverTimeApi = new AuctionApi();
-      const responseServerTime =
-        await serverTimeApi.apiAuctionsCurrentTimeGet();
-      const currentTime = new Date(responseServerTime.data!);
-      const startTime = new Date(auctionDetailResponse.data.startDate!);
-      const endTime = new Date(auctionDetailResponse.data.endDate!);
+      const currentTime = new Date(serverTime!);
+      const startTime = new Date(auctionDetail.startDate!);
+      const endTime = new Date(auctionDetail.endDate!);
 
       if (currentTime < startTime) {
         setDeadline(startTime.getTime());
       } else {
         setDeadline(endTime.getTime());
       }
-
-    } catch (error) {
-      console.error("Error fetching auction details:", error);
     }
-  };
-
-  useEffect(() => {
-    fetchData();
-    const setupSignalR = async () => {
-      try {
-        await signalRService.startConnection();
-        signalRService.joinAuctionGroup(auctionId!);
-        signalRService.onReceiveBidUpdate(addBid);
-        signalRService.onAuctionEnded((id: string) => {
-          if (id === auctionId) {
-            alert("Auction has ended");
-            navigate("/");
-          }
-        });
-      } catch (error) {
-        console.error("SignalR Error: ", error);
-      }
-    };
-
-    setupSignalR();
-
-    return () => {
-      signalRService.leaveAuctionGroup(auctionId!);
-    };
-  }, [auctionId, addBid, navigate]);
+  }, [data, addBid]);
 
   const handleBid = async () => {
     if (!nextBidAmount) return;
@@ -140,23 +79,40 @@ const Auction: React.FC = () => {
       memberId: userId,
       amount: nextBidAmount,
     };
-    console.log(auctionId);
-    console.log(bidRequest);
     try {
-      await signalrService.placeBid(auctionId!, bidRequest);
+      await placeBidMutation.mutateAsync(bidRequest);
     } catch (error) {
       console.error("Bid Error: ", error);
     }
   };
 
- 
   const formatBalance = (balance: number) => {
     return new Intl.NumberFormat("de-DE").format(balance);
   };
 
-  if (!product) {
+  const onFinish = () => {
+    message.info("Auction has ended");
+
+    setTimeout(() => {
+      navigate("/");
+    }, 2000);
+  };
+
+  if (isLoading) {
     return <div>Loading...</div>;
   }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
+
+  if (!data) {
+    return <div>No data available</div>;
+  }
+
+  const { product } = data;
+
+  useSignalRSetup(auctionId!, addBid, navigate);
 
   return (
     <Card>
@@ -167,18 +123,18 @@ const Auction: React.FC = () => {
             {product.images?.map((image, index) => (
               <Col span={24} key={index}>
                 <img
-                  src={image.imageUrl!}
+                  src={image}
                   alt={`Thumbnail ${index}`}
                   style={{
                     width: "90%",
                     height: "230px",
                     cursor: "pointer",
                     border:
-                      selectedImage === image.imageUrl
+                      selectedImage === image
                         ? "2px solid #1890ff"
                         : "none",
                   }}
-                  onClick={() => setSelectedImage(image.imageUrl!)}
+                  onClick={() => setSelectedImage(image)}
                 />
               </Col>
             ))}
@@ -200,7 +156,7 @@ const Auction: React.FC = () => {
             <Row gutter={[16, 16]}>
               <Col span={14}>
                 <Paragraph>
-                  <strong>Category:</strong> {product.category?.categoryName}
+                  <strong>Category:</strong> {product.categoryName}
                 </Paragraph>
                 <Paragraph>
                   <strong>Condition:</strong> {product.condition}%
@@ -290,3 +246,5 @@ const Auction: React.FC = () => {
 };
 
 export default Auction;
+
+

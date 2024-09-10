@@ -451,6 +451,12 @@ export interface Auction {
     'depositFee'?: number;
     /**
      * 
+     * @type {string}
+     * @memberof Auction
+     */
+    'auctionCode'?: string | null;
+    /**
+     * 
      * @type {Shop}
      * @memberof Auction
      */
@@ -770,38 +776,37 @@ export interface AuctionDetailResponse {
     'stepIncrement'?: number;
     /**
      * 
-     * @type {AuctionItemDetailResponse}
+     * @type {string}
      * @memberof AuctionDetailResponse
      */
-    'auctionItem'?: AuctionItemDetailResponse;
-}
-
-
-/**
- * 
- * @export
- * @interface AuctionItemCategory
- */
-export interface AuctionItemCategory {
+    'auctionCode'?: string | null;
     /**
      * 
      * @type {string}
-     * @memberof AuctionItemCategory
+     * @memberof AuctionDetailResponse
      */
-    'categoryId'?: string;
+    'createdDate'?: string;
     /**
      * 
      * @type {string}
-     * @memberof AuctionItemCategory
+     * @memberof AuctionDetailResponse
      */
-    'categoryName'?: string | null;
+    'individualItemCode'?: string | null;
     /**
      * 
-     * @type {number}
-     * @memberof AuctionItemCategory
+     * @type {string}
+     * @memberof AuctionDetailResponse
      */
-    'level'?: number;
+    'shopAddress'?: string | null;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof AuctionDetailResponse
+     */
+    'won'?: boolean;
 }
+
+
 /**
  * 
  * @export
@@ -888,22 +893,28 @@ export interface AuctionItemDetailResponse {
     'initialPrice'?: number | null;
     /**
      * 
-     * @type {ShopAuctionDetailResponse}
+     * @type {Array<string>}
      * @memberof AuctionItemDetailResponse
      */
-    'shop'?: ShopAuctionDetailResponse;
+    'images'?: Array<string> | null;
     /**
      * 
-     * @type {Array<FashionItemImage>}
+     * @type {string}
      * @memberof AuctionItemDetailResponse
      */
-    'images'?: Array<FashionItemImage> | null;
+    'categoryName'?: string | null;
     /**
      * 
-     * @type {AuctionItemCategory}
+     * @type {string}
      * @memberof AuctionItemDetailResponse
      */
-    'category'?: AuctionItemCategory;
+    'shopAddress'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof AuctionItemDetailResponse
+     */
+    'itemCode'?: string | null;
 }
 
 
@@ -945,6 +956,24 @@ export interface AuctionListResponse {
     'depositFee'?: number;
     /**
      * 
+     * @type {string}
+     * @memberof AuctionListResponse
+     */
+    'auctionCode'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof AuctionListResponse
+     */
+    'itemCode'?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof AuctionListResponse
+     */
+    'sucessfulBidAmount'?: number | null;
+    /**
+     * 
      * @type {AuctionStatus}
      * @memberof AuctionListResponse
      */
@@ -967,6 +996,12 @@ export interface AuctionListResponse {
      * @memberof AuctionListResponse
      */
     'auctionItemId'?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof AuctionListResponse
+     */
+    'isWon'?: boolean | null;
 }
 
 
@@ -1157,6 +1192,12 @@ export interface Bid {
      * @memberof Bid
      */
     'isWinning'?: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof Bid
+     */
+    'bidCode'?: string | null;
 }
 /**
  * 
@@ -1237,6 +1278,12 @@ export interface BidListResponse {
      * @memberof BidListResponse
      */
     'amount'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof BidListResponse
+     */
+    'bidCode'?: string | null;
     /**
      * 
      * @type {string}
@@ -2998,31 +3045,31 @@ export interface CreateAuctionRequest {
      * @type {string}
      * @memberof CreateAuctionRequest
      */
-    'title'?: string | null;
+    'title': string;
     /**
      * 
      * @type {string}
      * @memberof CreateAuctionRequest
      */
-    'shopId'?: string;
+    'shopId': string;
     /**
      * 
      * @type {string}
      * @memberof CreateAuctionRequest
      */
-    'auctionItemId'?: string;
+    'auctionItemId': string;
     /**
      * 
      * @type {string}
      * @memberof CreateAuctionRequest
      */
-    'startTime'?: string;
+    'startTime': string;
     /**
      * 
      * @type {string}
      * @memberof CreateAuctionRequest
      */
-    'endTime'?: string;
+    'endTime': string;
     /**
      * 
      * @type {number}
@@ -9718,25 +9765,6 @@ export interface Shop {
 /**
  * 
  * @export
- * @interface ShopAuctionDetailResponse
- */
-export interface ShopAuctionDetailResponse {
-    /**
-     * 
-     * @type {string}
-     * @memberof ShopAuctionDetailResponse
-     */
-    'shopId'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ShopAuctionDetailResponse
-     */
-    'address'?: string | null;
-}
-/**
- * 
- * @export
  * @interface ShopDetailResponse
  */
 export interface ShopDetailResponse {
@@ -10955,6 +10983,78 @@ export const AccountApiAxiosParamCreator = function (configuration?: Configurati
         /**
          * 
          * @param {string} accountId 
+         * @param {number} [page] 
+         * @param {number} [pageSize] 
+         * @param {string} [itemCode] 
+         * @param {string} [auctionCode] 
+         * @param {boolean} [isWon] 
+         * @param {string} [title] 
+         * @param {Array<AuctionStatus>} [statuses] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiAccountsAccountIdAuctionsGet: async (accountId: string, page?: number, pageSize?: number, itemCode?: string, auctionCode?: string, isWon?: boolean, title?: string, statuses?: Array<AuctionStatus>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'accountId' is not null or undefined
+            assertParamExists('apiAccountsAccountIdAuctionsGet', 'accountId', accountId)
+            const localVarPath = `/api/accounts/{accountId}/auctions`
+                .replace(`{${"accountId"}}`, encodeURIComponent(String(accountId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            if (page !== undefined) {
+                localVarQueryParameter['Page'] = page;
+            }
+
+            if (pageSize !== undefined) {
+                localVarQueryParameter['PageSize'] = pageSize;
+            }
+
+            if (itemCode !== undefined) {
+                localVarQueryParameter['ItemCode'] = itemCode;
+            }
+
+            if (auctionCode !== undefined) {
+                localVarQueryParameter['AuctionCode'] = auctionCode;
+            }
+
+            if (isWon !== undefined) {
+                localVarQueryParameter['IsWon'] = isWon;
+            }
+
+            if (title !== undefined) {
+                localVarQueryParameter['Title'] = title;
+            }
+
+            if (statuses) {
+                localVarQueryParameter['Statuses'] = statuses;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} accountId 
          * @param {string} bankAccountId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -12064,6 +12164,25 @@ export const AccountApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {string} accountId 
+         * @param {number} [page] 
+         * @param {number} [pageSize] 
+         * @param {string} [itemCode] 
+         * @param {string} [auctionCode] 
+         * @param {boolean} [isWon] 
+         * @param {string} [title] 
+         * @param {Array<AuctionStatus>} [statuses] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiAccountsAccountIdAuctionsGet(accountId: string, page?: number, pageSize?: number, itemCode?: string, auctionCode?: string, isWon?: boolean, title?: string, statuses?: Array<AuctionStatus>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AuctionListResponsePaginationResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAccountsAccountIdAuctionsGet(accountId, page, pageSize, itemCode, auctionCode, isWon, title, statuses, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AccountApi.apiAccountsAccountIdAuctionsGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {string} accountId 
          * @param {string} bankAccountId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -12402,6 +12521,22 @@ export const AccountApiFactory = function (configuration?: Configuration, basePa
         /**
          * 
          * @param {string} accountId 
+         * @param {number} [page] 
+         * @param {number} [pageSize] 
+         * @param {string} [itemCode] 
+         * @param {string} [auctionCode] 
+         * @param {boolean} [isWon] 
+         * @param {string} [title] 
+         * @param {Array<AuctionStatus>} [statuses] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiAccountsAccountIdAuctionsGet(accountId: string, page?: number, pageSize?: number, itemCode?: string, auctionCode?: string, isWon?: boolean, title?: string, statuses?: Array<AuctionStatus>, options?: any): AxiosPromise<AuctionListResponsePaginationResponse> {
+            return localVarFp.apiAccountsAccountIdAuctionsGet(accountId, page, pageSize, itemCode, auctionCode, isWon, title, statuses, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} accountId 
          * @param {string} bankAccountId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -12668,6 +12803,24 @@ export const AccountApiFactory = function (configuration?: Configuration, basePa
  * @extends {BaseAPI}
  */
 export class AccountApi extends BaseAPI {
+    /**
+     * 
+     * @param {string} accountId 
+     * @param {number} [page] 
+     * @param {number} [pageSize] 
+     * @param {string} [itemCode] 
+     * @param {string} [auctionCode] 
+     * @param {boolean} [isWon] 
+     * @param {string} [title] 
+     * @param {Array<AuctionStatus>} [statuses] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AccountApi
+     */
+    public apiAccountsAccountIdAuctionsGet(accountId: string, page?: number, pageSize?: number, itemCode?: string, auctionCode?: string, isWon?: boolean, title?: string, statuses?: Array<AuctionStatus>, options?: RawAxiosRequestConfig) {
+        return AccountApiFp(this.configuration).apiAccountsAccountIdAuctionsGet(accountId, page, pageSize, itemCode, auctionCode, isWon, title, statuses, options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * 
      * @param {string} accountId 
@@ -13584,15 +13737,16 @@ export const AuctionApiAxiosParamCreator = function (configuration?: Configurati
         },
         /**
          * 
-         * @param {string} [searchTerm] 
+         * @param {string} [title] 
          * @param {boolean} [getExpiredAuctions] 
-         * @param {Array<AuctionStatus>} [status] 
+         * @param {Array<AuctionStatus>} [statuses] 
          * @param {number} [pageNumber] 
          * @param {number} [pageSize] 
+         * @param {string} [auctionCode] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAuctionsGet: async (searchTerm?: string, getExpiredAuctions?: boolean, status?: Array<AuctionStatus>, pageNumber?: number, pageSize?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        apiAuctionsGet: async (title?: string, getExpiredAuctions?: boolean, statuses?: Array<AuctionStatus>, pageNumber?: number, pageSize?: number, auctionCode?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/auctions`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -13609,16 +13763,16 @@ export const AuctionApiAxiosParamCreator = function (configuration?: Configurati
             // http bearer authentication required
             await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
-            if (searchTerm !== undefined) {
-                localVarQueryParameter['SearchTerm'] = searchTerm;
+            if (title !== undefined) {
+                localVarQueryParameter['Title'] = title;
             }
 
             if (getExpiredAuctions !== undefined) {
                 localVarQueryParameter['GetExpiredAuctions'] = getExpiredAuctions;
             }
 
-            if (status) {
-                localVarQueryParameter['Status'] = status;
+            if (statuses) {
+                localVarQueryParameter['Statuses'] = statuses;
             }
 
             if (pageNumber !== undefined) {
@@ -13627,6 +13781,10 @@ export const AuctionApiAxiosParamCreator = function (configuration?: Configurati
 
             if (pageSize !== undefined) {
                 localVarQueryParameter['PageSize'] = pageSize;
+            }
+
+            if (auctionCode !== undefined) {
+                localVarQueryParameter['AuctionCode'] = auctionCode;
             }
 
 
@@ -13659,6 +13817,43 @@ export const AuctionApiAxiosParamCreator = function (configuration?: Configurati
             }
 
             const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiAuctionsIdAuctionItemGet: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('apiAuctionsIdAuctionItemGet', 'id', id)
+            const localVarPath = `/api/auctions/{id}/auction-item`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -14094,16 +14289,17 @@ export const AuctionApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {string} [searchTerm] 
+         * @param {string} [title] 
          * @param {boolean} [getExpiredAuctions] 
-         * @param {Array<AuctionStatus>} [status] 
+         * @param {Array<AuctionStatus>} [statuses] 
          * @param {number} [pageNumber] 
          * @param {number} [pageSize] 
+         * @param {string} [auctionCode] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiAuctionsGet(searchTerm?: string, getExpiredAuctions?: boolean, status?: Array<AuctionStatus>, pageNumber?: number, pageSize?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AuctionListResponsePaginationResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAuctionsGet(searchTerm, getExpiredAuctions, status, pageNumber, pageSize, options);
+        async apiAuctionsGet(title?: string, getExpiredAuctions?: boolean, statuses?: Array<AuctionStatus>, pageNumber?: number, pageSize?: number, auctionCode?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AuctionListResponsePaginationResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAuctionsGet(title, getExpiredAuctions, statuses, pageNumber, pageSize, auctionCode, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AuctionApi.apiAuctionsGet']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -14118,6 +14314,18 @@ export const AuctionApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.apiAuctionsIdApprovePut(id, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AuctionApi.apiAuctionsIdApprovePut']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {string} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiAuctionsIdAuctionItemGet(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AuctionItemDetailResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAuctionsIdAuctionItemGet(id, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AuctionApi.apiAuctionsIdAuctionItemGet']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -14302,16 +14510,17 @@ export const AuctionApiFactory = function (configuration?: Configuration, basePa
         },
         /**
          * 
-         * @param {string} [searchTerm] 
+         * @param {string} [title] 
          * @param {boolean} [getExpiredAuctions] 
-         * @param {Array<AuctionStatus>} [status] 
+         * @param {Array<AuctionStatus>} [statuses] 
          * @param {number} [pageNumber] 
          * @param {number} [pageSize] 
+         * @param {string} [auctionCode] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAuctionsGet(searchTerm?: string, getExpiredAuctions?: boolean, status?: Array<AuctionStatus>, pageNumber?: number, pageSize?: number, options?: any): AxiosPromise<AuctionListResponsePaginationResponse> {
-            return localVarFp.apiAuctionsGet(searchTerm, getExpiredAuctions, status, pageNumber, pageSize, options).then((request) => request(axios, basePath));
+        apiAuctionsGet(title?: string, getExpiredAuctions?: boolean, statuses?: Array<AuctionStatus>, pageNumber?: number, pageSize?: number, auctionCode?: string, options?: any): AxiosPromise<AuctionListResponsePaginationResponse> {
+            return localVarFp.apiAuctionsGet(title, getExpiredAuctions, statuses, pageNumber, pageSize, auctionCode, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -14321,6 +14530,15 @@ export const AuctionApiFactory = function (configuration?: Configuration, basePa
          */
         apiAuctionsIdApprovePut(id: string, options?: any): AxiosPromise<AuctionDetailResponse> {
             return localVarFp.apiAuctionsIdApprovePut(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiAuctionsIdAuctionItemGet(id: string, options?: any): AxiosPromise<AuctionItemDetailResponse> {
+            return localVarFp.apiAuctionsIdAuctionItemGet(id, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -14494,17 +14712,18 @@ export class AuctionApi extends BaseAPI {
 
     /**
      * 
-     * @param {string} [searchTerm] 
+     * @param {string} [title] 
      * @param {boolean} [getExpiredAuctions] 
-     * @param {Array<AuctionStatus>} [status] 
+     * @param {Array<AuctionStatus>} [statuses] 
      * @param {number} [pageNumber] 
      * @param {number} [pageSize] 
+     * @param {string} [auctionCode] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AuctionApi
      */
-    public apiAuctionsGet(searchTerm?: string, getExpiredAuctions?: boolean, status?: Array<AuctionStatus>, pageNumber?: number, pageSize?: number, options?: RawAxiosRequestConfig) {
-        return AuctionApiFp(this.configuration).apiAuctionsGet(searchTerm, getExpiredAuctions, status, pageNumber, pageSize, options).then((request) => request(this.axios, this.basePath));
+    public apiAuctionsGet(title?: string, getExpiredAuctions?: boolean, statuses?: Array<AuctionStatus>, pageNumber?: number, pageSize?: number, auctionCode?: string, options?: RawAxiosRequestConfig) {
+        return AuctionApiFp(this.configuration).apiAuctionsGet(title, getExpiredAuctions, statuses, pageNumber, pageSize, auctionCode, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -14516,6 +14735,17 @@ export class AuctionApi extends BaseAPI {
      */
     public apiAuctionsIdApprovePut(id: string, options?: RawAxiosRequestConfig) {
         return AuctionApiFp(this.configuration).apiAuctionsIdApprovePut(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} id 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AuctionApi
+     */
+    public apiAuctionsIdAuctionItemGet(id: string, options?: RawAxiosRequestConfig) {
+        return AuctionApiFp(this.configuration).apiAuctionsIdAuctionItemGet(id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
