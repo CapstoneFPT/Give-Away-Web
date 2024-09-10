@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { AuctionApi, CreateBidRequest } from '../api';
 import signalrService from '../pages/service/signalrService';
-export const useAuctionData = (auctionId: string) => {
+export const useAuctionData = (auctionId: string, itemId: string) => {
   const auctionDetailApi = new AuctionApi();
   
   return useQuery({
@@ -11,6 +11,7 @@ export const useAuctionData = (auctionId: string) => {
       const fetchedProduct = await auctionDetailApi.apiAuctionsIdAuctionItemGet(auctionId);
       const latestBidResponse = await auctionDetailApi.apiAuctionsIdBidsLatestGet(auctionId);
       const serverTimeResponse = await auctionDetailApi.apiAuctionsCurrentTimeGet();
+
 
       return {
         auctionDetail: auctionDetailResponse.data,

@@ -28,6 +28,8 @@ const { Title, Paragraph } = Typography;
 
 const Auction: React.FC = () => {
   const { auctionId } = useParams<{ auctionId: string }>();
+  const { itemId } = useParams<{ itemId: string }>();
+
   const navigate = useNavigate();
   const userId = JSON.parse(localStorage.getItem("userId") || "null");
   const [selectedImage, setSelectedImage] = useState<string>("");
@@ -37,7 +39,7 @@ const Auction: React.FC = () => {
   );
   const [deadline, setDeadline] = useState<number>(0);
 
-  const { data, isLoading, error } = useAuctionData(auctionId!);
+  const { data, isLoading, error } = useAuctionData(auctionId!, itemId!);
   const placeBidMutation = usePlaceBid(auctionId!);
 
   const addBid = useCallback((newBid: BidDetailResponse) => {

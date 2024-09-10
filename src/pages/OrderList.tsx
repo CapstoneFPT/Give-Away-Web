@@ -323,7 +323,7 @@ const OrderList: React.FC = () => {
               </Form.Item>
               <Form.Item name="paymentMethod">
                 <Select placeholder="Payment Method" allowClear>
-                  {Object.values(PaymentMethod).map(method => (
+                  {Object.values(PaymentMethod).filter(method => method !== 'Cash').map(method => (
                     <Option key={method} value={method}>{method}</Option>
                   ))}
                 </Select>
