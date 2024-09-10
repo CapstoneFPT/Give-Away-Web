@@ -1,7 +1,7 @@
 import React from "react";
 import "./App.css";
 import Navbar from "./components/Navbar/Navbar";
-import {BrowserRouter, Route, Routes} from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Shop from "./pages/Shop";
 import CartPage from "./pages/CartPage.tsx";
 import Login from "./pages/Login";
@@ -29,7 +29,7 @@ import Fund from "./pages/Fund";
 import Men from "./pages/MainProduct/Men";
 import Women from "./pages/MainProduct/Women";
 import ItemDetail from "./components/ItemsDisplay/ItemDetail";
-import {CartProvider} from "./pages/CartContext";
+import { CartProvider } from "./pages/CartContext";
 import Deposit from "./pages/Deposit";
 import ImageUpload from "./pages/Firebase/ImageUpload";
 import Search from "./pages/MainProduct/Search";
@@ -49,6 +49,7 @@ import RefundList from "./pages/RefundList.tsx";
 import RefundDetail from "./pages/RefundDetail.tsx";
 import ProcessPayment from "./components/Payment/ProcessPayment.tsx";
 import TransactionHistory from "./pages/Transaction/AllTransaction.tsx";
+import AuctionDetail from "./pages/Transaction/AuctionDetail.tsx";
 
 function App() {
     return (
@@ -60,23 +61,23 @@ function App() {
                             path="/verify-email"
                             element={
                                 <>
-                                    <Navbar/>
-                                    <EmailVerification/>
+                                    <Navbar />
+                                    <EmailVerification />
                                 </>
-                            }/>
-                            <Route path="/process-payment"
+                            } />
+                        <Route path="/process-payment"
                             element={
                                 <>
-                                    <Navbar/>
-                                    <ProcessPayment/>
+                                    <Navbar />
+                                    <ProcessPayment />
                                 </>
-                            }/>
+                            } />
                         <Route
                             path="/"
                             element={
                                 <>
                                     {/* <Navbar /> */}
-                                    <Shop/>
+                                    <Shop />
                                 </>
                             }
                         />
@@ -84,8 +85,8 @@ function App() {
                             path="/:category/:clothingType/:productId"
                             element={
                                 <>
-                                    <Navbar/>
-                                    <Breadcrumb/>
+                                    <Navbar />
+                                    <Breadcrumb />
                                 </>
                             }
                         />
@@ -93,8 +94,8 @@ function App() {
                             path="/cart"
                             element={
                                 <>
-                                    <Navbar/>
-                                    <CartPage/>
+                                    <Navbar />
+                                    <CartPage />
                                 </>
                             }
                         />
@@ -102,8 +103,8 @@ function App() {
                             path="/login"
                             element={
                                 <>
-                                    <Navbar/>
-                                    <Login/>
+                                    <Navbar />
+                                    <Login />
                                 </>
                             }
                         />
@@ -111,8 +112,8 @@ function App() {
                             path="/register"
                             element={
                                 <>
-                                    <Navbar/>
-                                    <Register/>
+                                    <Navbar />
+                                    <Register />
                                 </>
                             }
                         />
@@ -120,8 +121,8 @@ function App() {
                             path="/forgotPassword"
                             element={
                                 <>
-                                    <Navbar/>
-                                    <ForgotPassword/>
+                                    <Navbar />
+                                    <ForgotPassword />
                                 </>
                             }
                         />
@@ -129,8 +130,8 @@ function App() {
                             path="/confirmPassword"
                             element={
                                 <>
-                                    <Navbar/>
-                                    <ConfirmPassword/>
+                                    <Navbar />
+                                    <ConfirmPassword />
                                 </>
                             }
                         />
@@ -138,8 +139,8 @@ function App() {
                             path="/aunctionList"
                             element={
                                 <>
-                                    <Navbar/>
-                                    <AunctionList/>
+                                    <Navbar />
+                                    <AunctionList />
                                 </>
                             }
                         />
@@ -147,8 +148,8 @@ function App() {
                             path="/detailProductAuction/:auctionItemID"
                             element={
                                 <>
-                                    <Navbar/>
-                                    <DetailProductAunction/>
+                                    <Navbar />
+                                    <DetailProductAunction />
                                 </>
                             }
                         />
@@ -156,8 +157,8 @@ function App() {
                             path="/deposit"
                             element={
                                 <>
-                                    <Navbar/>
-                                    <Deposit/>
+                                    <Navbar />
+                                    <Deposit />
                                 </>
                             }
                         />
@@ -165,8 +166,8 @@ function App() {
                             path="/ruleAunction"
                             element={
                                 <>
-                                    <Navbar/>
-                                    <RuleAunction/>
+                                    <Navbar />
+                                    <RuleAunction />
                                 </>
                             }
                         />
@@ -174,8 +175,8 @@ function App() {
                             path="/ruleConsign"
                             element={
                                 <>
-                                    <Navbar/>
-                                    <RuleConsign/>
+                                    <Navbar />
+                                    <RuleConsign />
                                 </>
                             }
                         />
@@ -183,8 +184,8 @@ function App() {
                             path="/consign"
                             element={
                                 <>
-                                    <Navbar/>
-                                    <Consign/>
+                                    <Navbar />
+                                    <Consign />
                                 </>
                             }
                         />
@@ -192,8 +193,8 @@ function App() {
                             path="/auction/:auctionId"
                             element={
                                 <>
-                                    <Navbar/>
-                                    <Aunction/>
+                                    <Navbar />
+                                    <Aunction />
                                 </>
                             }
                         />
@@ -201,8 +202,8 @@ function App() {
                             path="/profile"
                             element={
                                 <>
-                                    <Navbar/>
-                                    <ProfilePage/>
+                                    <Navbar />
+                                    <ProfilePage />
                                 </>
                             }
                         />
@@ -210,8 +211,8 @@ function App() {
                             path="/change-password"
                             element={
                                 <>
-                                    <Navbar/>
-                                    <ChangePassword/>
+                                    <Navbar />
+                                    <ChangePassword />
                                 </>
                             }
                         />
@@ -219,8 +220,8 @@ function App() {
                             path="/refunds"
                             element={
                                 <>
-                                    <Navbar/>
-                                    <Refunds/>
+                                    <Navbar />
+                                    <Refunds />
                                 </>
                             }
                         />
@@ -228,8 +229,8 @@ function App() {
                             path="/add-fund"
                             element={
                                 <>
-                                    <Navbar/>
-                                    <Fund/>
+                                    <Navbar />
+                                    <Fund />
                                 </>
                             }
                         />
@@ -237,8 +238,8 @@ function App() {
                             path="/transaction/withdraw"
                             element={
                                 <>
-                                    <Navbar/>
-                                    <Withdraw/>
+                                    <Navbar />
+                                    <Withdraw />
                                 </>
                             }
                         />
@@ -247,8 +248,8 @@ function App() {
                             path="/transaction/deposit-history"
                             element={
                                 <>
-                                    <Navbar/>
-                                    <DepositHistory/>
+                                    <Navbar />
+                                    <DepositHistory />
                                 </>
                             }
                         />
@@ -256,8 +257,8 @@ function App() {
                             path="/transaction/withdraw-history"
                             element={
                                 <>
-                                    <Navbar/>
-                                    <WithdrawHistory/>
+                                    <Navbar />
+                                    <WithdrawHistory />
                                 </>
                             }
                         />
@@ -265,8 +266,8 @@ function App() {
                             path="/transaction/Auction-history"
                             element={
                                 <>
-                                    <Navbar/>
-                                    <AuctionHistory/>
+                                    <Navbar />
+                                    <AuctionHistory />
                                 </>
                             }
                         />
@@ -274,8 +275,8 @@ function App() {
                             path="/transaction/My-consign"
                             element={
                                 <>
-                                    <Navbar/>
-                                    <MyConsign/>
+                                    <Navbar />
+                                    <MyConsign />
                                 </>
                             }
                         />
@@ -283,8 +284,8 @@ function App() {
                             path="/transaction/purchase-history"
                             element={
                                 <>
-                                    <Navbar/>
-                                    <PurchaseHistory/>
+                                    <Navbar />
+                                    <PurchaseHistory />
                                 </>
                             }
                         />
@@ -292,8 +293,8 @@ function App() {
                             path="/transaction/recharge-history"
                             element={
                                 <>
-                                    <Navbar/>
-                                    <RechargeHistory/>
+                                    <Navbar />
+                                    <RechargeHistory />
                                 </>
                             }
                         />
@@ -301,8 +302,8 @@ function App() {
                             path="transaction/refund-history"
                             element={
                                 <>
-                                    <Navbar/>
-                                    <RefundHistory/>
+                                    <Navbar />
+                                    <RefundHistory />
                                 </>
                             }
                         />
@@ -310,8 +311,8 @@ function App() {
                             path="/order-list"
                             element={
                                 <>
-                                    <Navbar/>
-                                    <OrderList/>
+                                    <Navbar />
+                                    <OrderList />
                                 </>
                             }
                         />
@@ -319,8 +320,8 @@ function App() {
                             path="/order-detail/:id"
                             element={
                                 <>
-                                    <Navbar/>
-                                    <OrderDetail/>
+                                    <Navbar />
+                                    <OrderDetail />
                                 </>
                             }
                         />
@@ -328,7 +329,7 @@ function App() {
                             path="/branch"
                             element={
                                 <>
-                                    <Branches/>
+                                    <Branches />
                                 </>
                             }
                         />
@@ -336,8 +337,8 @@ function App() {
                             path="/transaction/payout-history"
                             element={
                                 <>
-                                    <Navbar/>
-                                    <PayoutHistory/>
+                                    <Navbar />
+                                    <PayoutHistory />
                                 </>
                             }
                         />
@@ -345,10 +346,10 @@ function App() {
                             path="/men"
                             element={
                                 <>
-                                    <Navbar/>
-                                    <Breadcrumb/>
-                                    <Men/>
-                                    <Footer/>
+                                    <Navbar />
+                                    <Breadcrumb />
+                                    <Men />
+                                    <Footer />
                                 </>
                             }
                         />
@@ -356,10 +357,10 @@ function App() {
                             path="/women"
                             element={
                                 <>
-                                    <Navbar/>
-                                    <Breadcrumb/>
-                                    <Women/>
-                                    <Footer/>
+                                    <Navbar />
+                                    <Breadcrumb />
+                                    <Women />
+                                    <Footer />
                                 </>
                             }
                         />
@@ -368,10 +369,19 @@ function App() {
                             element={
                                 <>
                                     {" "}
-                                    <Navbar/>
-                                    <Breadcrumb/>
-                                    <Search/>
-                                    <Footer/>
+                                    <Navbar />
+                                    <Breadcrumb />
+                                    <Search />
+                                    <Footer />
+                                </>
+                            }
+                        />
+                        <Route
+                            path="/auction-detail/:auctionId"
+                            element={
+                                <>
+                                    <Navbar />
+                                    <AuctionDetail />
                                 </>
                             }
                         />
@@ -380,9 +390,9 @@ function App() {
                             element={
                                 <>
                                     {" "}
-                                    <Navbar/>
-                                    <BranchItems/>
-                                    <Footer/>
+                                    <Navbar />
+                                    <BranchItems />
+                                    <Footer />
                                 </>
                             }
                         />
@@ -391,10 +401,10 @@ function App() {
                             path="/branch"
                             element={
                                 <>
-                                    <Navbar/>
-                                    <Breadcrumb/>
-                                    <Branches/>
-                                    <Footer/>
+                                    <Navbar />
+                                    <Breadcrumb />
+                                    <Branches />
+                                    <Footer />
                                 </>
                             }
                         />
@@ -403,9 +413,9 @@ function App() {
                             path="/itemDetail/:itemId"
                             element={
                                 <>
-                                    <Navbar/>
-                                    <ItemDetail/>
-                                    <Footer/>
+                                    <Navbar />
+                                    <ItemDetail />
+                                    <Footer />
                                 </>
                             }
                         />
@@ -413,9 +423,9 @@ function App() {
                             path="/listItems/:masterItemCode"
                             element={
                                 <>
-                                    <Navbar/>
-                                    <ChildItems/>
-                                    <Footer/>
+                                    <Navbar />
+                                    <ChildItems />
+                                    <Footer />
                                 </>
                             }
                         />
@@ -424,9 +434,9 @@ function App() {
                             path="/shopBranch/:shopId/listItems/:masterItemId"
                             element={
                                 <>
-                                    <Navbar/>
-                                    <ChildItemShop/>
-                                    <Footer/>
+                                    <Navbar />
+                                    <ChildItemShop />
+                                    <Footer />
                                 </>
                             }
                         />
@@ -435,9 +445,9 @@ function App() {
                             path="/transaction/My-consign/:consignId"
                             element={
                                 <>
-                                    <Navbar/>
-                                    <ConsignDetail/>
-                                    <Footer/>
+                                    <Navbar />
+                                    <ConsignDetail />
+                                    <Footer />
                                 </>
                             }
                         />
@@ -445,8 +455,8 @@ function App() {
                             path="/upload" // Thêm route cho component upload ảnh
                             element={
                                 <>
-                                    <Navbar/>
-                                    <ImageUpload/>
+                                    <Navbar />
+                                    <ImageUpload />
                                 </>
                             }
                         />
@@ -454,34 +464,34 @@ function App() {
                             path="/profile/addresses"
                             element={
                                 <>
-                                    <Navbar/>
-                                    <AddressManagementPage/>
+                                    <Navbar />
+                                    <AddressManagementPage />
                                 </>
-                            }/>
-                            <Route
+                            } />
+                        <Route
                             path="/profile/refundList"
                             element={
                                 <>
-                                    <Navbar/>
-                                    <RefundList/>
+                                    <Navbar />
+                                    <RefundList />
                                 </>
-                            }/>
-                             <Route
+                            } />
+                        <Route
                             path="/refundDetail/:refundId"
                             element={
                                 <>
-                                    <Navbar/>
-                                    <RefundDetail/>
+                                    <Navbar />
+                                    <RefundDetail />
                                 </>
-                            }/>
-                            <Route
+                            } />
+                        <Route
                             path="/transactions"
                             element={
                                 <>
-                                    <Navbar/>
-                                    <TransactionHistory/>
+                                    <Navbar />
+                                    <TransactionHistory />
                                 </>
-                            }/>
+                            } />
                     </Routes>
                 </CartProvider>
             </div>

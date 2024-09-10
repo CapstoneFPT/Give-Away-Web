@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Table, Input, Select, Card, Row, Col } from 'antd';
-import { AuctionStatus, AccountApi } from '../../api';
+import { Table, Input, Select, Card, Row, Col, Button } from 'antd';
+import { AuctionStatus, AccountApi, AuctionListResponse } from '../../api';
 import NavProfile from '../../components/NavProfile/NavProfile';
 import { useQuery } from '@tanstack/react-query';
+import { Link } from 'react-router-dom';
 
 const { Option } = Select;
 
@@ -80,6 +81,15 @@ const AuctionHistory: React.FC = () => {
       dataIndex: 'isWon',
       key: 'isWon',
       render: (isWon: boolean | null) => isWon === null ? 'N/A' : isWon ? 'Yes' : 'No',
+    },
+    {
+      title: 'Actions',
+      key: 'actions',
+      render: (text :string, record : AuctionListResponse) => (
+        <Link to={`/auction-detail/${record.auctionId}`}>
+          <Button type="primary">View Details</Button>
+        </Link>
+      ),
     },
   ];
 
