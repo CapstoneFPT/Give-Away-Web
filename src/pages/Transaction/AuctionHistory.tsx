@@ -1,75 +1,101 @@
-import React, {  useEffect, useState } from "react";
-import {  Card, Row, Col, Table } from "antd";
-import NavProfile from "../../components/NavProfile/NavProfile";
-import { AccountApi } from "../../api";
+import React, { useState } from 'react';
+import { Table, Input, Select, Card, Row, Col } from 'antd';
+import { AuctionStatus, AccountApi } from '../../api';
+import NavProfile from '../../components/NavProfile/NavProfile';
+import { useQuery } from '@tanstack/react-query';
 
-const AuctionHistory = () => {
+const { Option } = Select;
+
+const AuctionHistory: React.FC = () => {
   const userId = JSON.parse(localStorage.getItem("userId") || "null");
-  const [data, setData] = useState<any[]>([]); // Thêm trạng thái để lưu dữ liệu
-  useEffect(() => {
-    const fetchDepositHistory = async () => {
-      const DepositListApi = new AccountApi();
-      try {
-        const response = await DepositListApi.apiAccountsAccountIdOrdersGet(
-          userId,
-          null!,
-          null!,
-          null!,
-          null!,
-          null!,
-          null!,
-          null!,
-          null!,
-          null!,
-          null!,
-          null!,
-          true,
-          false,
-        );
-        setData(response.data.data?.items || []); // Lưu dữ liệu vào trạng thái
-      } catch (error) {
-        console.error("Error fetching deposit history:", error);
-      }
-    };
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [statuses, setStatuses] = useState<AuctionStatus[]>([]);
+  const [itemCode, setItemCode] = useState('');
+  const [auctionCode, setAuctionCode] = useState('');
+  const [title, setTitle] = useState('');
+  const [isWon, setIsWon] = useState<boolean | undefined>(undefined);
 
-    fetchDepositHistory();
-  }, [userId]);
+  const fetchAuctions = async () => {
+    const accountApi = new AccountApi();
+    const response = await accountApi.apiAccountsAccountIdAuctionsGet(
+      userId!,
+      page,
+      pageSize,
+      itemCode || undefined,
+      auctionCode || undefined,
+      isWon,
+      title || undefined,
+      statuses.length > 0 ? statuses : undefined
+    );
+    return response.data;
+  };
+
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['auctions', userId, page, pageSize, itemCode, auctionCode, isWon, title, statuses],
+    queryFn: fetchAuctions
+  });
 
   const columns = [
     {
-      title: 'Product name',
-      dataIndex: 'itemName',
-      key: 'itemName',
-    },
-    // {
-    //   title: 'Image',
-    //   dataIndex: 'image',
-    //   key: 'image',
-    //   render: (image: string) => (
-    //     <img src={image} alt="Product Image" style={{ width: '100px', height: '100px' }} />
-    //   ),
-    // },
-    {
-      title: 'Auction date',
-      dataIndex: 'auctionDate',
-      key: 'auctionDate',
+      title: 'Auction Code',
+      dataIndex: 'auctionCode',
+      key: 'auctionCode',
     },
     {
-      title: 'Successful bid price',
-      dataIndex: 'bidPrice',
-      key: 'bidPrice',
+      title: 'Item Code',
+      dataIndex: 'itemCode',
+      key: 'itemCode',
     },
     {
-      title: 'Shop',
-      dataIndex: 'seller',
-      key: 'seller',
+      title: 'Title',
+      dataIndex: 'title',
+      key: 'title',
+    },
+    {
+      title: 'Start Date',
+      dataIndex: 'startDate',
+      key: 'startDate',
+      render: (date: string) => new Date(date).toLocaleString(),
+    },
+    {
+      title: 'End Date',
+      dataIndex: 'endDate',
+      key: 'endDate',
+      render: (date: string) => new Date(date).toLocaleString(),
+    },
+    {
+      title: 'Deposit Fee',
+      dataIndex: 'depositFee',
+      key: 'depositFee',
+      render: (amount: number) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount),
     },
     {
       title: 'Status',
       dataIndex: 'status',
       key: 'status',
     },
+    {
+      title: 'Won',
+      dataIndex: 'isWon',
+      key: 'isWon',
+      render: (isWon: boolean | null) => isWon === null ? 'N/A' : isWon ? 'Yes' : 'No',
+    },
   ];
+
+  const handleStatusChange = (selectedStatuses: AuctionStatus[]) => {
+    setStatuses(selectedStatuses);
+    setPage(1);
+  };
+
+  const handleTableChange = (pagination: any) => {
+    setPage(pagination.current);
+    setPageSize(pagination.pageSize);
+  };
+
+  if (error) {
+    return <div>Error loading auctions</div>;
+  }
 
   return (
     <Card>
@@ -92,15 +118,71 @@ const AuctionHistory = () => {
                 marginBottom: "10px",
               }}
             >
-              Auction history
+              Auction History
             </h3>
+            <Row gutter={[16, 16]} style={{ marginBottom: 16 }}>
+              <Col span={8}>
+                <Input
+                  placeholder="Auction Code"
+                  value={auctionCode}
+                  onChange={(e) => setAuctionCode(e.target.value)}
+                />
+              </Col>
+              <Col span={8}>
+                <Input
+                  placeholder="Item Code"
+                  value={itemCode}
+                  onChange={(e) => setItemCode(e.target.value)}
+                />
+              </Col>
+              <Col span={8}>
+                <Input
+                  placeholder="Title"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                />
+              </Col>
+            </Row>
+            <Row gutter={[16, 16]} style={{ marginBottom: 16 }}>
+              <Col span={12}>
+                <Select
+                  mode="multiple"
+                  style={{ width: '100%' }}
+                  placeholder="Select auction statuses"
+                  onChange={handleStatusChange}
+                >
+                  {Object.values(AuctionStatus).filter(value => value === 'Finished' || value === 'OnGoing').map((status) => (
+                    <Option key={status} value={status}>
+                      {status}
+                    </Option>
+                  ))}
+                </Select>
+              </Col>
+              <Col span={12}>
+                <Select
+                  style={{ width: '100%' }}
+                  placeholder="Won Status"
+                  onChange={(value) => setIsWon(value === 'true' ? true : value === 'false' ? false : undefined)}
+                >
+                  <Option value="true">Won</Option>
+                  <Option value="false">Not Won</Option>
+                  <Option value="">All</Option>
+                </Select>
+              </Col>
+            </Row>
             <Table
-             
-              dataSource={data}
               columns={columns}
-              rowKey="id"
-              pagination={{ pageSize: 4 }}
-              style={{ marginTop: '20px' }}
+              dataSource={data?.items || []}
+              rowKey="auctionId"
+              loading={isLoading}
+              pagination={{
+                current: page,
+                pageSize: pageSize,
+                total: data?.totalCount,
+                showSizeChanger: true,
+                showQuickJumper: true,
+              }}
+              onChange={handleTableChange}
             />
           </Card>
         </Col>
