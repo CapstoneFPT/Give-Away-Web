@@ -271,9 +271,9 @@ const RefundDetail = () => {
                 />
                 <div style={{ marginTop: "20px" }}>
                   <strong>Upload Images:</strong>
-                  <Upload {...uploadProps}>
+                  {/* <Upload {...uploadProps}>
                     <Button icon={<UploadOutlined />}>Upload</Button>
-                  </Upload>
+                  </Upload> */}
                 </div>
               </div>
             </Modal>
