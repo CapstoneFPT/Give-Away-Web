@@ -90,7 +90,7 @@ const OrderList: React.FC = () => {
     try {
       const orderApi = new OrderApi();
       const response = await orderApi.apiOrdersOrderIdOrderlineitemsGet(orderId);
-      setOrderLineItems(response.data?.items || []);
+      setOrderLineItems(response.data.items || []);
       console.log(response);
     } catch (error) {
       console.error("Failed to fetch order details:", error);

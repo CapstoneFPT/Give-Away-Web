@@ -2,6 +2,8 @@ import React, {useEffect, useState} from "react";
 import {FashionItemApi, FashionItemList, MasterItemApi, MasterItemDetailResponse, SizeType} from "../../api";
 import {useNavigate, useParams} from "react-router-dom";
 import {Button, Card, Col, Image, Input, Modal, Row, Select, Spin, Typography} from "antd";
+import backgroundImageUrl from "../../components/Assets/handbag-near-sunglasses-with-wear-plant-twigs.jpg";
+
 
 const formatBalance = (balance: any) => {
     return new Intl.NumberFormat('de-DE').format(balance);
@@ -76,7 +78,7 @@ const ChildItemShop = () => {
     ));
 
     return (
-        <div>
+        <div style={{ backgroundImage: `url(${backgroundImageUrl})`, backgroundSize: 'cover', minHeight: '100vh' }}>
             <h1 style={{textAlign: 'center'}}>List Products</h1>
             <div style={{marginBottom: '16px', marginTop: '40px'}}>
                 <Input
@@ -122,7 +124,7 @@ const ChildItemShop = () => {
             {isLoading ? (
                 <Spin style={{display: 'flex', justifyContent: 'center', marginTop: '20px'}} size="large"/>
             ) : (
-                <Card>
+                <Card style={{ backgroundColor: 'rgba(0, 0, 0, 0)', color: 'white' }}>
                     <Row gutter={[16, 16]}>
                         <Col span={6}>
                             {dataMaster && (
