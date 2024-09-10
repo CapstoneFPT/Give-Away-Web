@@ -14,6 +14,8 @@ import {
 } from "../../api";
 import RuleConsign from "../../pages/RuleConsign";
 import ConsignFormList from "./ConsignFormList";
+import backgroundImageUrl from "../../components/Assets/travel-accessories-white-table.jpg";
+
 
 
 const ConsignForm = () => {
@@ -152,9 +154,16 @@ const ConsignForm = () => {
     };
 
     return (
-        <Card
+        <Card style={{
+            backgroundImage: `url(${backgroundImageUrl})`,
+            backgroundSize: "cover",
+            minHeight: "100vh",
+            backgroundColor: "rgba(255, 255, 255, 0)",
+            overflow: "hidden",
+            justifyContent: "center", display: "flex"
+        }}
             className="consign-form-container"
-            style={{justifyContent: "center", display: "flex"}}
+           
         >
             <Row gutter={[16, 16]}>
                 <Col span={8}>

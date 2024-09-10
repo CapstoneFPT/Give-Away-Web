@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Spin, Card, Row, Col, Input, Select, Button, Modal, Typography, Image } from 'antd';
 import { FashionItemApi, FashionItemList, MasterItemApi, MasterItemDetailResponse, SizeType } from '../../api';
 import { useParams, useNavigate } from 'react-router-dom';
+import backgroundImageUrl from "../../components/Assets/handbag-near-sunglasses-with-wear-plant-twigs.jpg";
+
 
 const { Option } = Select;
 const { Title } = Typography;
@@ -80,7 +82,7 @@ const ChildItems: React.FC = () => {
   ));
 
   return (
-    <div>
+    <div style={{ backgroundImage: `url(${backgroundImageUrl})`, backgroundSize: 'cover', minHeight: '100vh' }}>
       <h1 style={{ textAlign: 'center' }}>List Products</h1>
       <div style={{ marginBottom: '16px', marginTop: '40px' }}>
         <Input
@@ -126,7 +128,7 @@ const ChildItems: React.FC = () => {
       {isLoading ? (
         <Spin style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }} size="large" />
       ) : (
-        <Card>
+        <Card style={{ backgroundColor: 'rgba(0, 0, 0, 0)', color: 'white' }}>
           <Row gutter={[16, 16]}>
             <Col span={6}>
               {dataMaster && (

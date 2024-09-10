@@ -1,8 +1,11 @@
 import React, { useState, useMemo } from "react";
 import { Card, Button, Row, Col, InputNumber, message, Typography } from "antd";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { RechargeApi, InitiateRechargeRequest } from "../../api/api";
+
 import { WalletOutlined } from "@ant-design/icons";
+import { InitiateRechargeRequest, RechargeApi } from "../../api";
+import backgroundImageUrl from "../../components/Assets/z5815359792408_03a75ffa56becc61f3a6cba433ff19be.jpg";
+
 
 const { Title } = Typography;
 
@@ -23,7 +26,7 @@ const AddFund = () => {
 
   const rechargeMutation = useMutation({
     mutationFn: (rechargeAmount: number) => {
-      const rechargeApi = new RechargeApi();
+      const rechargeApi = new RechargeApi ;
       const request: InitiateRechargeRequest = {
         memberId: userId,
         amount: rechargeAmount
@@ -65,7 +68,16 @@ const AddFund = () => {
   };
 
   return (
-    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "80vh" }}>
+    <div
+    style={{
+      backgroundImage: `url(${backgroundImageUrl})`,
+      backgroundSize: "cover",
+      
+      backgroundColor: "rgba(255, 255, 255, 0)",
+      overflow: "hidden",
+      display: "flex", justifyContent: "center", alignItems: "center", minHeight: "82vh" 
+  }}
+    >
       <Card style={{ width: "100%", maxWidth: "500px", boxShadow: "0 4px 8px rgba(0,0,0,0.1)" }}>
         <Title level={2} style={{ marginBottom: "24px", textAlign: "center" }}>
           <WalletOutlined style={{ marginRight: "8px" }} />

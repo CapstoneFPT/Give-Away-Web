@@ -97,7 +97,7 @@ const RefundDetail = () => {
   };
 
   const uploadProps = {
-    action: 'https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload',
+    
     listType: 'picture',
     multiple: true,
     beforeUpload(file: any) {
@@ -271,9 +271,9 @@ const RefundDetail = () => {
                 />
                 <div style={{ marginTop: "20px" }}>
                   <strong>Upload Images:</strong>
-                  {/* <Upload {...uploadProps}>
+                  <Upload {...uploadProps}>
                     <Button icon={<UploadOutlined />}>Upload</Button>
-                  </Upload> */}
+                  </Upload>
                 </div>
               </div>
             </Modal>
