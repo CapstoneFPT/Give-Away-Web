@@ -8,20 +8,22 @@ import {
   List,
   Image,
   Statistic,
-  message
+  message,
+  Modal,
+  Table
 } from "antd";
 import Footer from "../components/Footer/Footer";
 import { useParams, useNavigate } from "react-router-dom";
 import {
   AuctionApi,
+  AuctionLeaderboardResponse,
   AuctionItemDetailResponse,
   BidDetailResponse,
   CreateBidRequest,
 } from "../api";
-
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuctionData, usePlaceBid } from "../hooks/auctionHooks";
 import { useSignalRSetup } from "../hooks/useSignalRSetup";
+import LeaderboardModal from "../components/Auction/LeaderboardModal";
 
 const { Title, Paragraph } = Typography;
 
@@ -36,6 +38,8 @@ const Auction: React.FC = () => {
     undefined
   );
   const [deadline, setDeadline] = useState<number>(0);
+  const [leaderboardData, setLeaderboardData] = useState<AuctionLeaderboardResponse | null>(null);
+  const [isLeaderboardVisible, setIsLeaderboardVisible] = useState(false);
 
   const { data, isLoading, error } = useAuctionData(auctionId!);
   const placeBidMutation = usePlaceBid(auctionId!);
@@ -49,7 +53,24 @@ const Auction: React.FC = () => {
     });
   }, [data?.auctionDetail.stepIncrement]);
 
-  useSignalRSetup(auctionId!, addBid, navigate);
+  const fetchLeaderboard = async () => {
+    try {
+      const auctionApi = new AuctionApi();
+      const response = await auctionApi.apiAuctionsIdLeaderboardGet(auctionId!);
+      setLeaderboardData(response.data);
+      setIsLeaderboardVisible(true);
+    } catch (error) {
+      console.error("Error fetching leaderboard:", error);
+      message.error("Failed to fetch leaderboard");
+    }
+  };
+
+  const onFinish = () => {
+    message.info("Auction has ended");
+    fetchLeaderboard();
+  };
+
+  useSignalRSetup(auctionId!, addBid, navigate, onFinish);
 
   useEffect(() => {
     if (data) {
@@ -63,7 +84,7 @@ const Auction: React.FC = () => {
         setNextBidAmount(product.initialPrice || 0);
       }
 
-      const currentTime = new Date(serverTime!);
+      const currentTime = new Date(serverTime.currentTime!);
       const startTime = new Date(auctionDetail.startDate!);
       const endTime = new Date(auctionDetail.endDate!);
 
@@ -92,35 +113,13 @@ const Auction: React.FC = () => {
     return new Intl.NumberFormat("de-DE").format(balance);
   };
 
-  const onFinish = () => {
-    message.info("Auction has ended");
-
-    setTimeout(() => {
-      navigate("/");
-    }, 2000);
-  };
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
-
-  if (!data) {
-    return <div>No data available</div>;
-  }
-
-  const { product } = data;
-
   return (
     <Card>
       <h1 style={{ textAlign: "center", fontSize: "40px" }}>Auction</h1>
       <Row gutter={[16, 16]} style={{ margin: "10px" }}>
         <Col span={4}>
           <Row gutter={[10, 8]}>
-            {product.images?.map((image, index) => (
+            {data?.product.images?.map((image, index) => (
               <Col span={24} key={index}>
                 <img
                   src={image}
@@ -144,7 +143,7 @@ const Auction: React.FC = () => {
           <div className="zoom-container">
             <Image
               src={selectedImage}
-              alt={product.name!}
+              alt={data?.product.name!}
               className="zoom-image"
               style={{ width: "90%", height: "750px" }}
             />
@@ -152,40 +151,40 @@ const Auction: React.FC = () => {
         </Col>
         <Col span={8}>
           <Card title="Product Details">
-            <Title level={3}>{product.name}</Title>
+            <Title level={3}>{data?.product.name}</Title>
             <Row gutter={[16, 16]}>
               <Col span={14}>
                 <Paragraph>
-                  <strong>Category:</strong> {product.categoryName}
+                  <strong>Category:</strong> {data?.product.categoryName}
                 </Paragraph>
                 <Paragraph>
-                  <strong>Condition:</strong> {product.condition}%
+                  <strong>Condition:</strong> {data?.product.condition}%
                 </Paragraph>
                 <Paragraph>
-                  <strong>Size:</strong> {product.size}
+                  <strong>Size:</strong> {data?.product.size}
                 </Paragraph>
               </Col>
               <Col span={10}>
                 <Paragraph>
-                  <strong>Brand:</strong> {product.brand}
+                  <strong>Brand:</strong> {data?.product.brand}
                 </Paragraph>
                 <Paragraph>
-                  <strong>Color:</strong> {product.color}
+                  <strong>Color:</strong> {data?.product.color}
                 </Paragraph>
                 <Paragraph>
-                  <strong>Gender:</strong> {product.gender}
+                  <strong>Gender:</strong> {data?.product.gender}
                 </Paragraph>
               </Col>
               <Paragraph>
                 <strong
                   style={{ fontSize: "18px", color: "ThreeDLightShadow" }}
                 >
-                  Initial Price: {formatBalance(product.initialPrice!)} VND
+                  Initial Price: {formatBalance(data?.product.initialPrice!)} VND
                 </strong>
               </Paragraph>
             </Row>
             <Paragraph>
-              <strong>Description:</strong> {product.description}
+              <strong>Description:</strong> {data?.product.description}
             </Paragraph>
             <Paragraph style={{ color: "#32b94b", fontSize: "20px" }}>
               <strong>Current Bid: {nextBidAmount} VND </strong>
@@ -241,6 +240,11 @@ const Auction: React.FC = () => {
         </Col>
       </Row>
       <Footer />
+      <LeaderboardModal
+        visible={isLeaderboardVisible}
+        onClose={() => setIsLeaderboardVisible(false)}
+        leaderboardData={leaderboardData}
+      />
     </Card>
   );
 };

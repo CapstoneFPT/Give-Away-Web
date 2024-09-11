@@ -3,7 +3,7 @@ import { BidDetailResponse } from "../api";
 import { useEffect } from "react";
 import signalrService from "../pages/service/signalrService";
 
-export const useSignalRSetup = (auctionId: string, addBid: (bid: BidDetailResponse) => void, navigate: NavigateFunction) => {
+export const useSignalRSetup = (auctionId: string, addBid: (bid: BidDetailResponse) => void, navigate: NavigateFunction, onFinish: () => void) => {
   useEffect(() => {
     const setupSignalR = async () => {
       try {
@@ -12,8 +12,7 @@ export const useSignalRSetup = (auctionId: string, addBid: (bid: BidDetailRespon
         signalrService.onReceiveBidUpdate(addBid);
         signalrService.onAuctionEnded((id: string) => {
           if (id === auctionId) {
-            alert("Auction has ended");
-            navigate("/");
+            onFinish();
           }
         });
       } catch (error) {
@@ -26,5 +25,5 @@ export const useSignalRSetup = (auctionId: string, addBid: (bid: BidDetailRespon
     return () => {
       signalrService.leaveAuctionGroup(auctionId);
     };
-  }, [auctionId, addBid, navigate]);
+  }, [auctionId, addBid, navigate, onFinish]);
 };
