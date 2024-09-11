@@ -48,7 +48,7 @@ const Auction: React.FC = () => {
     setBids((prevBids) => {
       const updatedBids = [newBid, ...prevBids];
       const latestBid = updatedBids[0];
-      setNextBidAmount(latestBid.amount || 0 + (data?.auctionDetail.stepIncrement || 0)); 
+      setNextBidAmount((latestBid.amount || 0) + (data?.auctionDetail.stepIncrement || 0)); 
       return updatedBids;
     });
   }, [data?.auctionDetail.stepIncrement]);
