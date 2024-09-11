@@ -48,15 +48,16 @@ const Auction: React.FC = () => {
     setBids((prevBids) => {
       const updatedBids = [newBid, ...prevBids];
       const latestBid = updatedBids[0];
-      setNextBidAmount(latestBid.amount || 0 + (data?.auctionDetail.stepIncrement || 0)); 
+      setNextBidAmount((latestBid.amount || 0) + (data?.auctionDetail.stepIncrement || 0));
       return updatedBids;
     });
   }, [data?.auctionDetail.stepIncrement]);
 
-  const fetchLeaderboard = async () => {
+  const fetchLeaderboard = async (page: number = 1, pageSize: number = 10) => {
     try {
       const auctionApi = new AuctionApi();
-      const response = await auctionApi.apiAuctionsIdLeaderboardGet(auctionId!);
+      const response = await auctionApi.apiAuctionsIdLeaderboardGet(auctionId!, page, pageSize);
+      console.log(response.data);
       setLeaderboardData(response.data);
       setIsLeaderboardVisible(true);
     } catch (error) {
@@ -75,9 +76,9 @@ const Auction: React.FC = () => {
   useEffect(() => {
     if (data) {
       const { product, latestBid, auctionDetail, serverTime } = data;
-      
+
       setSelectedImage(product.images![0]!);
-      
+
       if (latestBid) {
         addBid(latestBid);
       } else {
@@ -244,6 +245,8 @@ const Auction: React.FC = () => {
         visible={isLeaderboardVisible}
         onClose={() => setIsLeaderboardVisible(false)}
         leaderboardData={leaderboardData}
+        onPageChange={(page, pageSize) => fetchLeaderboard(page, pageSize)}
+        onRedirect={() => navigate("/")}
       />
     </Card>
   );

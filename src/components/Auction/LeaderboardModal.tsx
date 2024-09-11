@@ -1,15 +1,18 @@
 import React from 'react';
-import { Modal, Table } from 'antd';
-import { AuctionLeaderboardResponse } from '../../api';
+import { Modal, Table, Button } from 'antd';
+import { AuctionLeaderboardResponse, LeaderboardItemListResponse } from '../../api';
+import { ColumnType, TablePaginationConfig } from 'antd/es/table';
 
 interface LeaderboardModalProps {
   visible: boolean;
   onClose: () => void;
   leaderboardData: AuctionLeaderboardResponse | null;
+  onPageChange: (page: number, pageSize: number) => void;
+  onRedirect: () => void;
 }
 
-const LeaderboardModal: React.FC<LeaderboardModalProps> = ({ visible, onClose, leaderboardData }) => {
-  const columns = [
+const LeaderboardModal: React.FC<LeaderboardModalProps> = ({ visible, onClose, leaderboardData, onPageChange, onRedirect }) => {
+  const columns: ColumnType<LeaderboardItemListResponse>[] = [
     {
       title: 'Phone',
       dataIndex: 'phone',
@@ -29,12 +32,27 @@ const LeaderboardModal: React.FC<LeaderboardModalProps> = ({ visible, onClose, l
     },
   ];
 
+  const handleTableChange = (pagination: TablePaginationConfig) => {
+    if (pagination.current && pagination.pageSize) {
+      onPageChange(pagination.current, pagination.pageSize);
+    }
+  };
+
+  const handleClose = () => {
+    onClose();
+    onRedirect();
+  };
+
   return (
     <Modal
       title="Auction Leaderboard"
       open={visible}
       onCancel={onClose}
-      footer={null}
+      footer={[
+        <Button key="close" onClick={handleClose}>
+          Close and Redirect
+        </Button>
+      ]}
       width={800}
     >
       <Table
@@ -45,7 +63,9 @@ const LeaderboardModal: React.FC<LeaderboardModalProps> = ({ visible, onClose, l
           total: leaderboardData?.leaderboard?.totalCount,
           pageSize: leaderboardData?.leaderboard?.pageSize,
           current: leaderboardData?.leaderboard?.pageNumber,
+          onChange: (page, pageSize) => onPageChange(page, pageSize),
         }}
+        onChange={handleTableChange}
       />
     </Modal>
   );
