@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { AuctionApi, CreateBidRequest } from '../api';
 import signalrService from '../pages/service/signalrService';
-export const useAuctionData = (auctionId: string, itemId: string) => {
+export const useAuctionData = (auctionId: string) => {
   const auctionDetailApi = new AuctionApi();
   
   return useQuery({

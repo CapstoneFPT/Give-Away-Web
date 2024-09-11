@@ -28,7 +28,6 @@ const { Title, Paragraph } = Typography;
 
 const Auction: React.FC = () => {
   const { auctionId } = useParams<{ auctionId: string }>();
-  const { itemId } = useParams<{ itemId: string }>();
 
   const navigate = useNavigate();
   const userId = JSON.parse(localStorage.getItem("userId") || "null");
@@ -39,7 +38,7 @@ const Auction: React.FC = () => {
   );
   const [deadline, setDeadline] = useState<number>(0);
 
-  const { data, isLoading, error } = useAuctionData(auctionId!, itemId!);
+  const { data, isLoading, error } = useAuctionData(auctionId!);
   const placeBidMutation = usePlaceBid(auctionId!);
 
   const addBid = useCallback((newBid: BidDetailResponse) => {
@@ -49,7 +48,9 @@ const Auction: React.FC = () => {
       setNextBidAmount(latestBid.amount || 0 + (data?.auctionDetail.stepIncrement || 0)); 
       return updatedBids;
     });
-  }, []);
+  }, [data?.auctionDetail.stepIncrement]);
+
+  useSignalRSetup(auctionId!, addBid, navigate);
 
   useEffect(() => {
     if (data) {
@@ -113,8 +114,6 @@ const Auction: React.FC = () => {
   }
 
   const { product } = data;
-
-  useSignalRSetup(auctionId!, addBid, navigate);
 
   return (
     <Card>
