@@ -223,6 +223,10 @@ const OrderList: React.FC = () => {
       title: "Date",
       dataIndex: "createdDate",
       key: "createdDate",
+      render: (createdDate: string) => {
+        const date = new Date(createdDate);
+        return date.toLocaleString();
+      }
     },
     {
       title: "Total Price",

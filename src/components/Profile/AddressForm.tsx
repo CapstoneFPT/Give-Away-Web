@@ -69,7 +69,7 @@ const AddressForm: React.FC<AddressFormProps> = ({
                 label="Phone"
                 rules={[
                     { required: true, message: 'Please input phone number!' },
-                    { pattern: /^[0-9]+$/, message: 'Please enter a valid phone number!' },
+                    { pattern:/(((\+|)84)|0)(3|5|7|8|9)+([0-9]{8})\b/, message: 'Please enter a valid phone number!' },
                 ]}
             >
                 <Input />
