@@ -42,6 +42,7 @@ const ItemDetail: React.FC = () => {
     const {dispatch, isItemInCart} = useCart();
     const [selectedImage, setSelectedImage] = useState<string>("");
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const userId = JSON.parse(localStorage.getItem("userId") || "null");
     console.log(product);
     useEffect(() => {
         if (itemId !== undefined) {
@@ -49,7 +50,8 @@ const ItemDetail: React.FC = () => {
                 try {
                     const fashionItemApi = new FashionItemApi();
                     const response = await fashionItemApi.apiFashionitemsItemIdGet(
-                        itemId!
+                        itemId!,
+                        userId
                     );
                     console.debug(itemId, response.data);
                     setProduct(response.data.data!);
