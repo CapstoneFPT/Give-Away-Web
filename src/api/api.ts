@@ -4512,6 +4512,12 @@ export interface FashionItemDetailResponse {
     'isOrderedYet'?: boolean;
     /**
      * 
+     * @type {boolean}
+     * @memberof FashionItemDetailResponse
+     */
+    'isItemConsigned'?: boolean;
+    /**
+     * 
      * @type {GenderType}
      * @memberof FashionItemDetailResponse
      */

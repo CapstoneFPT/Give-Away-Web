@@ -75,7 +75,14 @@ const ItemDetail: React.FC = () => {
                 message: "Already Ordered",
                 description: `The item "${product.name}" has already been ordered.`,
             });
-        } else if (isItemInCart(product.itemId!)) {
+        } 
+        else if(product.isItemConsigned){
+            notification.error({
+                message: "You have consigned this item",
+                description: `You have consigned the item "${product.name}".`,
+            });
+        }
+        else if (isItemInCart(product.itemId!)) {
             notification.warning({
                 message: "Already in Cart",
                 description: `The item "${product.name}" is already in your cart.`,
