@@ -1,4 +1,4 @@
-import { FashionItemStatus, OrderStatus, RefundStatus } from "../api";
+import { AuctionStatus, FashionItemStatus, OrderStatus, RefundStatus } from "../api";
 
 export type Test = {
   name: string
@@ -79,3 +79,22 @@ export const getRefundStatus = (status: string) => {
   }
 
 }
+export const getAuctionStatus = (status: string) => {
+  switch (status) {
+    case AuctionStatus.Approved:
+      return "purple";
+      case AuctionStatus.Finished:
+      return "green";
+      case AuctionStatus.OnGoing:
+      return "blue";
+      case AuctionStatus.Pending:
+      return "orange";
+      case RefundStatus.Rejected:
+      return "red";
+
+    default:
+      return "default";
+  }
+
+}
+

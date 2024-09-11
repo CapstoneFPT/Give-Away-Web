@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Table, Input, Select, Card, Row, Col, Button } from 'antd';
+import { Table, Input, Select, Card, Row, Col, Button, Tag } from 'antd';
 import { AuctionStatus, AccountApi, AuctionListResponse } from '../../api';
 import NavProfile from '../../components/NavProfile/NavProfile';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
+import { getAuctionStatus } from '../../utils/types';
 
 const { Option } = Select;
 
@@ -69,12 +70,21 @@ const AuctionHistory: React.FC = () => {
       title: 'Deposit Fee',
       dataIndex: 'depositFee',
       key: 'depositFee',
-      render: (amount: number) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount),
+      render: (amount: number) => <strong>{formatBalance(amount)} VND</strong>,
+      
     },
     {
       title: 'Status',
       dataIndex: 'status',
       key: 'status',
+      render: (text: any, record: any) => ( // Sửa lại để sử dụng hàm render đúng cách
+        <Tag
+          style={{ marginBottom: "10px" }}
+          color={getAuctionStatus(record.status)}
+        >
+          {record.status}
+        </Tag>
+      ),
     },
     {
       title: 'Won',
@@ -87,7 +97,7 @@ const AuctionHistory: React.FC = () => {
       key: 'actions',
       render: (text :string, record : AuctionListResponse) => (
         <Link to={`/auction-detail/${record.auctionId}`}>
-          <Button type="primary">View Details</Button>
+          <Button style={{backgroundColor:'black',color:'white'}} type="primary">View Details</Button>
         </Link>
       ),
     },
@@ -97,7 +107,9 @@ const AuctionHistory: React.FC = () => {
     setStatuses(selectedStatuses);
     setPage(1);
   };
-
+  const formatBalance = (price: number): string => {
+    return new Intl.NumberFormat("de-DE").format(price);
+  };
   const handleTableChange = (pagination: any) => {
     setPage(pagination.current);
     setPageSize(pagination.pageSize);

@@ -10426,7 +10426,8 @@ export const TransactionType = {
     Refund: 'Refund',
     Recharge: 'Recharge',
     Payout: 'Payout',
-    Sale: 'Sale'
+    Sale: 'Sale',
+    RefundAuctionDeposit: 'RefundAuctionDeposit'
 } as const;
 
 export type TransactionType = typeof TransactionType[keyof typeof TransactionType];

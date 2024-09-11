@@ -1,8 +1,19 @@
-import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
-import { AuctionApi } from '../../api';
-import { Card, Row, Col, Typography, List, Image, Descriptions, Table } from 'antd';
+import React, { useState } from "react";
+import { useParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { AuctionApi } from "../../api";
+import {
+  Card,
+  Row,
+  Col,
+  Typography,
+  List,
+  Image,
+  Descriptions,
+  Table,
+  Tag,
+} from "antd";
+import { getAuctionStatus } from "../../utils/types";
 
 const { Title, Text } = Typography;
 
@@ -13,17 +24,18 @@ const AuctionDetail: React.FC = () => {
   const auctionApi = new AuctionApi();
 
   const { data: auctionData, isLoading: isLoadingAuction } = useQuery({
-    queryKey: ['auction', auctionId],
+    queryKey: ["auction", auctionId],
     queryFn: () => auctionApi.apiAuctionsIdGet(auctionId!),
   });
+  console.log(auctionData);
 
   const { data: bidsData, isLoading: isLoadingBids } = useQuery({
-    queryKey: ['bids', auctionId],
+    queryKey: ["bids", auctionId],
     queryFn: () => auctionApi.apiAuctionsIdBidsGet(auctionId!),
   });
 
   const { data: itemData, isLoading: isLoadingItem } = useQuery({
-    queryKey: ['auctionItem', auctionId],
+    queryKey: ["auctionItem", auctionId],
     queryFn: () => auctionApi.apiAuctionsIdAuctionItemGet(auctionId!),
   });
   const handleTableChange = (pagination: any) => {
@@ -41,59 +53,129 @@ const AuctionDetail: React.FC = () => {
 
   const bidColumns = [
     {
-      title: 'Bidder',
-      dataIndex: 'bidderName',
-      key: 'bidderName',
+      title: "Bidder",
+      dataIndex: "bidderName",
+      key: "bidderName",
     },
     {
-      title: 'Amount',
-      dataIndex: 'amount',
-      key: 'amount',
+      title: "Amount",
+      dataIndex: "amount",
+      key: "amount",
       render: (amount: number) => `$${amount.toFixed(2)}`,
     },
     {
-      title: 'Date',
-      dataIndex: 'createdDate',
-      key: 'createdDate',
+      title: "Date",
+      dataIndex: "createdDate",
+      key: "createdDate",
       render: (date: string) => new Date(date).toLocaleString(),
     },
   ];
+  const formatBalance = (price: number): string => {
+    return new Intl.NumberFormat("de-DE").format(price);
+  };
 
   return (
     <Card>
       <Row gutter={[16, 16]}>
         <Col span={12}>
-          <Title level={2}>Auction Details</Title>
-          <Descriptions bordered>
-            <Descriptions.Item label="Title" span={3}>{auction?.title}</Descriptions.Item>
-            <Descriptions.Item label="Start Date">{new Date(auction?.startDate!).toLocaleString()}</Descriptions.Item>
-            <Descriptions.Item label="End Date">{new Date(auction?.endDate!).toLocaleString()}</Descriptions.Item>
-            <Descriptions.Item label="Status">{auction?.status}</Descriptions.Item>
-            <Descriptions.Item label="Deposit Fee">${auction?.depositFee?.toFixed(2)}</Descriptions.Item>
-            <Descriptions.Item label="Step Increment">${auction?.stepIncrement?.toFixed(2)}</Descriptions.Item>
-            <Descriptions.Item label="Auction Code">{auction?.auctionCode}</Descriptions.Item>
-          </Descriptions>
+          <Card>
+            <Title level={2}>Auction Details</Title>
+            <Descriptions column={1}>
+              <Descriptions.Item label={<strong>Title</strong>} span={3}>
+                {auction?.title}
+              </Descriptions.Item>
+              <Descriptions.Item label={<strong>Start Date</strong>}>
+                {new Date(auction?.startDate!).toLocaleString()}
+              </Descriptions.Item>
+              <Descriptions.Item label={<strong>End Date</strong>}>
+                {new Date(auction?.endDate!).toLocaleString()}
+              </Descriptions.Item>
+              <Descriptions.Item label={<strong>Status</strong>}>
+                {" "}
+                <Tag
+                  style={{ marginRight: "10px" }}
+                  color={getAuctionStatus(auction?.status!)}
+                >
+                  {" "}
+                  {auction?.status!}
+                </Tag>
+              </Descriptions.Item>
+              <Descriptions.Item label={<strong>Deposit Fee</strong>}>
+                {formatBalance(auction?.depositFee!)} VND
+              </Descriptions.Item>
+              <Descriptions.Item label={<strong>Step Increment</strong>}>
+                {formatBalance(auction?.stepIncrement!)} VND
+              </Descriptions.Item>
+              <Descriptions.Item label={<strong>Auction Code</strong>}>
+                {auction?.auctionCode}
+              </Descriptions.Item>
+              <Descriptions.Item label={<strong>You won?</strong>}>
+                {auction?.won ? (
+                  <Tag color="green">Won</Tag>
+                ) : (
+                  <span role="img" aria-label="crying">😢</span>
+                )}
+              </Descriptions.Item>
+            </Descriptions>
+          </Card>
         </Col>
         <Col span={12}>
-          <Title level={2}>Item Details</Title>
-          <Image
-            width={200}
-            src={item?.images?.[0]}
-            fallback='https://via.placeholder.com/200'
-          />
-          <Descriptions bordered>
-            <Descriptions.Item label="Name" span={3}>{item?.name}</Descriptions.Item>
-            <Descriptions.Item label="Brand">{item?.brand}</Descriptions.Item>
-            <Descriptions.Item label="Color">{item?.color}</Descriptions.Item>
-            <Descriptions.Item label="Size">{item?.size}</Descriptions.Item>
-            <Descriptions.Item label="Gender">{item?.gender}</Descriptions.Item>
-            <Descriptions.Item label="Condition">{item?.condition}</Descriptions.Item>
-            <Descriptions.Item label="Initial Price">${item?.initialPrice?.toFixed(2)}</Descriptions.Item>
-            <Descriptions.Item label="Description" span={3}>{item?.description}</Descriptions.Item>
-          </Descriptions>
+          <Card>
+            {" "}
+            <Title level={2}>Product Details</Title>
+            <Image.PreviewGroup>
+              <Row gutter={[16, 16]}>
+                {" "}
+                {/* Thêm Row với gutter để tạo khoảng cách */}
+                {item?.images?.map((image: string, index: number) => (
+                  <Col key={index}>
+                    <Image
+                      width={100}
+                      src={image}
+                      fallback="https://via.placeholder.com/200"
+                    />
+                  </Col>
+                ))}
+              </Row>
+            </Image.PreviewGroup>
+            <Descriptions column={3}>
+              <Descriptions.Item label={<strong>Product Code</strong>} span={3}>
+                {item?.itemCode}
+              </Descriptions.Item>
+              <Descriptions.Item label={<strong>Initial Price</strong>}>
+                {formatBalance(item?.initialPrice || 0)} VND
+              </Descriptions.Item>
+              <Descriptions.Item label={<strong>Product Name</strong>}>
+                {item?.name}
+              </Descriptions.Item>
+              <Descriptions.Item label={<strong>Condition</strong>}>
+                {item?.condition}
+              </Descriptions.Item>
+
+              <Descriptions.Item label={<strong>Brand</strong>}>
+                {item?.brand}
+              </Descriptions.Item>
+
+              <Descriptions.Item label={<strong>Color</strong>}>
+                {item?.color}
+              </Descriptions.Item>
+              <Descriptions.Item label={<strong>Size</strong>}>
+                {item?.size}
+              </Descriptions.Item>
+              <Descriptions.Item label={<strong>Gender</strong>}>
+                {item?.gender}
+              </Descriptions.Item>
+              <Descriptions.Item label={<strong>Description</strong>} span={3}>
+                {item?.description}
+              </Descriptions.Item>
+              <Descriptions.Item label={<strong>Note</strong>} span={3}>
+                {item?.note}
+              </Descriptions.Item>
+            </Descriptions>
+          </Card>
         </Col>
       </Row>
-      <Row style={{ marginTop: '20px' }}>
+      <Row style={{ marginTop: "20px" }}>
         <Col span={24}>
           <Title level={2}>Bid History</Title>
           <Table
@@ -108,7 +190,8 @@ const AuctionDetail: React.FC = () => {
               showSizeChanger: true,
               showQuickJumper: true,
               onChange: handleTableChange,
-              showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
+              showTotal: (total, range) =>
+                `${range[0]}-${range[1]} of ${total} items`,
             }}
           />
         </Col>
