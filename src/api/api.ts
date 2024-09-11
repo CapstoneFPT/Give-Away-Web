@@ -6657,12 +6657,6 @@ export interface MasterFashionItem {
     'shopId'?: string;
     /**
      * 
-     * @type {number}
-     * @memberof MasterFashionItem
-     */
-    'stockCount'?: number;
-    /**
-     * 
      * @type {Array<IndividualFashionItem>}
      * @memberof MasterFashionItem
      */

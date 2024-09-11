@@ -5,6 +5,8 @@ import { UploadOutlined } from '@ant-design/icons';
 import { RefundApi, RefundResponse } from '../api';
 import { getRefundStatus } from '../utils/types';
 import TextArea from 'antd/es/input/TextArea';
+import { storage } from './Firebase/firebase-config'; // Import storage instance from firebase-config
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'; // Import Firebase Storage functions
 
 const RefundDetail = () => {
   const { refundId } = useParams();
@@ -35,9 +37,30 @@ const RefundDetail = () => {
 
     fetchRefundDetails();
   }, [refundId]);
+  console.log('hihi', refundId)
 
   const formatBalance = (balance: number) => {
     return new Intl.NumberFormat("de-DE").format(balance);
+  };
+
+  const handleUploadImages = async (files: File[]) => {
+    const uploadedUrls: string[] = [];
+    for (const file of files) {
+      const storageRef = ref(storage, `images/${file.name}`);
+      try {
+        await uploadBytes(storageRef, file);
+        // Lấy URL tải xuống sau khi upload thành công
+        const downloadURL = await getDownloadURL(storageRef);
+        uploadedUrls.push(downloadURL); // Thêm URL tải xuống vào danh sách
+      } catch (error) {
+        console.error("Error uploading image:", error);
+        notification.error({
+          message: 'Upload Failed',
+          description: 'There was an error uploading the image.',
+        });
+      }
+    }
+    return uploadedUrls;
   };
 
   const handleUpdate = async () => {
@@ -45,15 +68,17 @@ const RefundDetail = () => {
       setLoading(true);
       const Refund = new RefundApi();
       try {
+        const uploadedImageUrls = await handleUploadImages(refundImages); // Upload images to Firebase
         const updateRequest = {
           description,
-          refundImages: refundImages.map((file) => file.url), // Ensure only URLs are sent
+          refundImages: uploadedImageUrls, // Use uploaded image URLs
         };
         await Refund.apiRefundsRefundIdUpdatePut(refundId, updateRequest);
         notification.success({
           message: 'Update Successful',
           description: 'Refund details have been updated successfully.',
         });
+        console.log('hihi',refundId)
         setIsModalVisible(false);
         navigate(0); // Reload the page
       } catch (error) {
@@ -92,43 +117,13 @@ const RefundDetail = () => {
 
   const handleUploadChange = (info: any) => {
     if (info.fileList) {
-      setRefundImages(info.fileList.map((file: any) => file.response?.url || file.url));
+      setRefundImages(info.fileList.map((file: any) => file.originFileObj)); // Store the actual file objects
     }
   };
 
   const uploadProps = {
-    
-    listType: 'picture',
+    listType: 'picture' as 'picture', // Ensure this is a valid UploadListType
     multiple: true,
-    beforeUpload(file: any) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => {
-          const img = document.createElement('img');
-          img.src = reader.result as string;
-          img.onload = () => {
-            const canvas = document.createElement('canvas');
-            canvas.width = img.naturalWidth;
-            canvas.height = img.naturalHeight;
-            const ctx = canvas.getContext('2d')!;
-            ctx.drawImage(img, 0, 0);
-            ctx.fillStyle = 'red';
-            ctx.textBaseline = 'middle';
-            ctx.font = '33px Arial';
-            ctx.fillText('Give Away', 20, 20);
-            canvas.toBlob((result) => {
-              if (result) {
-                resolve(result as Blob);
-              } else {
-                reject(new Error('Failed to process the image.'));
-              }
-            });
-          };
-        };
-        reader.onerror = () => reject(new Error('Failed to read the file.'));
-      });
-    },
     onChange: handleUploadChange,
   };
 
@@ -213,8 +208,8 @@ const RefundDetail = () => {
                           src={image}
                           alt={`refund-image-${index}`}
                           style={{
-                            width: "100px",
-                            height: "100px",
+                            width: "120px",
+                            height: "150px",
                             marginRight: "5px",
                           }}
                         />
@@ -231,8 +226,8 @@ const RefundDetail = () => {
                           src={image}
                           alt={`refund-image-${index}`}
                           style={{
-                            width: "100px",
-                            height: "100px",
+                            width: "120px",
+                            height: "150px",
                             marginRight: "5px",
                           }}
                         />
@@ -271,9 +266,9 @@ const RefundDetail = () => {
                 />
                 <div style={{ marginTop: "20px" }}>
                   <strong>Upload Images:</strong>
-                  {/* <Upload {...uploadProps}>
+                  <Upload {...uploadProps}>
                     <Button icon={<UploadOutlined />}>Upload</Button>
-                  </Upload> */}
+                  </Upload>
                 </div>
               </div>
             </Modal>
