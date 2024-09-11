@@ -18,8 +18,7 @@ import {
   BidDetailResponse,
   CreateBidRequest,
 } from "../api";
-import signalRService from "./service/signalrService";
-import signalrService from "./service/signalrService";
+
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuctionData, usePlaceBid } from "../hooks/auctionHooks";
 import { useSignalRSetup } from "../hooks/useSignalRSetup";
@@ -28,7 +27,7 @@ const { Title, Paragraph } = Typography;
 
 const Auction: React.FC = () => {
   const { auctionId } = useParams<{ auctionId: string }>();
-  const { itemId } = useParams<{ itemId: string }>();
+  const { auctionItemId } = useParams<{ auctionItemId: string }>();
 
   const navigate = useNavigate();
   const userId = JSON.parse(localStorage.getItem("userId") || "null");
@@ -39,7 +38,7 @@ const Auction: React.FC = () => {
   );
   const [deadline, setDeadline] = useState<number>(0);
 
-  const { data, isLoading, error } = useAuctionData(auctionId!, itemId!);
+  const { data, isLoading, error } = useAuctionData(auctionId!, auctionItemId!);
   const placeBidMutation = usePlaceBid(auctionId!);
 
   const addBid = useCallback((newBid: BidDetailResponse) => {
