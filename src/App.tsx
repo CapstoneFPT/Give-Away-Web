@@ -13,7 +13,7 @@ import DetailProductAunction from "./pages/DetailProductAunction";
 import RuleAunction from "./pages/RuleAunction";
 import RuleConsign from "./pages/RuleConsign.tsx";
 import AunctionList from "./pages/AunctionList";
-import Aunction from "./pages/Auction.tsx";
+import Auction from "./pages/Auction.tsx";
 import Consign from "./pages/ConsignForm";
 import ProfilePage from "./pages/ProfilePage.tsx";
 import Footer from "./components/Footer/Footer";
@@ -194,7 +194,7 @@ function App() {
                             element={
                                 <>
                                     <Navbar />
-                                    <Aunction />
+                                    <Auction />
                                 </>
                             }
                         />
