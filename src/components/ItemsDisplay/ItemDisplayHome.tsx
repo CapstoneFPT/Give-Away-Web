@@ -1,26 +1,34 @@
-import React, {useState} from "react";
-import {Card, Layout,} from "antd";
-import {Content, Header} from "antd/es/layout/layout";
+import React, { useState } from "react";
+import { Card, Layout } from "antd";
+import { Content, Header } from "antd/es/layout/layout";
 import backgroundImageUrl from "../Assets/freepik_5229782.jpg";
-import useProductsFetch from "../../hooks/useProductsFetch.tsx";
 import ProductList from "../commons/ProductList.tsx";
 import useNavigateToListProducts from "../../hooks/useNavigateToListProducts.tsx";
+import { useQuery } from "@tanstack/react-query";
+import { MasterItemApi, MasterItemListResponsePaginationResponse } from "../../api";
 
 const ItemDisplayHome: React.FC = () => {
     const [currentPage, setCurrentPage] = useState(1);
-    const {goToListProducts} = useNavigateToListProducts()
+    const { goToListProducts } = useNavigateToListProducts();
     const pageSize = 24;
 
-    const {products, totalCount, isLoading} = useProductsFetch({
-        page: currentPage,
-        pageSize,
+    const { data, isLoading } = useQuery<MasterItemListResponsePaginationResponse>({
+        queryKey: ['homeProducts', currentPage, pageSize],
+        queryFn: async () => {
+            const masterItemApi = new MasterItemApi();
+            const response = await masterItemApi.apiMasterItemsFrontpageGet(
+                null!,
+                null!,
+                null!,
+                currentPage,
+                pageSize
+            );
+            return response.data;
+        },
     });
 
-    // const formatBalance = (sellingPrice: number) => {
-    //   return new Intl.NumberFormat("de-DE").format(sellingPrice);
-    // };
-
-
+    const products = data?.items || [];
+    const totalCount = data?.totalCount || 0;
 
     return (
         <Card

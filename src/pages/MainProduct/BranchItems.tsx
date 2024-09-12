@@ -3,8 +3,9 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { Col, Layout, Row } from "antd";
 import { Content } from "antd/es/layout/layout";
 import backgroundImageUrl from "../../components/Assets/—Pngtree—brightly lit interior showcasing empty_4846407.jpg";
-import useProductsFetch from "../../hooks/useProductsFetch.tsx";
 import ProductList from "../../components/commons/ProductList.tsx";
+import { useQuery } from "@tanstack/react-query";
+import { MasterItemApi, MasterItemListResponsePaginationResponse } from "../../api";
 
 const BranchItems: React.FC = () => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -16,11 +17,29 @@ const BranchItems: React.FC = () => {
 
     const pageSize = 12;
 
-    const { products, totalCount, isLoading } = useProductsFetch({
-        page: currentPage,
-        pageSize,
-        shopId: shopId
+    const { data, isLoading } = useQuery<MasterItemListResponsePaginationResponse, Error>({
+        queryKey: ['branchItems', shopId, currentPage, pageSize],
+        queryFn: async () => {
+            const masterItemApi = new MasterItemApi();
+            const response = await masterItemApi.apiMasterItemsGet(
+                null!, // searchTerm
+                null!, // searchItemCode
+                null!, // brand
+                currentPage,
+                pageSize,
+                null!, // categoryId
+                shopId,
+                null!, // genderType
+                null!, // isConsignment
+                true // isLeftInStock
+            );
+            return response.data;
+        },
+        
     });
+
+    const products = data?.items || [];
+    const totalCount = data?.totalCount || 0;
 
     const goToListItemPage = (masterItemId: string) => {
         navigate(`/shopBranch/${shopId}/listItems/${masterItemId}`);
