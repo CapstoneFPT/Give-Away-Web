@@ -1,60 +1,53 @@
-import React, { useState, useEffect } from "react";
-import {
-  Layout,
-  Menu,
-  Row,
-  Col,
-  Card,
-} from "antd";
-import {Content, Header} from "antd/es/layout/layout";
-import {
-  CategoryApi,
-  CategoryTreeNode,
-} from "../../api";
+import React, { useState } from "react";
+import { Layout, Menu, Row, Col, Card } from "antd";
+import { Content, Header } from "antd/es/layout/layout";
+import { CategoryApi, MasterItemApi, MasterItemListResponsePaginationResponse } from "../../api";
 import backgroundImageUrl from "../../components/Assets/freepik_3858429.jpg";
-import useProductsFetch from "../../hooks/useProductsFetch.tsx";
 import ProductList from "../../components/commons/ProductList.tsx";
 import useNavigateToListProducts from "../../hooks/useNavigateToListProducts.tsx";
 import useMenuItems from "../../hooks/useMenuItems.tsx";
+import { useQuery } from "@tanstack/react-query";
 
 const Women: React.FC = () => {
     const [currentPage, setCurrentPage] = useState(1);
-    const [categories, setCategories] = useState<CategoryTreeNode[]>([]);
     const [selectedCategoryId, setSelectedCategoryId] = useState<string>("550e8400-e29b-41d4-a716-446655440001");
-    const {goToListProducts} = useNavigateToListProducts();
+    const { goToListProducts } = useNavigateToListProducts();
 
     const pageSize = 12;
 
-    const { products, totalCount, isLoading } = useProductsFetch({
-        page: currentPage,
-        pageSize,
-        gender: 'Female',
-        categoryId: selectedCategoryId
-    });
-
-    useEffect(() => {
-        fetchCategories();
-    }, []);
-
-    const fetchCategories = async () => {
-        try {
+    const { data: categoriesData } = useQuery({
+        queryKey: ['categories', 'women'],
+        queryFn: async () => {
             const categoryApi = new CategoryApi();
             const rootCategoryId = "550e8400-e29b-41d4-a716-446655440001";
             const response = await categoryApi.apiCategoriesTreeGet(null!, rootCategoryId);
-            setCategories(response.data.categories || []);
-        } catch (error) {
-            console.error("Error fetching categories:", error);
-        }
-    };
-    // const formatBalance = (balance: number) => new Intl.NumberFormat("de-DE").format(balance);
+            return response.data.categories || [];
+        },
+    });
 
+    const { data: productsData, isLoading } = useQuery<MasterItemListResponsePaginationResponse>({
+        queryKey: ['products', 'women', currentPage, pageSize, selectedCategoryId],
+        queryFn: async () => {
+            const masterItemApi = new MasterItemApi();
+            const response = await masterItemApi.apiMasterItemsFrontpageGet(
+                null!,
+                selectedCategoryId,
+                'Female',
+                currentPage,
+                pageSize,
+                true
+            );
+            return response.data;
+        },
+    });
 
     const handleCategorySelect = (categoryId: string) => {
         setSelectedCategoryId(categoryId);
         setCurrentPage(1);
     };
 
-    const menuItems = useMenuItems(categories, handleCategorySelect);
+    const menuItems = useMenuItems(categoriesData || [], handleCategorySelect);
+
     return (
         <div style={{
             backgroundImage: `url(${backgroundImageUrl})`,
@@ -70,7 +63,7 @@ const Women: React.FC = () => {
                         <Menu
                             mode="horizontal"
                             selectedKeys={[selectedCategoryId]}
-                            defaultOpenKeys={categories.map((cat) => cat.categoryId!)}
+                            defaultOpenKeys={categoriesData?.map((cat) => cat.categoryId!) || []}
                             style={{ height: "100%", borderRight: 0 }}
                         >
                             {menuItems}
@@ -84,11 +77,11 @@ const Women: React.FC = () => {
                                 <h1>Women Collection</h1>
                             </Header>
                             <ProductList
-                                products={products}
+                                products={productsData?.items || []}
                                 isLoading={isLoading}
                                 currentPage={currentPage}
                                 pageSize={pageSize}
-                                totalCount={totalCount}
+                                totalCount={productsData?.totalCount || 0}
                                 onPageChange={setCurrentPage}
                                 onCardClick={goToListProducts}
                             />

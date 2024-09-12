@@ -165,7 +165,7 @@ const ChangePassword: React.FC = () => {
                 ]}
               >
                 <Input
-                  type={confirmPasswordVisible ? "text" : "confirmNewPassword"}
+                  type={confirmPasswordVisible ? "text" : "password"}
                   prefix={
                     confirmPasswordVisible ? (
                       <EyeInvisibleOutlined

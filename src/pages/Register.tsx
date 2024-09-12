@@ -103,7 +103,9 @@ const Register = () => {
 
                     <Form.Item
                         name="phone"
-                        rules={[{required: true, message: "Please input your phone number!"}]}
+                        rules={[{required: true, message: "Please input your phone number!"},{
+                            pattern:/(((\+|)84)|0)(3|5|7|8|9)+([0-9]{8})\b/, message: 'Please enter a valid phone number!'
+                        }]}
                         style={styles.inputContainer}
                     >
                         <Input placeholder="Phone" prefix={<PhoneOutlined/>}/>
@@ -111,7 +113,11 @@ const Register = () => {
 
                     <Form.Item
                         name="password"
-                        rules={[{required: true, message: "Please input your password!"}]}
+                        rules={[{required: true, message: "Please input your password!"},{
+                            min: 6, message: 'Password must be at least 6 characters!'
+                        },{
+                            pattern:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/, message: 'Password must contain at least 6 characters, 1 uppercase letter, 1 lowercase letter, 1 number and 1 special character!'
+                        }]}
                         style={styles.inputContainer}
                     >
                         <Input.Password

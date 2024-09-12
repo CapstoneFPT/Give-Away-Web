@@ -93,6 +93,7 @@ const ItemDetail: React.FC = () => {
                 message: "Added to Cart",
                 description: `The item "${product.name}" has been added to your cart.`,
             });
+            console.log("Product to add to cart: ", product);
             console.log("Adding item to cart with itemId:", product.itemId);
         }
     };

@@ -66,7 +66,7 @@ const NavProfile: React.FC = () => {
         {key: "17",icon: <OrderedListOutlined/>, label: "Consignment", to: "/transaction/My-consign"},
         {key: "12", icon: <OrderedListOutlined/>, label: "Auction", to: "/transaction/Auction-history"},
         {key: "15", icon: <OrderedListOutlined/>, label: "Refund", to: "/profile/refundList"},
-        // { key: "sub1", icon: <RetweetOutlined />, label: "Refunds", to: "/refunds" },
+        {key: "16", icon: <OrderedListOutlined/>, label: "Withdraw", to: "/transaction/withdraw"},
         {
             key: "sub2",
             icon: <ClockCircleOutlined/>,
