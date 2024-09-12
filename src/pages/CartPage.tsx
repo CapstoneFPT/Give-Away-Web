@@ -20,6 +20,7 @@ import {
   DeliveryListResponse,
   DeliveryRequest,
   OrderApi,
+  PaymentMethod,
 } from "../api";
 import { useAddresses } from "../hooks/useAddresses";
 import { AddressSelectionModal } from "../components/Cart/AddressSelectionModal";
@@ -175,10 +176,10 @@ const CartPage: React.FC = () => {
     }
   };
 
-  const handlePayment = async (paymentMethod: string, orderId: string) => {
+  const handlePayment = async (paymentMethod: PaymentMethod, orderId: string) => {
     const orderApi = new OrderApi();
     switch (paymentMethod) {
-      case "QRCode":
+      case PaymentMethod.Banking:
         const response = await orderApi.apiOrdersOrderIdPayVnpayPost(orderId, {
           memberId: userId,
         });
@@ -298,9 +299,9 @@ const CartPage: React.FC = () => {
               ]}
             >
               <Select placeholder="Select payment method">
-                <Option value="QRCode">QRCode</Option>
-                <Option value="Point">Point</Option>
-                <Option value="COD">COD</Option>
+                <Option value={PaymentMethod.Banking}>Banking</Option>
+                <Option value={PaymentMethod.Point}>Point</Option>
+                <Option value={PaymentMethod.Cod}>COD</Option>
               </Select>
             </Form.Item>
           </Form>

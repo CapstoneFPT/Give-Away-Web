@@ -78,6 +78,7 @@ const OrderDetail = () => {
             message: "Added to Cart",
             description: `The item "${product.name}" has been added to your cart.`,
         });
+        console.log("Product to add to cart: ", product);
         console.log("Adding item to cart with itemId:", product.itemId);
     }
 };
@@ -244,7 +245,7 @@ const OrderDetail = () => {
               onClick={() => {
                 // Create a new object of type FashionItemDetailResponse
                 const product: FashionItemDetailResponse = {
-                  itemId: record.orderLineItemId!,
+                  itemId: record.itemId!,
                   name: record.itemName,
                    // Set this based on your logic
                   images: record.itemImage!,
@@ -253,8 +254,9 @@ const OrderDetail = () => {
                   gender: record.itemGender,
                   color: record.itemColor,
                   sellingPrice: record.unitPrice,
-                  condition: record.condition
-                  
+                  condition: record.condition,
+                  status: record.itemStatus,
+                
 
                    // Assuming this is the correct mapping
                   // Add other necessary properties from record to match FashionItemDetailResponse
