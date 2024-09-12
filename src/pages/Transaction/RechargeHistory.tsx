@@ -15,7 +15,7 @@ const RechargeHistory = () => {
           userId,
           null!,
           null!,
-          ["Recharge"]
+          ["AddFund"]
         );
         setData(response.data.items || []); // Lưu dữ liệu vào trạng thái
       } catch (error) {

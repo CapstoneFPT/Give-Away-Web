@@ -130,7 +130,7 @@ const OrderList: React.FC = () => {
           });
           break;
         }
-        case PaymentMethod.QrCode: {
+        case PaymentMethod.Banking: {
           const response = await orderApi.apiOrdersOrderIdPayVnpayPost(
             selectedOrder.orderId!,
             { memberId: userId }

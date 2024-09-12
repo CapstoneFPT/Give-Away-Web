@@ -15,7 +15,7 @@ const RefundHistory = () => {
           userId,
           null!,
           null!,
-          ["Refund"]
+          ["RefundProduct"]
         );
         setData(response.data.items || []); // Lưu dữ liệu vào trạng thái
       } catch (error) {

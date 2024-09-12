@@ -18,7 +18,7 @@ const PayoutHistory = () => {
             userId,
             null!,
             null!,
-            ["Payout"]
+            ["ConsignPayout"]
           );
         console.log(response.data.items);
 
