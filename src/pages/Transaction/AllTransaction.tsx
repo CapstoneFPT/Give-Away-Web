@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Table, Input, Select, Card, Row, Col } from 'antd';
+import { Table, Input, Select, Card, Row, Col, Tag } from 'antd';
 import { GetTransactionsResponse, TransactionType } from '../../api';
 import useTransactions from '../../hooks/useTransactions';
 import NavProfile from '../../components/NavProfile/NavProfile';
 import { ColumnsType } from 'antd/es/table';
+import { getTransactionType } from '../../utils/types';
 
 const { Option } = Select;
 
@@ -51,7 +52,7 @@ const TransactionHistory: React.FC = () => {
       title: 'Amount',
       dataIndex: 'amount',
       key: 'amount',
-      render: (amount: number) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount),
+      render: (amount: number) => `${formatBalance(amount)} VND`,
     },
     {
       title: 'Created Date',
@@ -63,6 +64,14 @@ const TransactionHistory: React.FC = () => {
       title: 'Type',
       dataIndex: 'type',
       key: 'type',
+      render: (type: string, record: any) => ( // Sửa lại để sử dụng hàm render đúng cách
+        <Tag
+          style={{ marginBottom: "10px" }}
+          color={getTransactionType(record.type)}
+        >
+          {record.type}
+        </Tag>
+      ),
     },
   ];
 
@@ -79,6 +88,9 @@ const TransactionHistory: React.FC = () => {
   if (error) {
     return <div>Error loading transactions</div>;
   }
+  const formatBalance = (price: number): string => {
+    return new Intl.NumberFormat("de-DE").format(price);
+  };
 
   return (
     <Card>

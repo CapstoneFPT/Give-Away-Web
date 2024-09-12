@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams } from "react-router-dom"; // Bỏ import useHistory
 import { useQuery } from "@tanstack/react-query";
 import { AuctionApi } from "../../api";
 import {
@@ -7,15 +7,16 @@ import {
   Row,
   Col,
   Typography,
-  List,
   Image,
   Descriptions,
   Table,
   Tag,
+  Spin,
+  Button, // Thêm import Spin từ antd
 } from "antd";
 import { getAuctionStatus } from "../../utils/types";
 
-const { Title, Text } = Typography;
+const { Title } = Typography;
 
 const AuctionDetail: React.FC = () => {
   const { auctionId } = useParams<{ auctionId: string }>();
@@ -38,13 +39,14 @@ const AuctionDetail: React.FC = () => {
     queryKey: ["auctionItem", auctionId],
     queryFn: () => auctionApi.apiAuctionsIdAuctionItemGet(auctionId!),
   });
+  
   const handleTableChange = (pagination: any) => {
     setCurrentPage(pagination.current);
     setPageSize(pagination.pageSize);
   };
 
   if (isLoadingAuction || isLoadingBids || isLoadingItem) {
-    return <div>Loading...</div>;
+    return <Spin size="large" />; // Sử dụng Spin để hiển thị loading
   }
 
   const auction = auctionData?.data;
@@ -61,7 +63,7 @@ const AuctionDetail: React.FC = () => {
       title: "Amount",
       dataIndex: "amount",
       key: "amount",
-      render: (amount: number) => `$${amount.toFixed(2)}`,
+      render: (amount: number) => `${formatBalance(amount)} VND`,
     },
     {
       title: "Date",
@@ -70,12 +72,14 @@ const AuctionDetail: React.FC = () => {
       render: (date: string) => new Date(date).toLocaleString(),
     },
   ];
+  
   const formatBalance = (price: number): string => {
     return new Intl.NumberFormat("de-DE").format(price);
   };
 
   return (
     <Card>
+      <Button style={{backgroundColor:'black',color:'white'}} onClick={() => window.history.back()}>Back</Button> {/* Nút quay lại sử dụng window.history */}
       <Row gutter={[16, 16]}>
         <Col span={12}>
           <Card>
@@ -91,12 +95,10 @@ const AuctionDetail: React.FC = () => {
                 {new Date(auction?.endDate!).toLocaleString()}
               </Descriptions.Item>
               <Descriptions.Item label={<strong>Status</strong>}>
-                {" "}
                 <Tag
                   style={{ marginRight: "10px" }}
                   color={getAuctionStatus(auction?.status!)}
                 >
-                  {" "}
                   {auction?.status!}
                 </Tag>
               </Descriptions.Item>
@@ -121,12 +123,9 @@ const AuctionDetail: React.FC = () => {
         </Col>
         <Col span={12}>
           <Card>
-            {" "}
             <Title level={2}>Product Details</Title>
             <Image.PreviewGroup>
               <Row gutter={[16, 16]}>
-                {" "}
-                {/* Thêm Row với gutter để tạo khoảng cách */}
                 {item?.images?.map((image: string, index: number) => (
                   <Col key={index}>
                     <Image
@@ -151,11 +150,9 @@ const AuctionDetail: React.FC = () => {
               <Descriptions.Item label={<strong>Condition</strong>}>
                 {item?.condition}
               </Descriptions.Item>
-
               <Descriptions.Item label={<strong>Brand</strong>}>
                 {item?.brand}
               </Descriptions.Item>
-
               <Descriptions.Item label={<strong>Color</strong>}>
                 {item?.color}
               </Descriptions.Item>

@@ -1,4 +1,4 @@
-import { AuctionStatus, FashionItemStatus, OrderStatus, RefundStatus } from "../api";
+import { AuctionStatus, FashionItemStatus, OrderStatus, RefundStatus, TransactionType } from "../api";
 
 export type Test = {
   name: string
@@ -98,3 +98,25 @@ export const getAuctionStatus = (status: string) => {
 
 }
 
+export const getTransactionType = (type: string) => {
+  switch (type) {
+    case TransactionType.AuctionDeposit:
+      return "purple";
+      case TransactionType.Payout:
+      return "green";
+      case TransactionType.Purchase:
+      return "blue";
+      case TransactionType.Recharge:
+      return "orange";
+      case TransactionType.Refund:
+      return "brown";
+      case TransactionType.RefundAuctionDeposit:
+      return "yellow";
+      case TransactionType.Sale:
+      return "red";
+
+    default:
+      return "default";
+  }
+
+}

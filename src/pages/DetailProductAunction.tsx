@@ -19,18 +19,6 @@ interface Product {
   color: string;
 }
 
-const styles = {
-  buttonDetail: {
-    marginRight: "30px",
-    backgroundColor: "#000000",
-    color: "white",
-    width: "150px",
-    height: "50px",
-    border: "2px solid black",
-    padding: "10px 20px",
-    borderRadius: "30px",
-  },
-};
 
 const DetailProductAunction: React.FC = () => {
   const { auctionItemID } = useParams<{ auctionItemID: string }>();
@@ -99,14 +87,23 @@ const DetailProductAunction: React.FC = () => {
             </Col>
             <Col span={8}>
               <Card title="Product Details">
-                <Title level={3}>Product Name: {product.name}</Title>
+              <Title level={4}>Product Code: {product.itemCode}</Title>
+                <Row gutter={[16,16]}>
+                  <Col span={12}>
+                  <Paragraph>
+                  <strong>Product Name:</strong> {product.name}
+                </Paragraph>
                 <Paragraph>
                   <strong>Brand:</strong> {product.brand}
                 </Paragraph>
                 <Paragraph>
                   <strong>Category:</strong> {product.categoryName}
                 </Paragraph>
-                <Paragraph>
+                
+                  </Col>
+
+                  <Col span={12}>
+                  <Paragraph>
                   <strong>Gender:</strong> {product.gender}
                 </Paragraph>
                 <Paragraph>
@@ -115,12 +112,25 @@ const DetailProductAunction: React.FC = () => {
                 <Paragraph>
                   <strong>Color:</strong> {product.color}
                 </Paragraph>
-                <Paragraph>
+                
+                  </Col>
+                  <Paragraph>
+                  <strong>Condition:</strong> {product.condition}
+                </Paragraph>  
+
+                  <Paragraph>
                   <strong>Shop Address:</strong> {product.shopAddress}
                 </Paragraph>
+                 
+                </Row>
                 <Paragraph>
                   <strong>Description:</strong> {product.description}
                 </Paragraph>
+                <Paragraph>
+                  <strong>Note:</strong> {product.note}
+                </Paragraph>
+              
+                
               </Card>
             </Col>
             <Card>
@@ -155,10 +165,7 @@ const DetailProductAunction: React.FC = () => {
               eius ratione delectus? Ullam natus debitis pariatur fugiat vitae
               error voluptas explicabo ex! Ipsum, magni. Quidem, numquam.
             </Card>
-            <div style={{ margin: "30px" }}>
-              <Button style={styles.buttonDetail}>Deposit</Button>
-              <Button style={styles.buttonDetail}>Auction</Button>
-            </div>
+            
           </Row>
         </Card>
       </Card>
