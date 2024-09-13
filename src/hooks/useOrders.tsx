@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { AccountApi, OrderStatus, PaymentMethod, PurchaseType, OrderResponsePaginationResponse } from '../api';
+import { AccountApi, OrderStatus, PaymentMethod, PurchaseType, OrderListResponsePaginationResponse } from '../api';
 
 interface OrderQueryParams {
   accountId: string;
@@ -20,7 +20,7 @@ interface OrderQueryParams {
 const useOrders = (params: OrderQueryParams) => {
   const accountApi = new AccountApi();
 
-  return useQuery<OrderResponsePaginationResponse>({
+  return useQuery<OrderListResponsePaginationResponse>({
     queryKey: ['orders', params],
     queryFn: async () => {
       const response = await accountApi.apiAccountsAccountIdOrdersGet(

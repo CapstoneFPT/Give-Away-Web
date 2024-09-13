@@ -160,6 +160,16 @@ const OrderList: React.FC = () => {
     }
   };
 
+  const handleCheckoutAuctionOrder = async () => {
+    if (!selectedOrder || !userId) {
+      notification.error({
+        message: "Checkout Error",
+        description: "Missing order information or user ID. Please try again.",
+      });
+      return;
+    }
+  };
+
   const handleCancel = async () => {
     if (!selectedOrder) return;
 
