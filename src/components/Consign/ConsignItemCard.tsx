@@ -16,7 +16,7 @@ const ConsignItemCard = ({ key, name, restField, fileLists, handleFileChange, re
         marginBottom: "10px",
         position: "relative",
         padding: "10px",
-        width: "450px",
+        width: "1000px",
         border: "1px solid #aeacac",
       }}
     >

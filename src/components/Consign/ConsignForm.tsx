@@ -302,8 +302,8 @@ const ConsignForm = () => {
                                         },
                                     ]}
                                 >
-                                    <Checkbox>
-                                        I have read and agree to the terms and rules
+                                    <Checkbox style={{color:''}}>
+                                        <strong>I have read and agree to the terms and rules</strong>
                                     </Checkbox>
                                 </Form.Item>
                                 <Form.Item>
@@ -312,6 +312,7 @@ const ConsignForm = () => {
                                         htmlType="submit"
                                         loading={uploading}
                                         style={{
+                                            marginLeft:'780px',
                                             width: "15%",
                                             backgroundColor: "black",
                                             color: "white",
