@@ -21,14 +21,14 @@ const { Title } = Typography;
 const AuctionDetail: React.FC = () => {
   const { auctionId } = useParams<{ auctionId: string }>();
   const [currentPage, setCurrentPage] = useState(1);
+  const userId = JSON.parse(localStorage.getItem("userId") || "{}");
   const [pageSize, setPageSize] = useState(10);
   const auctionApi = new AuctionApi();
 
   const { data: auctionData, isLoading: isLoadingAuction } = useQuery({
-    queryKey: ["auction", auctionId],
-    queryFn: () => auctionApi.apiAuctionsIdGet(auctionId!),
+    queryKey: ["auction", auctionId, userId],
+    queryFn: () => auctionApi.apiAuctionsIdGet(auctionId!, userId),
   });
-  console.log(auctionData);
 
   const { data: bidsData, isLoading: isLoadingBids } = useQuery({
     queryKey: ["bids", auctionId],
@@ -39,7 +39,7 @@ const AuctionDetail: React.FC = () => {
     queryKey: ["auctionItem", auctionId],
     queryFn: () => auctionApi.apiAuctionsIdAuctionItemGet(auctionId!),
   });
-  
+
   const handleTableChange = (pagination: any) => {
     setCurrentPage(pagination.current);
     setPageSize(pagination.pageSize);
@@ -72,14 +72,14 @@ const AuctionDetail: React.FC = () => {
       render: (date: string) => new Date(date).toLocaleString(),
     },
   ];
-  
+
   const formatBalance = (price: number): string => {
     return new Intl.NumberFormat("de-DE").format(price);
   };
 
   return (
     <Card>
-      <Button style={{backgroundColor:'black',color:'white'}} onClick={() => window.history.back()}>Back</Button> {/* Nút quay lại sử dụng window.history */}
+      <Button style={{ backgroundColor: 'black', color: 'white' }} onClick={() => window.history.back()}>Back</Button> {/* Nút quay lại sử dụng window.history */}
       <Row gutter={[16, 16]}>
         <Col span={12}>
           <Card>
