@@ -351,6 +351,7 @@ const OrderList: React.FC = () => {
           </Card>
         </Col>
       </Row>
+
       <Modal
         title="Checkout"
         open={!!selectedOrder}

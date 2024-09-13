@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { AccountApi, GetTransactionsResponsePaginationResponse, TransactionType } from '../api';
+import { AccountApi, AccountTransactionsListResponse, AccountTransactionsListResponsePaginationResponse, TransactionType } from '../api';
 
 interface TransactionQueryParams {
   accountId: string;
@@ -16,7 +16,7 @@ interface TransactionQueryParams {
 const useTransactions = (params: TransactionQueryParams) => {
   const accountApi = new AccountApi();
 
-  return useQuery<GetTransactionsResponsePaginationResponse>({
+  return useQuery<AccountTransactionsListResponsePaginationResponse>({
     queryKey: ['transactions', params],
     queryFn: async () => {
       const response = await accountApi.apiAccountsAccountIdTransactionsGet(

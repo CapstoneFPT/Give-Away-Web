@@ -291,78 +291,157 @@ export type AccountStatus = typeof AccountStatus[keyof typeof AccountStatus];
 /**
  * 
  * @export
- * @interface AddFashionItemForConsignByShop
+ * @interface AccountTransactionsListResponse
  */
-export interface AddFashionItemForConsignByShop {
+export interface AccountTransactionsListResponse {
     /**
      * 
      * @type {string}
-     * @memberof AddFashionItemForConsignByShop
+     * @memberof AccountTransactionsListResponse
      */
-    'name'?: string | null;
+    'transactionId'?: string;
     /**
      * 
      * @type {string}
-     * @memberof AddFashionItemForConsignByShop
+     * @memberof AccountTransactionsListResponse
      */
-    'note'?: string | null;
+    'transactionCode'?: string | null;
     /**
      * 
      * @type {string}
-     * @memberof AddFashionItemForConsignByShop
+     * @memberof AccountTransactionsListResponse
      */
-    'description'?: string | null;
+    'orderCode'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof AccountTransactionsListResponse
+     */
+    'consignSaleCode'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof AccountTransactionsListResponse
+     */
+    'rechargeCode'?: string | null;
     /**
      * 
      * @type {number}
-     * @memberof AddFashionItemForConsignByShop
+     * @memberof AccountTransactionsListResponse
      */
-    'confirmedPrice'?: number;
+    'amount'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof AccountTransactionsListResponse
+     */
+    'createdDate'?: string;
+    /**
+     * 
+     * @type {TransactionType}
+     * @memberof AccountTransactionsListResponse
+     */
+    'type'?: TransactionType;
+    /**
+     * 
+     * @type {string}
+     * @memberof AccountTransactionsListResponse
+     */
+    'senderId'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof AccountTransactionsListResponse
+     */
+    'receiverId'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof AccountTransactionsListResponse
+     */
+    'depositCode'?: string | null;
+    /**
+     * 
+     * @type {PaymentMethod}
+     * @memberof AccountTransactionsListResponse
+     */
+    'paymentMethod'?: PaymentMethod;
     /**
      * 
      * @type {number}
-     * @memberof AddFashionItemForConsignByShop
+     * @memberof AccountTransactionsListResponse
      */
-    'condition'?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof AddFashionItemForConsignByShop
-     */
-    'categoryId'?: string | null;
-    /**
-     * 
-     * @type {SizeType}
-     * @memberof AddFashionItemForConsignByShop
-     */
-    'size'?: SizeType;
-    /**
-     * 
-     * @type {string}
-     * @memberof AddFashionItemForConsignByShop
-     */
-    'color'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof AddFashionItemForConsignByShop
-     */
-    'brand'?: string | null;
-    /**
-     * 
-     * @type {GenderType}
-     * @memberof AddFashionItemForConsignByShop
-     */
-    'gender'?: GenderType;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof AddFashionItemForConsignByShop
-     */
-    'images'?: Array<string> | null;
+    'accountBalance'?: number;
 }
 
 
+/**
+ * 
+ * @export
+ * @interface AccountTransactionsListResponsePaginationResponse
+ */
+export interface AccountTransactionsListResponsePaginationResponse {
+    /**
+     * 
+     * @type {number}
+     * @memberof AccountTransactionsListResponsePaginationResponse
+     */
+    'pageNumber'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof AccountTransactionsListResponsePaginationResponse
+     */
+    'pageSize'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof AccountTransactionsListResponsePaginationResponse
+     */
+    'searchTerm'?: string | null;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof AccountTransactionsListResponsePaginationResponse
+     */
+    'filters'?: Array<string> | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof AccountTransactionsListResponsePaginationResponse
+     */
+    'orderBy'?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof AccountTransactionsListResponsePaginationResponse
+     */
+    'totalCount'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof AccountTransactionsListResponsePaginationResponse
+     */
+    'totalPages'?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof AccountTransactionsListResponsePaginationResponse
+     */
+    'hasNext'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof AccountTransactionsListResponsePaginationResponse
+     */
+    'hasPrevious'?: boolean;
+    /**
+     * 
+     * @type {Array<AccountTransactionsListResponse>}
+     * @memberof AccountTransactionsListResponsePaginationResponse
+     */
+    'items'?: Array<AccountTransactionsListResponse> | null;
+}
 /**
  * 
  * @export
@@ -1310,6 +1389,12 @@ export interface BidListResponse {
      * @memberof BidListResponse
      */
     'memberId'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof BidListResponse
+     */
+    'phone'?: string | null;
     /**
      * 
      * @type {number}
@@ -3197,6 +3282,75 @@ export interface CreateCategoryRequest {
 /**
  * 
  * @export
+ * @interface CreateConsignDetailOfflineRequest
+ */
+export interface CreateConsignDetailOfflineRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateConsignDetailOfflineRequest
+     */
+    'masterItemId'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateConsignDetailOfflineRequest
+     */
+    'note'?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof CreateConsignDetailOfflineRequest
+     */
+    'expectedPrice'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateConsignDetailOfflineRequest
+     */
+    'productName'?: string | null;
+    /**
+     * 
+     * @type {GenderType}
+     * @memberof CreateConsignDetailOfflineRequest
+     */
+    'gender'?: GenderType;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateConsignDetailOfflineRequest
+     */
+    'condition'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateConsignDetailOfflineRequest
+     */
+    'color'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateConsignDetailOfflineRequest
+     */
+    'brand'?: string | null;
+    /**
+     * 
+     * @type {SizeType}
+     * @memberof CreateConsignDetailOfflineRequest
+     */
+    'size'?: SizeType;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof CreateConsignDetailOfflineRequest
+     */
+    'imageUrls'?: Array<string> | null;
+}
+
+
+/**
+ * 
+ * @export
  * @interface CreateConsignDetailRequest
  */
 export interface CreateConsignDetailRequest {
@@ -3274,7 +3428,7 @@ export interface CreateConsignSaleByShopRequest {
      * @type {string}
      * @memberof CreateConsignSaleByShopRequest
      */
-    'consigner'?: string | null;
+    'consignorName'?: string | null;
     /**
      * 
      * @type {string}
@@ -3295,10 +3449,10 @@ export interface CreateConsignSaleByShopRequest {
     'email'?: string | null;
     /**
      * 
-     * @type {Array<AddFashionItemForConsignByShop>}
+     * @type {Array<CreateConsignDetailOfflineRequest>}
      * @memberof CreateConsignSaleByShopRequest
      */
-    'fashionItemForConsigns'?: Array<AddFashionItemForConsignByShop> | null;
+    'consignDetailRequests': Array<CreateConsignDetailOfflineRequest>;
 }
 
 
@@ -5582,154 +5736,6 @@ export interface GeometryFactory {
      * @memberof GeometryFactory
      */
     'geometryServices'?: NtsGeometryServices;
-}
-/**
- * 
- * @export
- * @interface GetTransactionsResponse
- */
-export interface GetTransactionsResponse {
-    /**
-     * 
-     * @type {string}
-     * @memberof GetTransactionsResponse
-     */
-    'transactionId'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof GetTransactionsResponse
-     */
-    'transactionCode'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof GetTransactionsResponse
-     */
-    'orderCode'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof GetTransactionsResponse
-     */
-    'consignSaleCode'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof GetTransactionsResponse
-     */
-    'rechargeCode'?: string | null;
-    /**
-     * 
-     * @type {number}
-     * @memberof GetTransactionsResponse
-     */
-    'amount'?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof GetTransactionsResponse
-     */
-    'createdDate'?: string;
-    /**
-     * 
-     * @type {TransactionType}
-     * @memberof GetTransactionsResponse
-     */
-    'type'?: TransactionType;
-    /**
-     * 
-     * @type {string}
-     * @memberof GetTransactionsResponse
-     */
-    'senderId'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof GetTransactionsResponse
-     */
-    'receiverId'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof GetTransactionsResponse
-     */
-    'depositCode'?: string | null;
-    /**
-     * 
-     * @type {PaymentMethod}
-     * @memberof GetTransactionsResponse
-     */
-    'paymentMethod'?: PaymentMethod;
-}
-
-
-/**
- * 
- * @export
- * @interface GetTransactionsResponsePaginationResponse
- */
-export interface GetTransactionsResponsePaginationResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof GetTransactionsResponsePaginationResponse
-     */
-    'pageNumber'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof GetTransactionsResponsePaginationResponse
-     */
-    'pageSize'?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof GetTransactionsResponsePaginationResponse
-     */
-    'searchTerm'?: string | null;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof GetTransactionsResponsePaginationResponse
-     */
-    'filters'?: Array<string> | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof GetTransactionsResponsePaginationResponse
-     */
-    'orderBy'?: string | null;
-    /**
-     * 
-     * @type {number}
-     * @memberof GetTransactionsResponsePaginationResponse
-     */
-    'totalCount'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof GetTransactionsResponsePaginationResponse
-     */
-    'totalPages'?: number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof GetTransactionsResponsePaginationResponse
-     */
-    'hasNext'?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof GetTransactionsResponsePaginationResponse
-     */
-    'hasPrevious'?: boolean;
-    /**
-     * 
-     * @type {Array<GetTransactionsResponse>}
-     * @memberof GetTransactionsResponsePaginationResponse
-     */
-    'items'?: Array<GetTransactionsResponse> | null;
 }
 /**
  * 
@@ -12592,7 +12598,7 @@ export const AccountApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiAccountsAccountIdTransactionsGet(accountId: string, page?: number, pageSize?: number, types?: Array<TransactionType>, transactionCode?: string, orderCode?: string, consignSaleCode?: string, rechargeCode?: string, depositCode?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetTransactionsResponsePaginationResponse>> {
+        async apiAccountsAccountIdTransactionsGet(accountId: string, page?: number, pageSize?: number, types?: Array<TransactionType>, transactionCode?: string, orderCode?: string, consignSaleCode?: string, rechargeCode?: string, depositCode?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AccountTransactionsListResponsePaginationResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.apiAccountsAccountIdTransactionsGet(accountId, page, pageSize, types, transactionCode, orderCode, consignSaleCode, rechargeCode, depositCode, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AccountApi.apiAccountsAccountIdTransactionsGet']?.[localVarOperationServerIndex]?.url;
@@ -12900,7 +12906,7 @@ export const AccountApiFactory = function (configuration?: Configuration, basePa
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAccountsAccountIdTransactionsGet(accountId: string, page?: number, pageSize?: number, types?: Array<TransactionType>, transactionCode?: string, orderCode?: string, consignSaleCode?: string, rechargeCode?: string, depositCode?: string, options?: any): AxiosPromise<GetTransactionsResponsePaginationResponse> {
+        apiAccountsAccountIdTransactionsGet(accountId: string, page?: number, pageSize?: number, types?: Array<TransactionType>, transactionCode?: string, orderCode?: string, consignSaleCode?: string, rechargeCode?: string, depositCode?: string, options?: any): AxiosPromise<AccountTransactionsListResponsePaginationResponse> {
             return localVarFp.apiAccountsAccountIdTransactionsGet(accountId, page, pageSize, types, transactionCode, orderCode, consignSaleCode, rechargeCode, depositCode, options).then((request) => request(axios, basePath));
         },
         /**
@@ -14052,10 +14058,11 @@ export const AuctionApiAxiosParamCreator = function (configuration?: Configurati
          * @param {string} id 
          * @param {number} [pageNumber] 
          * @param {number} [pageSize] 
+         * @param {string} [memberId] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAuctionsIdBidsGet: async (id: string, pageNumber?: number, pageSize?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        apiAuctionsIdBidsGet: async (id: string, pageNumber?: number, pageSize?: number, memberId?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiAuctionsIdBidsGet', 'id', id)
             const localVarPath = `/api/auctions/{id}/bids`
@@ -14081,6 +14088,10 @@ export const AuctionApiAxiosParamCreator = function (configuration?: Configurati
 
             if (pageSize !== undefined) {
                 localVarQueryParameter['PageSize'] = pageSize;
+            }
+
+            if (memberId !== undefined) {
+                localVarQueryParameter['MemberId'] = memberId;
             }
 
 
@@ -14560,11 +14571,12 @@ export const AuctionApiFp = function(configuration?: Configuration) {
          * @param {string} id 
          * @param {number} [pageNumber] 
          * @param {number} [pageSize] 
+         * @param {string} [memberId] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiAuctionsIdBidsGet(id: string, pageNumber?: number, pageSize?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BidListResponsePaginationResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAuctionsIdBidsGet(id, pageNumber, pageSize, options);
+        async apiAuctionsIdBidsGet(id: string, pageNumber?: number, pageSize?: number, memberId?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BidListResponsePaginationResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAuctionsIdBidsGet(id, pageNumber, pageSize, memberId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AuctionApi.apiAuctionsIdBidsGet']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -14787,11 +14799,12 @@ export const AuctionApiFactory = function (configuration?: Configuration, basePa
          * @param {string} id 
          * @param {number} [pageNumber] 
          * @param {number} [pageSize] 
+         * @param {string} [memberId] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAuctionsIdBidsGet(id: string, pageNumber?: number, pageSize?: number, options?: any): AxiosPromise<BidListResponsePaginationResponse> {
-            return localVarFp.apiAuctionsIdBidsGet(id, pageNumber, pageSize, options).then((request) => request(axios, basePath));
+        apiAuctionsIdBidsGet(id: string, pageNumber?: number, pageSize?: number, memberId?: string, options?: any): AxiosPromise<BidListResponsePaginationResponse> {
+            return localVarFp.apiAuctionsIdBidsGet(id, pageNumber, pageSize, memberId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -15007,12 +15020,13 @@ export class AuctionApi extends BaseAPI {
      * @param {string} id 
      * @param {number} [pageNumber] 
      * @param {number} [pageSize] 
+     * @param {string} [memberId] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AuctionApi
      */
-    public apiAuctionsIdBidsGet(id: string, pageNumber?: number, pageSize?: number, options?: RawAxiosRequestConfig) {
-        return AuctionApiFp(this.configuration).apiAuctionsIdBidsGet(id, pageNumber, pageSize, options).then((request) => request(this.axios, this.basePath));
+    public apiAuctionsIdBidsGet(id: string, pageNumber?: number, pageSize?: number, memberId?: string, options?: RawAxiosRequestConfig) {
+        return AuctionApiFp(this.configuration).apiAuctionsIdBidsGet(id, pageNumber, pageSize, memberId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

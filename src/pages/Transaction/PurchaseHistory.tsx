@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from "react";
-import {AccountApi, GetTransactionsResponse} from "../../api";
+import {AccountApi, AccountTransactionsListResponse} from "../../api";
 import {Card, Col, Row, Table, TableColumnsType} from "antd";
 import NavProfile from "../../components/NavProfile/NavProfile.tsx";
 
 const PurchaseHistory = () => {
     const userId = JSON.parse(localStorage.getItem("userId") || "null");
 
-    const [data, setData] = useState<GetTransactionsResponse[]>([]);
+    const [data, setData] = useState<AccountTransactionsListResponse[]>([]);
     const [total, setTotal] = useState(0);
     const [loading, setLoading] = useState(true);
 
@@ -25,7 +25,7 @@ const PurchaseHistory = () => {
         return new Intl.NumberFormat('de-DE').format(balance);
     };
 
-    const columns: TableColumnsType<GetTransactionsResponse> = [
+    const columns: TableColumnsType<AccountTransactionsListResponse> = [
         {
             title: 'Order Code',
             dataIndex: 'orderCode',

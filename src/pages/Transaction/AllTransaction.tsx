@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Table, Input, Select, Card, Row, Col, Tag } from 'antd';
-import { GetTransactionsResponse, TransactionType } from '../../api';
+import { AccountTransactionsListResponse, TransactionType } from '../../api';
 import useTransactions from '../../hooks/useTransactions';
 import NavProfile from '../../components/NavProfile/NavProfile';
 import { ColumnsType } from 'antd/es/table';
@@ -31,7 +31,7 @@ const TransactionHistory: React.FC = () => {
     transactionCode,
   });
 
-  const columns : ColumnsType<GetTransactionsResponse> = [
+  const columns : ColumnsType<AccountTransactionsListResponse> = [
     {
       title: 'Code',
       dataIndex: 'code',

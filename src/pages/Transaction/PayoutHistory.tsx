@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import {
   AccountApi,
-  GetTransactionsResponse,
+  AccountTransactionsListResponse,
 } from "../../api";
 import { Card, Col, Row, Table } from "antd";
 import NavProfile from "../../components/NavProfile/NavProfile.tsx";
 
 const PayoutHistory = () => {
   const userId = JSON.parse(localStorage.getItem("userId") || "null");
-  const [data, setData] = useState<GetTransactionsResponse[]>([]); // Thêm trạng thái để lưu dữ liệu
+  const [data, setData] = useState<AccountTransactionsListResponse[]>([]); // Thêm trạng thái để lưu dữ liệu
   useEffect(() => {
     const fetchDepositHistory = async () => {
       const DepositListApi = new AccountApi();

@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from "react";
-import {AccountApi, GetTransactionsResponse} from "../../api";
+import {AccountApi, AccountTransactionsListResponse} from "../../api";
 import {Card, Col, Row, Table} from "antd";
 import NavProfile from "../../components/NavProfile/NavProfile.tsx";
 
 
 const RefundHistory = () => {
   const userId = JSON.parse(localStorage.getItem("userId") || "null");
-  const [data, setData] = useState<GetTransactionsResponse[]>([]);
+  const [data, setData] = useState<AccountTransactionsListResponse[]>([]);
   useEffect(() => {
     const fetchRefundHistory = async () => {
       const RefundListTransactionApi = new AccountApi();
