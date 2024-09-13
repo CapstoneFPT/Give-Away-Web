@@ -61,6 +61,12 @@ const TransactionHistory: React.FC = () => {
       render: (date: string) => new Date(date).toLocaleString(),
     },
     {
+      title: 'Reciver',
+      dataIndex: 'ReciverBalance',
+      key: 'Reciver',
+     
+    },
+    {
       title: 'Type',
       dataIndex: 'type',
       key: 'type',

@@ -1120,7 +1120,8 @@ export const AuctionStatus = {
     Rejected: 'Rejected',
     Approved: 'Approved',
     OnGoing: 'OnGoing',
-    Finished: 'Finished'
+    Finished: 'Finished',
+    Cancelled: 'Cancelled'
 } as const;
 
 export type AuctionStatus = typeof AuctionStatus[keyof typeof AuctionStatus];
@@ -10249,6 +10250,18 @@ export interface Transaction {
     'amount'?: number;
     /**
      * 
+     * @type {number}
+     * @memberof Transaction
+     */
+    'senderBalance'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof Transaction
+     */
+    'receiverBalance'?: number;
+    /**
+     * 
      * @type {string}
      * @memberof Transaction
      */
@@ -11108,6 +11121,7 @@ export interface Withdraw {
 
 export const WithdrawStatus = {
     Processing: 'Processing',
+    Expired: 'Expired',
     Completed: 'Completed'
 } as const;
 

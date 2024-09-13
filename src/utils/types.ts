@@ -100,20 +100,22 @@ export const getAuctionStatus = (status: string) => {
 
 export const getTransactionType = (type: string) => {
   switch (type) {
-    case TransactionType.AuctionDeposit:
+    case TransactionType.AddFund:
       return "purple";
-      case TransactionType.Payout:
+      case TransactionType.AuctionDeposit:
       return "green";
-      case TransactionType.Purchase:
+      case TransactionType.ConsignPayout:
       return "blue";
-      case TransactionType.Recharge:
+      case TransactionType.CustomerSale:
       return "orange";
-      case TransactionType.Refund:
+      case TransactionType.Purchase:
       return "brown";
       case TransactionType.RefundAuctionDeposit:
       return "yellow";
-      case TransactionType.Sale:
+      case TransactionType.RefundProduct:
       return "red";
+      case TransactionType.Withdraw:
+      return "pink";
 
     default:
       return "default";

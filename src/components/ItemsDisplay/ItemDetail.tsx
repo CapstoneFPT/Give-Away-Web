@@ -11,7 +11,7 @@ const {Paragraph} = Typography;
 const styles = {
     para: {
         margin: "10px",
-        fontSize: "18px",
+        fontSize: "16px",
         color: "black",
     },
     price: {
@@ -120,7 +120,7 @@ const ItemDetail: React.FC = () => {
                         <Col span={4}>
                             <Row
                                 gutter={[10, 8]}
-                                style={{maxHeight: "690px", overflowY: "auto"}}
+                                style={{maxHeight: "720px", overflowY: "auto"}}
                             >
                                 {product.images?.map((image, index) => (
                                     <Col span={24} key={index}>
@@ -128,8 +128,8 @@ const ItemDetail: React.FC = () => {
                                             src={image}
                                             alt={`Thumbnail ${index}`}
                                             style={{
-                                                width: "95%",
-                                                height: "230px",
+                                                width: "100%",
+                                                height: "290px",
                                                 cursor: "pointer",
                                                 border:
                                                     selectedImage === image ? "2px solid #1890ff" : "none",
@@ -150,7 +150,7 @@ const ItemDetail: React.FC = () => {
                         <Col span={9}>
                             <Card>
                                 <Paragraph style={styles.para}>
-                                    <strong style={{fontSize: "30px"}}>{product.name}</strong>
+                                    <strong style={{fontSize: "30px"}}> Product name: {product.name}</strong>
                                 </Paragraph>
                                 <Button
                                     type="link"

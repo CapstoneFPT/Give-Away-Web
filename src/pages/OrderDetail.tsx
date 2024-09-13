@@ -16,7 +16,7 @@ import {
 } from "antd";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import NavProfile from "../components/NavProfile/NavProfile";
-import { FashionItemDetailResponse, FashionItemStatus, OrderApi, OrderLineItemListResponse } from "../api";
+import { FashionItemDetailResponse, FashionItemStatus, OrderApi, OrderLineItemListResponse, OrderStatus } from "../api";
 import { useQuery } from "@tanstack/react-query";
 import { ColumnsType } from "antd/es/table";
 import { getOrderStatus, getStatusColor } from "../utils/types";
@@ -220,7 +220,7 @@ const OrderDetail = () => {
       align: "center",
       render: (text: any, record: OrderLineItemListResponse) => (
         <>
-          {record.itemStatus === FashionItemStatus.Refundable && (
+          {(record.itemStatus === FashionItemStatus.Refundable && orderDetail?.status === OrderStatus.Completed) && (
             <Button
               type="primary"
               style={{

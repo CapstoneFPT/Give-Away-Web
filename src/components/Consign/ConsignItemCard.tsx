@@ -43,6 +43,7 @@ const ConsignItemCard = ({ key, name, restField, fileLists, handleFileChange, re
               listType="picture-card"
               onChange={(info) => handleFileChange(key, info)}
               beforeUpload={() => false}
+              maxCount={3}
             >
               <div>
                 <div style={{ marginTop: 8 }}>Upload</div>

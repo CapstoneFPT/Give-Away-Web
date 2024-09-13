@@ -307,9 +307,7 @@ const ConsignDetail = () => {
                     <Descriptions.Item label="Color">
                       {item.color}
                     </Descriptions.Item>
-                    <Descriptions.Item label="Product Status">
-                      <Tag>{item.status}</Tag>
-                    </Descriptions.Item>
+                   
                     <Descriptions.Item label="Deal Status">
                       {renderDealStatus(item, consignInformation)}
                     </Descriptions.Item>
