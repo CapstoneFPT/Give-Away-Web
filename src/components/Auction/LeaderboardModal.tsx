@@ -18,6 +18,7 @@ const LeaderboardModal: React.FC<LeaderboardModalProps> = ({ visible, onClose, l
       title: 'Phone',
       dataIndex: 'phone',
       key: 'phone',
+      render: (value: string) => value.slice(0, -3) + '***' // Ẩn 3 số cuối
     },
     {
       title: 'Highest Bid',
@@ -29,7 +30,11 @@ const LeaderboardModal: React.FC<LeaderboardModalProps> = ({ visible, onClose, l
       title: 'Won',
       dataIndex: 'isWon',
       key: 'isWon',
-      render: (value: boolean) => value ? 'Yes' : 'No',
+      render: (value: boolean) => (
+        <span style={{ color: value ? 'green' : 'black' }}>
+          {value ? '🏆 Yes' : 'No'}
+        </span>
+      ),
     },
   ];
 

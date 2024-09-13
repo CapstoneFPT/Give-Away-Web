@@ -99,7 +99,7 @@ const AuctionList = () => {
               <Title level={4}>{auction.title}</Title>
               <Text strong>Start: </Text><Text>{auction.startDate}</Text><br />
               <Text strong>End: </Text><Text>{auction.endDate}</Text><br />
-              <Text strong>Deposit Fee: </Text><Text>{formatBalance(auction.depositFee!)}</Text><br />
+              <Text strong>Deposit Fee: </Text><Text>{formatBalance(auction.depositFee!)}VND </Text><br />
               <Text strong>Status: </Text><Text>{auction.status}</Text><br />
               <Space style={{ marginTop: "10px" }}>
                 <Link to={`/detailProductAuction/${auction.auctionItemId}`}>

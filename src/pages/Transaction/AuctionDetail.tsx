@@ -52,7 +52,7 @@ const AuctionDetail: React.FC = () => {
   const auction = auctionData?.data;
   const bids = bidsData?.data.items || [];
   const item = itemData?.data;
-
+console.log(auctionData?.data)
   const bidColumns = [
     {
       title: "Bidder",
