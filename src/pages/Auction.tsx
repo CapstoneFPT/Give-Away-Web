@@ -164,7 +164,7 @@ const Auction: React.FC = () => {
                   <strong>Category:</strong> {data?.product.categoryName}
                 </Paragraph>
                 <Paragraph>
-                  <strong>Condition:</strong> {data?.product.condition}%
+                  <strong>Condition:</strong> {data?.product.condition}
                 </Paragraph>
                 <Paragraph>
                   <strong>Size:</strong> {data?.product.size}
@@ -181,9 +181,7 @@ const Auction: React.FC = () => {
                   <strong>Gender:</strong> {data?.product.gender}
                 </Paragraph>
               </Col>
-              <Paragraph>
-                <strong>Note:</strong> {data?.product.note}
-              </Paragraph>
+             
               <Paragraph>
                 <strong
                   style={{ fontSize: "18px", color: "ThreeDLightShadow" }}
@@ -191,10 +189,14 @@ const Auction: React.FC = () => {
                   Initial Price: {formatBalance(data?.product.initialPrice!)} VND
                 </strong>
               </Paragraph>
+              
             </Row>
             <Paragraph>
               <strong>Description:</strong> {data?.product.description}
             </Paragraph>
+            <Paragraph>
+                <strong>Note:</strong> {data?.product.note}
+              </Paragraph>
             <Paragraph style={{ color: "#32b94b", fontSize: "20px" }}>
               <strong>Current Bid: {formatBalance(nextBidAmount!)} VND </strong>
             </Paragraph>
