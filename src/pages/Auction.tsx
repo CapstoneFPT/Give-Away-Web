@@ -46,8 +46,13 @@ const Auction: React.FC = () => {
 
   const addBid = useCallback((newBid: BidDetailResponse) => {
     setBids((prevBids) => {
+      console.count("addBid is running");
+      if (prevBids.some(bid => bid.id === newBid.id)) return prevBids;
       const updatedBids = [newBid, ...prevBids];
+      console.log("updatedBids: ", updatedBids);
       const latestBid = updatedBids[0];
+      console.log("latestBid: ", latestBid);
+      console.log("Next amount should be: ", (latestBid.amount || 0) + (data?.auctionDetail.stepIncrement || 0));
       setNextBidAmount((latestBid.amount || 0) + (data?.auctionDetail.stepIncrement || 0));
       return updatedBids;
     });
@@ -177,6 +182,9 @@ const Auction: React.FC = () => {
                 </Paragraph>
               </Col>
               <Paragraph>
+                <strong>Note:</strong> {data?.product.note}
+              </Paragraph>
+              <Paragraph>
                 <strong
                   style={{ fontSize: "18px", color: "ThreeDLightShadow" }}
                 >
@@ -232,6 +240,7 @@ const Auction: React.FC = () => {
                     bids[0]?.memberId === userId ? "gray" : "#000000",
                   width: "100%",
                 }}
+                loading={placeBidMutation.isPending}
                 onClick={handleBid}
               >
                 Place Bid
