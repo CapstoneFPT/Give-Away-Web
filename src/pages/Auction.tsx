@@ -188,7 +188,7 @@ const Auction: React.FC = () => {
               <strong>Description:</strong> {data?.product.description}
             </Paragraph>
             <Paragraph style={{ color: "#32b94b", fontSize: "20px" }}>
-              <strong>Current Bid: {nextBidAmount} VND </strong>
+              <strong>Current Bid: {formatBalance(nextBidAmount!)} VND </strong>
             </Paragraph>
             <Statistic.Countdown
               title="Auction Ends In"
@@ -211,7 +211,7 @@ const Auction: React.FC = () => {
                             bid.memberId === userId ? "#ff5151" : "inherit",
                         }}
                       >
-                        {bid.amount} VND
+                        {formatBalance(bid.amount!)} VND
                       </span>
                     }
                     description={new Date(bid.createdDate!).toLocaleString()}
@@ -221,7 +221,7 @@ const Auction: React.FC = () => {
             />
             <div style={{ marginTop: "10px" }}>
               <p>
-                <strong>Next Bid Amount: {nextBidAmount} VND </strong>{" "}
+                <strong>Next Bid Amount: {formatBalance(nextBidAmount!)} VND </strong>{" "}
               </p>
               <Button
                 disabled={bids[0]?.memberId === userId}

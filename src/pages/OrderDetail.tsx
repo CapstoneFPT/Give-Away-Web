@@ -101,7 +101,7 @@ const OrderDetail = () => {
       key: "itemImage",
       render: (images: string[], record: OrderLineItemListResponse) => (
         <>
-          <Text
+          <Paragraph
             strong
             style={{
               fontSize: "16px",
@@ -113,7 +113,7 @@ const OrderDetail = () => {
             >
               {record.itemStatus}
             </Tag>
-          </Text>
+          </Paragraph>
           <Image
             src={images[0]}
             alt="Product"
