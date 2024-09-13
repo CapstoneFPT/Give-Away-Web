@@ -71,6 +71,7 @@ const ConsignDetail = () => {
         ),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["consignLineItems"] });
+      queryClient.invalidateQueries({ queryKey: ["consignInformation"] });
       message.success(
         `Deal ${confirmationAction === "continue" ? "accepted" : "rejected"
         } successfully!`
