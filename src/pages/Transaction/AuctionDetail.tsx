@@ -31,8 +31,8 @@ const AuctionDetail: React.FC = () => {
   });
 
   const { data: bidsData, isLoading: isLoadingBids } = useQuery({
-    queryKey: ["bids", auctionId],
-    queryFn: () => auctionApi.apiAuctionsIdBidsGet(auctionId!),
+    queryKey: ["bids", auctionId, userId, currentPage, pageSize],
+    queryFn: () => auctionApi.apiAuctionsIdBidsGet(auctionId!, currentPage, pageSize, userId),
   });
 
   const { data: itemData, isLoading: isLoadingItem } = useQuery({
@@ -52,12 +52,12 @@ const AuctionDetail: React.FC = () => {
   const auction = auctionData?.data;
   const bids = bidsData?.data.items || [];
   const item = itemData?.data;
-console.log(auctionData?.data)
+
   const bidColumns = [
     {
-      title: "Bidder",
-      dataIndex: "bidderName",
-      key: "bidderName",
+      title: "Bid Code",
+      dataIndex: "bidCode",
+      key: "bidCode",
     },
     {
       title: "Amount",
@@ -65,11 +65,18 @@ console.log(auctionData?.data)
       key: "amount",
       render: (amount: number) => `${formatBalance(amount)} VND`,
     },
+
     {
       title: "Date",
       dataIndex: "createdDate",
       key: "createdDate",
       render: (date: string) => new Date(date).toLocaleString(),
+    },
+    {
+      title: "Winning",
+      dataIndex: "isWinning",
+      key: "isWinning",
+      render: (isWinning: boolean) => (isWinning ? "Yes" : "No"),
     },
   ];
 
@@ -176,9 +183,9 @@ console.log(auctionData?.data)
         <Col span={24}>
           <Title level={2}>Bid History</Title>
           <Table
-            dataSource={bids}
+            dataSource={bidsData?.data.items || []}
             columns={bidColumns}
-            rowKey="bidId"
+            rowKey="id"
             loading={isLoadingBids}
             pagination={{
               current: currentPage,
@@ -186,7 +193,10 @@ console.log(auctionData?.data)
               total: bidsData?.data.totalCount,
               showSizeChanger: true,
               showQuickJumper: true,
-              onChange: handleTableChange,
+              onChange: (page, pageSize) => {
+                setCurrentPage(page);
+                setPageSize(pageSize);
+              },
               showTotal: (total, range) =>
                 `${range[0]}-${range[1]} of ${total} items`,
             }}
