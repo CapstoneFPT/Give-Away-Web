@@ -2,6 +2,7 @@ import React from 'react';
 import { Modal, Table, Button } from 'antd';
 import { AuctionLeaderboardResponse, LeaderboardItemListResponse } from '../../api';
 import { ColumnType, TablePaginationConfig } from 'antd/es/table';
+import { formatBalance } from '../../utils/utils';
 
 interface LeaderboardModalProps {
   visible: boolean;
@@ -22,7 +23,7 @@ const LeaderboardModal: React.FC<LeaderboardModalProps> = ({ visible, onClose, l
       title: 'Highest Bid',
       dataIndex: 'highestBid',
       key: 'highestBid',
-      render: (value: number) => `$${value.toFixed(2)}`,
+      render: (value: number) => `${formatBalance(value)} VND`
     },
     {
       title: 'Won',

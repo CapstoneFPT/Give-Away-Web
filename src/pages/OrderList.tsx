@@ -241,7 +241,7 @@ const OrderList: React.FC = () => {
       dataIndex: "paymentMethod",
       key: "paymentMethod",
     },
-    
+
     {
       title: "Status",
       dataIndex: "status",
@@ -252,10 +252,10 @@ const OrderList: React.FC = () => {
             status === "Completed"
               ? "green"
               : status === "AwaitingPayment"
-              ? "yellow"
-              : status === "OnDelivery"
-              ? "blue"
-              : "red"
+                ? "yellow"
+                : status === "OnDelivery"
+                  ? "blue"
+                  : "red"
           }
         >
           {status.toUpperCase()}
@@ -376,10 +376,10 @@ const OrderList: React.FC = () => {
                           >
                             <Row>
                               <Col span={12}>
-                              <img style={{
-                                width: "180px",
-                                height: "180px",
-                              }} src={product.itemImage![0]!} alt={product.itemName!}/>
+                                <img style={{
+                                  width: "180px",
+                                  height: "180px",
+                                }} src={product.itemImage![0]!} alt={product.itemName!} />
                               </Col>
                               <Col span={12}>
                                 <Typography>
@@ -396,7 +396,7 @@ const OrderList: React.FC = () => {
                                 <p>Size: {product.itemSize || "N/A"}</p>
                                 <p>Gender: {product.itemGender || "N/A"}</p>
                                 <p>Brand: {product.itemBrand || "N/A"}</p>
-                                <p>Condition: {product.condition || "N/A"}%</p>
+                                <p>Condition: {product.condition || "N/A"}</p>
                               </Col>
                             </Row>
                           </Card>
@@ -450,17 +450,28 @@ const OrderList: React.FC = () => {
                       color: "#d1d124",
                     }}
                   >
+                    Discount : {formatBalance(selectedOrder.discount || 0)}{" "}
+                    VND
+                  </p>
+                  <p
+                    style={{
+                      marginBottom: "10px",
+                      fontSize: "20px",
+                      fontWeight: "bold",
+                      color: "#d1d124",
+                    }}
+                  >
                     Total Price: {formatBalance(selectedOrder.totalPrice || 0)}{" "}
                     VND
                   </p>
-                 <div style={{marginTop:'10px'}}>
-                 <Button style={{color:'white', backgroundColor:'black'}} type="primary" onClick={handleCheckout}>
-                    Checkout
-                  </Button>
-                  <Button type="primary" style={{color:'white', backgroundColor:'red', marginLeft:'135px'}} onClick={handleCancel}>
-                    Cancel
-                  </Button>
-                 </div>
+                  <div style={{ marginTop: '10px' }}>
+                    <Button style={{ color: 'white', backgroundColor: 'black' }} type="primary" onClick={handleCheckout}>
+                      Checkout
+                    </Button>
+                    <Button type="primary" style={{ color: 'white', backgroundColor: 'red', marginLeft: '135px' }} onClick={handleCancel}>
+                      Cancel
+                    </Button>
+                  </div>
                 </Card>
               </Col>
             </Row>
