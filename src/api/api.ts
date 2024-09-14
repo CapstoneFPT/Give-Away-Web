@@ -8348,6 +8348,12 @@ export interface OrderListResponse {
      * @memberof OrderListResponse
      */
     'auctionTitle'?: string | null;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof OrderListResponse
+     */
+    'isAuctionOrder'?: boolean;
 }
 
 
@@ -8559,73 +8565,6 @@ export interface OrderResponse {
 }
 
 
-/**
- * 
- * @export
- * @interface OrderResponsePaginationResponse
- */
-export interface OrderResponsePaginationResponse {
-    /**
-     * 
-     * @type {number}
-     * @memberof OrderResponsePaginationResponse
-     */
-    'pageNumber'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof OrderResponsePaginationResponse
-     */
-    'pageSize'?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof OrderResponsePaginationResponse
-     */
-    'searchTerm'?: string | null;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof OrderResponsePaginationResponse
-     */
-    'filters'?: Array<string> | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof OrderResponsePaginationResponse
-     */
-    'orderBy'?: string | null;
-    /**
-     * 
-     * @type {number}
-     * @memberof OrderResponsePaginationResponse
-     */
-    'totalCount'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof OrderResponsePaginationResponse
-     */
-    'totalPages'?: number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof OrderResponsePaginationResponse
-     */
-    'hasNext'?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof OrderResponsePaginationResponse
-     */
-    'hasPrevious'?: boolean;
-    /**
-     * 
-     * @type {Array<OrderResponse>}
-     * @memberof OrderResponsePaginationResponse
-     */
-    'items'?: Array<OrderResponse> | null;
-}
 /**
  * 
  * @export
@@ -10468,6 +10407,12 @@ export interface TransactionResponse {
      * @memberof TransactionResponse
      */
     'transactionId'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TransactionResponse
+     */
+    'transactionCode'?: string | null;
     /**
      * 
      * @type {string}
@@ -12536,7 +12481,7 @@ export const AccountApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiAccountsAccountIdOrdersGet(accountId: string, pageNumber?: number, pageSize?: number, shopId?: string, status?: OrderStatus, paymentMethod?: PaymentMethod, purchaseType?: PurchaseType, phone?: string, recipientName?: string, email?: string, customerName?: string, orderCode?: string, isFromAuction?: boolean, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<OrderResponsePaginationResponse>> {
+        async apiAccountsAccountIdOrdersGet(accountId: string, pageNumber?: number, pageSize?: number, shopId?: string, status?: OrderStatus, paymentMethod?: PaymentMethod, purchaseType?: PurchaseType, phone?: string, recipientName?: string, email?: string, customerName?: string, orderCode?: string, isFromAuction?: boolean, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<OrderListResponsePaginationResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.apiAccountsAccountIdOrdersGet(accountId, pageNumber, pageSize, shopId, status, paymentMethod, purchaseType, phone, recipientName, email, customerName, orderCode, isFromAuction, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AccountApi.apiAccountsAccountIdOrdersGet']?.[localVarOperationServerIndex]?.url;
@@ -12856,7 +12801,7 @@ export const AccountApiFactory = function (configuration?: Configuration, basePa
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAccountsAccountIdOrdersGet(accountId: string, pageNumber?: number, pageSize?: number, shopId?: string, status?: OrderStatus, paymentMethod?: PaymentMethod, purchaseType?: PurchaseType, phone?: string, recipientName?: string, email?: string, customerName?: string, orderCode?: string, isFromAuction?: boolean, options?: any): AxiosPromise<OrderResponsePaginationResponse> {
+        apiAccountsAccountIdOrdersGet(accountId: string, pageNumber?: number, pageSize?: number, shopId?: string, status?: OrderStatus, paymentMethod?: PaymentMethod, purchaseType?: PurchaseType, phone?: string, recipientName?: string, email?: string, customerName?: string, orderCode?: string, isFromAuction?: boolean, options?: any): AxiosPromise<OrderListResponsePaginationResponse> {
             return localVarFp.apiAccountsAccountIdOrdersGet(accountId, pageNumber, pageSize, shopId, status, paymentMethod, purchaseType, phone, recipientName, email, customerName, orderCode, isFromAuction, options).then((request) => request(axios, basePath));
         },
         /**

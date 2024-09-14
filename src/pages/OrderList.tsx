@@ -25,6 +25,7 @@ import {
   PurchaseType,
 } from "../api";
 import useOrders from "../hooks/useOrders";
+import { useCheckoutOrder, useCheckoutVnpay, useCancelOrder } from '../hooks/orderHooks';
 
 const { Option } = Select;
 
@@ -69,11 +70,15 @@ const OrderList: React.FC = () => {
     ...queryParams,
   });
 
+  const checkoutOrderMutation = useCheckoutOrder(userId!);
+  const checkoutVnpayMutation = useCheckoutVnpay(userId!);
+  const cancelOrderMutation = useCancelOrder();
+
   const handleSearch = (changedValues: any, allValues: any) => {
     setQueryParams(prev => ({
       ...prev,
       ...allValues,
-      pageNumber: 1, // Reset to first page on new search
+      pageNumber: 1,
     }));
   };
 
@@ -91,11 +96,9 @@ const OrderList: React.FC = () => {
       const orderApi = new OrderApi();
       const response = await orderApi.apiOrdersOrderIdOrderlineitemsGet(orderId);
       setOrderLineItems(response.data.items || []);
-      console.log(response);
     } catch (error) {
       console.error("Failed to fetch order details:", error);
-      // Removed notification error display
-      setOrderLineItems([]); // Clear order details on error
+      setOrderLineItems([]);
     } finally {
       setDetailsLoading(false);
     }
@@ -117,13 +120,9 @@ const OrderList: React.FC = () => {
     }
 
     try {
-      const orderApi = new OrderApi();
-
       switch (selectedOrder.paymentMethod) {
         case PaymentMethod.Point: {
-          await orderApi.apiOrdersOrderIdPayPointsPost(selectedOrder.orderId!, {
-            memberId: userId,
-          });
+          await checkoutOrderMutation.mutateAsync(selectedOrder.orderId!);
           notification.success({
             message: "Checkout Successful",
             description: "Order has been paid with points.",
@@ -131,11 +130,8 @@ const OrderList: React.FC = () => {
           break;
         }
         case PaymentMethod.Banking: {
-          const response = await orderApi.apiOrdersOrderIdPayVnpayPost(
-            selectedOrder.orderId!,
-            { memberId: userId }
-          );
-          const paymentUrl = response.data.paymentUrl;
+          const response = await checkoutVnpayMutation.mutateAsync(selectedOrder.orderId!);
+          const paymentUrl = response.paymentUrl;
 
           if (paymentUrl) {
             notification.success({
@@ -169,14 +165,12 @@ const OrderList: React.FC = () => {
       okText: "Yes",
       cancelText: "No",
       onOk: async () => {
-        const cancelOrderApi = new OrderApi();
         try {
-          await cancelOrderApi.apiOrdersOrderIdCancelPut(selectedOrder.orderId!);
+          await cancelOrderMutation.mutateAsync(selectedOrder.orderId!);
           notification.success({
             message: "Order Canceled",
             description: "Your order has been successfully canceled.",
           });
-
           refetch();
           setSelectedOrder(null);
         } catch (error) {
