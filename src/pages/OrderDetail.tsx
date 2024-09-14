@@ -227,7 +227,7 @@ const OrderDetail = () => {
         if (expirationDate.getTime() < currentDate.getTime()) {
           return <span style={{ color: "red" }}>Expired</span>;
         }
-        return expirationDate.getTime() === new Date("0001-01-01T00:00:00").getTime()
+        return expirationDate.getTime() === new Date(null!).getTime()
           ? "N/A"
           : expirationDate.toLocaleString();
       },

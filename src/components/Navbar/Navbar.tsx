@@ -158,7 +158,7 @@ const Navbar = () => {
                             <Link to="/aunctionList">Auctions</Link>
                         </li>
                         <li className="navbar-item">
-                            <Link to="/consign">Consign/Sale</Link>
+                            <Link to="/consign">Consign</Link>
                         </li>
                     </ul>
                 </div>

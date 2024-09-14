@@ -181,7 +181,7 @@ const ConsignForm = () => {
                         <Card style={{width: "970px", border: "1px solid #aeacac"}}>
                             {/* <div style={{ width: "1000px" }}> */}
                             <h1 style={{textAlign: "center", marginBottom: "10px"}}>
-                                Consign/Sale Form
+                                Consign Form
                             </h1>
                             <Card
                                 style={{marginBottom: "20px", border: "1px solid #aeacac"}}
@@ -211,10 +211,10 @@ const ConsignForm = () => {
                                             wrapperCol={{ span: 10 }} // Ensure input takes full width
                                         >
                                             <Select
-                                                placeholder="Type Consign/Sale"
+                                                placeholder="Type Consign"
                                                 style={{width: "100%"}}
                                             >
-                                                {Object.values(ConsignSaleType).map((type) => (
+                                                {Object.values(ConsignSaleType).filter(type => type !== ConsignSaleType.ForSale).map((type) => ( // Filter out 'ForSale'
                                                     <Select.Option key={type} value={type}>
                                                         {type}
                                                     </Select.Option>
