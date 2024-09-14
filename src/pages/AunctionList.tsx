@@ -109,6 +109,7 @@ const AuctionList = () => {
                 style={{backgroundColor:'black', color:'white'}}
                   type="default"
                   onClick={() => handleAuctionButtonClick(auction.auctionId!, auction.auctionItemId!)}
+                  disabled={auction.status === "OnGoing"}
                 >
                   Auction
                 </Button>
