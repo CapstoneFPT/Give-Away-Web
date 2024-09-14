@@ -34,6 +34,8 @@ const OrderList: React.FC = () => {
   const [selectedOrder, setSelectedOrder] = useState<OrderResponse | null>(null);
   const [orderLineItems, setOrderLineItems] = useState<OrderLineItemListResponse[]>([]);
   const [detailsLoading, setDetailsLoading] = useState<boolean>(false);
+  const [loadingCheckout, setLoadingCheckout] = useState<boolean>(false);
+  const [loadingCancel, setLoadingCancel] = useState<boolean>(false);
   const navigate = useNavigate();
   const [form] = Form.useForm();
 
@@ -119,6 +121,7 @@ const OrderList: React.FC = () => {
       return;
     }
 
+    setLoadingCheckout(true); // Start loading
     try {
       switch (selectedOrder.paymentMethod) {
         case PaymentMethod.Point: {
@@ -153,6 +156,9 @@ const OrderList: React.FC = () => {
         message: "Checkout Error",
         description: "Failed to process checkout. Please try again later.",
       });
+    } finally {
+      setLoadingCheckout(false); // End loading
+      handleCloseModal(); // Close modal after processing
     }
   };
 
@@ -165,6 +171,7 @@ const OrderList: React.FC = () => {
       okText: "Yes",
       cancelText: "No",
       onOk: async () => {
+        setLoadingCancel(true); // Start loading
         try {
           await cancelOrderMutation.mutateAsync(selectedOrder.orderId!);
           notification.success({
@@ -179,6 +186,9 @@ const OrderList: React.FC = () => {
             message: "Cancellation Error",
             description: "Failed to cancel the order. Please try again later.",
           });
+        } finally {
+          setLoadingCancel(false); // End loading
+          handleCloseModal(); // Close modal after processing
         }
       },
     });
@@ -235,7 +245,6 @@ const OrderList: React.FC = () => {
       dataIndex: "paymentMethod",
       key: "paymentMethod",
     },
-
     {
       title: "Status",
       dataIndex: "status",
@@ -283,7 +292,6 @@ const OrderList: React.FC = () => {
       ),
     },
   ];
-
 
   return (
     <Card>
@@ -460,10 +468,10 @@ const OrderList: React.FC = () => {
                     VND
                   </p>
                   <div style={{ marginTop: '10px' }}>
-                    <Button style={{ color: 'white', backgroundColor: 'black' }} type="primary" onClick={handleCheckout}>
+                    <Button style={{ color: 'white', backgroundColor: 'black' }} type="primary" onClick={handleCheckout} loading={loadingCheckout}>
                       Checkout
                     </Button>
-                    <Button type="primary" style={{ color: 'white', backgroundColor: 'red', marginLeft: '135px' }} onClick={handleCancel}>
+                    <Button type="primary" style={{ color: 'white', backgroundColor: 'red', marginLeft: '135px' }} onClick={handleCancel} loading={loadingCancel}>
                       Cancel
                     </Button>
                   </div>
