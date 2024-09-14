@@ -44,6 +44,7 @@ const OrderDetail = () => {
     queryFn: () => orderApi.apiOrdersOrderIdGet(id!),
     select: (response) => response.data,
   });
+  const itemType = orderLineItems?.[0]?.itemType;
 
   const isLoading = isOrderLineItemsLoading || isOrderDetailLoading;
 
@@ -178,14 +179,7 @@ const OrderDetail = () => {
                 {1}
               </Typography>
             </div>
-            <div>
-              <Typography>
-                <strong>Type: </strong>
-                {record.itemType == "ConsignedForAuction" &&  ("Auction Product")} 
-                {record.itemType == "ConsignedForSale" &&  ("Purchase Product")} 
-                {record.itemType == "ItemBase" &&  ("Purchase Product")} 
-              </Typography>
-            </div>
+           
           </Space>
         </>
       ),
@@ -203,13 +197,7 @@ const OrderDetail = () => {
         </>
       ),
     },
-    {
-      title: "Quantity",
-      dataIndex: "quantity",
-      key: "quantity",
-      width: 100,
-      align: "center",
-    },
+    
     {
       title: "Condition",
       dataIndex: "condition",
@@ -224,7 +212,13 @@ const OrderDetail = () => {
       align: "center",
      },
      {
-      title: "Refund Time",
+      title: "Resevred Expiration",
+      dataIndex: "resevredExpirationDate",
+      key: "refundExpirationDate",
+      
+    },
+     {
+      title: "Refund Expiration",
       dataIndex: "refundExpirationDate",
       key: "refundExpirationDate",
       render: (refundExpirationDate: string | null) => {
@@ -370,14 +364,24 @@ const OrderDetail = () => {
                   </Col>
                   <Col span={12}>
                     <Descriptions column={1} bordered size="small">
+                    <Descriptions.Item label="Purchase Type">
+                        {
+                          <Typography>
+                          
+                          {itemType == "ConsignedForAuction" &&  ("Auction Product")} 
+                          {itemType == "ConsignedForSale" &&  ("Purchase Product")} 
+                          {itemType == "ItemBase" &&  ("Purchase Product")} 
+                        </Typography>
+                        }
+                      </Descriptions.Item>
                       <Descriptions.Item label="Sub Total">
-                        {formatBalance(orderDetail?.subtotal || 0)} VND
+                        <strong>{formatBalance(orderDetail?.subtotal || 0)} VND</strong>
                       </Descriptions.Item>
                       <Descriptions.Item label="Shipping Fee">
-                        {formatBalance(orderDetail?.shippingFee || 0)} VND
+                       <strong> {formatBalance(orderDetail?.shippingFee || 0)} VND</strong>
                       </Descriptions.Item>
                       <Descriptions.Item label="Discount">
-                        -{formatBalance(orderDetail?.discount || 0)} VND
+                       <strong style={{color:'green'}}> -{formatBalance(orderDetail?.discount || 0)} VND</strong>
                       </Descriptions.Item>
                       <Descriptions.Item label="Total">
                         <strong>
