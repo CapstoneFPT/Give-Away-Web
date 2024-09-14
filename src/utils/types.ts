@@ -1,4 +1,4 @@
-import { AuctionStatus, FashionItemStatus, OrderStatus, RefundStatus, TransactionType } from "../api";
+import { AuctionStatus, FashionItemStatus, OrderStatus, PaymentMethod, RefundStatus, TransactionType } from "../api";
 
 export type Test = {
   name: string
@@ -78,6 +78,21 @@ export const getRefundStatus = (status: string) => {
       return "default";
   }
 
+}
+export const getPaymentStatus = (status: string) => {
+  switch (status) {
+    case PaymentMethod.Banking:
+      return "rgb(0, 150, 136)"; // Dark Teal
+    case PaymentMethod.Cash:
+      return "rgb(76, 175, 80)"; // Dark Lime
+    case PaymentMethod.Cod:
+      return "rgb(0, 188, 212)"; // Dark Cyan
+    case PaymentMethod.Point:
+      return "rgb(156, 39, 176)"; // Dark Magenta
+     
+    default:
+      return "default";
+  }
 }
 export const getAuctionStatus = (status: string) => {
   switch (status) {

@@ -4,7 +4,7 @@ import { AccountTransactionsListResponse, TransactionType } from '../../api';
 import useTransactions from '../../hooks/useTransactions';
 import NavProfile from '../../components/NavProfile/NavProfile';
 import { ColumnsType } from 'antd/es/table';
-import { getTransactionType } from '../../utils/types';
+import { getPaymentStatus, getTransactionType } from '../../utils/types';
 
 const { Option } = Select;
 
@@ -60,11 +60,25 @@ const TransactionHistory: React.FC = () => {
       key: 'createdDate',
       render: (date: string) => new Date(date).toLocaleString(),
     },
+    
     {
-      title: 'Reciver',
-      dataIndex: 'ReciverBalance',
-      key: 'Reciver',
-     
+      title: 'Balance',
+      dataIndex: 'accountBalance',
+      key: 'accountBalance',
+      render: (accountBalance: number) => `${formatBalance(accountBalance)} VND`,
+    },
+    {
+      title: 'Method',
+      dataIndex: 'paymentMethod',
+      key: 'paymentMethod',
+      render: (paymentMethod: string, record: any) => ( // Sửa lại để sử dụng hàm render đúng cách
+        <Tag
+          style={{ marginBottom: "10px" }}
+          color={getPaymentStatus(record.paymentMethod)}
+        >
+          {record.paymentMethod}
+        </Tag>
+      ),
     },
     {
       title: 'Type',
