@@ -107,12 +107,7 @@ const OrderDetail = () => {
               fontSize: "16px",
             }}
           >
-            <Tag
-              style={{ marginBottom: "10px" }}
-              color={getStatusColor(record.itemStatus!)}
-            >
-              {record.itemStatus}
-            </Tag>
+            
           </Paragraph>
           <Image
             src={images[0]}
@@ -175,6 +170,20 @@ const OrderDetail = () => {
               <Typography>
                 <strong>Color: </strong>
                 {record.itemColor}
+              </Typography>
+            </div>
+            <div>
+              <Typography>
+                <strong>Quantity: </strong>
+                {1}
+              </Typography>
+            </div>
+            <div>
+              <Typography>
+                <strong>Type: </strong>
+                {record.itemType == "ConsignedForAuction" &&  ("Auction Product")} 
+                {record.itemType == "ConsignedForSale" &&  ("Purchase Product")} 
+                {record.itemType == "ItemBase" &&  ("Purchase Product")} 
               </Typography>
             </div>
           </Space>
