@@ -31,6 +31,31 @@ const ConsignItemCard = ({ key, name, restField, fileLists, handleFileChange, re
           </Form.Item>
           <Form.Item
             {...restField}
+            name={[name, "gender"]}
+            rules={[{ required: true, message: "Missing gender" }]}
+            style={{ display: 'inline-block', width: '25%', marginRight: '8%' }} // Adjust width and margin
+          >
+            <Select placeholder="Gender">
+              <Option value="male">Male</Option>
+              <Option value="female">Female</Option>
+            </Select>
+          </Form.Item>
+          <Form.Item
+            {...restField}
+            name={[name, "size"]}
+            rules={[{ required: true, message: "Missing size" }]}
+            style={{ display: 'inline-block', width: '20%' }} // Adjust width
+          >
+            <Select placeholder="Size">
+              {Object.values(SizeType).map((size) => (
+                <Option key={size} value={size}>
+                  {size}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+          <Form.Item
+            {...restField}
             name={[name, "picture"]}
             valuePropName="fileList"
             getValueFromEvent={normFile}
@@ -50,6 +75,7 @@ const ConsignItemCard = ({ key, name, restField, fileLists, handleFileChange, re
               </div>
             </Upload>
           </Form.Item>
+          
           
           
         </Col>
@@ -77,29 +103,8 @@ const ConsignItemCard = ({ key, name, restField, fileLists, handleFileChange, re
               <Option value="Fair">Fair</Option>
             </Select>
           </Form.Item>
-          <Form.Item
-            {...restField}
-            name={[name, "gender"]}
-            rules={[{ required: true, message: "Missing gender" }]}
-          >
-            <Select placeholder="Gender" style={{ width: "70%" }}>
-              <Option value="male">Male</Option>
-              <Option value="female">Female</Option>
-            </Select>
-          </Form.Item>
-          <Form.Item
-            {...restField}
-            name={[name, "size"]}
-            rules={[{ required: true, message: "Missing size" }]}
-          >
-            <Select placeholder="Size" style={{ width: "50%" }}>
-              {Object.values(SizeType).map((size) => (
-                <Option key={size} value={size}>
-                  {size}
-                </Option>
-              ))}
-            </Select>
-          </Form.Item>
+          
+          
          
           <Form.Item
             {...restField}
