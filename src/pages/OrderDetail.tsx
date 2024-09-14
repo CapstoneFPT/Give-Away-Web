@@ -164,6 +164,7 @@ const OrderDetail = () => {
                 <Tag color="black">{record.itemSize}</Tag>
               </Typography>
             </div>
+            
             <div>
               <Typography>
                 <strong>Gender: </strong>
@@ -213,7 +214,21 @@ const OrderDetail = () => {
       width: 200,
       align: "center",
      },
-
+     {
+      title: "Refund Time",
+      dataIndex: "refundExpirationDate",
+      key: "refundExpirationDate",
+      render: (refundExpirationDate: string | null) => {
+        const expirationDate = new Date(refundExpirationDate || 0);
+        const currentDate = new Date();
+        if (expirationDate.getTime() < currentDate.getTime()) {
+          return <span style={{ color: "red" }}>Expiration</span>;
+        }
+        return expirationDate.getTime() === new Date("0001-01-01T00:00:00").getTime()
+          ? "N/A"
+          : expirationDate.toLocaleString();
+      },
+},
      {
       title: "Action",
       key: "action",
