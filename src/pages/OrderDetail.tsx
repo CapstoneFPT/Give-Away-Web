@@ -222,7 +222,7 @@ const OrderDetail = () => {
         const expirationDate = new Date(refundExpirationDate || 0);
         const currentDate = new Date();
         if (expirationDate.getTime() < currentDate.getTime()) {
-          return <span style={{ color: "red" }}>Expiration</span>;
+          return <span style={{ color: "red" }}>Expired</span>;
         }
         return expirationDate.getTime() === new Date("0001-01-01T00:00:00").getTime()
           ? "N/A"
