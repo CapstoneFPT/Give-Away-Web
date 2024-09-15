@@ -23,15 +23,17 @@ import {
   PaymentMethod,
   OrderStatus,
   PurchaseType,
+  OrderListResponse,
 } from "../api";
 import useOrders from "../hooks/useOrders";
 import { useCheckoutOrder, useCheckoutVnpay, useCancelOrder } from '../hooks/orderHooks';
+import CheckoutModal from "../components/Orders/CheckoutModal";
 
 const { Option } = Select;
 
 const OrderList: React.FC = () => {
   const [userId, setUserId] = useState<string | null>(null);
-  const [selectedOrder, setSelectedOrder] = useState<OrderResponse | null>(null);
+  const [selectedOrder, setSelectedOrder] = useState<OrderListResponse | null>(null);
   const [orderLineItems, setOrderLineItems] = useState<OrderLineItemListResponse[]>([]);
   const [detailsLoading, setDetailsLoading] = useState<boolean>(false);
   const [loadingCheckout, setLoadingCheckout] = useState<boolean>(false);
@@ -92,7 +94,7 @@ const OrderList: React.FC = () => {
     }));
   };
 
-  const fetchOrderDetails = async (orderId: string) => {
+  const fetchOrderLineItems = async (orderId: string) => {
     setDetailsLoading(true);
     try {
       const orderApi = new OrderApi();
@@ -109,7 +111,7 @@ const OrderList: React.FC = () => {
   const openCheckoutModal = async (order: OrderResponse) => {
     setSelectedOrder(order);
     setOrderLineItems([]);
-    await fetchOrderDetails(order.orderId!);
+    await fetchOrderLineItems(order.orderId!);
   };
 
   const handleCheckout = async () => {
@@ -354,7 +356,7 @@ const OrderList: React.FC = () => {
         </Col>
       </Row>
 
-      <Modal
+      {/* <Modal
         title="Checkout"
         open={!!selectedOrder}
         onCancel={handleCloseModal}
@@ -480,7 +482,16 @@ const OrderList: React.FC = () => {
             </Row>
           )
         )}
-      </Modal>
+      </Modal> */}
+      <CheckoutModal
+        visible={!!selectedOrder}
+        onCheckout={handleCheckout}
+        onCancel={handleCloseModal}
+        onCancelOrder={handleCancel}
+        selectedOrder={selectedOrder}
+        orderLineItems={orderLineItems}
+        isLoading={loadingCheckout}
+      />
     </Card>
   );
 };
