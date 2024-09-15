@@ -55,13 +55,13 @@ const AuctionList = () => {
         auctionId,
         userId!
       );
-      if (depositStatus.data.hasDeposit) {
-        // Redirect to the specific auction detail page
+     
+        
         window.location.href = `/auction/${auctionId}?item=${auctionItemId}`;
-      } else {
-        // Redirect to the deposit page with auctionId as a query parameter
-        window.location.href = `/deposit?auctionId=${auctionId}`;
-      }
+      
+        
+       
+      
     } catch (error) {
       console.error("Error checking deposit status:", error);
     }
@@ -109,9 +109,17 @@ const AuctionList = () => {
                 style={{backgroundColor:'black', color:'white'}}
                   type="default"
                   onClick={() => handleAuctionButtonClick(auction.auctionId!, auction.auctionItemId!)}
-                  disabled={auction.status === "OnGoing"}
+                  disabled={auction.status !== "OnGoing"}
                 >
                   Auction
+                </Button>
+                <Button
+                style={{backgroundColor:'black', color:'white'}}
+                  type="default"
+                  onClick={() => handleAuctionButtonClick(auction.auctionId!, auction.auctionItemId!)}
+                  disabled={auction.status === "OnGoing"}
+                >
+                  Deposit
                 </Button>
               </Space>
             </Card>
