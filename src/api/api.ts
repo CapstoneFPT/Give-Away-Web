@@ -470,16 +470,10 @@ export interface ApprovalRefundRequest {
     'status'?: RefundStatus;
     /**
      * 
-     * @type {number}
-     * @memberof ApprovalRefundRequest
-     */
-    'refundPercentage'?: number;
-    /**
-     * 
      * @type {string}
      * @memberof ApprovalRefundRequest
      */
-    'description'?: string | null;
+    'responseFromShop'?: string | null;
 }
 
 
@@ -748,7 +742,19 @@ export interface AuctionDepositListResponse {
      * @type {string}
      * @memberof AuctionDepositListResponse
      */
-    'memberId'?: string;
+    'customerName'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof AuctionDepositListResponse
+     */
+    'customerEmail'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof AuctionDepositListResponse
+     */
+    'customerPhone'?: string | null;
 }
 /**
  * 
@@ -1070,6 +1076,12 @@ export interface AuctionListResponse {
      * @memberof AuctionListResponse
      */
     'depositFee'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof AuctionListResponse
+     */
+    'initialPrice'?: number | null;
     /**
      * 
      * @type {string}
@@ -1871,6 +1883,33 @@ export interface ConfirmPendingOrderRequest {
 /**
  * 
  * @export
+ * @interface ConfirmReceivedRequest
+ */
+export interface ConfirmReceivedRequest {
+    /**
+     * 
+     * @type {RefundStatus}
+     * @memberof ConfirmReceivedRequest
+     */
+    'status'?: RefundStatus;
+    /**
+     * 
+     * @type {number}
+     * @memberof ConfirmReceivedRequest
+     */
+    'refundPercentage'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ConfirmReceivedRequest
+     */
+    'responseFromShop'?: string | null;
+}
+
+
+/**
+ * 
+ * @export
  * @interface ConsignSale
  */
 export interface ConsignSale {
@@ -2633,7 +2672,9 @@ export const ConsignSaleLineItemStatus = {
     Returned: 'Returned',
     Rejected: 'Rejected',
     ReadyForConsignSale: 'ReadyForConsignSale',
-    OnSale: 'OnSale'
+    OnSale: 'OnSale',
+    Sold: 'Sold',
+    UnSold: 'UnSold'
 } as const;
 
 export type ConsignSaleLineItemStatus = typeof ConsignSaleLineItemStatus[keyof typeof ConsignSaleLineItemStatus];
@@ -3512,7 +3553,7 @@ export interface CreateFeedbackRequest {
      * @type {string}
      * @memberof CreateFeedbackRequest
      */
-    'memberId'?: string;
+    'orderId'?: string;
     /**
      * 
      * @type {string}
@@ -5178,13 +5219,129 @@ export interface Feedback {
      * @type {string}
      * @memberof Feedback
      */
-    'orderLineItemId'?: string;
+    'orderId'?: string;
     /**
      * 
-     * @type {OrderLineItem}
+     * @type {Order}
      * @memberof Feedback
      */
-    'orderLineItem'?: OrderLineItem;
+    'order'?: Order;
+}
+/**
+ * 
+ * @export
+ * @interface FeedbackResponse
+ */
+export interface FeedbackResponse {
+    /**
+     * 
+     * @type {string}
+     * @memberof FeedbackResponse
+     */
+    'feedbackId'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof FeedbackResponse
+     */
+    'content'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof FeedbackResponse
+     */
+    'createDate'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof FeedbackResponse
+     */
+    'orderId'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof FeedbackResponse
+     */
+    'customerName'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof FeedbackResponse
+     */
+    'customerPhone'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof FeedbackResponse
+     */
+    'customerEmail'?: string | null;
+}
+/**
+ * 
+ * @export
+ * @interface FeedbackResponsePaginationResponse
+ */
+export interface FeedbackResponsePaginationResponse {
+    /**
+     * 
+     * @type {number}
+     * @memberof FeedbackResponsePaginationResponse
+     */
+    'pageNumber'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof FeedbackResponsePaginationResponse
+     */
+    'pageSize'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof FeedbackResponsePaginationResponse
+     */
+    'searchTerm'?: string | null;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof FeedbackResponsePaginationResponse
+     */
+    'filters'?: Array<string> | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof FeedbackResponsePaginationResponse
+     */
+    'orderBy'?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof FeedbackResponsePaginationResponse
+     */
+    'totalCount'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof FeedbackResponsePaginationResponse
+     */
+    'totalPages'?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof FeedbackResponsePaginationResponse
+     */
+    'hasNext'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof FeedbackResponsePaginationResponse
+     */
+    'hasPrevious'?: boolean;
+    /**
+     * 
+     * @type {Array<FeedbackResponse>}
+     * @memberof FeedbackResponsePaginationResponse
+     */
+    'items'?: Array<FeedbackResponse> | null;
 }
 /**
  * 
@@ -7638,6 +7795,12 @@ export interface Order {
      * @memberof Order
      */
     'discount'?: number;
+    /**
+     * 
+     * @type {Feedback}
+     * @memberof Order
+     */
+    'feedback'?: Feedback;
 }
 
 
@@ -7856,10 +8019,10 @@ export interface OrderLineItem {
     'individualFashionItemId'?: string | null;
     /**
      * 
-     * @type {Feedback}
+     * @type {string}
      * @memberof OrderLineItem
      */
-    'feedback'?: Feedback;
+    'reservedExpirationDate'?: string | null;
     /**
      * 
      * @type {string}
@@ -18959,6 +19122,236 @@ export class FashionItemApi extends BaseAPI {
 
 
 /**
+ * FeedbackApi - axios parameter creator
+ * @export
+ */
+export const FeedbackApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @param {number} [pageNumber] 
+         * @param {number} [pageSize] 
+         * @param {string} [orderId] 
+         * @param {string} [orderCode] 
+         * @param {string} [memberId] 
+         * @param {string} [startTime] 
+         * @param {string} [endTime] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiFeedbacksGet: async (pageNumber?: number, pageSize?: number, orderId?: string, orderCode?: string, memberId?: string, startTime?: string, endTime?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/feedbacks`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            if (pageNumber !== undefined) {
+                localVarQueryParameter['PageNumber'] = pageNumber;
+            }
+
+            if (pageSize !== undefined) {
+                localVarQueryParameter['PageSize'] = pageSize;
+            }
+
+            if (orderId !== undefined) {
+                localVarQueryParameter['OrderId'] = orderId;
+            }
+
+            if (orderCode !== undefined) {
+                localVarQueryParameter['OrderCode'] = orderCode;
+            }
+
+            if (memberId !== undefined) {
+                localVarQueryParameter['MemberId'] = memberId;
+            }
+
+            if (startTime !== undefined) {
+                localVarQueryParameter['StartTime'] = (startTime as any instanceof Date) ?
+                    (startTime as any).toISOString() :
+                    startTime;
+            }
+
+            if (endTime !== undefined) {
+                localVarQueryParameter['EndTime'] = (endTime as any instanceof Date) ?
+                    (endTime as any).toISOString() :
+                    endTime;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {CreateFeedbackRequest} [createFeedbackRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiFeedbacksPost: async (createFeedbackRequest?: CreateFeedbackRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/feedbacks`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(createFeedbackRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * FeedbackApi - functional programming interface
+ * @export
+ */
+export const FeedbackApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = FeedbackApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @param {number} [pageNumber] 
+         * @param {number} [pageSize] 
+         * @param {string} [orderId] 
+         * @param {string} [orderCode] 
+         * @param {string} [memberId] 
+         * @param {string} [startTime] 
+         * @param {string} [endTime] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiFeedbacksGet(pageNumber?: number, pageSize?: number, orderId?: string, orderCode?: string, memberId?: string, startTime?: string, endTime?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FeedbackResponsePaginationResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiFeedbacksGet(pageNumber, pageSize, orderId, orderCode, memberId, startTime, endTime, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['FeedbackApi.apiFeedbacksGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {CreateFeedbackRequest} [createFeedbackRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiFeedbacksPost(createFeedbackRequest?: CreateFeedbackRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FeedbackResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiFeedbacksPost(createFeedbackRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['FeedbackApi.apiFeedbacksPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * FeedbackApi - factory interface
+ * @export
+ */
+export const FeedbackApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = FeedbackApiFp(configuration)
+    return {
+        /**
+         * 
+         * @param {number} [pageNumber] 
+         * @param {number} [pageSize] 
+         * @param {string} [orderId] 
+         * @param {string} [orderCode] 
+         * @param {string} [memberId] 
+         * @param {string} [startTime] 
+         * @param {string} [endTime] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiFeedbacksGet(pageNumber?: number, pageSize?: number, orderId?: string, orderCode?: string, memberId?: string, startTime?: string, endTime?: string, options?: any): AxiosPromise<FeedbackResponsePaginationResponse> {
+            return localVarFp.apiFeedbacksGet(pageNumber, pageSize, orderId, orderCode, memberId, startTime, endTime, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {CreateFeedbackRequest} [createFeedbackRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiFeedbacksPost(createFeedbackRequest?: CreateFeedbackRequest, options?: any): AxiosPromise<FeedbackResponse> {
+            return localVarFp.apiFeedbacksPost(createFeedbackRequest, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * FeedbackApi - object-oriented interface
+ * @export
+ * @class FeedbackApi
+ * @extends {BaseAPI}
+ */
+export class FeedbackApi extends BaseAPI {
+    /**
+     * 
+     * @param {number} [pageNumber] 
+     * @param {number} [pageSize] 
+     * @param {string} [orderId] 
+     * @param {string} [orderCode] 
+     * @param {string} [memberId] 
+     * @param {string} [startTime] 
+     * @param {string} [endTime] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FeedbackApi
+     */
+    public apiFeedbacksGet(pageNumber?: number, pageSize?: number, orderId?: string, orderCode?: string, memberId?: string, startTime?: string, endTime?: string, options?: RawAxiosRequestConfig) {
+        return FeedbackApiFp(this.configuration).apiFeedbacksGet(pageNumber, pageSize, orderId, orderCode, memberId, startTime, endTime, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {CreateFeedbackRequest} [createFeedbackRequest] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FeedbackApi
+     */
+    public apiFeedbacksPost(createFeedbackRequest?: CreateFeedbackRequest, options?: RawAxiosRequestConfig) {
+        return FeedbackApiFp(this.configuration).apiFeedbacksPost(createFeedbackRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+
+/**
  * InquiryApi - axios parameter creator
  * @export
  */
@@ -19958,6 +20351,53 @@ export const OrderApiAxiosParamCreator = function (configuration?: Configuration
         },
         /**
          * 
+         * @param {string} [startDate] 
+         * @param {string} [endDate] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiOrdersExportCsvGet: async (startDate?: string, endDate?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/orders/export-csv`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            if (startDate !== undefined) {
+                localVarQueryParameter['StartDate'] = (startDate as any instanceof Date) ?
+                    (startDate as any).toISOString() :
+                    startDate;
+            }
+
+            if (endDate !== undefined) {
+                localVarQueryParameter['EndDate'] = (endDate as any instanceof Date) ?
+                    (endDate as any).toISOString() :
+                    endDate;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {number} [pageNumber] 
          * @param {number} [pageSize] 
          * @param {string} [shopId] 
@@ -20163,6 +20603,48 @@ export const OrderApiAxiosParamCreator = function (configuration?: Configuration
         /**
          * 
          * @param {string} orderId 
+         * @param {string} [shopId] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiOrdersOrderIdInvoiceGet: async (orderId: string, shopId?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'orderId' is not null or undefined
+            assertParamExists('apiOrdersOrderIdInvoiceGet', 'orderId', orderId)
+            const localVarPath = `/api/orders/{orderId}/invoice`
+                .replace(`{${"orderId"}}`, encodeURIComponent(String(orderId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            if (shopId !== undefined) {
+                localVarQueryParameter['shopId'] = shopId;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} orderId 
          * @param {number} [pageNumber] 
          * @param {number} [pageSize] 
          * @param {string} [shopId] 
@@ -20352,6 +20834,19 @@ export const OrderApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {string} [startDate] 
+         * @param {string} [endDate] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiOrdersExportCsvGet(startDate?: string, endDate?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiOrdersExportCsvGet(startDate, endDate, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['OrderApi.apiOrdersExportCsvGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @param {number} [pageNumber] 
          * @param {number} [pageSize] 
          * @param {string} [shopId] 
@@ -20407,6 +20902,19 @@ export const OrderApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.apiOrdersOrderIdGet(orderId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['OrderApi.apiOrdersOrderIdGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {string} orderId 
+         * @param {string} [shopId] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiOrdersOrderIdInvoiceGet(orderId: string, shopId?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<File>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiOrdersOrderIdInvoiceGet(orderId, shopId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['OrderApi.apiOrdersOrderIdInvoiceGet']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -20483,6 +20991,16 @@ export const OrderApiFactory = function (configuration?: Configuration, basePath
         },
         /**
          * 
+         * @param {string} [startDate] 
+         * @param {string} [endDate] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiOrdersExportCsvGet(startDate?: string, endDate?: string, options?: any): AxiosPromise<void> {
+            return localVarFp.apiOrdersExportCsvGet(startDate, endDate, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @param {number} [pageNumber] 
          * @param {number} [pageSize] 
          * @param {string} [shopId] 
@@ -20527,6 +21045,16 @@ export const OrderApiFactory = function (configuration?: Configuration, basePath
          */
         apiOrdersOrderIdGet(orderId: string, options?: any): AxiosPromise<OrderDetailedResponse> {
             return localVarFp.apiOrdersOrderIdGet(orderId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} orderId 
+         * @param {string} [shopId] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiOrdersOrderIdInvoiceGet(orderId: string, shopId?: string, options?: any): AxiosPromise<File> {
+            return localVarFp.apiOrdersOrderIdInvoiceGet(orderId, shopId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -20592,6 +21120,18 @@ export class OrderApi extends BaseAPI {
 
     /**
      * 
+     * @param {string} [startDate] 
+     * @param {string} [endDate] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof OrderApi
+     */
+    public apiOrdersExportCsvGet(startDate?: string, endDate?: string, options?: RawAxiosRequestConfig) {
+        return OrderApiFp(this.configuration).apiOrdersExportCsvGet(startDate, endDate, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @param {number} [pageNumber] 
      * @param {number} [pageSize] 
      * @param {string} [shopId] 
@@ -20643,6 +21183,18 @@ export class OrderApi extends BaseAPI {
      */
     public apiOrdersOrderIdGet(orderId: string, options?: RawAxiosRequestConfig) {
         return OrderApiFp(this.configuration).apiOrdersOrderIdGet(orderId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} orderId 
+     * @param {string} [shopId] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof OrderApi
+     */
+    public apiOrdersOrderIdInvoiceGet(orderId: string, shopId?: string, options?: RawAxiosRequestConfig) {
+        return OrderApiFp(this.configuration).apiOrdersOrderIdInvoiceGet(orderId, shopId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -21371,10 +21923,11 @@ export const RefundApiAxiosParamCreator = function (configuration?: Configuratio
         /**
          * 
          * @param {string} refundId 
+         * @param {ConfirmReceivedRequest} [confirmReceivedRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiRefundsRefundIdConfirmReceivedAndRefundPut: async (refundId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        apiRefundsRefundIdConfirmReceivedAndRefundPut: async (refundId: string, confirmReceivedRequest?: ConfirmReceivedRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'refundId' is not null or undefined
             assertParamExists('apiRefundsRefundIdConfirmReceivedAndRefundPut', 'refundId', refundId)
             const localVarPath = `/api/refunds/{refundId}/confirm-received-and-refund`
@@ -21396,9 +21949,12 @@ export const RefundApiAxiosParamCreator = function (configuration?: Configuratio
 
 
     
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(confirmReceivedRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -21556,11 +22112,12 @@ export const RefundApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {string} refundId 
+         * @param {ConfirmReceivedRequest} [confirmReceivedRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiRefundsRefundIdConfirmReceivedAndRefundPut(refundId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RefundResponseResult>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiRefundsRefundIdConfirmReceivedAndRefundPut(refundId, options);
+        async apiRefundsRefundIdConfirmReceivedAndRefundPut(refundId: string, confirmReceivedRequest?: ConfirmReceivedRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RefundResponseResult>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiRefundsRefundIdConfirmReceivedAndRefundPut(refundId, confirmReceivedRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['RefundApi.apiRefundsRefundIdConfirmReceivedAndRefundPut']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -21651,11 +22208,12 @@ export const RefundApiFactory = function (configuration?: Configuration, basePat
         /**
          * 
          * @param {string} refundId 
+         * @param {ConfirmReceivedRequest} [confirmReceivedRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiRefundsRefundIdConfirmReceivedAndRefundPut(refundId: string, options?: any): AxiosPromise<RefundResponseResult> {
-            return localVarFp.apiRefundsRefundIdConfirmReceivedAndRefundPut(refundId, options).then((request) => request(axios, basePath));
+        apiRefundsRefundIdConfirmReceivedAndRefundPut(refundId: string, confirmReceivedRequest?: ConfirmReceivedRequest, options?: any): AxiosPromise<RefundResponseResult> {
+            return localVarFp.apiRefundsRefundIdConfirmReceivedAndRefundPut(refundId, confirmReceivedRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -21745,12 +22303,13 @@ export class RefundApi extends BaseAPI {
     /**
      * 
      * @param {string} refundId 
+     * @param {ConfirmReceivedRequest} [confirmReceivedRequest] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof RefundApi
      */
-    public apiRefundsRefundIdConfirmReceivedAndRefundPut(refundId: string, options?: RawAxiosRequestConfig) {
-        return RefundApiFp(this.configuration).apiRefundsRefundIdConfirmReceivedAndRefundPut(refundId, options).then((request) => request(this.axios, this.basePath));
+    public apiRefundsRefundIdConfirmReceivedAndRefundPut(refundId: string, confirmReceivedRequest?: ConfirmReceivedRequest, options?: RawAxiosRequestConfig) {
+        return RefundApiFp(this.configuration).apiRefundsRefundIdConfirmReceivedAndRefundPut(refundId, confirmReceivedRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -22340,7 +22899,7 @@ export const ShopApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiShopsShopIdFeedbacksPost(shopId: string, createFeedbackRequest?: CreateFeedbackRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
+        async apiShopsShopIdFeedbacksPost(shopId: string, createFeedbackRequest?: CreateFeedbackRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FeedbackResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.apiShopsShopIdFeedbacksPost(shopId, createFeedbackRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['ShopApi.apiShopsShopIdFeedbacksPost']?.[localVarOperationServerIndex]?.url;
@@ -22482,7 +23041,7 @@ export const ShopApiFactory = function (configuration?: Configuration, basePath?
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiShopsShopIdFeedbacksPost(shopId: string, createFeedbackRequest?: CreateFeedbackRequest, options?: any): AxiosPromise<object> {
+        apiShopsShopIdFeedbacksPost(shopId: string, createFeedbackRequest?: CreateFeedbackRequest, options?: any): AxiosPromise<FeedbackResponse> {
             return localVarFp.apiShopsShopIdFeedbacksPost(shopId, createFeedbackRequest, options).then((request) => request(axios, basePath));
         },
         /**
