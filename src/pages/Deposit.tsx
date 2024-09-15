@@ -9,6 +9,7 @@ const Deposit = () => {
   const auctionId = query.get('auctionId');
   const [userId, setUserId] = useState<string | null>(null); 
   const [data, setData] = useState<AuctionListResponse | null>(null);
+  const [hasDeposit, setHasDeposit] = useState<boolean>(false); // Thêm state để kiểm tra đã đặt cọc hay chưa
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -30,7 +31,7 @@ const Deposit = () => {
               endDate: moment(item.endDate).format("YYYY-MM-DD HH:mm"),
             }))
           : ([] as AuctionListResponse[]);
-        console.log(fetchedData);
+        console.log(response);
         const auctionData = fetchedData.find(item => item.auctionId === auctionId) || null;
         setData(auctionData);
       } catch (error) {
@@ -40,6 +41,18 @@ const Deposit = () => {
 
     fetchData();
   }, [auctionId]);
+
+  useEffect(() => {
+    const checkUserDeposit = async () => {
+      if (auctionId && userId) {
+        const depositApi = new AuctionApi();
+        const response = await depositApi.apiAuctionsAuctionIdDepositsHasDepositGet(auctionId, userId);
+        setHasDeposit(response.data.hasDeposit!); 
+      }
+    };
+    checkUserDeposit();
+  }, [auctionId, userId]);
+
   const formatBalance = (balance: number) => {
     return new Intl.NumberFormat('de-DE').format(balance);
   };
@@ -60,10 +73,10 @@ const Deposit = () => {
           const deposit = await depositApi.apiAuctionsAuctionIdDepositsPlaceDepositPost(auctionId, {
             memberId: userId!
           });
-
+        
           if (deposit.status) {
             message.success('Deposit successful!');
-             navigate(`/aunctionList`);
+            navigate(`/aunctionList`);
           }
         } catch (error) {
           message.error('Deposit failed. Please try again.');
@@ -81,13 +94,12 @@ const Deposit = () => {
           <Row gutter={16}>
             <Col span={4}>
               <Image
-              
                 src={data.imageUrl!}
                 alt="Product"
-                style={{  width: "200px", height: "auto" }}
+                style={{ width: "200px", height: "auto" }}
               />
             </Col>
-            <Col  span={20}>
+            <Col span={20}>
               <Descriptions title="Auction Product Details" bordered>
                 <Descriptions.Item label="Title">
                   <strong>{data.title}</strong>
@@ -105,10 +117,14 @@ const Deposit = () => {
                   <strong>{data.status}</strong>
                 </Descriptions.Item>
                 <Descriptions.Item label="Action">
-                  <Button style={{backgroundColor:'black', color:'white'}} type="primary" onClick={() => handleDeposit(data.auctionId!)}>
-                    Submit Deposit
-                  </Button>
-                </Descriptions.Item>
+  {!hasDeposit ? ( // Nếu chưa đặt cọc, hiện nút
+    <Button style={{ backgroundColor: 'black', color: 'white' }} type="primary" onClick={() => handleDeposit(data.auctionId!)}>
+      Submit Deposit
+    </Button>
+  ) : (
+    <span>Deposit already placed</span> // Hiện thông báo nếu đã đặt cọc
+  )}
+</Descriptions.Item>
               </Descriptions>
             </Col>
           </Row>
