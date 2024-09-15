@@ -109,11 +109,22 @@ const OrderList: React.FC = () => {
   };
 
   const openCheckoutModal = async (order: OrderResponse) => {
-    setSelectedOrder(order);
-    setOrderLineItems([]);
-    await fetchOrderLineItems(order.orderId!);
+    setDetailsLoading(true);
+    try {
+      const orderApi = new OrderApi();
+      const response = await orderApi.apiOrdersOrderIdOrderlineitemsGet(order.orderId!);
+      setOrderLineItems(response.data.items || []);
+      setSelectedOrder(order);
+    } catch (error) {
+      console.error("Failed to fetch order details:", error);
+      notification.error({
+        message: "Error",
+        description: "Failed to load order details. Please try again.",
+      });
+    } finally {
+      setDetailsLoading(false);
+    }
   };
-
   const handleCheckout = async () => {
     if (!selectedOrder || !userId) {
       notification.error({

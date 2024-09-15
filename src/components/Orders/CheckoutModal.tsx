@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Modal,
   Row,
@@ -10,11 +10,14 @@ import {
   Spin,
   Space,
   Tag,
+  notification,
 } from "antd";
-import { OrderListResponse, PaymentMethod, DeliveryListResponse, DeliveryRequest, OrderLineItemListResponse } from "../../api";
+import { OrderListResponse, PaymentMethod, DeliveryListResponse, DeliveryRequest, OrderLineItemListResponse, CheckoutAuctionRequest, OrderApi } from "../../api";
 import { useAddresses } from "../../hooks/useAddresses";
 import { AddressSelectionModal } from "../Cart/AddressSelectionModal";
 import { ShoppingOutlined, DollarOutlined, CarOutlined } from "@ant-design/icons";
+import { useCheckoutAuctionOrder } from "../../hooks/orderHooks";
+import { useQuery } from "@tanstack/react-query";
 
 const { Title, Text } = Typography;
 
@@ -41,11 +44,84 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
   const { addresses, isLoading: isLoadingAddresses, addNewAddress } = useAddresses(userId);
   const [selectedAddress, setSelectedAddress] = useState<DeliveryListResponse | null>(null);
   const [showAddressModal, setShowAddressModal] = useState(false);
+  const checkoutAuctionOrderMutation = useCheckoutAuctionOrder();
+
+
+
+  const { data: shippingFeeData, isLoading: isCalculatingShippingFee, refetch } = useQuery({
+    queryKey: ["shippingFee", selectedOrder?.orderId, selectedAddress?.ghnDistrictId, selectedAddress?.ghnWardCode, selectedAddress?.ghnProvinceId],
+    queryFn: async () => {
+      if (!selectedOrder || !selectedAddress) {
+        return null;
+      }
+      console.log("Selected address query:", selectedAddress);
+      console.log("Selected order query:", selectedOrder);
+      console.log("Order line items query:", orderLineItems);
+      const orderApi = new OrderApi();
+      const response = await orderApi.apiOrdersCalculateShippingFeeGet(
+        orderLineItems.map(item => item.itemId!),
+        selectedAddress?.ghnDistrictId
+      );
+      return response.data.shippingFee!;
+    },
+    enabled: visible && !!selectedOrder && !!selectedAddress,
+  });
+
+  useEffect(() => {
+    if (visible && selectedOrder) {
+      console.log("Selected order:", selectedOrder);
+      console.log("Selected address:", selectedAddress);
+      if (!selectedAddress && addresses.length > 0) {
+        console.log("Addresses:", addresses);
+        const defaultAddress = addresses.find((address) => address.isDefault) || addresses[0];
+        console.log("Default address:", defaultAddress);
+        setSelectedAddress(defaultAddress);
+        refetch();
+      } else if (selectedAddress) {
+        console.log("Refetching shipping fee...");
+        refetch();
+      }
+    }
+  }, [visible, selectedOrder, selectedAddress, addresses, refetch]);
 
   const handleCheckout = () => {
-    onCheckout(selectedOrder?.paymentMethod!, selectedAddress?.addressId);
+    if (selectedOrder?.isAuctionOrder) {
+      if (!selectedAddress) {
+        notification.error({ message: "Please select a shipping address" });
+        return;
+      }
+      const checkoutAuctionRequest: CheckoutAuctionRequest = {
+        address: selectedAddress.residence,
+        ghnDistrictId: selectedAddress.ghnDistrictId,
+        ghnWardCode: selectedAddress.ghnWardCode,
+        ghnProvinceId: selectedAddress.ghnProvinceId,
+        addressType: selectedAddress.addressType,
+        recipientName: selectedAddress.recipientName,
+        phone: selectedAddress.phone,
+        shippingFee: shippingFeeData || 0,
+        discount: selectedOrder.discount,
+        memberId: userId
+      };
+      checkoutAuctionOrderMutation.mutate(
+        { orderId: selectedOrder.orderId!, checkoutAuctionRequest },
+        {
+          onSuccess: () => {
+            notification.success({ message: "Auction order checked out successfully" });
+            onCancel();
+          },
+          onError: (error) => {
+            notification.error({ message: "Checkout failed", description: error.message });
+          }
+        }
+      );
+    } else {
+      onCheckout(selectedOrder?.paymentMethod!, selectedAddress?.addressId);
+    }
   };
-
+  const handleCancel = () => {
+    setSelectedAddress(null);
+    onCancel();
+  };
   const handleAddNewAddress = async (value: DeliveryRequest) => {
     await addNewAddress(value);
     setShowAddressModal(false);
@@ -92,16 +168,27 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
     }
   };
 
+  useEffect(() => {
+    if (visible && selectedOrder) {
+      if (!selectedAddress && addresses.length > 0) {
+        const defaultAddress = addresses.find((address) => address.isDefault) || addresses[0];
+        setSelectedAddress(defaultAddress);
+      } else if (selectedAddress) {
+        refetch();
+      }
+    }
+  }, [visible, selectedOrder, selectedAddress, addresses, refetch]);
+
   return (
     <Modal
       title={<Title level={3}><ShoppingOutlined /> Order Details</Title>}
       open={visible}
-      onCancel={onCancel}
+      onCancel={handleCancel}
       footer={null}
       width={1200}
       style={{ top: 20 }}
     >
-      {isLoading ? (
+      {isLoading || orderLineItems.length === 0 ? (
         <div style={{ textAlign: 'center', padding: '50px' }}>
           <Spin size="large" />
         </div>
@@ -178,7 +265,11 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
                   </Row>
                   <Row justify="space-between">
                     <Text>Shipping Fee:</Text>
-                    <Text strong>{formatBalance(selectedOrder.shippingFee || 0)} VND</Text>
+                    {isCalculatingShippingFee ? (
+                      <Spin size="small" />
+                    ) : (
+                      <Text strong>{formatBalance((shippingFeeData || 0) || (selectedOrder.shippingFee || 0))} VND</Text>
+                    )}
                   </Row>
                   <Row justify="space-between">
                     <Text>Discount:</Text>
@@ -189,7 +280,7 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
                 <Row justify="space-between" align="middle">
                   <Title level={4}>Total:</Title>
                   <Title level={4} style={{ color: 'black' }}>
-                    {formatBalance((selectedOrder.totalPrice || 0) + (selectedOrder.shippingFee || 0) - (selectedOrder.discount || 0))} VND
+                    {formatBalance((selectedOrder.totalPrice || 0) + (shippingFeeData || selectedOrder.shippingFee || 0) - (selectedOrder.discount || 0))} VND
                   </Title>
                 </Row>
                 <Row gutter={16} style={{ marginTop: '20px' }}>
@@ -206,10 +297,13 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
                   </Col>
                   <Col span={12}>
                     <Button
-                      type="primary"
+                      style={{
+                        backgroundColor: 'black',
+                        color: 'white',
+                      }}
                       onClick={handleCheckout}
-                      loading={isLoading}
-                      disabled={isLoading || (selectedOrder.isAuctionOrder && !selectedAddress)}
+                      loading={isLoading || checkoutAuctionOrderMutation.isPending}
+                      disabled={isLoading || checkoutAuctionOrderMutation.isPending || (selectedOrder.isAuctionOrder && !selectedAddress)}
                       block
                     >
                       Checkout
