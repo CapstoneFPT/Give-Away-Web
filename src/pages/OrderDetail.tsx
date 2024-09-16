@@ -27,7 +27,7 @@ const { Title, Text, Paragraph } = Typography;
 const OrderDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const {dispatch, isItemInCart} = useCart();
+  const { dispatch, isItemInCart } = useCart();
 
   const orderApi = new OrderApi();
 
@@ -64,25 +64,25 @@ const OrderDetail = () => {
   };
   const handleAddToCart = (product: FashionItemDetailResponse) => {
     if (product.isOrderedYet) {
-        notification.error({
-            message: "Already Ordered",
-            description: `The item "${product.name}" has already been ordered.`,
-        });
+      notification.error({
+        message: "Already Ordered",
+        description: `The item "${product.name}" has already been ordered.`,
+      });
     } else if (isItemInCart(product.itemId!)) {
-        notification.warning({
-            message: "Already in Cart",
-            description: `The item "${product.name}" is already in your cart.`,
-        });
+      notification.warning({
+        message: "Already in Cart",
+        description: `The item "${product.name}" is already in your cart.`,
+      });
     } else {
-        dispatch({type: "ADD_TO_CART", payload: {...product}});
-        notification.success({
-            message: "Added to Cart",
-            description: `The item "${product.name}" has been added to your cart.`,
-        });
-        console.log("Product to add to cart: ", product);
-        console.log("Adding item to cart with itemId:", product.itemId);
+      dispatch({ type: "ADD_TO_CART", payload: { ...product } });
+      notification.success({
+        message: "Added to Cart",
+        description: `The item "${product.name}" has been added to your cart.`,
+      });
+      console.log("Product to add to cart: ", product);
+      console.log("Adding item to cart with itemId:", product.itemId);
     }
-};
+  };
 
   const handleRefundClick = (
     orderLineItem: OrderLineItemListResponse,
@@ -108,7 +108,7 @@ const OrderDetail = () => {
               fontSize: "16px",
             }}
           >
-            
+
           </Paragraph>
           <Image
             src={images[0]}
@@ -160,7 +160,7 @@ const OrderDetail = () => {
                 <Tag color="black">{record.itemSize}</Tag>
               </Typography>
             </div>
-            
+
             <div>
               <Typography>
                 <strong>Gender: </strong>
@@ -179,7 +179,7 @@ const OrderDetail = () => {
                 {1}
               </Typography>
             </div>
-           
+
           </Space>
         </>
       ),
@@ -197,7 +197,7 @@ const OrderDetail = () => {
         </>
       ),
     },
-    
+
     {
       title: "Condition",
       dataIndex: "condition",
@@ -210,20 +210,15 @@ const OrderDetail = () => {
       key: "shopId",
       width: 200,
       align: "center",
-     },
-     {
-      title: "Resevred Expiration",
-      dataIndex: "resevredExpirationDate",
-      key: "refundExpirationDate",
-      
     },
-     {
-      title: "Refund Expiration",
-      dataIndex: "refundExpirationDate",
-      key: "refundExpirationDate",
-      render: (refundExpirationDate: string | null) => {
-        const expirationDate = new Date(refundExpirationDate || 0);
+    {
+      title: "Resevred Expiration",
+      dataIndex: "reservedExpirationDate",
+      key: "reservedExpirationDate",
+      render: (reservedExpirationDate: string | null) => {
+        const expirationDate = new Date(reservedExpirationDate || 0);
         const currentDate = new Date();
+        if (expirationDate.getFullYear() === 1970) return "N/A";
         if (expirationDate.getTime() < currentDate.getTime()) {
           return <span style={{ color: "red" }}>Expired</span>;
         }
@@ -231,8 +226,26 @@ const OrderDetail = () => {
           ? "N/A"
           : expirationDate.toLocaleString();
       },
-},
-     {
+    },
+    {
+      title: "Refund Expiration",
+      dataIndex: "refundExpirationDate",
+      key: "refundExpirationDate",
+      render: (refundExpirationDate: string | null) => {
+        console.log(refundExpirationDate);
+        const expirationDate = new Date(refundExpirationDate || 0);
+        console.log(expirationDate);
+        const currentDate = new Date();
+        if (expirationDate.getFullYear() === 1970) return "N/A";
+        if (expirationDate.getTime() < currentDate.getTime()) {
+          return <span style={{ color: "red" }}>Expired</span>;
+        }
+        return expirationDate.getTime() === new Date(null!).getTime()
+          ? "N/A"
+          : expirationDate.toLocaleString();
+      },
+    },
+    {
       title: "Action",
       key: "action",
       align: "center",
@@ -252,7 +265,7 @@ const OrderDetail = () => {
               Refund
             </Button>
           )}
-           {record.itemStatus === FashionItemStatus.Reserved && (
+          {record.itemStatus === FashionItemStatus.Reserved && (
             <Button
               type="default"
               style={{
@@ -265,7 +278,7 @@ const OrderDetail = () => {
                 const product: FashionItemDetailResponse = {
                   itemId: record.itemId!,
                   name: record.itemName,
-                   // Set this based on your logic
+                  // Set this based on your logic
                   images: record.itemImage!,
                   brand: record.itemBrand,
                   size: record.itemSize,
@@ -274,9 +287,9 @@ const OrderDetail = () => {
                   sellingPrice: record.unitPrice,
                   condition: record.condition,
                   status: record.itemStatus,
-                
 
-                   // Assuming this is the correct mapping
+
+                  // Assuming this is the correct mapping
                   // Add other necessary properties from record to match FashionItemDetailResponse
                 };
                 handleAddToCart(product);
@@ -364,24 +377,24 @@ const OrderDetail = () => {
                   </Col>
                   <Col span={12}>
                     <Descriptions column={1} bordered size="small">
-                    <Descriptions.Item label="Purchase Type">
+                      <Descriptions.Item label="Purchase Type">
                         {
                           <Typography>
-                          
-                          {itemType == "ConsignedForAuction" &&  ("Auction Product")} 
-                          {itemType == "ConsignedForSale" &&  ("Purchase Product")} 
-                          {itemType == "ItemBase" &&  ("Purchase Product")} 
-                        </Typography>
+
+                            {itemType == "ConsignedForAuction" && ("Auction Product")}
+                            {itemType == "ConsignedForSale" && ("Purchase Product")}
+                            {itemType == "ItemBase" && ("Purchase Product")}
+                          </Typography>
                         }
                       </Descriptions.Item>
                       <Descriptions.Item label="Sub Total">
                         <strong>{formatBalance(orderDetail?.subtotal || 0)} VND</strong>
                       </Descriptions.Item>
                       <Descriptions.Item label="Shipping Fee">
-                       <strong> {formatBalance(orderDetail?.shippingFee || 0)} VND</strong>
+                        <strong> {formatBalance(orderDetail?.shippingFee || 0)} VND</strong>
                       </Descriptions.Item>
                       <Descriptions.Item label="Discount">
-                       <strong style={{color:'green'}}> -{formatBalance(orderDetail?.discount || 0)} VND</strong>
+                        <strong style={{ color: 'green' }}> -{formatBalance(orderDetail?.discount || 0)} VND</strong>
                       </Descriptions.Item>
                       <Descriptions.Item label="Total">
                         <strong>
@@ -390,27 +403,27 @@ const OrderDetail = () => {
                       </Descriptions.Item>
                       <Descriptions.Item label="Create At">
                         {new Date(orderDetail?.createdDate || 0).getTime() ===
-                        new Date("0001-01-01T00:00:00").getTime()
+                          new Date("0001-01-01T00:00:00").getTime()
                           ? "N/A"
                           : new Date(
-                              orderDetail?.createdDate || ""
-                            ).toLocaleString()}
+                            orderDetail?.createdDate || ""
+                          ).toLocaleString()}
                       </Descriptions.Item>
                       <Descriptions.Item label="Payment Date">
                         {new Date(orderDetail?.paymentDate || 0).getTime() ===
-                        new Date("0001-01-01T00:00:00").getTime()
+                          new Date("0001-01-01T00:00:00").getTime()
                           ? "N/A"
                           : new Date(
-                              orderDetail?.paymentDate || ""
-                            ).toLocaleString()}
+                            orderDetail?.paymentDate || ""
+                          ).toLocaleString()}
                       </Descriptions.Item>
                       <Descriptions.Item label="Completed Date">
                         {new Date(orderDetail?.completedDate || 0).getTime() ===
-                        new Date("0001-01-01T00:00:00").getTime()
+                          new Date("0001-01-01T00:00:00").getTime()
                           ? "N/A"
                           : new Date(
-                              orderDetail?.completedDate || ""
-                            ).toLocaleString()}
+                            orderDetail?.completedDate || ""
+                          ).toLocaleString()}
                       </Descriptions.Item>
                     </Descriptions>
                   </Col>

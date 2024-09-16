@@ -18,6 +18,8 @@ const TransactionHistory: React.FC = () => {
   const [rechargeCode, setRechargeCode] = useState('');
   const [depositCode, setDepositCode] = useState('');
   const [transactionCode, setTransactionCode] = useState('');
+  const [withdrawCode, setWithdrawCode] = useState('');
+  const [refundCode, setRefundCode] = useState('');
 
   const { data, isLoading, error } = useTransactions({
     accountId: userId,
@@ -29,18 +31,22 @@ const TransactionHistory: React.FC = () => {
     rechargeCode,
     depositCode,
     transactionCode,
+    withdrawCode,
+    refundCode,
   });
 
-  const columns : ColumnsType<AccountTransactionsListResponse> = [
+  const columns: ColumnsType<AccountTransactionsListResponse> = [
     {
       title: 'Code',
       dataIndex: 'code',
       key: 'code',
-      render: (text: string, record: any) => {
+      render: (text: string, record: AccountTransactionsListResponse) => {
         if (record.orderCode) return record.orderCode;
         if (record.consignSaleCode) return record.consignSaleCode;
         if (record.rechargeCode) return record.rechargeCode;
         if (record.depositCode) return record.depositCode;
+        if (record.withdrawCode) return record.withdrawCode;
+        if (record.refundCode) return record.refundCode;
       },
     },
     {
@@ -60,7 +66,7 @@ const TransactionHistory: React.FC = () => {
       key: 'createdDate',
       render: (date: string) => new Date(date).toLocaleString(),
     },
-    
+
     {
       title: 'Balance',
       dataIndex: 'accountBalance',
@@ -146,6 +152,8 @@ const TransactionHistory: React.FC = () => {
                     setConsignSaleCode('');
                     setRechargeCode('');
                     setDepositCode('');
+                    setWithdrawCode('');
+                    setRefundCode('');
                   }}
                 />
               </Col>
@@ -158,6 +166,8 @@ const TransactionHistory: React.FC = () => {
                     setConsignSaleCode('');
                     setRechargeCode('');
                     setDepositCode('');
+                    setWithdrawCode('');
+                    setRefundCode('');
                   }}
                 />
               </Col>
@@ -170,6 +180,8 @@ const TransactionHistory: React.FC = () => {
                     setOrderCode('');
                     setRechargeCode('');
                     setDepositCode('');
+                    setWithdrawCode('');
+                    setRefundCode('');
                   }}
                 />
               </Col>
@@ -182,6 +194,8 @@ const TransactionHistory: React.FC = () => {
                     setOrderCode('');
                     setConsignSaleCode('');
                     setDepositCode('');
+                    setWithdrawCode('');
+                    setRefundCode('');
                   }}
                 />
               </Col>
@@ -194,6 +208,36 @@ const TransactionHistory: React.FC = () => {
                     setOrderCode('');
                     setConsignSaleCode('');
                     setRechargeCode('');
+                    setWithdrawCode('');
+                    setRefundCode('');
+                  }}
+                />
+              </Col>
+              <Col span={6}>
+                <Input
+                  placeholder="Withdraw Code"
+                  value={withdrawCode}
+                  onChange={(e) => {
+                    setWithdrawCode(e.target.value);
+                    setOrderCode('');
+                    setConsignSaleCode('');
+                    setRechargeCode('');
+                    setDepositCode('');
+                    setRefundCode('');
+                  }}
+                />
+              </Col>
+              <Col span={6}>
+                <Input
+                  placeholder="Refund Code"
+                  value={refundCode}
+                  onChange={(e) => {
+                    setRefundCode(e.target.value);
+                    setOrderCode('');
+                    setConsignSaleCode('');
+                    setRechargeCode('');
+                    setDepositCode('');
+                    setWithdrawCode('');
                   }}
                 />
               </Col>

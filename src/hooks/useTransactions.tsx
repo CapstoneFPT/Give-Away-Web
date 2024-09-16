@@ -11,6 +11,8 @@ interface TransactionQueryParams {
   rechargeCode?: string;
   depositCode?: string;
   transactionCode?: string;
+  withdrawCode?: string;
+  refundCode?: string;
 }
 
 const useTransactions = (params: TransactionQueryParams) => {
@@ -28,7 +30,9 @@ const useTransactions = (params: TransactionQueryParams) => {
         params.orderCode,
         params.consignSaleCode,
         params.rechargeCode,
-        params.depositCode
+        params.depositCode,
+        params.withdrawCode,
+        params.refundCode
       );
       return response.data;
     },
