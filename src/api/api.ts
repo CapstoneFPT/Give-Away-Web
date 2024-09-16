@@ -326,6 +326,18 @@ export interface AccountTransactionsListResponse {
     'rechargeCode'?: string | null;
     /**
      * 
+     * @type {string}
+     * @memberof AccountTransactionsListResponse
+     */
+    'withdrawCode'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof AccountTransactionsListResponse
+     */
+    'refundCode'?: string | null;
+    /**
+     * 
      * @type {number}
      * @memberof AccountTransactionsListResponse
      */
@@ -629,16 +641,10 @@ export interface AuctionDeposit {
     'auctionId'?: string;
     /**
      * 
-     * @type {Transaction}
+     * @type {Array<Transaction>}
      * @memberof AuctionDeposit
      */
-    'transaction'?: Transaction;
-    /**
-     * 
-     * @type {string}
-     * @memberof AuctionDeposit
-     */
-    'transactionId'?: string;
+    'transactions'?: Array<Transaction> | null;
     /**
      * 
      * @type {string}
@@ -9642,6 +9648,12 @@ export interface Refund {
      * @memberof Refund
      */
     'images'?: Array<Image> | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof Refund
+     */
+    'refundCode'?: string | null;
 }
 
 
@@ -10551,6 +10563,12 @@ export interface Transaction {
      * @memberof Transaction
      */
     'vnPayTransactionNumber'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof Transaction
+     */
+    'auctionDepositId'?: string | null;
     /**
      * 
      * @type {AuctionDeposit}
