@@ -36,11 +36,13 @@ const TransactionHistory: React.FC = () => {
       title: 'Code',
       dataIndex: 'code',
       key: 'code',
-      render: (text: string, record: any) => {
+      render: (text: string, record: AccountTransactionsListResponse) => {
         if (record.orderCode) return record.orderCode;
         if (record.consignSaleCode) return record.consignSaleCode;
         if (record.rechargeCode) return record.rechargeCode;
         if (record.depositCode) return record.depositCode;
+        if(record.withdrawCode) return record.withdrawCode;
+        if(record.refundCode) return record.refundCode;
       },
     },
     {
