@@ -125,6 +125,128 @@ export interface Account {
 /**
  * 
  * @export
+ * @interface AccountDepositsListResponse
+ */
+export interface AccountDepositsListResponse {
+    /**
+     * 
+     * @type {string}
+     * @memberof AccountDepositsListResponse
+     */
+    'accountId'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AccountDepositsListResponse
+     */
+    'depositId'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AccountDepositsListResponse
+     */
+    'depositCode'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof AccountDepositsListResponse
+     */
+    'auctionCode'?: string | null;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof AccountDepositsListResponse
+     */
+    'hasRefunded'?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof AccountDepositsListResponse
+     */
+    'amount'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof AccountDepositsListResponse
+     */
+    'createdDate'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AccountDepositsListResponse
+     */
+    'auctionId'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface AccountDepositsListResponsePaginationResponse
+ */
+export interface AccountDepositsListResponsePaginationResponse {
+    /**
+     * 
+     * @type {number}
+     * @memberof AccountDepositsListResponsePaginationResponse
+     */
+    'pageNumber'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof AccountDepositsListResponsePaginationResponse
+     */
+    'pageSize'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof AccountDepositsListResponsePaginationResponse
+     */
+    'searchTerm'?: string | null;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof AccountDepositsListResponsePaginationResponse
+     */
+    'filters'?: Array<string> | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof AccountDepositsListResponsePaginationResponse
+     */
+    'orderBy'?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof AccountDepositsListResponsePaginationResponse
+     */
+    'totalCount'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof AccountDepositsListResponsePaginationResponse
+     */
+    'totalPages'?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof AccountDepositsListResponsePaginationResponse
+     */
+    'hasNext'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof AccountDepositsListResponsePaginationResponse
+     */
+    'hasPrevious'?: boolean;
+    /**
+     * 
+     * @type {Array<AccountDepositsListResponse>}
+     * @memberof AccountDepositsListResponsePaginationResponse
+     */
+    'items'?: Array<AccountDepositsListResponse> | null;
+}
+/**
+ * 
+ * @export
  * @interface AccountResponse
  */
 export interface AccountResponse {
@@ -11908,6 +12030,68 @@ export const AccountApiAxiosParamCreator = function (configuration?: Configurati
         /**
          * 
          * @param {string} accountId 
+         * @param {number} [page] 
+         * @param {number} [pageSize] 
+         * @param {string} [depositCode] 
+         * @param {string} [auctionCode] 
+         * @param {boolean} [isRefunded] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiAccountsAccountIdDepositsGet: async (accountId: string, page?: number, pageSize?: number, depositCode?: string, auctionCode?: string, isRefunded?: boolean, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'accountId' is not null or undefined
+            assertParamExists('apiAccountsAccountIdDepositsGet', 'accountId', accountId)
+            const localVarPath = `/api/accounts/{accountId}/deposits`
+                .replace(`{${"accountId"}}`, encodeURIComponent(String(accountId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+            if (page !== undefined) {
+                localVarQueryParameter['Page'] = page;
+            }
+
+            if (pageSize !== undefined) {
+                localVarQueryParameter['PageSize'] = pageSize;
+            }
+
+            if (depositCode !== undefined) {
+                localVarQueryParameter['DepositCode'] = depositCode;
+            }
+
+            if (auctionCode !== undefined) {
+                localVarQueryParameter['AuctionCode'] = auctionCode;
+            }
+
+            if (isRefunded !== undefined) {
+                localVarQueryParameter['IsRefunded'] = isRefunded;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} accountId 
          * @param {CreateInquiryRequest} [createInquiryRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -12719,6 +12903,23 @@ export const AccountApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {string} accountId 
+         * @param {number} [page] 
+         * @param {number} [pageSize] 
+         * @param {string} [depositCode] 
+         * @param {string} [auctionCode] 
+         * @param {boolean} [isRefunded] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiAccountsAccountIdDepositsGet(accountId: string, page?: number, pageSize?: number, depositCode?: string, auctionCode?: string, isRefunded?: boolean, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AccountDepositsListResponsePaginationResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAccountsAccountIdDepositsGet(accountId, page, pageSize, depositCode, auctionCode, isRefunded, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AccountApi.apiAccountsAccountIdDepositsGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {string} accountId 
          * @param {CreateInquiryRequest} [createInquiryRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -13044,6 +13245,20 @@ export const AccountApiFactory = function (configuration?: Configuration, basePa
         /**
          * 
          * @param {string} accountId 
+         * @param {number} [page] 
+         * @param {number} [pageSize] 
+         * @param {string} [depositCode] 
+         * @param {string} [auctionCode] 
+         * @param {boolean} [isRefunded] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiAccountsAccountIdDepositsGet(accountId: string, page?: number, pageSize?: number, depositCode?: string, auctionCode?: string, isRefunded?: boolean, options?: any): AxiosPromise<AccountDepositsListResponsePaginationResponse> {
+            return localVarFp.apiAccountsAccountIdDepositsGet(accountId, page, pageSize, depositCode, auctionCode, isRefunded, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} accountId 
          * @param {CreateInquiryRequest} [createInquiryRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -13352,6 +13567,22 @@ export class AccountApi extends BaseAPI {
      */
     public apiAccountsAccountIdDeliveriesPost(accountId: string, deliveryRequest?: DeliveryRequest, options?: RawAxiosRequestConfig) {
         return AccountApiFp(this.configuration).apiAccountsAccountIdDeliveriesPost(accountId, deliveryRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} accountId 
+     * @param {number} [page] 
+     * @param {number} [pageSize] 
+     * @param {string} [depositCode] 
+     * @param {string} [auctionCode] 
+     * @param {boolean} [isRefunded] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AccountApi
+     */
+    public apiAccountsAccountIdDepositsGet(accountId: string, page?: number, pageSize?: number, depositCode?: string, auctionCode?: string, isRefunded?: boolean, options?: RawAxiosRequestConfig) {
+        return AccountApiFp(this.configuration).apiAccountsAccountIdDepositsGet(accountId, page, pageSize, depositCode, auctionCode, isRefunded, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -13975,10 +14206,13 @@ export const AuctionApiAxiosParamCreator = function (configuration?: Configurati
          * @param {string} auctionId 
          * @param {number} [page] 
          * @param {number} [pageSize] 
+         * @param {string} [depositCode] 
+         * @param {string} [auctionCode] 
+         * @param {boolean} [isRefunded] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAuctionsAuctionIdDepositsGet: async (auctionId: string, page?: number, pageSize?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        apiAuctionsAuctionIdDepositsGet: async (auctionId: string, page?: number, pageSize?: number, depositCode?: string, auctionCode?: string, isRefunded?: boolean, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'auctionId' is not null or undefined
             assertParamExists('apiAuctionsAuctionIdDepositsGet', 'auctionId', auctionId)
             const localVarPath = `/api/auctions/{auctionId}/deposits`
@@ -14004,6 +14238,18 @@ export const AuctionApiAxiosParamCreator = function (configuration?: Configurati
 
             if (pageSize !== undefined) {
                 localVarQueryParameter['PageSize'] = pageSize;
+            }
+
+            if (depositCode !== undefined) {
+                localVarQueryParameter['DepositCode'] = depositCode;
+            }
+
+            if (auctionCode !== undefined) {
+                localVarQueryParameter['AuctionCode'] = auctionCode;
+            }
+
+            if (isRefunded !== undefined) {
+                localVarQueryParameter['IsRefunded'] = isRefunded;
             }
 
 
@@ -14696,11 +14942,14 @@ export const AuctionApiFp = function(configuration?: Configuration) {
          * @param {string} auctionId 
          * @param {number} [page] 
          * @param {number} [pageSize] 
+         * @param {string} [depositCode] 
+         * @param {string} [auctionCode] 
+         * @param {boolean} [isRefunded] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiAuctionsAuctionIdDepositsGet(auctionId: string, page?: number, pageSize?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AuctionDepositListResponsePaginationResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAuctionsAuctionIdDepositsGet(auctionId, page, pageSize, options);
+        async apiAuctionsAuctionIdDepositsGet(auctionId: string, page?: number, pageSize?: number, depositCode?: string, auctionCode?: string, isRefunded?: boolean, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AuctionDepositListResponsePaginationResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAuctionsAuctionIdDepositsGet(auctionId, page, pageSize, depositCode, auctionCode, isRefunded, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AuctionApi.apiAuctionsAuctionIdDepositsGet']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -14945,11 +15194,14 @@ export const AuctionApiFactory = function (configuration?: Configuration, basePa
          * @param {string} auctionId 
          * @param {number} [page] 
          * @param {number} [pageSize] 
+         * @param {string} [depositCode] 
+         * @param {string} [auctionCode] 
+         * @param {boolean} [isRefunded] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAuctionsAuctionIdDepositsGet(auctionId: string, page?: number, pageSize?: number, options?: any): AxiosPromise<AuctionDepositListResponsePaginationResponse> {
-            return localVarFp.apiAuctionsAuctionIdDepositsGet(auctionId, page, pageSize, options).then((request) => request(axios, basePath));
+        apiAuctionsAuctionIdDepositsGet(auctionId: string, page?: number, pageSize?: number, depositCode?: string, auctionCode?: string, isRefunded?: boolean, options?: any): AxiosPromise<AuctionDepositListResponsePaginationResponse> {
+            return localVarFp.apiAuctionsAuctionIdDepositsGet(auctionId, page, pageSize, depositCode, auctionCode, isRefunded, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -15152,12 +15404,15 @@ export class AuctionApi extends BaseAPI {
      * @param {string} auctionId 
      * @param {number} [page] 
      * @param {number} [pageSize] 
+     * @param {string} [depositCode] 
+     * @param {string} [auctionCode] 
+     * @param {boolean} [isRefunded] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AuctionApi
      */
-    public apiAuctionsAuctionIdDepositsGet(auctionId: string, page?: number, pageSize?: number, options?: RawAxiosRequestConfig) {
-        return AuctionApiFp(this.configuration).apiAuctionsAuctionIdDepositsGet(auctionId, page, pageSize, options).then((request) => request(this.axios, this.basePath));
+    public apiAuctionsAuctionIdDepositsGet(auctionId: string, page?: number, pageSize?: number, depositCode?: string, auctionCode?: string, isRefunded?: boolean, options?: RawAxiosRequestConfig) {
+        return AuctionApiFp(this.configuration).apiAuctionsAuctionIdDepositsGet(auctionId, page, pageSize, depositCode, auctionCode, isRefunded, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

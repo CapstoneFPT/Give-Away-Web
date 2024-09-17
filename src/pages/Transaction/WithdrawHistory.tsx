@@ -3,6 +3,7 @@ import { Card, Col, Row, Table, Typography, Input, Select, Space } from "antd";
 import NavProfile from "../../components/NavProfile/NavProfile";
 import { GetWithdrawsResponse, WithdrawStatus } from "../../api";
 import useWithdrawHistory from "../../hooks/useWithdraws";
+import { ColumnsType } from "antd/es/table";
 
 const { Title } = Typography;
 const { Search } = Input;
@@ -27,7 +28,12 @@ const WithdrawHistory: React.FC = () => {
         return new Intl.NumberFormat('de-DE').format(balance);
     };
 
-    const columns = [
+    const columns : ColumnsType<GetWithdrawsResponse> = [
+        {
+            title: 'Withdraw Code',
+            dataIndex: 'withdrawCode',
+            key: 'withdrawCode',
+        },
         {
             title: 'Bank Name',
             dataIndex: 'bankAccountName',
