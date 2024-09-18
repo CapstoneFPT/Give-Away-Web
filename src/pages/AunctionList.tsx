@@ -66,6 +66,23 @@ const AuctionList = () => {
       console.error("Error checking deposit status:", error);
     }
   };
+  const handleDepositButtonClick = async (
+    auctionId: string,
+    auctionItemId: string
+) => {
+    try {
+        const depositApi = new AuctionApi();
+        const depositStatus = await depositApi.apiAuctionsAuctionIdDepositsHasDepositGet(
+            auctionId,
+            userId!
+        );
+        // Sửa đổi URL để sử dụng "&" thay vì "?" cho tham số truy vấn
+        window.location.href = `/deposit/${auctionId}&item=${auctionItemId}`;
+        
+    } catch (error) {
+        console.error("Error checking deposit status:", error);
+    }
+};
   const formatBalance = (balance: number) => {
     return new Intl.NumberFormat('de-DE').format(balance);
   };
@@ -116,7 +133,7 @@ const AuctionList = () => {
                 <Button
                 style={{backgroundColor:'black', color:'white'}}
                   type="default"
-                  onClick={() => handleAuctionButtonClick(auction.auctionId!, auction.auctionItemId!)}
+                  onClick={() => handleDepositButtonClick(auction.auctionId!, auction.auctionItemId!)}
                   disabled={auction.status === "OnGoing"}
                 >
                   Deposit

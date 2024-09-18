@@ -154,7 +154,7 @@ function App() {
                             }
                         />
                         <Route
-                            path="/deposit"
+                            path="/deposit/:auctionId"
                             element={
                                 <>
                                     <Navbar />

@@ -86,7 +86,7 @@ const AddFund = () => {
       >
         <Title level={2} style={{ marginBottom: "24px", textAlign: "center" }}>
           <WalletOutlined style={{ marginRight: "8px" }} />
-          ReCharge
+          Recharge
         </Title>
         <Row gutter={[0, 24]}>
           <Col span={24}>

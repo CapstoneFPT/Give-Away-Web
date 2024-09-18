@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Button, message, Card, Col, Row, Descriptions, Image, Modal } from 'antd'; // Thêm Modal vào import
 import { AuctionApi, AuctionListResponse } from '../api';
 import moment from 'moment';
 
 const Deposit = () => {
   const query = new URLSearchParams(useLocation().search);
-  const auctionId = query.get('auctionId');
+  // const auctionId = query.get('auctionId');
   const [userId, setUserId] = useState<string | null>(null); 
   const [data, setData] = useState<AuctionListResponse | null>(null);
   const [hasDeposit, setHasDeposit] = useState<boolean>(false); // Thêm state để kiểm tra đã đặt cọc hay chưa
   const navigate = useNavigate();
+  const { auctionId } = useParams<{ auctionId: string }>();
+  console.log("hihi",auctionId)
 
   useEffect(() => {
     const userId = JSON.parse(localStorage.getItem("userId") || "null");
@@ -31,7 +33,7 @@ const Deposit = () => {
               endDate: moment(item.endDate).format("YYYY-MM-DD HH:mm"),
             }))
           : ([] as AuctionListResponse[]);
-        console.log(response);
+        console.log("abc",response);
         const auctionData = fetchedData.find(item => item.auctionId === auctionId) || null;
         setData(auctionData);
       } catch (error) {
@@ -73,6 +75,7 @@ const Deposit = () => {
           const deposit = await depositApi.apiAuctionsAuctionIdDepositsPlaceDepositPost(auctionId, {
             memberId: userId!
           });
+          console.log('huy',userId)
         
           if (deposit.status) {
             message.success('Deposit successful!');
