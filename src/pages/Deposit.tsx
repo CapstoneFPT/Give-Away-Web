@@ -12,6 +12,8 @@ const Deposit = () => {
   const [hasDeposit, setHasDeposit] = useState<boolean>(false);
   const navigate = useNavigate();
   const { auctionId } = useParams<{ auctionId: string }>();
+  // console.log('auction',auctionId)
+  // console.log('user',userId)
 
   useEffect(() => {
     const auctionApi = new AuctionApi();
@@ -55,7 +57,9 @@ const Deposit = () => {
     return new Intl.NumberFormat('de-DE').format(balance);
   };
 
-  const handleDeposit = async (auctionId: string) => {
+  const handleDeposit = async (auctionId: string, ) => {
+    console.log('auction',auctionId)
+    console.log('user',userId)
     Modal.confirm({
       title: 'Confirm Deposit',
       content: 'Are you sure you want to deposit for this auction?',
@@ -71,6 +75,7 @@ const Deposit = () => {
           const deposit = await depositApi.apiAuctionsAuctionIdDepositsPlaceDepositPost(auctionId, {
             memberId: userId!
           });
+          
         
           if (deposit.status) {
             message.success('Deposit successful!');
@@ -120,7 +125,7 @@ const Deposit = () => {
                       Submit Deposit
                     </Button>
                   ) : (
-                    <span>Deposit already placed</span>
+                    <span style={{color:'yellow'}}>Deposit already placed</span>
                   )}
                 </Descriptions.Item>
               </Descriptions>
@@ -128,29 +133,8 @@ const Deposit = () => {
           </Row>
         </Card>
       ) : (
-        <Card>
-          <h2>No auction data found for the specified auction ID.</h2>
-          <h3>Available Auctions:</h3>
-          <Row gutter={16}>
-            {fetchedData.length > 0 ? (
-              fetchedData.map(item => (
-                <Col span={8} key={item.auctionId}>
-                  <Card title={item.title}>
-                    <Image src={item.imageUrl!} alt="Product" style={{ width: "100%" }} />
-                    <p>Start Date: {moment(item.startDate).format("YYYY-MM-DD HH:mm")}</p>
-                    <p>End Date: {moment(item.endDate).format("YYYY-MM-DD HH:mm")}</p>
-                    <p>Deposit Fee: {formatBalance(item.depositFee!)} VND</p>
-                    <Button style={{ backgroundColor: 'black', color: 'white' }} type="primary" onClick={() => handleDeposit(item.auctionId!)}>
-                      Submit Deposit
-                    </Button>
-                  </Card>
-                </Col>
-              ))
-            ) : (
-              <p>No auctions available.</p>
-            )}
-          </Row>
-        </Card>
+        <div><h2>No auction data found for the specified auction ID.</h2></div>
+       
       )}
     </div>
   );

@@ -77,7 +77,7 @@ const AuctionList = () => {
             userId!
         );
         // Sửa đổi URL để sử dụng "&" thay vì "?" cho tham số truy vấn
-        window.location.href = `/deposit/${auctionId}&item=${auctionItemId}`;
+        window.location.href = `/deposit/${auctionId}`;
         
     } catch (error) {
         console.error("Error checking deposit status:", error);

@@ -79,14 +79,14 @@ const DetailProductAunction: React.FC = () => {
                 ))}
               </Row>
             </Col>
-            <Col span={8}>
+            <Col span={10}>
               <Image
                 src={selectedImage}
                 alt={product.name!}
                 style={{ width: "90%", height: "750px" }}
               />
             </Col>
-            <Col span={12}>
+            <Col span={10}>
               <Card
                 title="Product Details"
                 headStyle={{ backgroundColor: "black", color: "white" }}
@@ -131,8 +131,12 @@ const DetailProductAunction: React.FC = () => {
                   <strong>Note:</strong> {product.note}
                 </Paragraph>
               </Card>
-             <Card>
-             <h2 style={{textAlign:'center'}}>Condition Guide</h2>
+             <Card
+             title='Condition Guide'
+                headStyle={{ backgroundColor: "black", color: "white" }}
+             
+             >
+             
         <p><strong>Never worn, with tag</strong> - A never-worn item with tag is an item which has never been worn and still has the original purchase hangtags on it (include a photo of the tag).</p> <br/>
         <p><strong>Never worn</strong> - A never-worn item without a tag is an item which has never been worn and shows no defects or alterations.</p> <br/>
         <p><strong>Very good</strong> - An item in very good condition is a second-hand item which has been only lightly used and extremely well maintained, which can show slight defects from usage. These must be mentioned in the description and visible on the photos.</p> <br/>
