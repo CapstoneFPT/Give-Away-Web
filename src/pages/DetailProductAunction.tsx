@@ -79,14 +79,14 @@ const DetailProductAunction: React.FC = () => {
                 ))}
               </Row>
             </Col>
-            <Col span={12}>
+            <Col span={8}>
               <Image
                 src={selectedImage}
                 alt={product.name!}
                 style={{ width: "90%", height: "750px" }}
               />
             </Col>
-            <Col span={8}>
+            <Col span={12}>
               <Card
                 title="Product Details"
                 headStyle={{ backgroundColor: "black", color: "white" }}
@@ -131,19 +131,32 @@ const DetailProductAunction: React.FC = () => {
                   <strong>Note:</strong> {product.note}
                 </Paragraph>
               </Card>
-              <Card
+             <Card>
+             <h2 style={{textAlign:'center'}}>Condition Guide</h2>
+        <p><strong>Never worn, with tag</strong> - A never-worn item with tag is an item which has never been worn and still has the original purchase hangtags on it (include a photo of the tag).</p> <br/>
+        <p><strong>Never worn</strong> - A never-worn item without a tag is an item which has never been worn and shows no defects or alterations.</p> <br/>
+        <p><strong>Very good</strong> - An item in very good condition is a second-hand item which has been only lightly used and extremely well maintained, which can show slight defects from usage. These must be mentioned in the description and visible on the photos.</p> <br/>
+        <p><strong>Good</strong> - An item in good condition is a second-hand item which has been worn and well maintained. If the item has defects, they must be mentioned in the description and visible in the photos.</p> <br/>
+        <p><strong>Fair</strong> - An item in fair condition is a second-hand item which has been worn frequently and shows defects (these are mentioned in the description and visible in photos).</p>
+             </Card>
+
+            </Col>
+          </Row>
+          <Card
   style={{ marginTop: '20px' }}
-  headStyle={{ backgroundColor: "black", color: "white" }}
+  // headStyle={{ backgroundColor: "black", color: "white" }}
   title="Policy Auction"
 >
-  <h2 style={{ textAlign: "center" }}>Eligibility to Bid</h2>
+  <Row gutter={[16,16]}>
+    <Col span={12}>
+    <h2 >Eligibility to Bid</h2>
   <p>
     Only registered participants are eligible to bid.<br />
     All bidders must be at least 18 years old and provide valid identification.
   </p>
   <br />
 
-  <h2 style={{ textAlign: "center" }}>Bidding Process</h2>
+  <h2 >Bidding Process</h2>
   <p>
     All bids must be placed online/in-person, depending on the auction format.<br />
     Bids must be made in the stated increments. Bids that do not meet this increment will not be considered.<br />
@@ -151,7 +164,7 @@ const DetailProductAunction: React.FC = () => {
   </p>
   <br />
 
-  <h2 style={{ textAlign: "center" }}>Winning Bids</h2>
+  <h2 >Winning Bids</h2>
   <p>
     The highest bid at the close of the auction wins the item.<br />
     In the case of a tie bid, the first bid placed at the highest price will be declared the winner.<br />
@@ -159,7 +172,7 @@ const DetailProductAunction: React.FC = () => {
   </p>
   <br />
 
-  <h2 style={{ textAlign: "center" }}>Payment Terms</h2>
+  <h2 >Payment Terms</h2>
   <p>
     Full payment is due within 3 business days of winning the auction.<br />
     Acceptable payment methods include credit card, bank transfer, or other methods stated by the auction organizer.<br />
@@ -167,46 +180,49 @@ const DetailProductAunction: React.FC = () => {
   </p>
   <br />
 
-  <h2 style={{ textAlign: "center" }}>Item Descriptions and Condition</h2>
+  <h2 >Item Descriptions and Condition</h2>
   <p>
     All items are sold "as-is" with no warranties or guarantees. Descriptions and images provided are for informational purposes only and do not constitute a guarantee of condition.<br />
     It is the bidder's responsibility to inspect the item before placing a bid, when possible.
   </p>
   <br />
-
-  <h2 style={{ textAlign: "center" }}>Shipping and Delivery</h2>
+    </Col>
+    <Col span={12}>
+    <h2 >Shipping and Delivery</h2>
   <p>
     The buyer is responsible for all shipping and delivery costs, unless otherwise specified.<br />
     Items will be shipped within 7-10 business days after payment is received and confirmed.
   </p>
   <br />
 
-  <h2 style={{ textAlign: "center" }}>Refunds and Returns</h2>
+  <h2 >Refunds and Returns</h2>
   <p>
     All sales are final. No returns or refunds will be accepted unless otherwise stated by the auction organizer.<br />
     If an item is found to be significantly misrepresented, the buyer must contact the auction house within 48 hours of receiving the item to request a resolution.
   </p>
   <br />
 
-  <h2 style={{ textAlign: "center" }}>Auctioneer's Discretion</h2>
+  <h2 >Auctioneer's Discretion</h2>
   <p>
     The auctioneer reserves the right to reject any bid, withdraw any item from the auction, or cancel the auction at any time without notice.<br />
     In case of any disputes, the auctioneer's decision will be final.
   </p>
   <br />
 
-  <h2 style={{ textAlign: "center" }}>Liability</h2>
+  <h2 >Liability</h2>
   <p>
     The auction house is not responsible for any errors in bidding or any technical issues experienced by the bidder during the auction process.<br />
     By participating in the auction, the bidder agrees to indemnify and hold harmless the auction organizer from any claims arising from their participation.
   </p>
   <br />
 
+    </Col>
+  </Row>
+ 
+
+ 
   
 </Card>
-
-            </Col>
-          </Row>
         </Card>
       </Card>
       <Footer />
