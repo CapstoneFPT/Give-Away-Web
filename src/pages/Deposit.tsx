@@ -1,24 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { Button, message, Card, Col, Row, Descriptions, Image, Modal } from 'antd'; // Thêm Modal vào import
+import { Button, message, Card, Col, Row, Descriptions, Image, Modal } from 'antd';
 import { AuctionApi, AuctionListResponse } from '../api';
 import moment from 'moment';
 
 const Deposit = () => {
   const query = new URLSearchParams(useLocation().search);
-  // const auctionId = query.get('auctionId');
   const [userId, setUserId] = useState<string | null>(null); 
   const [data, setData] = useState<AuctionListResponse | null>(null);
-  const [hasDeposit, setHasDeposit] = useState<boolean>(false); // Thêm state để kiểm tra đã đặt cọc hay chưa
+  const [fetchedData, setFetchedData] = useState<AuctionListResponse[]>([]);
+  const [hasDeposit, setHasDeposit] = useState<boolean>(false);
   const navigate = useNavigate();
   const { auctionId } = useParams<{ auctionId: string }>();
-  console.log("hihi",auctionId)
-
-  useEffect(() => {
-    const userId = JSON.parse(localStorage.getItem("userId") || "null");
-    setUserId(userId);
-    console.log(userId);
-  }, []);
 
   useEffect(() => {
     const auctionApi = new AuctionApi();
@@ -33,9 +26,10 @@ const Deposit = () => {
               endDate: moment(item.endDate).format("YYYY-MM-DD HH:mm"),
             }))
           : ([] as AuctionListResponse[]);
-        console.log("abc",response);
+        
         const auctionData = fetchedData.find(item => item.auctionId === auctionId) || null;
         setData(auctionData);
+        setFetchedData(fetchedData); // Store all fetched data
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -46,14 +40,16 @@ const Deposit = () => {
 
   useEffect(() => {
     const checkUserDeposit = async () => {
-      if (auctionId && userId) {
+      const userIdFromStorage = JSON.parse(localStorage.getItem("userId") || "null");
+      setUserId(userIdFromStorage);
+      if (auctionId && userIdFromStorage) {
         const depositApi = new AuctionApi();
-        const response = await depositApi.apiAuctionsAuctionIdDepositsHasDepositGet(auctionId, userId);
+        const response = await depositApi.apiAuctionsAuctionIdDepositsHasDepositGet(auctionId, userIdFromStorage);
         setHasDeposit(response.data.hasDeposit!); 
       }
     };
     checkUserDeposit();
-  }, [auctionId, userId]);
+  }, [auctionId]);
 
   const formatBalance = (balance: number) => {
     return new Intl.NumberFormat('de-DE').format(balance);
@@ -75,7 +71,6 @@ const Deposit = () => {
           const deposit = await depositApi.apiAuctionsAuctionIdDepositsPlaceDepositPost(auctionId, {
             memberId: userId!
           });
-          console.log('huy',userId)
         
           if (deposit.status) {
             message.success('Deposit successful!');
@@ -120,20 +115,42 @@ const Deposit = () => {
                   <strong>{data.status}</strong>
                 </Descriptions.Item>
                 <Descriptions.Item label="Action">
-  {!hasDeposit ? ( // Nếu chưa đặt cọc, hiện nút
-    <Button style={{ backgroundColor: 'black', color: 'white' }} type="primary" onClick={() => handleDeposit(data.auctionId!)}>
-      Submit Deposit
-    </Button>
-  ) : (
-    <span>Deposit already placed</span> // Hiện thông báo nếu đã đặt cọc
-  )}
-</Descriptions.Item>
+                  {!hasDeposit ? (
+                    <Button style={{ backgroundColor: 'black', color: 'white' }} type="primary" onClick={() => handleDeposit(data.auctionId!)}>
+                      Submit Deposit
+                    </Button>
+                  ) : (
+                    <span>Deposit already placed</span>
+                  )}
+                </Descriptions.Item>
               </Descriptions>
             </Col>
           </Row>
         </Card>
       ) : (
-        <p>No auction data found for the specified auction ID.</p>
+        <Card>
+          <h2>No auction data found for the specified auction ID.</h2>
+          <h3>Available Auctions:</h3>
+          <Row gutter={16}>
+            {fetchedData.length > 0 ? (
+              fetchedData.map(item => (
+                <Col span={8} key={item.auctionId}>
+                  <Card title={item.title}>
+                    <Image src={item.imageUrl!} alt="Product" style={{ width: "100%" }} />
+                    <p>Start Date: {moment(item.startDate).format("YYYY-MM-DD HH:mm")}</p>
+                    <p>End Date: {moment(item.endDate).format("YYYY-MM-DD HH:mm")}</p>
+                    <p>Deposit Fee: {formatBalance(item.depositFee!)} VND</p>
+                    <Button style={{ backgroundColor: 'black', color: 'white' }} type="primary" onClick={() => handleDeposit(item.auctionId!)}>
+                      Submit Deposit
+                    </Button>
+                  </Card>
+                </Col>
+              ))
+            ) : (
+              <p>No auctions available.</p>
+            )}
+          </Row>
+        </Card>
       )}
     </div>
   );
