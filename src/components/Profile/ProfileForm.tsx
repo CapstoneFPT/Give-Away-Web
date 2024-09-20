@@ -1,7 +1,9 @@
-import React, {useEffect, useState} from 'react';
-import {Button, Card, Form, Input,  notification} from 'antd';
-import {MailOutlined, PhoneOutlined, UserOutlined} from '@ant-design/icons';
-import {AccountApi, DeliveryListResponse, DeliveryRequest} from '../../api';
+import React, { useEffect, useState } from 'react';
+import { Button, Card, Form, Input, notification, Typography } from 'antd';
+import { MailOutlined, PhoneOutlined, UserOutlined } from '@ant-design/icons';
+import { AccountApi, DeliveryListResponse, DeliveryRequest, InquiryApi, InquiryListResponse,  } from '../../api';
+
+const { Text } = Typography;
 
 const ProfileForm: React.FC = () => {
     const [form] = Form.useForm();
@@ -10,15 +12,18 @@ const ProfileForm: React.FC = () => {
     const [addresses, setAddresses] = useState<DeliveryListResponse[]>([]);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [isSaveButtonLoading, setIsSaveButtonLoading] = useState(false);
+    const [inquiries, setInquiries] = useState<InquiryListResponse[]>([]); // State to hold inquiries
 
     useEffect(() => {
         fetchUserData();
+        fetchInquiries(); // Fetch inquiries on component mount
     }, []);
 
+    const userId = JSON.parse(localStorage.getItem('userId') || 'null');
+
     const fetchUserData = async () => {
-        const userId = JSON.parse(localStorage.getItem('userId') || 'null');
         if (!userId) {
-            notification.error({message: 'User ID not found in local storage.'});
+            notification.error({ message: 'User ID not found in local storage.' });
             return;
         }
 
@@ -32,10 +37,23 @@ const ProfileForm: React.FC = () => {
             });
 
             const addressResponse = await accountApi.apiAccountsAccountIdDeliveriesGet(userId);
-            setAddresses(addressResponse.data.data || [])
+            setAddresses(addressResponse.data.data || []);
         } catch (error) {
             console.error('Error fetching user data:', error);
-            notification.error({message: 'Failed to fetch user data. Please try again later.'});
+            notification.error({ message: 'Failed to fetch user data. Please try again later.' });
+        }
+    };
+console.log()
+    const fetchInquiries = async () => {
+        try {
+            const inquiryApi = new InquiryApi();
+            const response = await inquiryApi.apiInquiriesGet(null!, null!,  userId!);
+            setInquiries(response.data.items || []); 
+            // Set inquiries data
+            console.log('hihi',response)
+        } catch (error) {
+            console.error('Error fetching inquiries:', error);
+            notification.error({ message: 'Failed to fetch inquiries. Please try again later.' });
         }
     };
 
@@ -51,11 +69,11 @@ const ProfileForm: React.FC = () => {
                 phone: values.phone,
             });
 
-            notification.success({message: 'User data updated successfully!'});
+            notification.success({ message: 'User data updated successfully!' });
             setIsFormChanged(false);
         } catch (error) {
             console.error('Error updating user data:', error);
-            notification.error({message: 'Failed to update user data. Please try again later.'});
+            notification.error({ message: 'Failed to update user data. Please try again later.' });
         }
     };
 
@@ -77,10 +95,10 @@ const ProfileForm: React.FC = () => {
             setIsSaveButtonLoading(false);
             setIsModalVisible(false);
             addressForm.resetFields();
-            notification.success({message: 'Address added successfully!'});
+            notification.success({ message: 'Address added successfully!' });
         } catch (error) {
             console.error('Validation failed:', error);
-            notification.error({message: 'Failed to add address. Please try again.'});
+            notification.error({ message: 'Failed to add address. Please try again.' });
             setIsSaveButtonLoading(false);
         }
     };
@@ -94,16 +112,14 @@ const ProfileForm: React.FC = () => {
                 onValuesChange={() => setIsFormChanged(true)}
             >
                 <Form.Item name="fullname" label="Name">
-                    <Input prefix={<UserOutlined/>}/>
+                    <Input prefix={<UserOutlined />} />
                 </Form.Item>
                 <Form.Item name="phone" label="Phone">
-                    <Input prefix={<PhoneOutlined/>} maxLength={10}/>
+                    <Input prefix={<PhoneOutlined />} maxLength={10} />
                 </Form.Item>
                 <Form.Item name="email" label="Email">
-                    <Input prefix={<MailOutlined/>} readOnly/>
+                    <Input prefix={<MailOutlined />} readOnly />
                 </Form.Item>
-
-
 
                 <Button
                     style={{
@@ -119,6 +135,16 @@ const ProfileForm: React.FC = () => {
                     Save
                 </Button>
             </Form>
+
+            <Card style={{ marginTop: '20px' }} title='Your Inquiries'>
+                {inquiries.length > 0 ? (
+                    inquiries.map((inquiry) => (
+                        <Text  key={inquiry.inquiryId}>{inquiry.message}</Text> // Display each inquiry
+                    ))
+                ) : (
+                    <Text>No inquiries available.</Text> // Message when no inquiries exist
+                )}
+            </Card>
         </Card>
     );
 };

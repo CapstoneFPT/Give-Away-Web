@@ -298,6 +298,12 @@ export interface AccountResponse {
      * @memberof AccountResponse
      */
     'shopId'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof AccountResponse
+     */
+    'shopCode'?: string | null;
 }
 
 
