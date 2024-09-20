@@ -125,7 +125,7 @@ const Deposit = () => {
                       Submit Deposit
                     </Button>
                   ) : (
-                    <span style={{color:'yellow'}}>Deposit already placed</span>
+                    <span style={{color:'brown'}}>Deposit already placed</span>
                   )}
                 </Descriptions.Item>
               </Descriptions>

@@ -13,10 +13,20 @@ import {
   Table,
   Space,
   notification,
+  Modal,
+  Input,
 } from "antd";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import NavProfile from "../components/NavProfile/NavProfile";
-import { FashionItemDetailResponse, FashionItemStatus, OrderApi, OrderLineItemListResponse, OrderStatus } from "../api";
+import {
+  FashionItemDetailResponse,
+  FashionItemStatus,
+  FeedbackApi,
+  FeedbackResponse,
+  OrderApi,
+  OrderLineItemListResponse,
+  OrderStatus,
+} from "../api";
 import { useQuery } from "@tanstack/react-query";
 import { ColumnsType } from "antd/es/table";
 import { getOrderStatus, getStatusColor } from "../utils/types";
@@ -28,6 +38,9 @@ const OrderDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { dispatch, isItemInCart } = useCart();
+  const [isModalVisible, setIsModalVisible] = React.useState(false);
+  const [feedbackText, setFeedbackText] = React.useState("");
+  const [feedbacks, setFeedbacks] = React.useState<FeedbackResponse[]>([]);
 
   const orderApi = new OrderApi();
 
@@ -83,6 +96,30 @@ const OrderDetail = () => {
       console.log("Adding item to cart with itemId:", product.itemId);
     }
   };
+  const handleFeedbackClick = (itemId: string) => {
+    setIsModalVisible(true);
+  };
+  const feedbackAPI = new FeedbackApi();
+  const fetchFeedbacks = async () => {
+    const feedbackAPI = new FeedbackApi();
+    const response = await feedbackAPI.apiFeedbacksGet(
+      null!,
+      null!,
+      orderDetail?.orderId
+    );
+    return response.data || [];
+  };
+  const handleSendFeedback = () => {
+    const orderId = orderDetail?.orderId; // Assuming orderId is part of orderDetail
+    const reqFeedback = feedbackAPI.apiFeedbacksPost({
+      orderId,
+      content: feedbackText, // Pass the feedback text here
+    });
+    console.log("Sending feedback:", feedbackText);
+    // Reset feedback text and close modal
+    setFeedbackText("");
+    setIsModalVisible(false);
+  };
 
   const handleRefundClick = (
     orderLineItem: OrderLineItemListResponse,
@@ -107,9 +144,7 @@ const OrderDetail = () => {
             style={{
               fontSize: "16px",
             }}
-          >
-
-          </Paragraph>
+          ></Paragraph>
           <Image
             src={images[0]}
             alt="Product"
@@ -179,7 +214,6 @@ const OrderDetail = () => {
                 {1}
               </Typography>
             </div>
-
           </Space>
         </>
       ),
@@ -251,20 +285,23 @@ const OrderDetail = () => {
       align: "center",
       render: (text: any, record: OrderLineItemListResponse) => (
         <>
-          {(record.itemStatus === FashionItemStatus.Refundable && orderDetail?.status === OrderStatus.Completed) && (
-            <Button
-              type="primary"
-              style={{
-                backgroundColor: "black",
-                borderColor: "black",
-                width: "100px",
-                height: "35px",
-              }}
-              onClick={() => handleRefundClick(record, record.orderLineItemId!)}
-            >
-              Refund
-            </Button>
-          )}
+          {record.itemStatus === FashionItemStatus.Refundable &&
+            orderDetail?.status === OrderStatus.Completed && (
+              <Button
+                type="primary"
+                style={{
+                  backgroundColor: "black",
+                  borderColor: "black",
+                  width: "100px",
+                  height: "35px",
+                }}
+                onClick={() =>
+                  handleRefundClick(record, record.orderLineItemId!)
+                }
+              >
+                Refund
+              </Button>
+            )}
           {record.itemStatus === FashionItemStatus.Reserved && (
             <Button
               type="default"
@@ -288,7 +325,6 @@ const OrderDetail = () => {
                   condition: record.condition,
                   status: record.itemStatus,
 
-
                   // Assuming this is the correct mapping
                   // Add other necessary properties from record to match FashionItemDetailResponse
                 };
@@ -304,157 +340,223 @@ const OrderDetail = () => {
   ];
 
   return (
-    <Card
-      style={{
-        borderRadius: "10px",
-        boxShadow: "2px 2px 10px rgba(0,0,0,0.1)",
-        padding: "20px",
-      }}
-    >
-      <Row gutter={[24, 24]}>
-        <Col span={6}>
-          <NavProfile />
-        </Col>
-        <Col span={18}>
-          <Card
-            title={
-              <>
-                <h3>Order Detail</h3>
+    <>
+      <Card
+        style={{
+          borderRadius: "10px",
+          boxShadow: "2px 2px 10px rgba(0,0,0,0.1)",
+          padding: "20px",
+        }}
+      >
+        <Row gutter={[24, 24]}>
+          <Col span={6}>
+            <NavProfile />
+          </Col>
+          <Col span={18}>
+            <Card
+              title={
+                <>
+                  <h3>Order Detail</h3>
 
-                <Typography>
-                  <strong>Status Order: </strong>
-                  <Tag
-                    style={{ marginRight: "10px" }}
-                    color={getOrderStatus(orderDetail?.status!)}
-                  >
-                    {" "}
-                    {orderDetail?.status!}
-                  </Tag>
-                </Typography>
-              </>
-            }
-          >
-            <Card bordered={false} style={{ borderRadius: "10px" }}>
-              <Title
-                level={2}
-                style={{ textAlign: "center", marginBottom: "20px" }}
-              >
-                Order Detail
-              </Title>
-              <Card
-                title="Recipient Information"
-                bordered={false}
-                style={{ borderRadius: "10px", marginBottom: "20px" }}
-              >
-                <Row gutter={[16, 16]}>
-                  <Col span={12}>
-                    <Descriptions column={1} bordered size="small">
-                      <Descriptions.Item label="Order Code">
-                        {orderDetail?.orderCode}
-                      </Descriptions.Item>
-                      <Descriptions.Item label="Payment Method">
-                        {orderDetail?.paymentMethod}
-                      </Descriptions.Item>
-                      <Descriptions.Item label="Recipient Name">
-                        {orderDetail?.reciepientName}
-                      </Descriptions.Item>
-                      <Descriptions.Item label="Customer Name">
-                        {orderDetail?.customerName}
-                      </Descriptions.Item>
-                      <Descriptions.Item label="Address">
-                        {orderDetail?.address}
-                      </Descriptions.Item>
-                      <Descriptions.Item label="Address Type">
-                        {orderDetail?.addressType}
-                      </Descriptions.Item>
-                      <Descriptions.Item label="Phone Number">
-                        {orderDetail?.phone}
-                      </Descriptions.Item>
-                      <Descriptions.Item label="Email">
-                        {orderDetail?.email}
-                      </Descriptions.Item>
-                    </Descriptions>
-                  </Col>
-                  <Col span={12}>
-                    <Descriptions column={1} bordered size="small">
-                      <Descriptions.Item label="Purchase Type">
-                        {
-                          <Typography>
-
-                            {itemType == "ConsignedForAuction" && ("Auction Product")}
-                            {itemType == "ConsignedForSale" && ("Purchase Product")}
-                            {itemType == "ItemBase" && ("Purchase Product")}
-                          </Typography>
-                        }
-                      </Descriptions.Item>
-                      <Descriptions.Item label="Sub Total">
-                        <strong>{formatBalance(orderDetail?.subtotal || 0)} VND</strong>
-                      </Descriptions.Item>
-                      <Descriptions.Item label="Shipping Fee">
-                        <strong> {formatBalance(orderDetail?.shippingFee || 0)} VND</strong>
-                      </Descriptions.Item>
-                      <Descriptions.Item label="Discount">
-                        <strong style={{ color: 'green' }}> -{formatBalance(orderDetail?.discount || 0)} VND</strong>
-                      </Descriptions.Item>
-                      <Descriptions.Item label="Total">
-                        <strong>
-                          {formatBalance(orderDetail?.totalPrice || 0)} VND{" "}
-                        </strong>
-                      </Descriptions.Item>
-                      <Descriptions.Item label="Create At">
-                        {new Date(orderDetail?.createdDate || 0).getTime() ===
-                          new Date("0001-01-01T00:00:00").getTime()
-                          ? "N/A"
-                          : new Date(
-                            orderDetail?.createdDate || ""
-                          ).toLocaleString()}
-                      </Descriptions.Item>
-                      <Descriptions.Item label="Payment Date">
-                        {new Date(orderDetail?.paymentDate || 0).getTime() ===
-                          new Date("0001-01-01T00:00:00").getTime()
-                          ? "N/A"
-                          : new Date(
-                            orderDetail?.paymentDate || ""
-                          ).toLocaleString()}
-                      </Descriptions.Item>
-                      <Descriptions.Item label="Completed Date">
-                        {new Date(orderDetail?.completedDate || 0).getTime() ===
-                          new Date("0001-01-01T00:00:00").getTime()
-                          ? "N/A"
-                          : new Date(
-                            orderDetail?.completedDate || ""
-                          ).toLocaleString()}
-                      </Descriptions.Item>
-                    </Descriptions>
-                  </Col>
-                </Row>
-              </Card>
-              <Table
-                columns={columns}
-                dataSource={orderLineItems}
-                rowKey="orderDetailId"
-                pagination={false}
-              />
-              <Divider />
-              <Link to="/order-list">
-                <Button
-                  type="primary"
-                  style={{
-                    backgroundColor: "black",
-                    borderColor: "black",
-                    width: "100px",
-                    height: "35px",
-                    marginTop: "20px",
-                  }}
+                  <Typography>
+                    <strong>Status Order: </strong>
+                    <Tag
+                      style={{ marginRight: "10px" }}
+                      color={getOrderStatus(orderDetail?.status!)}
+                    >
+                      {" "}
+                      {orderDetail?.status!}
+                    </Tag>
+                  </Typography>
+                </>
+              }
+            >
+              <Card bordered={false} style={{ borderRadius: "10px" }}>
+                <Title
+                  level={2}
+                  style={{ textAlign: "center", marginBottom: "20px" }}
                 >
-                  Back
-                </Button>
-              </Link>
+                  Order Detail
+                </Title>
+                <Card
+                  title="Recipient Information"
+                  bordered={false}
+                  style={{ borderRadius: "10px", marginBottom: "20px" }}
+                >
+                  <Row gutter={[16, 16]}>
+                    <Col span={12}>
+                      <Descriptions column={1} bordered size="small">
+                        <Descriptions.Item label="Order Code">
+                          {orderDetail?.orderCode}
+                        </Descriptions.Item>
+                        <Descriptions.Item label="Payment Method">
+                          {orderDetail?.paymentMethod}
+                        </Descriptions.Item>
+                        <Descriptions.Item label="Recipient Name">
+                          {orderDetail?.reciepientName}
+                        </Descriptions.Item>
+                        <Descriptions.Item label="Customer Name">
+                          {orderDetail?.customerName}
+                        </Descriptions.Item>
+                        <Descriptions.Item label="Address">
+                          {orderDetail?.address}
+                        </Descriptions.Item>
+                        <Descriptions.Item label="Address Type">
+                          {orderDetail?.addressType}
+                        </Descriptions.Item>
+                        <Descriptions.Item label="Phone Number">
+                          {orderDetail?.phone}
+                        </Descriptions.Item>
+                        <Descriptions.Item label="Email">
+                          {orderDetail?.email}
+                        </Descriptions.Item>
+                      </Descriptions>
+                    </Col>
+                    <Col span={12}>
+                      <Descriptions column={1} bordered size="small">
+                        <Descriptions.Item label="Purchase Type">
+                          {
+                            <Typography>
+                              {itemType == "ConsignedForAuction" &&
+                                "Auction Product"}
+                              {itemType == "ConsignedForSale" &&
+                                "Purchase Product"}
+                              {itemType == "ItemBase" && "Purchase Product"}
+                            </Typography>
+                          }
+                        </Descriptions.Item>
+                        <Descriptions.Item label="Sub Total">
+                          <strong>
+                            {formatBalance(orderDetail?.subtotal || 0)} VND
+                          </strong>
+                        </Descriptions.Item>
+                        <Descriptions.Item label="Shipping Fee">
+                          <strong>
+                            {" "}
+                            {formatBalance(orderDetail?.shippingFee || 0)} VND
+                          </strong>
+                        </Descriptions.Item>
+                        <Descriptions.Item label="Discount">
+                          <strong style={{ color: "green" }}>
+                            {" "}
+                            -{formatBalance(orderDetail?.discount || 0)} VND
+                          </strong>
+                        </Descriptions.Item>
+                        <Descriptions.Item label="Total">
+                          <strong>
+                            {formatBalance(orderDetail?.totalPrice || 0)} VND{" "}
+                          </strong>
+                        </Descriptions.Item>
+                        <Descriptions.Item label="Create At">
+                          {new Date(orderDetail?.createdDate || 0).getTime() ===
+                          new Date("0001-01-01T00:00:00").getTime()
+                            ? "N/A"
+                            : new Date(
+                                orderDetail?.createdDate || ""
+                              ).toLocaleString()}
+                        </Descriptions.Item>
+                        <Descriptions.Item label="Payment Date">
+                          {new Date(orderDetail?.paymentDate || 0).getTime() ===
+                          new Date("0001-01-01T00:00:00").getTime()
+                            ? "N/A"
+                            : new Date(
+                                orderDetail?.paymentDate || ""
+                              ).toLocaleString()}
+                        </Descriptions.Item>
+                        <Descriptions.Item label="Completed Date">
+                          {new Date(
+                            orderDetail?.completedDate || 0
+                          ).getTime() ===
+                          new Date("0001-01-01T00:00:00").getTime()
+                            ? "N/A"
+                            : new Date(
+                                orderDetail?.completedDate || ""
+                              ).toLocaleString()}
+                        </Descriptions.Item>
+                        <Descriptions.Item label="Customer Feedback">
+    {feedbacks.length > 0 ? (
+        <Input.TextArea
+            rows={4}
+            value={feedbacks.map((feedback: FeedbackResponse) => feedback.content).join('\n')} // Join feedbacks into a single string
+            readOnly // Make the TextArea read-only
+        />
+    ) : (
+        <Text>No feedback available</Text>
+    )}
+</Descriptions.Item>
+                        
+                         
+                        
+                      </Descriptions>
+                      
+                    </Col>
+                  </Row>
+                  {feedbacks.length === 0 && orderDetail?.status === OrderStatus.Completed && (
+                            <Button
+                              type="default"
+                              style={{
+                                width: "100px",
+                                height: "35px",
+                                margin: "30px",
+                                color: "white",
+                                backgroundColor: "black",
+                              }}
+                              onClick={() =>
+                                handleFeedbackClick(orderDetail.orderId!)
+                              }
+                            >
+                              Feedback
+                            </Button>
+                          )}
+                          
+                </Card>
+                <Table
+                  columns={columns}
+                  dataSource={orderLineItems}
+                  rowKey="orderDetailId"
+                  pagination={false}
+                />
+                <Divider />
+                <Link to="/order-list">
+                  <Button
+                    type="primary"
+                    style={{
+                      backgroundColor: "black",
+                      borderColor: "black",
+                      width: "100px",
+                      height: "35px",
+                      marginTop: "20px",
+                    }}
+                  >
+                    Back
+                  </Button>
+                </Link>
+              </Card>
             </Card>
-          </Card>
-        </Col>
-      </Row>
-    </Card>
+          </Col>
+        </Row>
+      </Card>
+      <Modal
+        title="Feedback"
+        visible={isModalVisible}
+        onCancel={() => setIsModalVisible(false)}
+        footer={[
+          <Button key="back" onClick={() => setIsModalVisible(false)}>
+            Cancel
+          </Button>,
+          <Button key="submit" type="primary" onClick={handleSendFeedback}>
+            Send
+          </Button>,
+        ]}
+      >
+        <Input.TextArea
+          rows={4}
+          value={feedbackText}
+          onChange={(e) => setFeedbackText(e.target.value)}
+          placeholder="Enter your feedback here"
+        />
+      </Modal>
+    </>
   );
 };
 

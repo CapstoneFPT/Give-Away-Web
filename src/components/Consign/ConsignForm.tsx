@@ -214,7 +214,7 @@ const ConsignForm = () => {
                                                 placeholder="Type Consign"
                                                 style={{width: "100%"}}
                                             >
-                                                {Object.values(ConsignSaleType).filter(type => type !== ConsignSaleType.ForSale).map((type) => ( // Filter out 'ForSale'
+                                                {Object.values(ConsignSaleType).map((type) => ( // Removed filter for 'ForSale'
                                                     <Select.Option key={type} value={type}>
                                                         {type}
                                                     </Select.Option>
