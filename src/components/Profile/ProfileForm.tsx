@@ -47,10 +47,11 @@ console.log()
     const fetchInquiries = async () => {
         try {
             const inquiryApi = new InquiryApi();
-            const response = await inquiryApi.apiInquiriesGet(null!, null!,  userId!);
+            const response = await inquiryApi.apiInquiriesGet(null!, null!,null!,  userId!);
             setInquiries(response.data.items || []); 
             // Set inquiries data
             console.log('hihi',response)
+            console.log('huy',userId)
         } catch (error) {
             console.error('Error fetching inquiries:', error);
             notification.error({ message: 'Failed to fetch inquiries. Please try again later.' });
@@ -137,14 +138,17 @@ console.log()
             </Form>
 
             <Card style={{ marginTop: '20px' }} title='Your Inquiries'>
-                {inquiries.length > 0 ? (
-                    inquiries.map((inquiry) => (
-                        <Text  key={inquiry.inquiryId}>{inquiry.message}</Text> // Display each inquiry
-                    ))
-                ) : (
-                    <Text>No inquiries available.</Text> // Message when no inquiries exist
-                )}
-            </Card>
+    {inquiries.length > 0 ? (
+        inquiries.map((inquiry, index) => (
+            <div key={inquiry.inquiryId}>
+                <Text style={{ display: 'block', fontSize:'20px', }}>{inquiry.message}</Text> {/* Display each inquiry on a new line */}
+                {index < inquiries.length - 1 && <hr />} {/* Add horizontal line except after the last inquiry */}
+            </div>
+        ))
+    ) : (
+        <Text>No inquiries available.</Text> // Message when no inquiries exist
+    )}
+</Card>
         </Card>
     );
 };
