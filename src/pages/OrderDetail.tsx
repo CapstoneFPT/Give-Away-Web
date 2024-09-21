@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Card,
   Row,
@@ -57,6 +57,30 @@ const OrderDetail = () => {
     queryFn: () => orderApi.apiOrdersOrderIdGet(id!),
     select: (response) => response.data,
   });
+  useEffect(() => {
+    const fetchFeedbacks = async () => {
+      try {
+        if (!orderDetail?.orderId) {
+          throw new Error("Order ID is not available");
+        }
+        const response = await feedbackAPI.apiFeedbacksGet(
+          null!,
+          null!,
+          orderDetail.orderId // Ensure orderId is valid
+        );
+        setFeedbacks(response.data.items || []); // Update feedbacks state
+      } catch (error) {
+        console.error("Error fetching feedbacks:", error);
+        notification.error({
+          message: "Error",
+          description: "Failed to fetch feedbacks. Please try again later.",
+        });
+      }
+    };
+
+    fetchFeedbacks(); // Call the function to fetch feedbacks
+  }, [orderDetail]);
+
   const itemType = orderLineItems?.[0]?.itemType;
 
   const isLoading = isOrderLineItemsLoading || isOrderDetailLoading;
@@ -100,15 +124,21 @@ const OrderDetail = () => {
     setIsModalVisible(true);
   };
   const feedbackAPI = new FeedbackApi();
-  const fetchFeedbacks = async () => {
-    const feedbackAPI = new FeedbackApi();
-    const response = await feedbackAPI.apiFeedbacksGet(
-      null!,
-      null!,
-      orderDetail?.orderId
-    );
-    return response.data || [];
-  };
+  // const fetchFeedbacks = async () => {
+  //   try {
+  //     const feedbackAPI = new FeedbackApi();
+  //     const response = await feedbackAPI.apiFeedbacksGet(
+  //       null!,
+  //       null!,
+  //       orderDetail?.orderId
+  //     );
+  //     return response.data.items || [];
+  //     console.log(response)
+  //   } catch (error) {
+  //     console.error("Error fetching feedbacks:", error);
+  //     return []; // Hoặc xử lý lỗi theo cách khác
+  //   }
+  // };
   const handleSendFeedback = () => {
     const orderId = orderDetail?.orderId; // Assuming orderId is part of orderDetail
     const reqFeedback = feedbackAPI.apiFeedbacksPost({
@@ -474,41 +504,44 @@ const OrderDetail = () => {
                               ).toLocaleString()}
                         </Descriptions.Item>
                         <Descriptions.Item label="Customer Feedback">
-    {feedbacks.length > 0 ? (
-        <Input.TextArea
-            rows={4}
-            value={feedbacks.map((feedback: FeedbackResponse) => feedback.content).join('\n')} // Join feedbacks into a single string
-            readOnly // Make the TextArea read-only
-        />
-    ) : (
-        <Text>No feedback available</Text>
-    )}
-</Descriptions.Item>
-                        
-                         
-                        
+                          <>
+                            <Text style={{ color: "orange", fontWeight: "bold" }}>
+                              Feedback Date: {new Date().toLocaleString()}{" "}
+                              {/* Assuming current date for feedback date */}
+                            </Text>
+                            <Input.TextArea
+                              rows={4}
+                              value={feedbacks
+                                .map(
+                                  (feedback: FeedbackResponse) =>
+                                    feedback.content
+                                )
+                                .join("\n")} // Join feedbacks into a single string
+                              readOnly // Make the TextArea read-only
+                            />
+                          </>
+                        </Descriptions.Item>
                       </Descriptions>
-                      
                     </Col>
                   </Row>
-                  {feedbacks.length === 0 && orderDetail?.status === OrderStatus.Completed && (
-                            <Button
-                              type="default"
-                              style={{
-                                width: "100px",
-                                height: "35px",
-                                margin: "30px",
-                                color: "white",
-                                backgroundColor: "black",
-                              }}
-                              onClick={() =>
-                                handleFeedbackClick(orderDetail.orderId!)
-                              }
-                            >
-                              Feedback
-                            </Button>
-                          )}
-                          
+                  {feedbacks.length === 0 &&
+                    orderDetail?.status === OrderStatus.Completed && (
+                      <Button
+                        type="default"
+                        style={{
+                          width: "100px",
+                          height: "35px",
+                          margin: "30px",
+                          color: "white",
+                          backgroundColor: "black",
+                        }}
+                        onClick={() =>
+                          handleFeedbackClick(orderDetail.orderId!)
+                        }
+                      >
+                        Feedback
+                      </Button>
+                    )}
                 </Card>
                 <Table
                   columns={columns}
