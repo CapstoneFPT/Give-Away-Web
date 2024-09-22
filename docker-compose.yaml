@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        - NODE_ENV=production
+        - NODE_ENV=development
         - VITE_API_KEY=${VITE_API_KEY}
         - VITE_AUTH_DOMAIN=${VITE_AUTH_DOMAIN}
         - VITE_PROJECT_ID=${VITE_PROJECT_ID}
