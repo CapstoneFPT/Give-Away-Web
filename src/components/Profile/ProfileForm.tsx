@@ -22,6 +22,7 @@ const ProfileForm: React.FC = () => {
 
     const { currentUser } = useAuth();
     const userId = currentUser?.id || '';
+    console.log(currentUser);
 
     const fetchUserData = async () => {
         if (!userId) {
