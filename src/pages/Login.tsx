@@ -10,20 +10,21 @@ import {
     UserOutlined
 } from "@ant-design/icons";
 import {Link, useNavigate} from "react-router-dom";
+import {useAuth} from '../components/Auth/Auth';
 
 import {useCart} from "../pages/CartContext";
 import {AuthApi, LoginRequest} from "../api";
 
 const Login = () => {
+    const { login } = useAuth();
     const [isModalLoginOpen, setIsModalLoginOpen] = useState(false);
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const navigate = useNavigate();
-    const {dispatch} = useCart();
+    const { dispatch } = useCart();
 
     useEffect(() => {
         const role = localStorage.getItem("role");
@@ -57,10 +58,10 @@ const Login = () => {
 
             if (response.data.resultStatus === "Success") {
                 const userId = response.data?.data?.id ?? null;
-                localStorage.setItem(
-                    "user",
-                    JSON.stringify(response.data?.data?.accessToken)
-                );
+                const accessToken = response.data?.data?.accessToken;
+
+                login(accessToken ?? ''); 
+
                 localStorage.setItem("userId", JSON.stringify(userId));
                 localStorage.setItem("role", JSON.stringify(response.data?.data?.role));
 
@@ -73,17 +74,15 @@ const Login = () => {
                 });
 
                 setIsModalLoginOpen(false); // hide modal after login
-                setIsLoggedIn(true);
-
                 navigate('/'); // Navigate to home page
             } else {
                 notification.error({
                     message: 'Login Failed',
-                    description: response.data.resultStatus || 'NotFound' || 'Duplicated' || 'Error', // Use response message or fallback options
+                    description: response.data.resultStatus || 'NotFound' || 'Duplicated' || 'Error',
                 });
             }
         } catch (error: any) {
-            console.log(error)
+            console.log(error);
             notification.error({
                 message: 'Login Failed',
                 description: error.response.data.messages,

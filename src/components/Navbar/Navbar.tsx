@@ -8,6 +8,7 @@ import {AccountApi} from "../../api";
 import {useCart} from "../../pages/CartContext";
 import BranchNavbar from "./BranchNavbar";
 import Login from "../../pages/Login";
+import { useAuth } from "../Auth/Auth";
 
 const Navbar = () => {
     const [menu, setMenu] = useState("shop");
@@ -19,6 +20,7 @@ const Navbar = () => {
     const cart = useCart();
     const userId = JSON.parse(localStorage.getItem("userId") || "null");
     const isLoggedIn = !!userId;
+    const { logout } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -61,6 +63,7 @@ const Navbar = () => {
     const handleLogout = async () => {
         setIsLoggingOut(true);
         try {
+            logout();
             localStorage.removeItem("user");
             localStorage.removeItem("userId");
             localStorage.removeItem("role");

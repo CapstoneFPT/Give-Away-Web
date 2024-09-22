@@ -37,7 +37,7 @@
     "react-inner-image-zoom": "^3.0.2",
     "react-leaflet": "^4.2.1",
     "react-medium-image-zoom": "^5.2.8",
-    "react-router-dom": "^6.25.1",
+    "react-router-dom": "^6.26.1",
     "react-slick": "^0.30.2",
     "slick-carousel": "^1.8.1",
     "stream-browserify": "^3.0.0",
