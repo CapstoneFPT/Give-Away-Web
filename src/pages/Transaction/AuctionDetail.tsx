@@ -15,13 +15,15 @@ import {
   Button, // Thêm import Spin từ antd
 } from "antd";
 import { getAuctionStatus } from "../../utils/types";
+import { useAuth } from "../../components/Auth/Auth";
 
 const { Title } = Typography;
 
 const AuctionDetail: React.FC = () => {
   const { auctionId } = useParams<{ auctionId: string }>();
+  const { currentUser } = useAuth();
+  const userId = currentUser?.id || '';
   const [currentPage, setCurrentPage] = useState(1);
-  const userId = JSON.parse(localStorage.getItem("userId") || "{}");
   const [pageSize, setPageSize] = useState(10);
   const auctionApi = new AuctionApi();
 

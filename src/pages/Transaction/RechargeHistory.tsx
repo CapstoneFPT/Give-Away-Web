@@ -5,11 +5,13 @@ import useRecharges from '../../hooks/useRecharges';
 import NavProfile from '../../components/NavProfile/NavProfile';
 import { ColumnsType } from 'antd/es/table';
 import { getPaymentStatus, getRechargeStatus } from '../../utils/types';
+import { useAuth } from '../../components/Auth/Auth';
 
 const { Option } = Select;
 
 const RechargeHistory: React.FC = () => {
-	const userId = JSON.parse(localStorage.getItem("userId") || "null");
+	const { currentUser } = useAuth();
+	const userId = currentUser?.id || '';
 	const [page, setPage] = useState(1);
 	const [pageSize, setPageSize] = useState(10);
 	const [rechargeCode, setRechargeCode] = useState('');

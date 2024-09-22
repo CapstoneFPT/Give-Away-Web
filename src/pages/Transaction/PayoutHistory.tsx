@@ -5,9 +5,11 @@ import {
 } from "../../api";
 import { Card, Col, Row, Table } from "antd";
 import NavProfile from "../../components/NavProfile/NavProfile.tsx";
+import { useAuth } from "../../components/Auth/Auth.tsx";
 
 const PayoutHistory = () => {
-  const userId = JSON.parse(localStorage.getItem("userId") || "null");
+  const { currentUser } = useAuth();
+  const userId = currentUser?.id || '';
   const [data, setData] = useState<AccountTransactionsListResponse[]>([]); // Thêm trạng thái để lưu dữ liệu
   useEffect(() => {
     const fetchDepositHistory = async () => {

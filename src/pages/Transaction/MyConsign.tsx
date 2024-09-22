@@ -5,13 +5,15 @@ import { useNavigate } from "react-router-dom";
 import useConsignSales from "../../hooks/useConsignSales";
 import { ConsignSaleListResponse, ConsignSaleStatus, ConsignSaleType } from "../../api";
 import { ColumnsType } from "antd/es/table";
+import { useAuth } from "../../components/Auth/Auth";
 
 const { Option } = Select;
 const { RangePicker } = DatePicker;
 
 const MyConsign = () => {
   const navigate = useNavigate();
-  const userId = JSON.parse(localStorage.getItem("userId") || "null");
+  const { currentUser } = useAuth();
+  const userId = currentUser?.id || '';
   const [queryParams, setQueryParams] = useState({
     pageNumber: 1,
     pageSize: 10,

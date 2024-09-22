@@ -28,11 +28,13 @@ import {
 import useOrders from "../hooks/useOrders";
 import { useCheckoutOrder, useCheckoutVnpay, useCancelOrder } from '../hooks/orderHooks';
 import CheckoutModal from "../components/Orders/CheckoutModal";
+import { useAuth } from "../components/Auth/Auth";
 
 const { Option } = Select;
 
 const OrderList: React.FC = () => {
-  const [userId, setUserId] = useState<string | null>(null);
+  const { currentUser } = useAuth();
+  const userId = currentUser?.id || '';
   const [selectedOrder, setSelectedOrder] = useState<OrderListResponse | null>(null);
   const [orderLineItems, setOrderLineItems] = useState<OrderLineItemListResponse[]>([]);
   const [detailsLoading, setDetailsLoading] = useState<boolean>(false);
@@ -50,18 +52,7 @@ const OrderList: React.FC = () => {
   });
 
   useEffect(() => {
-    const storedUserId = localStorage.getItem("userId");
-    if (storedUserId) {
-      try {
-        setUserId(JSON.parse(storedUserId));
-      } catch (error) {
-        console.error("Failed to parse userId from localStorage:", error);
-        notification.error({
-          message: "Error",
-          description: "Invalid user data. Please log in again.",
-        });
-      }
-    } else {
+    if (!userId) {
       notification.error({
         message: "Error",
         description: "User not logged in. Please log in to view orders.",

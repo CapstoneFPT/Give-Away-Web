@@ -4,21 +4,18 @@ import { Button, Card, Row, Col, Form, Input, message, Modal } from "antd";
 import NavProfile from "../components/NavProfile/NavProfile";
 import "./CSS/ChangePassword.css";
 import { AuthApi, ChangePasswordRequest } from "../api";
+import { useAuth } from "../components/Auth/Auth";
 
 const ChangePassword: React.FC = () => {
+  const { currentUser } = useAuth();
+  const userId = currentUser?.id || '';
   const [currentPasswordVisible, setCurrentPasswordVisible] = useState(false);
   const [newPasswordVisible, setNewPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
   const [isFormChanged, setIsFormChanged] = useState(false);
   const [form] = Form.useForm<ChangePasswordRequest>();
-  const [userId, setUserId] = useState<string | null>(null);
 
-  useEffect(() => {
-    const storedUserId = JSON.parse(localStorage.getItem("userId") || "null");
-    setUserId(storedUserId);
-    console.log(storedUserId);
-  }, []);
-
+  
   const onFinish = (values: ChangePasswordRequest) => {
     if (!userId) {
       message.error("User ID not found. Please log in again.");

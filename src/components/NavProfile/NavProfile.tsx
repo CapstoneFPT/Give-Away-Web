@@ -13,6 +13,7 @@ import {Button, Menu, Card} from "antd";
 import {useNavigate} from "react-router-dom";
 import {AccountApi} from "../../api";
 import { icon } from "leaflet";
+import { useAuth } from "../Auth/Auth";
 
 
 const MenuItemWithButton = ({key, icon, label, to}: {
@@ -36,7 +37,8 @@ const NavProfile: React.FC = () => {
 
     useEffect(() => {
         const fetchBalance = async () => {
-            const userId = JSON.parse(localStorage.getItem("userId") || "null");
+            const { currentUser } = useAuth();
+            const userId = currentUser?.id || '';
             try {
                 const accountApi = new AccountApi();
                 const response = await accountApi.apiAccountsIdGet(userId);

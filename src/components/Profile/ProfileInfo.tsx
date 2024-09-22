@@ -3,9 +3,11 @@ import { Button, Card, notification } from 'antd';
 import img from "../Assets/nam2.png";
 import TextArea from 'antd/es/input/TextArea';
 import { AccountApi } from '../../api';
+import { useAuth } from '../Auth/Auth';
 
 const ProfileInfo: React.FC = () => {
-    const userId = JSON.parse(localStorage.getItem('userId') || 'null');
+    const { currentUser } = useAuth();
+    const userId = currentUser?.id || '';
     const [inquiryText, setInquiryText] = useState(""); // State to hold the inquiry text
     const [loading, setLoading] = useState(false); // State to manage loading
 

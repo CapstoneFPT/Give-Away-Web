@@ -4,17 +4,14 @@ import { Link } from "react-router-dom";
 import moment from "moment";
 import { AuctionApi, AuctionListResponse } from "../api";
 import backgroundImageUrl from "../components/Assets/adobestock_573340270.jpg";
+import { useAuth } from "../components/Auth/Auth";
 
 const { Title, Text } = Typography;
 
 const AuctionList = () => {
   const [data, setData] = useState<AuctionListResponse[]>([]);
-  const [userId, setUserId] = useState<string | null>(null);
-
-  useEffect(() => {
-    const userId = JSON.parse(localStorage.getItem("userId") || "null");
-    setUserId(userId);
-  }, []);
+  const { currentUser } = useAuth();
+  const userId = currentUser?.id || '';
 
   useEffect(() => {
     const auctionApi = new AuctionApi();

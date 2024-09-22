@@ -28,11 +28,13 @@ import {
 import { BankSelectionModal } from "../components/Profile/BankSelectionModal";
 import { useFetchBankAccounts } from "../hooks/useFetchBankAccounts";
 import { AxiosError } from "axios";
+import { useAuth } from "../components/Auth/Auth";
 
 const { Title, Text } = Typography;
 
 const Withdraw: React.FC = () => {
-  const userId = JSON.parse(localStorage.getItem("userId") || "null");
+  const { currentUser } = useAuth();
+  const userId = currentUser?.id || '';
   const [form] = Form.useForm();
   const [selectedBank, setSelectedBank] =
     useState<BankAccountsListResponse | null>(null);

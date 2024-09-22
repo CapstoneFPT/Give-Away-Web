@@ -27,6 +27,7 @@ import { AddressSelectionModal } from "../components/Cart/AddressSelectionModal"
 import { useNavigate } from "react-router-dom";
 import Cart from "../components/Cart/Cart";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { useAuth } from "../components/Auth/Auth";
 
 const { Option } = Select;
 
@@ -35,7 +36,8 @@ const CartPage: React.FC = () => {
   const [showConfirm, setShowConfirm] = useState(false);
   const [itemToRemove, setItemToRemove] = useState<Product | null>(null);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
-  const userId = JSON.parse(localStorage.getItem("userId") || "null");
+  const { currentUser } = useAuth();
+  const userId = currentUser?.id || '';
   const {
     addresses,
     isLoading: isLoadingAddresses,

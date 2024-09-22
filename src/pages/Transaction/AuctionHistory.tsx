@@ -5,11 +5,13 @@ import NavProfile from '../../components/NavProfile/NavProfile';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { getAuctionStatus } from '../../utils/types';
+import { useAuth } from '../../components/Auth/Auth';
 
 const { Option } = Select;
 
 const AuctionHistory: React.FC = () => {
-  const userId = JSON.parse(localStorage.getItem("userId") || "null");
+  const { currentUser } = useAuth();
+  const userId = currentUser?.id || '';
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [statuses, setStatuses] = useState<AuctionStatus[]>([]);

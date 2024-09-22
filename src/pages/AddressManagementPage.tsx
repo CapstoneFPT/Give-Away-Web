@@ -7,9 +7,11 @@ import { useModal } from "../hooks/useModal";
 import NavProfile from "../components/NavProfile/NavProfile";
 import AddressCard from "../components/Profile/AddressCard";
 import AddressForm from "../components/Profile/AddressForm";
+import { useAuth } from "../components/Auth/Auth";
 
 const AddressManagementPage: React.FC = () => {
-    const userId = useMemo(() => JSON.parse(localStorage.getItem('userId') || 'null'), []);
+    const { currentUser } = useAuth();
+    const userId = currentUser?.id || '';
     const { addresses, isLoading, error, addNewAddress, updateAddress, deleteAddress, setDefaultAddress } = useAddresses(userId);
     const formModal = useModal();
     const deleteModal = useModal();

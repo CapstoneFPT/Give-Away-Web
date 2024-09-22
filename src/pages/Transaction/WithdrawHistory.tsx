@@ -4,13 +4,15 @@ import NavProfile from "../../components/NavProfile/NavProfile";
 import { GetWithdrawsResponse, WithdrawStatus } from "../../api";
 import useWithdrawHistory from "../../hooks/useWithdraws";
 import { ColumnsType } from "antd/es/table";
+import { useAuth } from "../../components/Auth/Auth";
 
 const { Title } = Typography;
 const { Search } = Input;
 const { Option } = Select;
 
 const WithdrawHistory: React.FC = () => {
-    const userId = JSON.parse(localStorage.getItem("userId") || "null");
+    const { currentUser } = useAuth();
+    const userId = currentUser?.id || '';
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const [status, setStatus] = useState<WithdrawStatus | undefined>(undefined);

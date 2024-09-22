@@ -18,7 +18,8 @@ const Navbar = () => {
     const [isLoggingOut, setIsLoggingOut] = useState(false);
     const [searchValue, setSearchValue] = useState("");
     const cart = useCart();
-    const userId = JSON.parse(localStorage.getItem("userId") || "null");
+    const { currentUser } = useAuth();
+    const userId = currentUser?.id || '';
     const isLoggedIn = !!userId;
     const { logout } = useAuth();
     const navigate = useNavigate();

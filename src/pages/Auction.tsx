@@ -24,6 +24,7 @@ import {
 import { useAuctionData, usePlaceBid } from "../hooks/auctionHooks";
 import { useSignalRSetup } from "../hooks/useSignalRSetup";
 import LeaderboardModal from "../components/Auction/LeaderboardModal";
+import { useAuth } from "../components/Auth/Auth";
 
 const { Title, Paragraph } = Typography;
 
@@ -31,7 +32,8 @@ const Auction: React.FC = () => {
   const { auctionId } = useParams<{ auctionId: string }>();
 
   const navigate = useNavigate();
-  const userId = JSON.parse(localStorage.getItem("userId") || "null");
+  const { currentUser } = useAuth();
+  const userId = currentUser?.id || '';
   const [selectedImage, setSelectedImage] = useState<string>("");
   const [bids, setBids] = useState<BidDetailResponse[]>([]);
   const [nextBidAmount, setNextBidAmount] = useState<number | undefined>(

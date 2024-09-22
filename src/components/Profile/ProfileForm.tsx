@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Card, Form, Input, notification, Typography } from 'antd';
 import { MailOutlined, PhoneOutlined, UserOutlined } from '@ant-design/icons';
 import { AccountApi, DeliveryListResponse, DeliveryRequest, InquiryApi, InquiryListResponse,  } from '../../api';
+import { useAuth } from '../Auth/Auth';
 
 const { Text } = Typography;
 
@@ -19,7 +20,8 @@ const ProfileForm: React.FC = () => {
         fetchInquiries(); // Fetch inquiries on component mount
     }, []);
 
-    const userId = JSON.parse(localStorage.getItem('userId') || 'null');
+    const { currentUser } = useAuth();
+    const userId = currentUser?.id || '';
 
     const fetchUserData = async () => {
         if (!userId) {

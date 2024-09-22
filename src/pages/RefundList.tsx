@@ -4,9 +4,11 @@ import { Card, Col, Row, Table, Button, Tag } from "antd";
 import NavProfile from "../components/NavProfile/NavProfile.tsx";
 import { getRefundStatus } from "../utils/types.ts";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../components/Auth/Auth.tsx";
 
 const RefundList = () => {
-  const userId = JSON.parse(localStorage.getItem("userId") || "null");
+  const { currentUser } = useAuth();
+  const userId = currentUser?.id || '';
   const [data, setData] = useState<RefundResponse[]>([]);
   const navigate = useNavigate();
 

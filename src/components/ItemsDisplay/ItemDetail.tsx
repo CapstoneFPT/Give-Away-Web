@@ -5,6 +5,7 @@ import {useCart} from "../../pages/CartContext";
 
 import {useParams} from "react-router-dom";
 import {FashionItemApi, FashionItemDetailResponse} from "../../api";
+import { useAuth } from "../Auth/Auth";
 
 const {Paragraph} = Typography;
 
@@ -42,7 +43,8 @@ const ItemDetail: React.FC = () => {
     const {dispatch, isItemInCart} = useCart();
     const [selectedImage, setSelectedImage] = useState<string>("");
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const userId = JSON.parse(localStorage.getItem("userId") || "null");
+    const { currentUser } = useAuth();
+    const userId = currentUser?.id || '';
     console.log(product);
     useEffect(() => {
         if (itemId !== undefined) {
