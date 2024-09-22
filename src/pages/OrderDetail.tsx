@@ -59,7 +59,7 @@ const OrderDetail = () => {
   });
   useEffect(() => {
     const fetchFeedbacks = async () => {
-      try {
+    
         if (!orderDetail?.orderId) {
           throw new Error("Order ID is not available");
         }
@@ -69,13 +69,7 @@ const OrderDetail = () => {
           orderDetail.orderId // Ensure orderId is valid
         );
         setFeedbacks(response.data.items || []); // Update feedbacks state
-      } catch (error) {
-        console.error("Error fetching feedbacks:", error);
-        notification.error({
-          message: "Error",
-          description: "Failed to fetch feedbacks. Please try again later.",
-        });
-      }
+     
     };
 
     fetchFeedbacks(); // Call the function to fetch feedbacks
@@ -124,21 +118,7 @@ const OrderDetail = () => {
     setIsModalVisible(true);
   };
   const feedbackAPI = new FeedbackApi();
-  // const fetchFeedbacks = async () => {
-  //   try {
-  //     const feedbackAPI = new FeedbackApi();
-  //     const response = await feedbackAPI.apiFeedbacksGet(
-  //       null!,
-  //       null!,
-  //       orderDetail?.orderId
-  //     );
-  //     return response.data.items || [];
-  //     console.log(response)
-  //   } catch (error) {
-  //     console.error("Error fetching feedbacks:", error);
-  //     return []; // Hoặc xử lý lỗi theo cách khác
-  //   }
-  // };
+
   const handleSendFeedback = () => {
     const orderId = orderDetail?.orderId; // Assuming orderId is part of orderDetail
     const reqFeedback = feedbackAPI.apiFeedbacksPost({
@@ -506,8 +486,7 @@ const OrderDetail = () => {
                         <Descriptions.Item label="Customer Feedback">
                           <>
                             <Text style={{ color: "orange", fontWeight: "bold" }}>
-                              Feedback Date: {new Date().toLocaleString()}{" "}
-                              {/* Assuming current date for feedback date */}
+                              Feedback Date: {feedbacks.length > 0 ? new Date(feedbacks[0].createDate!).toLocaleString() : "N/A"}{" "}
                             </Text>
                             <Input.TextArea
                               rows={4}

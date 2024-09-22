@@ -44,7 +44,7 @@ const ChildItems: React.FC = () => {
           null!, // minPrice (not used here)
           null!, // maxPrice (not used here)
           ["Available"], // status (not used here)
-          ["ItemBase", "ConsignedForSale"], // type (not used here)
+          ["ItemBase", "ConsignedForSale","CustomerSale"], // type (not used here)
           null!, // sortBy (not used here)
           null!, // sortDescending (not used here)
           null!, // pageNumber (not used here)

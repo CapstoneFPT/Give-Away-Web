@@ -37,7 +37,7 @@ const ConsignForm = () => {
   const shopApi = new ShopApi();
   const [form] = Form.useForm<CreateConsignSaleRequest>(); // Form instance for resetting fields
   const userId = JSON.parse(localStorage.getItem("userId") || "null");
-
+console.log(uploading)
   console.log(userId);
   useEffect(() => {
     const fetchBranches = async () => {

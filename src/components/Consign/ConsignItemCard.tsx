@@ -80,16 +80,35 @@ const ConsignItemCard = ({ key, name, restField, fileLists, handleFileChange, re
           
         </Col>
         <Col span={12}>
-          <Form.Item
-            {...restField}
-            name={[name, "expectedPrice"]}
-            rules={[
-              { required: true, message: "Missing price" },
-              { pattern: /^\d+(\.\d{1,2})?$/, message: "Invalid price" },
-            ]}
-          >
-            <Input placeholder="Expected Price" />
-          </Form.Item>
+        <Form.Item
+  {...restField}
+  name={[name, "expectedPrice"]}
+  rules={[
+    { required: true, message: "Missing price" },
+    { pattern: /^\d+(\.\d{1,2})?$/, message: "Invalid price" },
+  ]}
+>
+  <Input 
+    placeholder="Expected Price" 
+    onChange={(e) => {
+      let value = e.target.value;
+
+      // Xóa bỏ tất cả các ký tự không phải số
+      value = value.replace(/\D/g, '');
+
+      // Thêm dấu chấm vào mỗi 3 ký tự
+      value = value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+      // Cập nhật lại giá trị cho input
+      e.target.value = value;
+
+      // Gọi sự kiện onChange để cập nhật form value
+      // Form.Item không nhận dạng sự thay đổi `e.target.value` khi thay đổi giá trị trực tiếp,
+      // Nên cần gọi thêm hàm dưới để cập nhật giá trị chính xác vào form.
+      e.target.dispatchEvent(new Event('input', { bubbles: true }));
+    }} 
+  />
+</Form.Item>
           <Form.Item
             {...restField}
             name={[name, "conditionPercentage"]}
@@ -103,9 +122,6 @@ const ConsignItemCard = ({ key, name, restField, fileLists, handleFileChange, re
               <Option value="Fair">Fair</Option>
             </Select>
           </Form.Item>
-          
-          
-         
           <Form.Item
             {...restField}
             name={[name, "color"]}

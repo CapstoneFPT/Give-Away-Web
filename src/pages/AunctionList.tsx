@@ -55,8 +55,7 @@ const AuctionList = () => {
         auctionId,
         userId!
       );
-     
-        
+ 
         window.location.href = `/auction/${auctionId}?item=${auctionItemId}`;
       
         
