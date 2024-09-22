@@ -12,7 +12,7 @@ services:
       - ./src:/app/src
       - /etc/letsencrypt/live/giveawayproject.jettonetto.org:/etc/letsencrypt/live/giveawayproject.jettonetto.org:ro
       - /etc/letsencrypt/archive/giveawayproject.jettonetto.org:/etc/letsencrypt/archive/giveawayproject.jettonetto.org:ro
-    environment:
+    args:
       - NODE_ENV=production
       - VITE_API_KEY=${VITE_API_KEY}
       - VITE_AUTH_DOMAIN=${VITE_AUTH_DOMAIN}
