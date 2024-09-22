@@ -30,7 +30,7 @@ COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile
 
 COPY . .
-RUN pnpm run build
+RUN pnpm run vite build
 
 # Production stage
 FROM nginx:alpine
