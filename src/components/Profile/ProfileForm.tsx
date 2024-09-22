@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { Button, Card, Form, Input, notification, Typography } from 'antd';
+import React, { useState } from 'react';
+import { Button, Card, Form, Input, notification, Typography, Skeleton } from 'antd';
 import { MailOutlined, PhoneOutlined, UserOutlined } from '@ant-design/icons';
-import { AccountApi, DeliveryListResponse, DeliveryRequest, InquiryApi, InquiryListResponse,  } from '../../api';
+import { AccountApi, DeliveryListResponse, DeliveryRequest, InquiryApi, InquiryListResponse } from '../../api';
 import { useAuth } from '../Auth/Auth';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 const { Text } = Typography;
 
@@ -10,74 +11,93 @@ const ProfileForm: React.FC = () => {
     const [form] = Form.useForm();
     const [addressForm] = Form.useForm<DeliveryRequest>();
     const [isFormChanged, setIsFormChanged] = useState(false);
-    const [addresses, setAddresses] = useState<DeliveryListResponse[]>([]);
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const [isSaveButtonLoading, setIsSaveButtonLoading] = useState(false);
-    const [inquiries, setInquiries] = useState<InquiryListResponse[]>([]); // State to hold inquiries
-
-    useEffect(() => {
-        fetchUserData();
-        fetchInquiries(); // Fetch inquiries on component mount
-    }, []);
-
     const { currentUser } = useAuth();
     const userId = currentUser?.id || '';
-    console.log(currentUser);
+    const queryClient = useQueryClient();
 
-    const fetchUserData = async () => {
-        if (!userId) {
-            notification.error({ message: 'User ID not found in local storage.' });
-            return;
-        }
-
-        try {
+    const { data: userData, isLoading: isUserLoading } = useQuery({
+        queryKey: ['userData', userId],
+        queryFn: async () => {
             const accountApi = new AccountApi();
             const response = await accountApi.apiAccountsIdGet(userId);
-            form.setFieldsValue({
-                fullname: response.data?.data?.fullname,
-                phone: response.data?.data?.phone,
-                email: response.data?.data?.email,
-            });
+            return response.data?.data;
+        },
+        enabled: !!userId,
+    });
 
-            const addressResponse = await accountApi.apiAccountsAccountIdDeliveriesGet(userId);
-            setAddresses(addressResponse.data.data || []);
-        } catch (error) {
-            console.error('Error fetching user data:', error);
-            notification.error({ message: 'Failed to fetch user data. Please try again later.' });
-        }
-    };
-console.log()
-    const fetchInquiries = async () => {
-        try {
+    const { data: addresses, isLoading: isAddressesLoading } = useQuery({
+        queryKey: ['addresses', userId],
+        queryFn: async () => {
+            const accountApi = new AccountApi();
+            const response = await accountApi.apiAccountsAccountIdDeliveriesGet(userId);
+            return response.data.data || [];
+        },
+        enabled: !!userId,
+    });
+
+    const { data: inquiries, isLoading: isInquiriesLoading } = useQuery({
+        queryKey: ['inquiries', userId],
+        queryFn: async () => {
             const inquiryApi = new InquiryApi();
-            const response = await inquiryApi.apiInquiriesGet(null!, null!,null!,  userId!);
-            setInquiries(response.data.items || []); 
-            // Set inquiries data
-            console.log('hihi',response)
-            console.log('huy',userId)
-        } catch (error) {
-            console.error('Error fetching inquiries:', error);
-            notification.error({ message: 'Failed to fetch inquiries. Please try again later.' });
-        }
-    };
+            const response = await inquiryApi.apiInquiriesGet(null!, null!, null!, userId!);
+            return response.data.items || [];
+        },
+        enabled: !!userId,
+    });
 
-    const handleSave = async () => {
-        try {
-            const values = await form.validateFields();
-            const userId = JSON.parse(localStorage.getItem('userId') || 'null');
-            if (!userId) throw new Error('User ID not found');
-
+    const updateUserMutation = useMutation({
+        mutationFn: async (values: any) => {
             const accountApi = new AccountApi();
             await accountApi.apiAccountsAccountIdPut(userId, {
                 fullname: values.fullname,
                 phone: values.phone,
             });
-
+        },
+        onSuccess: () => {
             notification.success({ message: 'User data updated successfully!' });
             setIsFormChanged(false);
-        } catch (error) {
+            queryClient.invalidateQueries({ queryKey: ['userData', userId] });
+        },
+        onError: (error) => {
             console.error('Error updating user data:', error);
             notification.error({ message: 'Failed to update user data. Please try again later.' });
+        },
+    });
+
+    const addAddressMutation = useMutation({
+        mutationFn: async (values: DeliveryRequest) => {
+            const accountApi = new AccountApi();
+            await accountApi.apiAccountsAccountIdDeliveriesPost(userId, values);
+        },
+        onSuccess: () => {
+            notification.success({ message: 'Address added successfully!' });
+            setIsModalVisible(false);
+            addressForm.resetFields();
+            queryClient.invalidateQueries({ queryKey: ['addresses', userId] });
+        },
+        onError: (error) => {
+            console.error('Error adding address:', error);
+            notification.error({ message: 'Failed to add address. Please try again.' });
+        },
+    });
+
+    React.useEffect(() => {
+        if (userData) {
+            form.setFieldsValue({
+                fullname: userData.fullname,
+                phone: userData.phone,
+                email: userData.email,
+            });
+        }
+    }, [userData, form]);
+
+    const handleSave = async () => {
+        try {
+            const values = await form.validateFields();
+            updateUserMutation.mutate(values);
+        } catch (error) {
+            console.error('Validation failed:', error);
         }
     };
 
@@ -87,25 +107,25 @@ console.log()
 
     const handleModalOk = async () => {
         try {
-            setIsSaveButtonLoading(true);
             const values = await addressForm.validateFields();
-            console.log('New Address:', values);
-
-            const accountApi = new AccountApi();
-            const userId = JSON.parse(localStorage.getItem('userId') || 'null');
-            if (!userId) throw new Error('User ID not found');
-
-            await accountApi.apiAccountsAccountIdDeliveriesPost(userId, values);
-            setIsSaveButtonLoading(false);
-            setIsModalVisible(false);
-            addressForm.resetFields();
-            notification.success({ message: 'Address added successfully!' });
+            addAddressMutation.mutate(values);
         } catch (error) {
             console.error('Validation failed:', error);
-            notification.error({ message: 'Failed to add address. Please try again.' });
-            setIsSaveButtonLoading(false);
         }
     };
+
+    const isLoading = isUserLoading || isAddressesLoading || isInquiriesLoading;
+
+    if (isLoading) {
+        return (
+            <Card>
+                <Skeleton avatar active paragraph={{ rows: 4 }} />
+                <Skeleton active paragraph={{ rows: 2 }} />
+                <Skeleton.Button active size="large" style={{ width: 120, marginTop: 16 }} />
+                <Skeleton active paragraph={{ rows: 4 }} style={{ marginTop: 24 }} />
+            </Card>
+        );
+    }
 
     return (
         <Card>
@@ -141,17 +161,17 @@ console.log()
             </Form>
 
             <Card style={{ marginTop: '20px' }} title='Your Inquiries'>
-    {inquiries.length > 0 ? (
-        inquiries.map((inquiry, index) => (
-            <div key={inquiry.inquiryId}>
-                <Text style={{ display: 'block', fontSize:'20px', }}>{inquiry.message}</Text> {/* Display each inquiry on a new line */}
-                {index < inquiries.length - 1 && <hr />} {/* Add horizontal line except after the last inquiry */}
-            </div>
-        ))
-    ) : (
-        <Text>No inquiries available.</Text> // Message when no inquiries exist
-    )}
-</Card>
+                {inquiries && inquiries.length > 0 ? (
+                    inquiries.map((inquiry, index) => (
+                        <div key={inquiry.inquiryId}>
+                            <Text style={{ display: 'block', fontSize: '20px', }}>{inquiry.message}</Text>
+                            {index < inquiries.length - 1 && <hr />}
+                        </div>
+                    ))
+                ) : (
+                    <Text>No inquiries available.</Text>
+                )}
+            </Card>
         </Card>
     );
 };

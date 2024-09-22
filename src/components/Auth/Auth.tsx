@@ -23,43 +23,48 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const newAuth: AuthModel = { api_token: token };
     setAuth(newAuth);
     authHelper.setAuth(newAuth);
+    localStorage.setItem('auth_token', token);
   };
 
   const logout = () => {
     setAuth(undefined);
     setCurrentUser(undefined);
     authHelper.removeAuth();
+    localStorage.removeItem('auth_token');
     navigate('/');
   };
 
   useEffect(() => {
-    const fetchCurrentUser = async () => {
-      if (auth?.api_token) {
-        try {
-          const accountApi = new AccountApi();
-          const { data } = await accountApi.apiAccountsGetCurrentAccountPost({
-            headers: {
-              Authorization: `Bearer ${auth.api_token}`,
-            }
-          });
-          if (data?.data) {
-            setCurrentUser({
-              id: data.data.accountId || '',
-              email: data.data.email || '',
-              role: data.data.role!
-            });
+    const fetchCurrentUser = async (token: string) => {
+      try {
+        const accountApi = new AccountApi();
+        const { data } = await accountApi.apiAccountsGetCurrentAccountPost({
+          headers: {
+            Authorization: `Bearer ${token}`,
           }
-        } catch (error) {
-          console.error('Failed to fetch current user:', error);
-          logout();
+        });
+        if (data?.data) {
+          setCurrentUser({
+            id: data.data.accountId || '',
+            email: data.data.email || '',
+            role: data.data.role!
+          });
+          setAuth({ api_token: token });
         }
-      } else {
-        setCurrentUser(undefined);
+      } catch (error) {
+        console.error('Failed to fetch current user:', error);
+        logout();
       }
     };
 
-    fetchCurrentUser();
-  }, [auth]);
+    const token = localStorage.getItem('auth_token');
+    if (token) {
+      fetchCurrentUser(token);
+    } else {
+      setCurrentUser(undefined);
+      setAuth(undefined);
+    }
+  }, []);
 
   return (
     <AuthContext.Provider value={{ auth, currentUser, login, logout }}>

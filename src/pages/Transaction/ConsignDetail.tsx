@@ -336,16 +336,8 @@ const ConsignDetail = () => {
               <Col>
                 <Button
                   onClick={() => openConfirmationModal("continue")}
-                  disabled={(
-                    consignLineItems && consignLineItems.some((item) => item.status === 'Negotiating')
-                    && consignInformation?.status === "Negotiating"
-                  ) || (
-                      consignInformation?.status === ConsignSaleStatus.Pending ||
-                      consignInformation?.status === ConsignSaleStatus.AwaitDelivery ||
-                      consignInformation?.status === ConsignSaleStatus.Processing ||
-                      consignInformation?.status === ConsignSaleStatus.Completed ||
-                      consignInformation?.status === ConsignSaleStatus.Cancelled
-                    )
+                  disabled={
+                    !(consignInformation?.status === ConsignSaleStatus.Negotiating && consignLineItems.every(item => item.isApproved !== null))
                   }
                   style={{ marginRight: "10px" }}
                 >
