@@ -97,7 +97,7 @@ const NavProfile: React.FC = () => {
                         textAlign: "center",
                     }}
                 >
-                    {isLoading ? 'Loading...' : `${formatBalance(balanceData)} VND`}
+                    {isLoading ? 'Loading...' : `${formatBalance(balanceData || 0)} VND`}
                 </div>
             </Card>
             <Card

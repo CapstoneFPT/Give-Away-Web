@@ -337,7 +337,7 @@ const ConsignDetail = () => {
                 <Button
                   onClick={() => openConfirmationModal("continue")}
                   disabled={
-                    !(consignInformation?.status === ConsignSaleStatus.Negotiating && consignLineItems.every(item => item.isApproved !== null))
+                    !(consignInformation?.status === ConsignSaleStatus.Negotiating && consignLineItems?.every(item => item.isApproved !== null))
                   }
                   style={{ marginRight: "10px" }}
                 >
