@@ -10,7 +10,8 @@ import {
   Statistic,
   message,
   Modal,
-  Table
+  Table,
+  Select
 } from "antd";
 import Footer from "../components/Footer/Footer";
 import { useParams, useNavigate } from "react-router-dom";
@@ -25,6 +26,7 @@ import { useAuctionData, usePlaceBid } from "../hooks/auctionHooks";
 import { useSignalRSetup } from "../hooks/useSignalRSetup";
 import LeaderboardModal from "../components/Auction/LeaderboardModal";
 import { useAuth } from "../components/Auth/Auth";
+import { CgLayoutGrid } from "react-icons/cg";
 
 const { Title, Paragraph } = Typography;
 
@@ -42,23 +44,33 @@ const Auction: React.FC = () => {
   const [deadline, setDeadline] = useState<number>(0);
   const [leaderboardData, setLeaderboardData] = useState<AuctionLeaderboardResponse | null>(null);
   const [isLeaderboardVisible, setIsLeaderboardVisible] = useState(false);
+  const [stepIncrementPercentage, setStepIncrementPercentage] = useState<number>(0);
 
   const { data, isLoading, error } = useAuctionData(auctionId!);
   const placeBidMutation = usePlaceBid(auctionId!);
 
+  const generateBidOptions = useCallback(() => {
+    const options = [];
+    for (let i = 0; i <= 50; i++) {
+      options.push(i * 10);
+    }
+    return options;
+  }, []);
+
   const addBid = useCallback((newBid: BidDetailResponse) => {
+    console.log("New bid: ", newBid);
     setBids((prevBids) => {
-      console.count("addBid is running");
       if (prevBids.some(bid => bid.id === newBid.id)) return prevBids;
       const updatedBids = [newBid, ...prevBids];
-      console.log("updatedBids: ", updatedBids);
-      const latestBid = updatedBids[0];
-      console.log("latestBid: ", latestBid);
-      console.log("Next amount should be: ", (latestBid.amount || 0) + (data?.auctionDetail.stepIncrement || 0));
-      setNextBidAmount((latestBid.amount || 0) + (data?.auctionDetail.stepIncrement || 0));
       return updatedBids;
     });
-  }, [data?.auctionDetail.stepIncrement]);
+
+    const latestBid = newBid.amount || data?.product.initialPrice || 0;
+    const baseIncrement = data?.auctionDetail.stepIncrement || 0;
+    const additionalIncrement = baseIncrement * (stepIncrementPercentage / 100);
+    const nextAmount = latestBid + baseIncrement + additionalIncrement;
+    setNextBidAmount(nextAmount);
+  }, [data?.auctionDetail.stepIncrement, stepIncrementPercentage, data?.product.initialPrice]);
 
   const fetchLeaderboard = async (page: number = 1, pageSize: number = 10) => {
     try {
@@ -87,9 +99,13 @@ const Auction: React.FC = () => {
       setSelectedImage(product.images![0]!);
 
       if (latestBid) {
+        console.log("Latest bid: ", latestBid);
         addBid(latestBid);
       } else {
-        setNextBidAmount(product.initialPrice || 0);
+        const baseIncrement = auctionDetail.stepIncrement || 0;
+        const additionalIncrement = baseIncrement * (stepIncrementPercentage / 100);
+        const initialBidAmount = product.initialPrice || 0;
+        setNextBidAmount(initialBidAmount + baseIncrement + additionalIncrement);
       }
 
       const currentTime = new Date(serverTime.currentTime!);
@@ -102,7 +118,7 @@ const Auction: React.FC = () => {
         setDeadline(endTime.getTime());
       }
     }
-  }, [data, addBid]);
+  }, [data, addBid, stepIncrementPercentage]);
 
   const handleBid = async () => {
     if (!nextBidAmount) return;
@@ -110,6 +126,7 @@ const Auction: React.FC = () => {
       memberId: userId,
       amount: nextBidAmount,
     };
+    console.log("Step increment: ", stepIncrementPercentage);
     try {
       await placeBidMutation.mutateAsync(bidRequest);
     } catch (error) {
@@ -120,6 +137,8 @@ const Auction: React.FC = () => {
   const formatBalance = (balance: number) => {
     return new Intl.NumberFormat("de-DE").format(balance);
   };
+
+  const bidOptions = generateBidOptions();
 
   return (
     <Card>
@@ -200,7 +219,7 @@ const Auction: React.FC = () => {
                 <strong>Note:</strong> {data?.product.note}
               </Paragraph>
             <Paragraph style={{ color: "#32b94b", fontSize: "20px" }}>
-              <strong>Current Bid: {formatBalance(nextBidAmount!)} VND </strong>
+              <strong>Current Bid: {formatBalance(bids[0]?.amount!)} VND </strong>
             </Paragraph>
             <Statistic.Countdown
               title="Auction Ends In"
@@ -233,7 +252,28 @@ const Auction: React.FC = () => {
             />
             <div style={{ marginTop: "10px" }}>
               <p>
-                <strong>Next Bid Amount: {formatBalance(nextBidAmount!)} VND </strong>{" "}
+                <strong>Select Step Increment Percentage: </strong>
+              </p>
+              <Select
+                style={{ width: '100%', marginBottom: '10px' }}
+                value={stepIncrementPercentage}
+                onChange={(value) => {
+                  setStepIncrementPercentage(value);
+                  const baseIncrement = data?.auctionDetail.stepIncrement || 0;
+                  const additionalIncrement = baseIncrement * (value / 100);
+                  const latestBid = bids[0]?.amount || data?.product.initialPrice || 0;
+                  const newNextBidAmount = latestBid + baseIncrement + additionalIncrement;
+                  setNextBidAmount(newNextBidAmount);
+                }}
+              >
+                {bidOptions.map((option) => (
+                  <Select.Option key={option} value={option}>
+                    +{option}%
+                  </Select.Option>
+                ))}
+              </Select>
+              <p>
+                <strong>Next Bid Amount: {formatBalance(nextBidAmount!)} VND </strong>
               </p>
               <Button
                 disabled={bids[0]?.memberId === userId}

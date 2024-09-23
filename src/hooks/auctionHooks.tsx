@@ -18,6 +18,7 @@ export const useAuctionData = (auctionId: string) => {
         product: fetchedProduct.data,
         latestBid: latestBidResponse.data,
         serverTime: serverTimeResponse.data,
+        stepIncrement: auctionDetailResponse.data.stepIncrement,
       };
     },
   });
