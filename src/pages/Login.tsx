@@ -74,7 +74,7 @@ const Login = () => {
                 });
 
                 setIsModalLoginOpen(false); // hide modal after login
-                navigate('/'); // Navigate to home page
+                window.location.reload();
             } else {
                 notification.error({
                     message: 'Login Failed',
