@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Table, Input, Select, Card, Row, Col, Tag } from 'antd';
-import { AccountTransactionsListResponse, TransactionType } from '../../api';
+import { AccountTransactionsListResponse, PaymentMethod, TransactionType } from '../../api';
 import useTransactions from '../../hooks/useTransactions';
 import NavProfile from '../../components/NavProfile/NavProfile';
 import { ColumnsType } from 'antd/es/table';
@@ -15,6 +15,7 @@ const TransactionHistory: React.FC = () => {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [types, setTypes] = useState<TransactionType[]>([]);
+  const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
   const [orderCode, setOrderCode] = useState('');
   const [consignSaleCode, setConsignSaleCode] = useState('');
   const [rechargeCode, setRechargeCode] = useState('');
@@ -28,6 +29,7 @@ const TransactionHistory: React.FC = () => {
     page,
     pageSize,
     types,
+    paymentMethods,
     orderCode,
     consignSaleCode,
     rechargeCode,
@@ -105,6 +107,11 @@ const TransactionHistory: React.FC = () => {
 
   const handleTypeChange = (selectedTypes: TransactionType[]) => {
     setTypes(selectedTypes);
+    setPage(1);
+  };
+
+  const handlePaymentMethodChange = (selectedPaymentMethods: PaymentMethod[]) => {
+    setPaymentMethods(selectedPaymentMethods);
     setPage(1);
   };
 
@@ -248,13 +255,27 @@ const TransactionHistory: React.FC = () => {
               <Col span={24}>
                 <Select
                   mode="multiple"
-                  style={{ width: '24%' }}
+                  style={{ width: '100%' }}
                   placeholder="Select transaction types"
                   onChange={handleTypeChange}
                 >
                   {Object.values(TransactionType).map((type) => (
                     <Option key={type} value={type}>
                       {type}
+                    </Option>
+                  ))}
+                </Select>
+              </Col>
+              <Col span={24}>
+                <Select
+                  mode="multiple"
+                  style={{ width: '100%' }}
+                  placeholder="Select payment methods"
+                  onChange={handlePaymentMethodChange}
+                >
+                  {Object.values(PaymentMethod).map((method) => (
+                    <Option key={method} value={method}>
+                      {method}
                     </Option>
                   ))}
                 </Select>
