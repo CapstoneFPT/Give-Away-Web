@@ -1,11 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
-import { AccountApi, AccountTransactionsListResponse, AccountTransactionsListResponsePaginationResponse, TransactionType } from '../api';
+import { AccountApi, AccountTransactionsListResponse, AccountTransactionsListResponsePaginationResponse, PaymentMethod, TransactionType } from '../api';
 
 interface TransactionQueryParams {
   accountId: string;
   page?: number;
   pageSize?: number;
   types?: TransactionType[];
+  paymentMethods?: PaymentMethod[];
   orderCode?: string;
   consignSaleCode?: string;
   rechargeCode?: string;
@@ -26,6 +27,7 @@ const useTransactions = (params: TransactionQueryParams) => {
         params.page,
         params.pageSize,
         params.types,
+        params.paymentMethods,
         params.transactionCode,
         params.orderCode,
         params.consignSaleCode,
