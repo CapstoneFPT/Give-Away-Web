@@ -35,8 +35,8 @@ const RechargeHistory: React.FC = () => {
 			title: 'Amount',
 			dataIndex: 'amount',
 			key: 'amount',
-			render: (amount: number) => `${formatBalance(amount)} VND`,
-		},
+			render: (amount: number) => <strong>{`${formatBalance(amount)} VND`}</strong>,
+		  },
 		{
 			title: 'Created Date',
 			dataIndex: 'createdDate',

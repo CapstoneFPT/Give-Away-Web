@@ -138,9 +138,30 @@ const ProfileForm: React.FC = () => {
                 <Form.Item name="fullname" label="Name">
                     <Input prefix={<UserOutlined />} />
                 </Form.Item>
-                <Form.Item name="phone" label="Phone">
-                    <Input prefix={<PhoneOutlined />} maxLength={10} />
-                </Form.Item>
+                <Form.Item
+  name="phone"
+  label="Phone"
+  rules={[
+    {
+      pattern: /^\d{10}$/,
+      message: 'Phone number must be 10 digits long.',
+    },
+  ]}
+>
+  <Input
+    prefix={<PhoneOutlined />}
+    maxLength={10}
+    onChange={(e) => {
+      const { value } = e.target;
+      // Remove any non-numeric characters
+      const numericValue = value.replace(/\D/g, '');
+      // Limit the value to 10 digits
+      if (numericValue.length <= 10) {
+        form.setFieldsValue({ phone: numericValue });
+      }
+    }}
+  />
+</Form.Item>
                 <Form.Item name="email" label="Email">
                     <Input prefix={<MailOutlined />} readOnly />
                 </Form.Item>

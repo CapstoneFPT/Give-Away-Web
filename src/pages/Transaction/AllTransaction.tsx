@@ -60,7 +60,7 @@ const TransactionHistory: React.FC = () => {
       title: 'Amount',
       dataIndex: 'amount',
       key: 'amount',
-      render: (amount: number) => `${formatBalance(amount)} VND`,
+      render: (amount: number) => <strong>{`${formatBalance(amount)} VND`}</strong>,
     },
     {
       title: 'Created Date',
@@ -73,7 +73,7 @@ const TransactionHistory: React.FC = () => {
       title: 'Balance',
       dataIndex: 'accountBalance',
       key: 'accountBalance',
-      render: (accountBalance: number) => `${formatBalance(accountBalance)} VND`,
+      render: (accountBalance: number) => <strong>{formatBalance(accountBalance)} VND</strong>,
     },
     {
       title: 'Method',
@@ -248,7 +248,7 @@ const TransactionHistory: React.FC = () => {
               <Col span={24}>
                 <Select
                   mode="multiple"
-                  style={{ width: '100%' }}
+                  style={{ width: '24%' }}
                   placeholder="Select transaction types"
                   onChange={handleTypeChange}
                 >
