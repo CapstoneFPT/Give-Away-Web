@@ -105,7 +105,6 @@ const ConsignItemCard = ({
     parser={(value: any) => 
       value!.replace(/\.\s?|(\D*)/g, "") // Remove any non-numeric characters, dots, and " VND"
     }
-   
     onKeyDown={(event: any) => {
       // Prevent entering non-numeric characters and limit input length
       if (

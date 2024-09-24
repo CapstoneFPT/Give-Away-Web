@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Button, Card, Form, Input, notification, Typography, Skeleton } from 'antd';
 import { MailOutlined, PhoneOutlined, UserOutlined } from '@ant-design/icons';
-import { AccountApi, DeliveryListResponse, DeliveryRequest, InquiryApi, InquiryListResponse } from '../../api';
+import { AccountApi, DeliveryRequest, InquiryApi } from '../../api';
 import { useAuth } from '../Auth/Auth';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import Icon from '@ant-design/icons/lib/components/Icon';
 
 const { Text } = Typography;
 
@@ -12,6 +13,7 @@ const ProfileForm: React.FC = () => {
     const [addressForm] = Form.useForm<DeliveryRequest>();
     const [isFormChanged, setIsFormChanged] = useState(false);
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [isInquiriesVisible, setInquiriesVisible] = useState(false); // State để kiểm soát hiển thị inquiries
     const { currentUser } = useAuth();
     const userId = currentUser?.id || '';
     const queryClient = useQueryClient();
@@ -22,16 +24,6 @@ const ProfileForm: React.FC = () => {
             const accountApi = new AccountApi();
             const response = await accountApi.apiAccountsIdGet(userId);
             return response.data?.data;
-        },
-        enabled: !!userId,
-    });
-
-    const { data: addresses, isLoading: isAddressesLoading } = useQuery({
-        queryKey: ['addresses', userId],
-        queryFn: async () => {
-            const accountApi = new AccountApi();
-            const response = await accountApi.apiAccountsAccountIdDeliveriesGet(userId);
-            return response.data.data || [];
         },
         enabled: !!userId,
     });
@@ -65,23 +57,6 @@ const ProfileForm: React.FC = () => {
         },
     });
 
-    const addAddressMutation = useMutation({
-        mutationFn: async (values: DeliveryRequest) => {
-            const accountApi = new AccountApi();
-            await accountApi.apiAccountsAccountIdDeliveriesPost(userId, values);
-        },
-        onSuccess: () => {
-            notification.success({ message: 'Address added successfully!' });
-            setIsModalVisible(false);
-            addressForm.resetFields();
-            queryClient.invalidateQueries({ queryKey: ['addresses', userId] });
-        },
-        onError: (error) => {
-            console.error('Error adding address:', error);
-            notification.error({ message: 'Failed to add address. Please try again.' });
-        },
-    });
-
     React.useEffect(() => {
         if (userData) {
             form.setFieldsValue({
@@ -101,20 +76,11 @@ const ProfileForm: React.FC = () => {
         }
     };
 
-    const handleAddAddress = () => {
-        setIsModalVisible(true);
+    const toggleInquiries = () => {
+        setInquiriesVisible(!isInquiriesVisible); // Đảo ngược trạng thái hiển thị inquiries
     };
 
-    const handleModalOk = async () => {
-        try {
-            const values = await addressForm.validateFields();
-            addAddressMutation.mutate(values);
-        } catch (error) {
-            console.error('Validation failed:', error);
-        }
-    };
-
-    const isLoading = isUserLoading || isAddressesLoading || isInquiriesLoading;
+    const isLoading = isUserLoading || isInquiriesLoading;
 
     if (isLoading) {
         return (
@@ -139,29 +105,29 @@ const ProfileForm: React.FC = () => {
                     <Input prefix={<UserOutlined />} />
                 </Form.Item>
                 <Form.Item
-  name="phone"
-  label="Phone"
-  rules={[
-    {
-      pattern: /^\d{10}$/,
-      message: 'Phone number must be 10 digits long.',
-    },
-  ]}
->
-  <Input
-    prefix={<PhoneOutlined />}
-    maxLength={10}
-    onChange={(e) => {
-      const { value } = e.target;
-      // Remove any non-numeric characters
-      const numericValue = value.replace(/\D/g, '');
-      // Limit the value to 10 digits
-      if (numericValue.length <= 10) {
-        form.setFieldsValue({ phone: numericValue });
-      }
-    }}
-  />
-</Form.Item>
+                    name="phone"
+                    label="Phone"
+                    rules={[
+                        {
+                            pattern: /^\d{10}$/,
+                            message: 'Phone number must be 10 digits long.',
+                        },
+                    ]}
+                >
+                    <Input
+                        prefix={<PhoneOutlined />}
+                        maxLength={10}
+                        onChange={(e) => {
+                            const { value } = e.target;
+                            // Remove any non-numeric characters
+                            const numericValue = value.replace(/\D/g, '');
+                            // Limit the value to 10 digits
+                            if (numericValue.length <= 10) {
+                                form.setFieldsValue({ phone: numericValue });
+                            }
+                        }}
+                    />
+                </Form.Item>
                 <Form.Item name="email" label="Email">
                     <Input prefix={<MailOutlined />} readOnly />
                 </Form.Item>
@@ -181,18 +147,49 @@ const ProfileForm: React.FC = () => {
                 </Button>
             </Form>
 
-            <Card style={{ marginTop: '20px' }} title='Your Inquiries'>
-                {inquiries && inquiries.length > 0 ? (
-                    inquiries.map((inquiry, index) => (
-                        <div key={inquiry.inquiryId}>
-                            <Text style={{ display: 'block', fontSize: '20px', }}>{inquiry.message}</Text>
-                            {index < inquiries.length - 1 && <hr />}
-                        </div>
-                    ))
-                ) : (
-                    <Text>No inquiries available.</Text>
-                )}
-            </Card>
+            <Button 
+                style={{ marginTop: '20px', marginBottom: '10px' }} 
+                onClick={toggleInquiries}
+            >
+                {isInquiriesVisible ? 'Hide Inquiries' : 'Show Inquiries'}
+            </Button>
+
+            {isInquiriesVisible && (
+                <Card 
+                    style={{ 
+                        marginTop: '20px', 
+                        borderRadius: '8px', 
+                        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', 
+                        backgroundColor: '#f7f7f7',
+                        padding: '20px'
+                    }} 
+                    title={<span style={{ fontSize: '24px', fontWeight: 'bold', color: '#333' }}>Your Inquiries</span>}
+                >
+                    {inquiries && inquiries.length > 0 ? (
+                        inquiries.map((inquiry, index) => (
+                            <div 
+                                key={inquiry.inquiryId} 
+                                style={{ 
+                                    padding: '10px 0', 
+                                    borderBottom: index < inquiries.length - 1 ? '1px solid #e0e0e0' : 'none' 
+                                }}
+                            >
+                                <Text style={{ display: 'block', fontSize: '18px', color: '#555', marginBottom: '5px' }}>
+                                    <strong>{index + 1}.</strong> {inquiry.message}
+                                </Text>
+                                <div style={{ display: 'flex', alignItems: 'center', marginTop: '5px' }}>
+                                    <Text type="secondary" style={{ fontSize: '14px', color: '#888' }}>
+                                        {new Date(inquiry.createdDate!).toLocaleString()} {/* Hiển thị thời gian */}
+                                    </Text>
+                                    <Icon type="message" style={{ marginLeft: '10px', color: '#888' }} />
+                                </div>
+                            </div>
+                        ))
+                    ) : (
+                        <Text style={{ fontSize: '16px', color: '#999' }}>No inquiries available.</Text>
+                    )}
+                </Card>
+            )}
         </Card>
     );
 };
