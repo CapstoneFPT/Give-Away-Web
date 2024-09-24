@@ -30,9 +30,10 @@ const BranchItems: React.FC = () => {
                 null!, // categoryId
                 shopId,
                 null!, // genderType
-                false, // isConsignment
+                null!, // isConsignment
                 true, // isLeftInStock
-                true
+                true,
+                true, //Category
             );
             return response.data;
         },

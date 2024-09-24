@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Card, Row, Col, Button, Typography, Image } from "antd";
+import { Card, Row, Col, Button, Typography, Image, Divider } from "antd";
 import Footer from "../components/Footer/Footer";
 import { useParams } from "react-router-dom";
 import { FashionItemApi, FashionItemDetailResponse } from "../api";
@@ -75,6 +75,7 @@ const DetailProductAunction: React.FC = () => {
                       }}
                       onClick={() => setSelectedImage(image)}
                     />
+                    
                   </Col>
                 ))}
               </Row>
@@ -85,7 +86,9 @@ const DetailProductAunction: React.FC = () => {
                 alt={product.name!}
                 style={{ width: "90%", height: "750px" }}
               />
+              
             </Col>
+            
             <Col span={10}>
               <Card
                 title="Product Details"
@@ -130,103 +133,116 @@ const DetailProductAunction: React.FC = () => {
                 <Paragraph>
                   <strong>Note:</strong> {product.note}
                 </Paragraph>
+                
               </Card>
-             <Card
-             title='Condition Guide'
+              <Card style={{marginTop:"20px"}}
+                title="Condition Guide"
                 headStyle={{ backgroundColor: "black", color: "white" }}
-             
-             >
-             
-        <p><strong>Never worn, with tag</strong> - A never-worn item with tag is an item which has never been worn and still has the original purchase hangtags on it (include a photo of the tag).</p> <br/>
-        <p><strong>Never worn</strong> - A never-worn item without a tag is an item which has never been worn and shows no defects or alterations.</p> <br/>
-        <p><strong>Very good</strong> - An item in very good condition is a second-hand item which has been only lightly used and extremely well maintained, which can show slight defects from usage. These must be mentioned in the description and visible on the photos.</p> <br/>
-        <p><strong>Good</strong> - An item in good condition is a second-hand item which has been worn and well maintained. If the item has defects, they must be mentioned in the description and visible in the photos.</p> <br/>
-        <p><strong>Fair</strong> - An item in fair condition is a second-hand item which has been worn frequently and shows defects (these are mentioned in the description and visible in photos).</p>
-             </Card>
-
+              >
+                <Row gutter={[16,16]}>
+                  <Col span={12}>
+                  <p>
+                  <strong>Never worn, with tag</strong> - A never-worn item with
+                  tag is an item which has never been worn and still has the
+                  original purchase hangtags on it (include a photo of the tag).
+                </p>{" "}
+                <br />
+                <p>
+                  <strong>Never worn</strong> - A never-worn item without a tag
+                  is an item which has never been worn and shows no defects or
+                  alterations.
+                </p>{" "}
+                <br />
+                
+                
+                  </Col>
+                  <Col span={12}>
+                  <p>
+                  <strong>Good</strong> - An item in good condition is a
+                  second-hand item which has been worn and well maintained. If
+                  the item has defects, they must be mentioned in the
+                  description and visible in the photos.
+                </p>{" "}
+                <br />
+                <p>
+                  <strong>Fair</strong> - An item in fair condition is a
+                  second-hand item which has been worn frequently and shows
+                  defects (these are mentioned in the description and visible in
+                  photos).
+                </p>
+                  </Col>
+                </Row>
+                <p>
+                  <strong>Very good</strong> - An item in very good condition is
+                  a second-hand item which has been only lightly used and
+                  extremely well maintained, which can show slight defects from
+                  usage. These must be mentioned in the description and visible
+                  on the photos.
+                </p>{" "}
+               
+              </Card>
+              
             </Col>
+            <Card
+            style={{ marginTop: "20px" }}
+             headStyle={{ backgroundColor: "black", color: "white" }}
+            title="Policy Auction"
+          >
+            <Row gutter={[16, 16]}>
+              <Col span={12}>
+                <Typography>
+                  <Title level={5}>Auction Participation Requirements</Title>
+                  <Paragraph>
+                    To participate in an auction, a deposit is required before
+                    the auction starts. The deposit must be made within the
+                    specified timeframe before the auction begins.
+                  </Paragraph>
+                  <Divider />
+
+                  <Title level={5}>Deposit Forfeiture Policy</Title>
+                  <Paragraph>
+                    If you place a deposit but do not participate in the
+                    auction, the deposit will be forfeited. For unsuccessful
+                    bidders, the deposit will be refunded in the form of system
+                    points.
+                  </Paragraph>
+                  <Divider />
+
+                  <Title level={5}>Deposit and Bid Increments</Title>
+                  <Paragraph>
+                    The deposit fee is based on the value of the item. The bid
+                    increments will be calculated as a percentage of the initial
+                    value of the item and multiplied by the percentage you have
+                    chosen.
+                  </Paragraph>
+                  <Divider />
+                </Typography>
+              </Col>
+              <Col span={12}>
+                <Title level={5}>Payment and Deposit Deduction</Title>
+                <Paragraph>
+                  If you win the auction, the deposit will be deducted from the
+                  total amount you need to pay for the item. Please note that
+                  the auction only accepts payment in system points.
+                </Paragraph>
+                <Divider />
+
+                <Title level={5}>Shipping and Delivery</Title>
+                <Paragraph>
+                  Once the auctioned item is paid for, the shop will package and
+                  deliver the item to the address provided in the order. The
+                  customer can inspect the item upon receipt and has 7 days to
+                  request a refund if there is any discrepancy.
+                </Paragraph>
+                <Divider />
+              </Col>
+            </Row>
+            <Title level={4} style={{ textAlign: "center" }}>
+              Thank you from Give Away!
+            </Title>
+          </Card>
           </Row>
-          <Card
-  style={{ marginTop: '20px' }}
-  // headStyle={{ backgroundColor: "black", color: "white" }}
-  title="Policy Auction"
->
-  <Row gutter={[16,16]}>
-    <Col span={12}>
-    <h2 >Eligibility to Bid</h2>
-  <p>
-    Only registered participants are eligible to bid.<br />
-    All bidders must be at least 18 years old and provide valid identification.
-  </p>
-  <br />
-
-  <h2 >Bidding Process</h2>
-  <p>
-    All bids must be placed online/in-person, depending on the auction format.<br />
-    Bids must be made in the stated increments. Bids that do not meet this increment will not be considered.<br />
-    Each bidder is responsible for ensuring their bid is placed correctly. Mistakes made during the bidding process are the sole responsibility of the bidder.
-  </p>
-  <br />
-
-  <h2 >Winning Bids</h2>
-  <p>
-    The highest bid at the close of the auction wins the item.<br />
-    In the case of a tie bid, the first bid placed at the highest price will be declared the winner.<br />
-    Winning bidders will be notified within 24 hours of the auction close.
-  </p>
-  <br />
-
-  <h2 >Payment Terms</h2>
-  <p>
-    Full payment is due within 3 business days of winning the auction.<br />
-    Acceptable payment methods include credit card, bank transfer, or other methods stated by the auction organizer.<br />
-    Failure to make payment within the specified period will result in forfeiture of the winning bid, and the item will be offered to the next highest bidder.
-  </p>
-  <br />
-
-  <h2 >Item Descriptions and Condition</h2>
-  <p>
-    All items are sold "as-is" with no warranties or guarantees. Descriptions and images provided are for informational purposes only and do not constitute a guarantee of condition.<br />
-    It is the bidder's responsibility to inspect the item before placing a bid, when possible.
-  </p>
-  <br />
-    </Col>
-    <Col span={12}>
-    <h2 >Shipping and Delivery</h2>
-  <p>
-    The buyer is responsible for all shipping and delivery costs, unless otherwise specified.<br />
-    Items will be shipped within 7-10 business days after payment is received and confirmed.
-  </p>
-  <br />
-
-  <h2 >Refunds and Returns</h2>
-  <p>
-    All sales are final. No returns or refunds will be accepted unless otherwise stated by the auction organizer.<br />
-    If an item is found to be significantly misrepresented, the buyer must contact the auction house within 48 hours of receiving the item to request a resolution.
-  </p>
-  <br />
-
-  <h2 >Auctioneer's Discretion</h2>
-  <p>
-    The auctioneer reserves the right to reject any bid, withdraw any item from the auction, or cancel the auction at any time without notice.<br />
-    In case of any disputes, the auctioneer's decision will be final.
-  </p>
-  <br />
-
-  <h2 >Liability</h2>
-  <p>
-    The auction house is not responsible for any errors in bidding or any technical issues experienced by the bidder during the auction process.<br />
-    By participating in the auction, the bidder agrees to indemnify and hold harmless the auction organizer from any claims arising from their participation.
-  </p>
-  <br />
-
-    </Col>
-  </Row>
- 
-
- 
-  
-</Card>
+          
         </Card>
       </Card>
       <Footer />
