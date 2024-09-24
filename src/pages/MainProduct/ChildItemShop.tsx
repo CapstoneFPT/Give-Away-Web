@@ -3,6 +3,7 @@ import {FashionItemApi, FashionItemList, MasterItemApi, MasterItemDetailResponse
 import {useNavigate, useParams} from "react-router-dom";
 import {Button, Card, Col, Image, Input, Modal, Row, Select, Spin, Typography} from "antd";
 import backgroundImageUrl from "../../components/Assets/handbag-near-sunglasses-with-wear-plant-twigs.jpg";
+import { Option } from "antd/es/mentions";
 
 
 const formatBalance = (balance: any) => {
@@ -70,6 +71,13 @@ const ChildItemShop = () => {
     const handleCancel = () => {
         setIsModalVisible(false);
     };
+    const clearFilters = () => {
+        setFilterSize(undefined);
+        setFilterColor(undefined);
+        setFilterCondition(undefined);
+        setItemCodeFilter(undefined);
+      };
+    
 
     const sizeOptions = Object.values(SizeType).map(size => (
         <Select.Option key={size} value={size}>
@@ -87,39 +95,41 @@ const ChildItemShop = () => {
                     style={{width: '200px', marginRight: '8px', marginLeft: '15px'}}
                 />
                 <Select
-                    placeholder="Size"
-                    onChange={value => setFilterSize(value)}
-                    style={{width: '70px', marginRight: '8px'}}
-                >
-                    {sizeOptions}
-                </Select>
-                <Select
-                    placeholder="Color"
-                    onChange={value => setFilterColor(value)}
-                    style={{width: '90px', marginRight: '8px'}}
-                >
-                    <Select.Option value="Red">Red</Select.Option>
-                    <Select.Option value="Blue">Blue</Select.Option>
-                    <Select.Option value="Green">Green</Select.Option>
-                </Select>
-                <Select
-                    placeholder="Condition"
-                    onChange={value => setFilterCondition(value)}
-                    style={{width: '180px', marginRight: '8px'}}
-                >
-                    <Select.Option value="Never worn, with tag">Never worn, with tag</Select.Option>
-                    <Select.Option value="Never worn">Never worn</Select.Option>
-                    <Select.Option value="Very good">Very good</Select.Option>
-                    <Select.Option value="Good">Good</Select.Option>
-                    <Select.Option value="Fair">Fair</Select.Option>
-                </Select>
-                <Button
-                    type="link"
-                    onClick={showConditionGuide}
-                    style={{marginLeft: '255px', color: 'black', textDecoration: 'underline'}}
-                >
-                    <strong>Condition Guide</strong>
-                </Button>
+          placeholder="Size"
+          value={filterSize}
+          onChange={value => setFilterSize(value)}
+          style={{ width: '70px', marginRight: '8px' }}
+        >
+          {sizeOptions}
+        </Select>
+        <Select
+          placeholder="Condition"
+          value={filterCondition}
+          onChange={value => setFilterCondition(value)}
+          style={{ width: '180px', marginRight: '8px' }}
+        >
+          <Option value="Never worn, with tag">Never worn, with tag</Option>
+          <Option value="Never worn">Never worn</Option>
+          <Option value="Very good">Very good</Option>
+          <Option value="Good">Good</Option>
+          <Option value="Fair">Fair</Option>
+        </Select>
+       
+        {/* Clear Filter Button */}
+        <Button
+          type="primary"
+          onClick={clearFilters}
+          style={{ marginLeft: '20px', backgroundColor:'black', color:'white' }}
+        >
+          Clear Filters
+        </Button>
+        <Button
+          type="link"
+          onClick={showConditionGuide}
+          style={{ marginLeft: '400px', color: 'black', textDecoration: 'underline' }}
+        >
+          <strong>Condition Guide</strong>
+        </Button>
             </div>
             {isLoading ? (
                 <Spin style={{display: 'flex', justifyContent: 'center', marginTop: '20px'}} size="large"/>

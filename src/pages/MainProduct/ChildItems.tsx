@@ -4,7 +4,6 @@ import { FashionItemApi, FashionItemList, MasterItemApi, MasterItemDetailRespons
 import { useParams, useNavigate } from 'react-router-dom';
 import backgroundImageUrl from "../../components/Assets/handbag-near-sunglasses-with-wear-plant-twigs.jpg";
 
-
 const { Option } = Select;
 const { Title } = Typography;
 
@@ -75,6 +74,14 @@ const ChildItems: React.FC = () => {
     setIsModalVisible(false);
   };
 
+  // Function to clear all filters
+  const clearFilters = () => {
+    setFilterSize(undefined);
+    setFilterColor(undefined);
+    setFilterCondition(undefined);
+    setItemCodeFilter(undefined);
+  };
+
   const sizeOptions = Object.values(SizeType).map(size => (
     <Option key={size} value={size}>
       {size}
@@ -87,27 +94,21 @@ const ChildItems: React.FC = () => {
       <div style={{ marginBottom: '16px', marginTop: '40px' }}>
         <Input
           placeholder="Search by Product Code"
+          value={itemCodeFilter}
           onChange={e => setItemCodeFilter(e.target.value)}
           style={{ width: '200px', marginRight: '8px', marginLeft: '15px' }}
         />
         <Select
           placeholder="Size"
+          value={filterSize}
           onChange={value => setFilterSize(value)}
           style={{ width: '70px', marginRight: '8px' }}
         >
           {sizeOptions}
         </Select>
         <Select
-          placeholder="Color"
-          onChange={value => setFilterColor(value)}
-          style={{ width: '90px', marginRight: '8px' }}
-        >
-          <Option value="Red">Red</Option>
-          <Option value="Blue">Blue</Option>
-          <Option value="Green">Green</Option>
-        </Select>
-        <Select
           placeholder="Condition"
+          value={filterCondition}
           onChange={value => setFilterCondition(value)}
           style={{ width: '180px', marginRight: '8px' }}
         >
@@ -117,10 +118,19 @@ const ChildItems: React.FC = () => {
           <Option value="Good">Good</Option>
           <Option value="Fair">Fair</Option>
         </Select>
+       
+        {/* Clear Filter Button */}
+        <Button
+          type="primary"
+          onClick={clearFilters}
+          style={{ marginLeft: '20px', backgroundColor:'black', color:'white' }}
+        >
+          Clear Filters
+        </Button>
         <Button
           type="link"
           onClick={showConditionGuide}
-          style={{ marginLeft: '255px', color: 'black', textDecoration: 'underline' }}
+          style={{ marginLeft: '400px', color: 'black', textDecoration: 'underline' }}
         >
           <strong>Condition Guide</strong>
         </Button>
@@ -186,9 +196,9 @@ const ChildItems: React.FC = () => {
         <h2 style={{textAlign:'center'}}>Condition Guide</h2>
         <p><strong>Never worn, with tag</strong> - A never-worn item with tag is an item which has never been worn and still has the original purchase hangtags on it (include a photo of the tag).</p> <br/>
         <p><strong>Never worn</strong> - A never-worn item without a tag is an item which has never been worn and shows no defects or alterations.</p> <br/>
-        <p><strong>Very good</strong> - An item in very good condition is a second-hand item which has been only lightly used and extremely well maintained, which can show slight defects from usage. These must be mentioned in the description and visible on the photos.</p> <br/>
-        <p><strong>Good</strong> - An item in good condition is a second-hand item which has been worn and well maintained. If the item has defects, they must be mentioned in the description and visible in the photos.</p> <br/>
-        <p><strong>Fair</strong> - An item in fair condition is a second-hand item which has been worn frequently and shows defects (these are mentioned in the description and visible in photos).</p>
+        <p><strong>Very good</strong> - An item in very good condition has been worn a few times and may show slight signs of wear or a few small defects.</p> <br/>
+        <p><strong>Good</strong> - An item in good condition has been worn and shows signs of wear, such as minor scratches or defects.</p> <br/>
+        <p><strong>Fair</strong> - An item in fair condition has been worn frequently and shows more significant signs of wear, such as more obvious scratches or defects.</p> <br/>
       </Modal>
     </div>
   );
