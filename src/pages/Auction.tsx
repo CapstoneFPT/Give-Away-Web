@@ -66,9 +66,13 @@ const Auction: React.FC = () => {
     });
 
     const latestBid = newBid.amount || data?.product.initialPrice || 0;
+
     const baseIncrement = data?.auctionDetail.stepIncrement || 0;
+    console.log("Base increment: ", baseIncrement);
     const additionalIncrement = baseIncrement * (stepIncrementPercentage / 100);
+    console.log("Additional increment: ", additionalIncrement);
     const nextAmount = latestBid + baseIncrement + additionalIncrement;
+    console.log("Next amount: ", nextAmount);
     setNextBidAmount(nextAmount);
   }, [data?.auctionDetail.stepIncrement, stepIncrementPercentage, data?.product.initialPrice]);
 
@@ -236,6 +240,7 @@ const Auction: React.FC = () => {
                 <List.Item>
                   <List.Item.Meta
                     title={
+                      <>
                       <span
                         style={{
                           color:
@@ -244,9 +249,13 @@ const Auction: React.FC = () => {
                       >
                         {formatBalance(bid.amount!)} VND
                       </span>
+                      </>
                     }
                     description={new Date(bid.createdDate!).toLocaleString()}
                   />
+                  <span>
+                    {bid.phone ? bid.phone : "N/A"}
+                  </span>
                 </List.Item>
               )}
             />
