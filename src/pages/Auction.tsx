@@ -262,7 +262,7 @@ const [stepIncrementPercentage, setStepIncrementPercentage] = useState<number>((
                     description={new Date(bid.createdDate!).toLocaleString()}
                   />
                   <span>
-                    {bid.phone ? bid.phone : "N/A"}
+                    {bid.phone ? bid.phone.slice(0, -3) + "***" : "N/A"}
                   </span>
                 </List.Item>
               )}
