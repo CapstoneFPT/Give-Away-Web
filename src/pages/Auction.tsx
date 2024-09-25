@@ -11,7 +11,8 @@ import {
   message,
   Modal,
   Table,
-  Select
+  Select,
+  Input,
 } from "antd";
 import Footer from "../components/Footer/Footer";
 import { useParams, useNavigate } from "react-router-dom";
@@ -45,6 +46,7 @@ const Auction: React.FC = () => {
   const [deadline, setDeadline] = useState<number>(0);
   const [leaderboardData, setLeaderboardData] = useState<AuctionLeaderboardResponse | null>(null);
   const [isLeaderboardVisible, setIsLeaderboardVisible] = useState(false);
+  const [customBidAmount, setCustomBidAmount] = useState<string>("");
 
 
   const { data, isLoading, error } = useAuctionData(auctionId!);
@@ -57,7 +59,11 @@ const Auction: React.FC = () => {
   const handleStepIncrementChange = useCallback((value: number) => {
     console.log("Setting new step increment percentage: ", value);
     setStepIncrementPercentage(value);
-  }, []);
+    if (data?.product.initialPrice) {
+      const newBidAmount = data.product.initialPrice * (1 + value / 100);
+      setCustomBidAmount(newBidAmount.toFixed(0));
+    }
+  }, [data?.product.initialPrice]);
 
   const addBid = useCallback((newBid: BidDetailResponse) => {
     console.log("New bid: ", newBid);
@@ -133,14 +139,24 @@ const Auction: React.FC = () => {
       const newNextBidAmount = Math.max(currentHighestBid + newStepIncrement, data.product.initialPrice + newStepIncrement);
       console.log("Updating next bid amount: ", newNextBidAmount);
       setNextBidAmount(newNextBidAmount);
+      setCustomBidAmount(newNextBidAmount.toFixed(0));
     }
   }, [data, stepIncrementPercentage, bids]);
 
+  const handleCustomBidChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCustomBidAmount(e.target.value);
+  };
+
   const handleBid = async () => {
-    if (!nextBidAmount) return;
+    const bidAmount = parseFloat(customBidAmount);
+    if (isNaN(bidAmount) || bidAmount < nextBidAmount!) {
+      message.error(`Bid must be at least ${formatBalance(nextBidAmount!)} VND`);
+      return;
+    }
+
     const bidRequest: CreateBidRequest = {
       memberId: userId,
-      amount: nextBidAmount,
+      amount: bidAmount,
     };
     console.log("Step increment: ", stepIncrementPercentage);
     try {
@@ -279,13 +295,19 @@ const Auction: React.FC = () => {
                 onStepIncrementChange={handleStepIncrementChange}
               />
               <p>
-                <strong>Next Bid Amount: {formatBalance(nextBidAmount!)} VND </strong>
+                <strong>Minimum Bid Amount: {formatBalance(nextBidAmount!)} VND </strong>
               </p>
+              <Input
+                type="number"
+                value={customBidAmount}
+                onChange={handleCustomBidChange}
+                placeholder={`Enter bid amount (min: ${formatBalance(nextBidAmount!)} VND)`}
+                style={{ marginBottom: "10px" }}
+              />
               <Button
                 disabled={bids[0]?.memberId === userId}
                 type="primary"
                 style={{
-                  marginTop: "10px",
                   backgroundColor:
                     bids[0]?.memberId === userId ? "gray" : "#000000",
                   width: "100%",
