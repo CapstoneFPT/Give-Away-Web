@@ -51,15 +51,7 @@ const OrderList: React.FC = () => {
     orderCode: undefined as string | undefined,
   });
 
-  useEffect(() => {
-    if (!userId) {
-      notification.error({
-        message: "Error",
-        description: "User not logged in. Please log in to view orders.",
-      });
-    }
-  }, []);
-
+  
   const { data: ordersData, isLoading, isError, error, refetch } = useOrders({
     accountId: userId!,
     ...queryParams,
