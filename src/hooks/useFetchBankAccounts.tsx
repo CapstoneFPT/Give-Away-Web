@@ -13,10 +13,6 @@ export const useFetchBankAccounts = (userId :string) => {
             const response = await accountApi.apiAccountsAccountIdBankaccountsGet(userId);
             setBankAccounts(response.data || []);
         } catch (e) {
-            console.log("Error fetching bank accounts:", e);
-            notification.error({
-                message: "Failed to fetch bank accounts. Please try again later.",
-            })
         } finally {
             setIsLoading(false);
         }
