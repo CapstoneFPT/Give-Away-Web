@@ -27,6 +27,7 @@ import { useSignalRSetup } from "../hooks/useSignalRSetup";
 import LeaderboardModal from "../components/Auction/LeaderboardModal";
 import { useAuth } from "../components/Auth/Auth";
 import { CgLayoutGrid } from "react-icons/cg";
+import StepIncrementInput from "../components/Auction/StepIncrementInput";
 
 const { Title, Paragraph } = Typography;
 
@@ -44,37 +45,36 @@ const Auction: React.FC = () => {
   const [deadline, setDeadline] = useState<number>(0);
   const [leaderboardData, setLeaderboardData] = useState<AuctionLeaderboardResponse | null>(null);
   const [isLeaderboardVisible, setIsLeaderboardVisible] = useState(false);
-  const [stepIncrementPercentage, setStepIncrementPercentage] = useState<number>(0);
+  
 
   const { data, isLoading, error } = useAuctionData(auctionId!);
+const [stepIncrementPercentage, setStepIncrementPercentage] = useState<number>(() => {
+    if (data?.auctionDetail?.stepIncrement && data?.product.initialPrice) {
+      return (data.auctionDetail.stepIncrement / data.product.initialPrice) * 100;
+    }
+    return 0;
+  });
   const placeBidMutation = usePlaceBid(auctionId!);
 
-  const generateBidOptions = useCallback(() => {
-    const options = [];
-    for (let i = 0; i <= 50; i++) {
-      options.push(i * 10);
-    }
-    return options;
+  const handleStepIncrementChange = useCallback((value: number) => {
+    console.log("Setting new step increment percentage: ", value);
+    setStepIncrementPercentage(value);
   }, []);
 
   const addBid = useCallback((newBid: BidDetailResponse) => {
     console.log("New bid: ", newBid);
     setBids((prevBids) => {
       if (prevBids.some(bid => bid.id === newBid.id)) return prevBids;
-      const updatedBids = [newBid, ...prevBids];
-      return updatedBids;
+      return [newBid, ...prevBids];
     });
 
-    const latestBid = newBid.amount || data?.product.initialPrice || 0;
-
-    const baseIncrement = data?.auctionDetail.stepIncrement || 0;
-    console.log("Base increment: ", baseIncrement);
-    const additionalIncrement = baseIncrement * (stepIncrementPercentage / 100);
-    console.log("Additional increment: ", additionalIncrement);
-    const nextAmount = latestBid + baseIncrement + additionalIncrement;
-    console.log("Next amount: ", nextAmount);
-    setNextBidAmount(nextAmount);
-  }, [data?.auctionDetail.stepIncrement, stepIncrementPercentage, data?.product.initialPrice]);
+    if (data?.product.initialPrice) {
+      const newStepIncrement = (stepIncrementPercentage / 100) * data.product.initialPrice;
+      const nextAmount = newBid.amount || data.product.initialPrice + newStepIncrement;
+      console.log("Next amount: ", nextAmount);
+      setNextBidAmount(nextAmount);
+    }
+  }, [data?.product.initialPrice, stepIncrementPercentage]);
 
   const fetchLeaderboard = async (page: number = 1, pageSize: number = 10) => {
     try {
@@ -124,6 +124,16 @@ const Auction: React.FC = () => {
     }
   }, [data, addBid, stepIncrementPercentage]);
 
+  useEffect(() => {
+    if (data?.product.initialPrice) {
+      const currentHighestBid = bids[0]?.amount || data.product.initialPrice;
+      const newStepIncrement = (stepIncrementPercentage / 100) * data.product.initialPrice;
+      const newNextBidAmount = Math.max(currentHighestBid + newStepIncrement, data.product.initialPrice + newStepIncrement);
+      console.log("Updating next bid amount: ", newNextBidAmount);
+      setNextBidAmount(newNextBidAmount);
+    }
+  }, [data, stepIncrementPercentage, bids]);
+
   const handleBid = async () => {
     if (!nextBidAmount) return;
     const bidRequest: CreateBidRequest = {
@@ -141,8 +151,6 @@ const Auction: React.FC = () => {
   const formatBalance = (balance: number) => {
     return new Intl.NumberFormat("de-DE").format(balance);
   };
-
-  const bidOptions = generateBidOptions();
 
   return (
     <Card>
@@ -206,7 +214,7 @@ const Auction: React.FC = () => {
                   <strong>Gender:</strong> {data?.product.gender}
                 </Paragraph>
               </Col>
-             
+
               <Paragraph>
                 <strong
                   style={{ fontSize: "18px", color: "ThreeDLightShadow" }}
@@ -214,14 +222,14 @@ const Auction: React.FC = () => {
                   Initial Price: {formatBalance(data?.product.initialPrice!)} VND
                 </strong>
               </Paragraph>
-              
+
             </Row>
             <Paragraph>
               <strong>Description:</strong> {data?.product.description}
             </Paragraph>
             <Paragraph>
-                <strong>Note:</strong> {data?.product.note}
-              </Paragraph>
+              <strong>Note:</strong> {data?.product.note}
+            </Paragraph>
             <Paragraph style={{ color: "#32b94b", fontSize: "20px" }}>
               <strong>Current Bid: {formatBalance(bids[0]?.amount!)} VND </strong>
             </Paragraph>
@@ -241,14 +249,14 @@ const Auction: React.FC = () => {
                   <List.Item.Meta
                     title={
                       <>
-                      <span
-                        style={{
-                          color:
-                            bid.memberId === userId ? "#ff5151" : "inherit",
-                        }}
-                      >
-                        {formatBalance(bid.amount!)} VND
-                      </span>
+                        <span
+                          style={{
+                            color:
+                              bid.memberId === userId ? "#ff5151" : "inherit",
+                          }}
+                        >
+                          {formatBalance(bid.amount!)} VND
+                        </span>
                       </>
                     }
                     description={new Date(bid.createdDate!).toLocaleString()}
@@ -261,26 +269,14 @@ const Auction: React.FC = () => {
             />
             <div style={{ marginTop: "10px" }}>
               <p>
-                <strong>Select Step Increment Percentage: </strong>
+                <strong>Set Step Increment Percentage: </strong>
               </p>
-              <Select
-                style={{ width: '100%', marginBottom: '10px' }}
-                value={stepIncrementPercentage}
-                onChange={(value) => {
-                  setStepIncrementPercentage(value);
-                  const baseIncrement = data?.auctionDetail.stepIncrement || 0;
-                  const additionalIncrement = baseIncrement * (value / 100);
-                  const latestBid = bids[0]?.amount || data?.product.initialPrice || 0;
-                  const newNextBidAmount = latestBid + baseIncrement + additionalIncrement;
-                  setNextBidAmount(newNextBidAmount);
-                }}
-              >
-                {bidOptions.map((option) => (
-                  <Select.Option key={option} value={option}>
-                    +{option}%
-                  </Select.Option>
-                ))}
-              </Select>
+              <StepIncrementInput
+                auctionId={auctionId!}
+                initialPrice={data?.product.initialPrice || 0}
+                currentPercentage={stepIncrementPercentage}
+                onStepIncrementChange={handleStepIncrementChange}
+              />
               <p>
                 <strong>Next Bid Amount: {formatBalance(nextBidAmount!)} VND </strong>
               </p>
