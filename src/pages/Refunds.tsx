@@ -6,6 +6,7 @@ import NavProfile from '../components/NavProfile/NavProfile';
 import { CreateRefundRequest, OrderLineItemListResponse, RefundApi } from '../api';
 import { storage } from './Firebase/firebase-config'; // Import the storage instance from Firebase config
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { formatBalance } from '../utils/utils';
 
 const styles = {
   buttonRefunds: {
@@ -123,6 +124,9 @@ const Refunds = () => {
       title: 'Unit Price',
       dataIndex: 'unitPrice',
       key: 'sellingPrice',
+      render: (sellingPrice: number) => (
+        <strong>{formatBalance(sellingPrice)} VND</strong>
+      ),
     },
   ];
 

@@ -229,13 +229,13 @@ const Login = () => {
                             Login
                         </Button>
                     </div>
-                    <div style={{textAlign: "center", marginTop: "30px"}}>
+                    {/* <div style={{textAlign: "center", marginTop: "30px"}}>
                         <p>-------Or-------</p>
                         <Button type="primary" style={{width: "90%", marginTop: "30px"}}>
                             <GoogleOutlined/>
                             Login with Google
                         </Button>
-                    </div>
+                    </div> */}
                     <div style={{marginTop: "20px", textAlign: "center"}}>
                         <div style={{marginBottom: "10px"}}>
                             Don't have an account?
