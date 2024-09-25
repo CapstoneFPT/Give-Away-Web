@@ -37,7 +37,7 @@ const CartPage: React.FC = () => {
   const [itemToRemove, setItemToRemove] = useState<Product | null>(null);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const { currentUser } = useAuth();
-  const userId = currentUser?.id || '';
+  const userId = currentUser?.id || "";
   const {
     addresses,
     isLoading: isLoadingAddresses,
@@ -47,6 +47,14 @@ const CartPage: React.FC = () => {
     useState<DeliveryListResponse | null>(null);
   const [showAddressModal, setShowAddressModal] = useState(false);
   const navigate = useNavigate();
+  const [isModalDiscount, setIsModalDiscount] = useState(false);
+
+  const showDiscountPolicy = () => {
+    setIsModalDiscount(true);
+  };
+  const handleCancel = () => {
+    setIsModalDiscount(false);
+  };
 
   const [form] = Form.useForm();
   useEffect(() => {
@@ -178,7 +186,10 @@ const CartPage: React.FC = () => {
     }
   };
 
-  const handlePayment = async (paymentMethod: PaymentMethod, orderId: string) => {
+  const handlePayment = async (
+    paymentMethod: PaymentMethod,
+    orderId: string
+  ) => {
     const orderApi = new OrderApi();
     switch (paymentMethod) {
       case PaymentMethod.Banking:
@@ -274,6 +285,7 @@ const CartPage: React.FC = () => {
           <Button onClick={() => setShowAddressModal(true)}>
             {selectedAddress ? "Change Address" : "Select Address"}
           </Button>
+
           <Divider />
           {selectedAddress && (
             <div>
@@ -323,16 +335,31 @@ const CartPage: React.FC = () => {
             )}
           </Typography.Title>
           <Divider />
-          <Typography.Title level={5}>
-            Discount:{" "}
-            {isCalculatingShippingFee ? (
-              <Spin size="small" />
-            ) : discount !== 0 ? (
-              `-${formatBalance(discount)} VND`
-            ) : (
-              "0 VND"
-            )}
-          </Typography.Title>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              marginBottom: "16px",
+            }}
+          >
+            <Typography.Title level={5} style={{ marginRight: "210px" }}>
+              Discount:{" "}
+              {isCalculatingShippingFee ? (
+                <Spin size="small" />
+              ) : discount !== 0 ? (
+                `-${formatBalance(discount)} VND`
+              ) : (
+                "0 VND"
+              )}
+            </Typography.Title>
+            <Button
+          type="link"
+          onClick={showDiscountPolicy}
+          style={{  color: 'black', textDecoration: 'underline' }}
+        >
+          <strong>Discount policy</strong>
+        </Button>
+          </div>
           <Divider />
           <Typography.Title level={4}>
             Total Price: {formatBalance(calculateTotalPrice())} VND
@@ -362,6 +389,34 @@ const CartPage: React.FC = () => {
             Check Out
           </Button>
         </Card>
+        <Modal
+        title=""
+        visible={isModalDiscount}
+        onCancel={handleCancel}
+        footer={null}
+        width={800}
+       
+      >
+        
+        <div>
+      {/* Title for Discounts */}
+      <Typography.Title level={3}>Giveaway Discounts for Customers</Typography.Title>
+      <Typography.Paragraph>
+        - For orders <strong>equal to or greater than <strong style={{color:'yellowgreen'}}>1,000,000 VND</strong></strong>, a <strong style={{color:'yellowgreen'}}>10%</strong> discount is applied to the total order amount.
+      </Typography.Paragraph>
+      <Typography.Paragraph>
+        - For orders <strong>equal to or greater than <strong style={{color:'yellowgreen'}}>500,000 VND</strong></strong>, a <strong style={{color:'yellowgreen'}}>5%</strong> discount is applied to the total order amount.
+      </Typography.Paragraph>
+
+      {/* Title for Shipping Fees */}
+      <Typography.Title level={4}>Shipping Fees</Typography.Title>
+      <Typography.Paragraph>
+        - For orders containing items from multiple shops, the shipping fee will be calculated based on the distance from the customer's address to each shop and summed up.
+      </Typography.Paragraph>
+    </div>
+        
+       
+      </Modal>
       </Col>
       <AddressSelectionModal
         visible={showAddressModal}
@@ -376,6 +431,7 @@ const CartPage: React.FC = () => {
         isLoading={isLoadingAddresses}
       />
     </Row>
+    
   );
 };
 

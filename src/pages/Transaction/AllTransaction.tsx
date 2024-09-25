@@ -38,6 +38,7 @@ const TransactionHistory: React.FC = () => {
     withdrawCode,
     refundCode,
   });
+  console.log(data)
 
   const columns: ColumnsType<AccountTransactionsListResponse> = [
     {
