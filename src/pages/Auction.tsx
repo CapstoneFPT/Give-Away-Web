@@ -45,15 +45,13 @@ const Auction: React.FC = () => {
   const [deadline, setDeadline] = useState<number>(0);
   const [leaderboardData, setLeaderboardData] = useState<AuctionLeaderboardResponse | null>(null);
   const [isLeaderboardVisible, setIsLeaderboardVisible] = useState(false);
-  
+
 
   const { data, isLoading, error } = useAuctionData(auctionId!);
-const [stepIncrementPercentage, setStepIncrementPercentage] = useState<number>(() => {
-    if (data?.auctionDetail?.stepIncrement && data?.product.initialPrice) {
-      return (data.auctionDetail.stepIncrement / data.product.initialPrice) * 100;
-    }
-    return 0;
-  });
+  const [stepIncrementPercentage, setStepIncrementPercentage] = useState<number>(0);
+
+
+
   const placeBidMutation = usePlaceBid(auctionId!);
 
   const handleStepIncrementChange = useCallback((value: number) => {
@@ -101,6 +99,10 @@ const [stepIncrementPercentage, setStepIncrementPercentage] = useState<number>((
       const { product, latestBid, auctionDetail, serverTime } = data;
 
       setSelectedImage(product.images![0]!);
+
+     if(stepIncrementPercentage === 0){
+      setStepIncrementPercentage(auctionDetail.stepIncrement || 0);
+     }
 
       if (latestBid) {
         console.log("Latest bid: ", latestBid);
@@ -272,7 +274,6 @@ const [stepIncrementPercentage, setStepIncrementPercentage] = useState<number>((
                 <strong>Set Step Increment Percentage: </strong>
               </p>
               <StepIncrementInput
-                auctionId={auctionId!}
                 initialPrice={data?.product.initialPrice || 0}
                 currentPercentage={stepIncrementPercentage}
                 onStepIncrementChange={handleStepIncrementChange}

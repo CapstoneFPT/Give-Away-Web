@@ -3,15 +3,13 @@ import { Input, Button, message } from "antd";
 import { useAuctionData } from "../../hooks/auctionHooks";
 
 const StepIncrementInput: React.FC<{
-  auctionId: string;
   initialPrice: number;
   onStepIncrementChange: (value: number) => void;
   currentPercentage: number;
-}> = ({ auctionId, initialPrice, onStepIncrementChange, currentPercentage }) => {
-  const { data } = useAuctionData(auctionId);
+}> = ({ initialPrice, onStepIncrementChange, currentPercentage }) => {
   const [inputValue, setInputValue] = useState<string>("");
   useEffect(() => {
-    setInputValue(currentPercentage.toFixed(2));
+    setInputValue(currentPercentage.toFixed(0));
   }, [currentPercentage]);
 
 
