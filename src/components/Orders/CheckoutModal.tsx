@@ -261,7 +261,8 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
                 <Space direction="vertical" size="small" style={{ width: '100%' }}>
                   <Row justify="space-between">
                     <Text>Subtotal:</Text>
-                    <Text strong>{formatBalance(selectedOrder.totalPrice || 0)} VND</Text>
+                    <Text strong>{formatBalance(
+                      selectedOrder.subtotal || 0)} VND</Text>
                   </Row>
                   <Row justify="space-between">
                     <Text>Shipping Fee:</Text>
@@ -280,7 +281,7 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
                 <Row justify="space-between" align="middle">
                   <Title level={4}>Total:</Title>
                   <Title level={4} style={{ color: 'black' }}>
-                    {formatBalance((selectedOrder.totalPrice || 0) + (shippingFeeData || selectedOrder.shippingFee || 0) - (selectedOrder.discount || 0))} VND
+                    {formatBalance((selectedOrder.subtotal || 0) + (shippingFeeData || selectedOrder.shippingFee || 0) - (selectedOrder.discount || 0))} VND
                   </Title>
                 </Row>
                 <Row gutter={16} style={{ marginTop: '20px' }}>
