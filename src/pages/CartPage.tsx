@@ -313,7 +313,7 @@ const CartPage: React.FC = () => {
               ]}
             >
               <Select placeholder="Select payment method">
-                <Option value={PaymentMethod.Banking}>Banking</Option>
+                <Option value={PaymentMethod.Banking}>VNPay</Option>
                 <Option value={PaymentMethod.Point}>Point</Option>
                 <Option value={PaymentMethod.Cod}>COD</Option>
               </Select>

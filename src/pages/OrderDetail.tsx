@@ -400,7 +400,7 @@ const OrderDetail = () => {
                           {orderDetail?.orderCode}
                         </Descriptions.Item>
                         <Descriptions.Item label="Payment Method">
-                          {orderDetail?.paymentMethod}
+                          {orderDetail?.paymentMethod === 'Banking' ? 'VNPay' : orderDetail?.paymentMethod}
                         </Descriptions.Item>
                         <Descriptions.Item label="Recipient Name">
                           {orderDetail?.reciepientName}

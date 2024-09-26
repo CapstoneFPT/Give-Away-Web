@@ -51,14 +51,6 @@ const OrderList: React.FC = () => {
     orderCode: undefined as string | undefined,
   });
 
-  useEffect(() => {
-    if (!userId) {
-      notification.error({
-        message: "Error",
-        description: "User not logged in. Please log in to view orders.",
-      });
-    }
-  }, []);
 
   const { data: ordersData, isLoading, isError, error, refetch } = useOrders({
     accountId: userId!,
@@ -248,6 +240,9 @@ const OrderList: React.FC = () => {
       title: "Payment Method",
       dataIndex: "paymentMethod",
       key: "paymentMethod",
+      render: (paymentMethod: string, record: OrderResponse) => (
+        record.paymentMethod === 'Banking' ? 'VNPay' : record.paymentMethod
+      ),
     },
     {
       title: "Status",
