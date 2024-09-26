@@ -255,7 +255,7 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
                 <Title level={5}>
                   <DollarOutlined /> Payment Method
                 </Title>
-                <Text>{selectedOrder.paymentMethod}</Text>
+                <Text>{selectedOrder.paymentMethod === 'Banking' ? 'VNPay' : selectedOrder.paymentMethod}</Text>
                 <Divider />
                 <Title level={5}>Order Summary</Title>
                 <Space direction="vertical" size="small" style={{ width: '100%' }}>

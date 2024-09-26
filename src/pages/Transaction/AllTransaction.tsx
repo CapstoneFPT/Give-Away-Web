@@ -82,12 +82,12 @@ const TransactionHistory: React.FC = () => {
       title: 'Method',
       dataIndex: 'paymentMethod',
       key: 'paymentMethod',
-      render: (paymentMethod: string, record: any) => ( // Sửa lại để sử dụng hàm render đúng cách
+      render: (paymentMethod: string, record: AccountTransactionsListResponse) => ( // Sửa lại để sử dụng hàm render đúng cách
         <Tag
           style={{ marginBottom: "10px" }}
-          color={getPaymentStatus(record.paymentMethod)}
+          color={getPaymentStatus(record.paymentMethod || '')}
         >
-          {record.paymentMethod}
+          {record.paymentMethod === 'Banking' ? 'VNPay' : record.paymentMethod}
         </Tag>
       ),
     },

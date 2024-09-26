@@ -49,7 +49,7 @@ const RechargeHistory: React.FC = () => {
 			key: 'paymentMethod',
 			render: (paymentMethod: string) => (
 				<Tag color={getPaymentStatus(paymentMethod)}>
-					{paymentMethod}
+					{paymentMethod === 'Banking' ? 'VNPay' : paymentMethod}
 				</Tag>
 			),
 		},
