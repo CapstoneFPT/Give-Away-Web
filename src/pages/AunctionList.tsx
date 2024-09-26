@@ -24,10 +24,10 @@ const AuctionList = () => {
         ]);
         const fetchedData: AuctionListResponse[] = response.data.items
           ? response.data.items.map((item: any) => ({
-              ...item,
-              startDate: moment(item.startDate).format("YYYY-MM-DD HH:mm"),
-              endDate: moment(item.endDate).format("YYYY-MM-DD HH:mm")
-            }))
+            ...item,
+            startDate: moment(item.startDate).format("YYYY-MM-DD HH:mm"),
+            endDate: moment(item.endDate).format("YYYY-MM-DD HH:mm")
+          }))
           : ([] as AuctionListResponse[]);
         setData(
           fetchedData.sort((a: any, b: any) =>
@@ -52,12 +52,12 @@ const AuctionList = () => {
         auctionId,
         userId!
       );
- 
-        window.location.href = `/auction/${auctionId}?item=${auctionItemId}`;
-      
-        
-       
-      
+
+      window.location.href = `/auction/${auctionId}?item=${auctionItemId}`;
+
+
+
+
     } catch (error) {
       console.error("Error checking deposit status:", error);
     }
@@ -65,20 +65,20 @@ const AuctionList = () => {
   const handleDepositButtonClick = async (
     auctionId: string,
     auctionItemId: string
-) => {
+  ) => {
     try {
-        const depositApi = new AuctionApi();
-        const depositStatus = await depositApi.apiAuctionsAuctionIdDepositsHasDepositGet(
-            auctionId,
-            userId!
-        );
-        // Sửa đổi URL để sử dụng "&" thay vì "?" cho tham số truy vấn
-        window.location.href = `/deposit/${auctionId}`;
-        
+      const depositApi = new AuctionApi();
+      const depositStatus = await depositApi.apiAuctionsAuctionIdDepositsHasDepositGet(
+        auctionId,
+        userId!
+      );
+      // Sửa đổi URL để sử dụng "&" thay vì "?" cho tham số truy vấn
+      window.location.href = `/deposit/${auctionId}`;
+
     } catch (error) {
-        console.error("Error checking deposit status:", error);
+      console.error("Error checking deposit status:", error);
     }
-};
+  };
   const formatBalance = (balance: number) => {
     return new Intl.NumberFormat('de-DE').format(balance);
   };
@@ -93,7 +93,7 @@ const AuctionList = () => {
         boxShadow: "0 4px 8px rgba(0,0,0,0.2)"
       }}
     >
-      <Title level={2} style={{ textAlign: "center", margin: "30px 0", color:"CaptionText" }}>
+      <Title level={2} style={{ textAlign: "center", margin: "30px 0", color: "CaptionText" }}>
         Auction List
       </Title>
       <Row gutter={[16, 16]}>
@@ -113,13 +113,13 @@ const AuctionList = () => {
               <Text strong>Start: </Text><Text>{auction.startDate}</Text><br />
               <Text strong>End: </Text><Text>{auction.endDate}</Text><br />
               <Text strong>Deposit Fee: </Text><Text>{formatBalance(auction.depositFee!)}VND </Text><br />
-              <Text strong>Status: </Text><Text>{auction.status}</Text><br />
+              <Text strong>Status: </Text><Text>{auction.status == 'Approved' ? 'Upcoming' : auction.status == 'OnGoing' ? 'On Going' : 'Ended'}</Text><br />
               <Space style={{ marginTop: "10px" }}>
                 <Link to={`/detailProductAuction/${auction.auctionItemId}`}>
-                  <Button style={{backgroundColor:'black', color:'white'}} type="primary">Detail</Button>
+                  <Button style={{ backgroundColor: 'black', color: 'white' }} type="primary">Detail</Button>
                 </Link>
                 <Button
-                style={{backgroundColor:'black', color:'white'}}
+                  style={{ backgroundColor: 'black', color: 'white' }}
                   type="default"
                   onClick={() => handleAuctionButtonClick(auction.auctionId!, auction.auctionItemId!)}
                   disabled={auction.status !== "OnGoing"}
@@ -127,7 +127,7 @@ const AuctionList = () => {
                   Auction
                 </Button>
                 <Button
-                style={{backgroundColor:'black', color:'white'}}
+                  style={{ backgroundColor: 'black', color: 'white' }}
                   type="default"
                   onClick={() => handleDepositButtonClick(auction.auctionId!, auction.auctionItemId!)}
                   disabled={auction.status === "OnGoing"}
