@@ -194,7 +194,6 @@ const ConsignDetail = () => {
                 <Descriptions column={2} bordered size="small">
                   <Descriptions.Item label="Consign Code">
                     {consignInformation.consignSaleCode}
-
                   </Descriptions.Item>
                   <Descriptions.Item label="Consignor">
                     {consignInformation.consginer}
@@ -241,6 +240,13 @@ const ConsignDetail = () => {
                       </Tag>
                     </Typography>
                   </Descriptions.Item>
+                  <Descriptions.Item label="Consignor Recieved">
+                    <strong>{formatBalance(consignInformation.memberReceivedAmount! ||0)}VND</strong>
+                  </Descriptions.Item>
+                  <Descriptions.Item label="Total Sold Price">
+                    <strong>{formatBalance(consignInformation.soldPrice||0)}VND</strong>
+                  </Descriptions.Item>
+                 
                 </Descriptions>
               )}
             </div>
