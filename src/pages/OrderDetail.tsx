@@ -130,6 +130,30 @@ const OrderDetail = () => {
     setFeedbackText("");
     setIsModalVisible(false);
   };
+  const handleCancel = async () => {
+    try {
+      const orderId = orderDetail?.orderId;
+      if (!orderId) {
+        notification.error({
+          message: 'Order ID Missing',
+          description: 'Unable to find the Order ID for cancellation.',
+        });
+        return;
+      }
+  
+      await orderApi.apiOrdersOrderIdCancelPut(orderId);
+  
+      notification.success({
+        message: 'Order Cancelled',
+        description: `Order ${orderDetail.orderCode} has been successfully cancelled.`,
+      });
+    } catch (error) {
+      notification.error({
+        message: 'Cancellation Failed',
+        description: 'An error occurred while trying to cancel the order. Please try again later.',
+      });
+    }
+  };
 
   const handleRefundClick = (
     orderLineItem: OrderLineItemListResponse,
@@ -519,6 +543,24 @@ const OrderDetail = () => {
                         }
                       >
                         Feedback
+                      </Button>
+                    )}
+                    {feedbacks.length === 0 &&
+                    orderDetail?.status === OrderStatus.Pending && (
+                      <Button
+                        type="default"
+                        style={{
+                          width: "100px",
+                          height: "35px",
+                          margin: "30px",
+                          color: "white",
+                          backgroundColor: "red",
+                        }}
+                        onClick={() =>
+                          handleCancel()
+                        }
+                      >
+                        Cancel
                       </Button>
                     )}
                 </Card>

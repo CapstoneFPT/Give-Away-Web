@@ -20,7 +20,7 @@ const Women: React.FC = () => {
         queryFn: async () => {
             const categoryApi = new CategoryApi();
             const rootCategoryId = "550e8400-e29b-41d4-a716-446655440001";
-            const response = await categoryApi.apiCategoriesTreeGet(null!, rootCategoryId);
+            const response = await categoryApi.apiCategoriesTreeGet(null!, rootCategoryId, true);
             return response.data.categories || [];
         },
     });
