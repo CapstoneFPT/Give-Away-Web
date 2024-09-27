@@ -55,26 +55,28 @@ const ConsignDetail = () => {
   });
 
   const dealDecisionMutation = useMutation({
-    mutationFn: ({
+    mutationFn: async ({
       itemId,
       decision,
     }: {
       itemId: string;
       decision: "accept" | "reject";
-    }) =>
+    }) => {
       decision === "accept"
-        ? consignLineItemApi.apiConsignlineitemsConsignLineItemIdAprroveNegotiationPut(
+        ? await consignLineItemApi.apiConsignlineitemsConsignLineItemIdAprroveNegotiationPut(
           itemId
         )
-        : consignLineItemApi.apiConsignlineitemsConsignLineItemIdRejectNegotiationPut(
+        : await consignLineItemApi.apiConsignlineitemsConsignLineItemIdRejectNegotiationPut(
           itemId
-        ),
-    onSuccess: () => {
+        );
+
+        return decision;
+    },
+    onSuccess: (decision) => {
       queryClient.invalidateQueries({ queryKey: ["consignLineItems"] });
       queryClient.invalidateQueries({ queryKey: ["consignInformation"] });
       message.success(
-        `Deal ${confirmationAction === "continue" ? "accepted" : "rejected"
-        } successfully!`
+        `Deal ${decision === "accept" ? "accepted" : "rejected"} successfully!`
       );
       setModalVisible(false);
     },
