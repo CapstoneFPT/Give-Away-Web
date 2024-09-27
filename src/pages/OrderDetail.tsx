@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   Row,
@@ -39,8 +39,10 @@ const OrderDetail = () => {
   const navigate = useNavigate();
   const { dispatch, isItemInCart } = useCart();
   const [isModalVisible, setIsModalVisible] = React.useState(false);
+  const [isModalCancelVisible, setIsModalCancelVisible] = React.useState(false);
   const [feedbackText, setFeedbackText] = React.useState("");
   const [feedbacks, setFeedbacks] = React.useState<FeedbackResponse[]>([]);
+  const [isLoadingCancel, setIsLoadingCancel] = useState(false);
 
   const orderApi = new OrderApi();
 
@@ -130,6 +132,10 @@ const OrderDetail = () => {
     setFeedbackText("");
     setIsModalVisible(false);
   };
+  const handleCancelClick = (orderId: string) => {
+    setIsModalCancelVisible(true);
+  };
+
   const handleCancel = async () => {
     try {
       const orderId = orderDetail?.orderId;
@@ -140,6 +146,7 @@ const OrderDetail = () => {
         });
         return;
       }
+      setIsLoadingCancel(true);
   
       await orderApi.apiOrdersOrderIdCancelPut(orderId);
   
@@ -147,6 +154,8 @@ const OrderDetail = () => {
         message: 'Order Cancelled',
         description: `Order ${orderDetail.orderCode} has been successfully cancelled.`,
       });
+      setIsModalCancelVisible(false);
+      window.location.reload();
     } catch (error) {
       notification.error({
         message: 'Cancellation Failed',
@@ -557,7 +566,7 @@ const OrderDetail = () => {
                           backgroundColor: "red",
                         }}
                         onClick={() =>
-                          handleCancel()
+                          handleCancelClick(orderDetail.orderId!)
                         }
                       >
                         Cancel
@@ -609,6 +618,22 @@ const OrderDetail = () => {
           onChange={(e) => setFeedbackText(e.target.value)}
           placeholder="Enter your feedback here"
         />
+      </Modal>
+      <Modal
+        title="Cancel Order"
+        visible={isModalCancelVisible}
+        onCancel={() => setIsModalCancelVisible(false)}
+        footer={[
+          <Button key="back" onClick={() => setIsModalCancelVisible(false)}>
+           Close
+          </Button>,
+          <Button key="submit" type="primary" onClick={handleCancel} loading={isLoadingCancel}>
+            Cancel
+          </Button>,
+        ]}
+      >
+        <p>Do you want cancel Order <strong>{orderDetail?.orderCode}</strong></p>
+        
       </Modal>
     </>
   );
