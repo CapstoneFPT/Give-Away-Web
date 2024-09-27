@@ -324,7 +324,10 @@ const Auction: React.FC = () => {
       <Footer />
       <LeaderboardModal
         visible={isLeaderboardVisible}
-        onClose={() => setIsLeaderboardVisible(false)}
+        onClose={() => {
+          setIsLeaderboardVisible(false)
+          navigate("/")
+        }}
         leaderboardData={leaderboardData}
         onPageChange={(page, pageSize) => fetchLeaderboard(page, pageSize)}
         onRedirect={() => navigate("/")}
