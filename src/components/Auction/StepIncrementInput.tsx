@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Input, Button, message } from "antd";
+import { Input, Button, message, Typography } from "antd";
 import { useAuctionData } from "../../hooks/auctionHooks";
 
 const StepIncrementInput: React.FC<{
@@ -30,6 +30,7 @@ const StepIncrementInput: React.FC<{
     }
   };
 
+  const currentStepIncrement = (initialPrice * currentPercentage) / 100;
   return (
     <div>
       <Input
@@ -39,6 +40,9 @@ const StepIncrementInput: React.FC<{
         placeholder="1-100%"
       />
       <Button onClick={handleSetStepIncrement}>Set Step Increment</Button>
+      <Typography.Text style={{ marginLeft: "10px" }}>
+        Current Step Increment: {currentStepIncrement.toFixed(0)} VND
+      </Typography.Text>
     </div>
   );
 };
