@@ -276,7 +276,7 @@ const TransactionHistory: React.FC = () => {
                 >
                   {Object.values(PaymentMethod).map((method) => (
                     <Option key={method} value={method}>
-                      {method}
+                      {method === 'Banking' ? 'VNPay' : method}
                     </Option>
                   ))}
                 </Select>
