@@ -249,7 +249,7 @@ const Auction: React.FC = () => {
               <strong>Note:</strong> {data?.product.note}
             </Paragraph>
             <Paragraph style={{ color: "#32b94b", fontSize: "20px" }}>
-              <strong>Current Bid: {formatBalance(bids[0]?.amount!)} VND </strong>
+              <strong>Current Bid: {bids[0] != null ? formatBalance(bids[0]?.amount!) : formatBalance(data?.product.initialPrice || 0) } VND </strong>
             </Paragraph>
             <Statistic.Countdown
               title="Auction Ends In"
