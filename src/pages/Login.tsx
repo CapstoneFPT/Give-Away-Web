@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from "react";
-import type {MenuProps} from "antd";
-import {Avatar, Button, Input, Modal, notification} from "antd";
+import React, { useEffect, useState } from "react";
+import type { MenuProps } from "antd";
+import { Avatar, Button, Input, Modal, notification } from "antd";
 import {
     EyeInvisibleOutlined,
     EyeOutlined,
@@ -9,11 +9,11 @@ import {
     MoneyCollectOutlined,
     UserOutlined
 } from "@ant-design/icons";
-import {Link, useNavigate} from "react-router-dom";
-import {useAuth} from '../components/Auth/Auth';
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from '../components/Auth/Auth';
 
-import {useCart} from "../pages/CartContext";
-import {AuthApi, LoginRequest} from "../api";
+import { useCart } from "../pages/CartContext";
+import { AuthApi, LoginRequest } from "../api";
 
 const Login = () => {
     const { login } = useAuth();
@@ -57,16 +57,26 @@ const Login = () => {
             const response = await authApi.apiAuthLoginPost(request);
 
             if (response.data.resultStatus === "Success") {
+                if (response.data.data?.role != 'Member') {
+                    notification.error({
+                        message: 'Login Failed',
+                        description: 'You are not a member of this website.',
+                    });
+                    setIsLoading(false);
+                    setIsModalLoginOpen(false);
+                    return;
+                }
+
                 const userId = response.data?.data?.id ?? null;
                 const accessToken = response.data?.data?.accessToken;
 
-                login(accessToken ?? ''); 
+                login(accessToken ?? '');
 
                 localStorage.setItem("userId", JSON.stringify(userId));
                 localStorage.setItem("role", JSON.stringify(response.data?.data?.role));
 
-                dispatch({type: "CLEAR_CART"}); // Clear cart on login
-                dispatch({type: "SET_USER", payload: userId});
+                dispatch({ type: "CLEAR_CART" }); // Clear cart on login
+                dispatch({ type: "SET_USER", payload: userId });
 
                 notification.success({
                     message: 'Login Successful',
@@ -97,7 +107,7 @@ const Login = () => {
         localStorage.removeItem("user");
         localStorage.removeItem("userId");
         localStorage.removeItem("role");
-        dispatch({type: "CLEAR_CART"}); // Clear cart in context
+        dispatch({ type: "CLEAR_CART" }); // Clear cart in context
         localStorage.removeItem("cart"); // Clear cart from localStorage
         // localStorage.clear();
         setIsLoggedIn(false);
@@ -106,15 +116,15 @@ const Login = () => {
     const dropDownItems: MenuProps["items"] = [
         {
             key: "2",
-            icon: <MoneyCollectOutlined style={{fontSize: '23px'}}/>,
+            icon: <MoneyCollectOutlined style={{ fontSize: '23px' }} />,
             label: <Link to="/add-fund">Add Fund</Link>
         },
-        {key: "3", icon: <UserOutlined style={{fontSize: '20px'}}/>, label: <Link to="/profile">Profile</Link>},
+        { key: "3", icon: <UserOutlined style={{ fontSize: '20px' }} />, label: <Link to="/profile">Profile</Link> },
         {
             key: "4",
             label: (
                 <Link to="/" onClick={handleLogout}>
-                    <LogoutOutlined style={{fontSize: '20px', marginLeft: '9px'}}/>
+                    <LogoutOutlined style={{ fontSize: '20px', marginLeft: '9px' }} />
                     Logout
                 </Link>
             ),
@@ -177,10 +187,9 @@ const Login = () => {
 
     return (
         <>
-
             <Avatar icon={<UserOutlined style={{
                 cursor: "pointer",
-            }}/>} onClick={showModalLogin} className="navbar-avatar"/>
+            }} />} onClick={showModalLogin} className="navbar-avatar" />
             <Modal
                 centered
                 width={500}
@@ -188,7 +197,7 @@ const Login = () => {
                 onCancel={handleCancel}
                 open={isModalLoginOpen}
             >
-                <div style={{height: "550px"}}>
+                <div style={{ height: "550px" }}>
                     <h2 style={styles.loginTitle}>Give Away</h2>
                     <h3
                         style={{
@@ -205,7 +214,7 @@ const Login = () => {
                             placeholder="Email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            prefix={<UserOutlined/>}
+                            prefix={<UserOutlined />}
                         />
                     </div>
                     <div style={styles.inputContainer}>
@@ -217,14 +226,14 @@ const Login = () => {
                             onChange={(e) => setPassword(e.target.value)}
                             prefix={
                                 isPasswordVisible ? (
-                                    <EyeInvisibleOutlined onClick={togglePasswordVisibility}/>
+                                    <EyeInvisibleOutlined onClick={togglePasswordVisibility} />
                                 ) : (
-                                    <EyeOutlined onClick={togglePasswordVisibility}/>
+                                    <EyeOutlined onClick={togglePasswordVisibility} />
                                 )
                             }
                         />
                     </div>
-                    <div style={{textAlign: "center"}}>
+                    <div style={{ textAlign: "center" }}>
                         <Button loading={isLoading} style={styles.buttonLoginModalLayout} onClick={handleLogin}>
                             Login
                         </Button>
@@ -236,8 +245,8 @@ const Login = () => {
                             Login with Google
                         </Button>
                     </div> */}
-                    <div style={{marginTop: "20px", textAlign: "center"}}>
-                        <div style={{marginBottom: "10px"}}>
+                    <div style={{ marginTop: "20px", textAlign: "center" }}>
+                        <div style={{ marginBottom: "10px" }}>
                             Don't have an account?
                             <Link to="/register" onClick={handleCancel}>
                                 {" "}
