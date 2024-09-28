@@ -13,33 +13,28 @@ interface ItemType {
 const items: ItemType[] = [
   {
     id: 1,
-    type: "Men Shoe",
-    imageUrl: () => import("../Assets/AIR+VAPORMAX+2023+FK+SE.png"),
+    type: "Winter Outfits",
+    imageUrl: () => import("../Assets/uniqlo3.png"),
   },
   {
     id: 2,
-    type: "Women Shoe",
-    imageUrl: () => import("../Assets/womensShoes.jpg"),
-  },
-  {
-    id: 3,
-    type: "Men clothes",
+    type: "Urban Outfits",
     imageUrl: () => import("../Assets/mensClothes.jpg")
   },
   {
-    id: 4,
-    type: "Women clothes",
+    id: 3,
+    type: "Urban Outfits",
     imageUrl: () => import("../Assets/womenClothes.jpg")
   },
   {
-    id: 5,
-    type: "Men Eyeglasses",
-    imageUrl: () => import("../Assets/meneyeglasses.jpg"),
+    id: 4,
+    type: "Winter Outfits",
+    imageUrl: () => import("../Assets/unniq1.png"),
   },
   {
-    id: 6,
-    type: "Women Brancelets",
-    imageUrl: () => import("../Assets/J18N-ROSECROSS-SILVER-1.jpg"),
+    id: 5,
+    type: "Winter Outfits",
+    imageUrl: () => import("../Assets/uniqlo2.png"),
   },
 ];
 
